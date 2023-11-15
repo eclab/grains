@@ -27,13 +27,13 @@ A two- or three-output square-wave LFO generator.  Options include two independe
 
 Status: Working
 
-### Theory
+## Theory
 
 One, Two, or Three digital outputs set up as functions of four, five, or six analog inputs.  You specify the functions in the code (it's set up to make it easy!), including special randomness and logic functions.
 
 Status: Working
 
-### Multiple
+## Multiple
 
 A two-track clock multiplier with a variety of multiplication options.
 
