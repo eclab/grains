@@ -47,7 +47,3 @@ Choice of Clock Multiple 1   [Set the switch to MAN]
 Choice of Clock Multiple 2   [Set the switch to MAN]
 #### POT 3
 Pulsewidth
-
-### GRAINS BUG
-
-There is a bug in GRAINS that affects Pots (Dials) 1 and 2.  If you set the switch to "Man", then the range of the Pot is correct.  But if you set the switch to "In 1" (or "In 2"), then the range of the Dial is maximum (1.0 probability for our purposes) at about the 2 o'clock position on the Dial.  Beyond that it stays at 1.0.
