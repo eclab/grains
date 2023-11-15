@@ -46,9 +46,14 @@ IN 2 is an alternative CV in for POT 2, and if you set Pot 2 to "In 2", Pot 2 wi
 
 IN 1 is **BOTH** a CV for POT 1 **AND** a CLOCK source.  You should ALWAYS set Pot 1 to "In 2", **not** to "Man".  If you don't care about the CV, just provide a clock signal and you're done.  If you care about the CV, the CV is simply the voltage of the clock.  You can do this by putting a 5V CLOCK signal into the INPUT of a 2VCA module set to **DC**.  Put the CV signal into the CV of the 2VCA module.  The output of the 2VCA is the two multiplied, so take that and feed it into IN 1 on your GRAINS.
 
-GRAINS BUG.  If you set Pot P1 or P2 to "Man" then these pot have full range.  But if you set them to "In1 1" or "In 2", then the maximum possible value is no longer at full right, but rather is at about the 2 o'clock position: the range is cut down by 1/3.  I think it is an error in the GRAINS pot circuitry.  This is a particular problem for us because P1 **must** be set to "In 1" due to the incoming clock.  Additionally, we take out about 1/8 at the other end to handle the clock not being on, so the total range of these pots, at "In 1" or "In 2", is about 1/2.  :-( 
+### CHAOS
 
 The Chaos is fixed to 0 (no randomness), but you can change it by changing a #define in the code.  You can set it to any value from 0 to 255 (maximum chaos).  Do not exceed those values.
+
+### GRAINS BUG.  
+
+If you set Pot P1 or P2 to "Man" then these pot have full range.  But if you set them to "In1 1" or "In 2", then the maximum possible value is no longer at full right, but rather is at about the 2 o'clock position: the range is cut down by 1/3.  I think it is an error in the GRAINS pot circuitry.  This is a particular problem for us because P1 **must** be set to "In 1" due to the incoming clock.  Additionally, we take out about 1/8 at the other end to handle the clock not being on, so the total range of these pots, at "In 1" or "In 2", is about 1/2.  :-( 
+
 
 
 
