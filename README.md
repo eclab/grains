@@ -37,6 +37,6 @@ Status: Working
 
 A two-track clock multiplier with a variety of multiplication options.
 
-Status: Coming Up.  Not Yet Finished.
+Status: Working.  Could use some improvement.
 
 
