@@ -59,6 +59,12 @@
 
 #define RANDOM_ORDERING 0
 
+/// When picking random words, if we have THREE OR MORE words in a sentence, we can 
+/// try to avoid saying the same word twice.  If you want this, set the following to 1.
+/// (It only has an effect if we're doing RANDOM_ORDERING of course).
+
+#define AVOID_REPEATS 1
+
 /// If you're NOT doing Random Order, then Oration will speak its current sentence
 /// until it is done, then it will emit a trigger on Digital Out (D).  You can feed
 /// this into Audio In (A), which will cause Oration to go on to the next sentence.
@@ -115,16 +121,20 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
 #define CV_AUDIO_OUT  11    // Sentence
 #define CV_GATE_OUT   8     // Finished
 
+#define RANDOM_PIN              A5
+
 #define MINIMUM_RESET 800
 #define LOW 400
 #define COUNTDOWN 100       // we need about 100 to trigger Kick drums properly
+#define WAITING_SCALE 16
+#define WAIT_FOREVER (1000 * 16)
 
-int8_t sentence = -1;
+int8_t sentence = -2;
 int8_t _word = -1;
 Talkie voice(false, true);		// inverted pin (pin 11) only
 
-
 uint8_t sizes[NUM_SENTENCES];
+int16_t waiting = 0;
 
 void selectedSentence()
   {
@@ -132,17 +142,25 @@ void selectedSentence()
   if (sentence == NUM_SENTENCES)
     sentence = -2;  // stop the loop
   _word = -1;
+  waiting = -1;
   }
 
 void nextSentence()
   {
+    if (RANDOM_ORDERING)
+      {
+      waiting = -1;
+      return;
+      }
+      
   sentence++;
   if (sentence >= NUM_SENTENCES)
     {
     if (LOOPING) sentence = 0;
-    else sentence = -1;
+    else sentence = -2;
     }
   _word = -1;
+  waiting = -1;
   }
 
 const uint8_t* nextWord()
@@ -150,6 +168,20 @@ const uint8_t* nextWord()
     if (sentence < 0 || sentence >= NUM_SENTENCES) return NULL;
    if (RANDOM_ORDERING)
     {
+      if (sizes[sentence] == 1) return 0;
+      else if (AVOID_REPEATS && sizes[sentence] > 2)
+        {
+          for(uint8_t tries = 0; tries < 255; tries++)    // try up to 256 times
+            {
+            uint8_t newWord = random(sizes[sentence]);
+            if (newWord != _word)
+              {
+              _word = newWord;
+              return sentences[sentence][_word];
+              }
+            }
+         }
+      // not avoiding repeats, or giving up
      _word = random(sizes[sentence]);
      return sentences[sentence][_word];
     }
@@ -164,6 +196,7 @@ const uint8_t* nextWord()
 
 void setup()
   {
+    randomSeed(analogRead(RANDOM_PIN));
   pinMode(CV_AUDIO_OUT, OUTPUT);
     pinMode(CV_GATE_OUT, OUTPUT);
 
@@ -175,17 +208,16 @@ void setup()
       sizes[i] = j;
       } 
 
-//    Serial.begin(112500);
+  voice.initializeHardware();
+//Serial.begin(112500);
   }
   
 uint8_t _selectedSentence = 0;
 uint8_t _nextSentence = 0;
 int8_t countdown = -1;
 uint8_t triggered = false; // prevent the first null
-int16_t waiting = 0;
 void loop()
   {
-    //Serial.println(sentence);
   // is the digital write countdown finished?
   if (countdown == 0)
     {
@@ -236,12 +268,12 @@ void loop()
   // Okay, we're done talking.  Is there another word and we've not yet started waiting?
   else if (waiting == -1 && nextWord() != NULL)   // this loads the word, so we don't call nextWord() again
   	{
-  	waiting = analogRead(CV_POT3);
+  	waiting = analogRead(CV_POT3) * WAITING_SCALE;
   	}
    // Okay, so we're waiting.  
    else if (waiting > 0 && sentences[sentence][_word] != NULL)
     {
-    waiting--;
+    if (!RANDOM_ORDERING ||  waiting < WAIT_FOREVER) waiting--;
     }
    // Okay, we're done waiting and there's another word.  So say it and trigger a gate out
    else if (waiting == 0 && sentences[sentence][_word] != NULL)
