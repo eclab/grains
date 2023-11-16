@@ -46,6 +46,8 @@
 /// to "In 1" (or "In 2"), then the range of the Dial is maximum (1.0 probability for 
 /// our purposes) at about the 2 o'clock position on the Dial.  Beyond that it stays at 1.0
 
+/// THANKS to ptr for randomseed bug report
+
 
 
 
@@ -59,6 +61,7 @@
 #define CV_AUDIO_OUT  11    // Output 1
 #define CV_GATE_OUT   8     // Output 2
 
+#define RANDOM_PIN 		A5
 
 
 #define CLOCK_TRIGGER 800
@@ -70,6 +73,7 @@ void setup()
     pinMode(CV_AUDIO_OUT, OUTPUT);
     pinMode(CV_GATE_OUT, OUTPUT);
     pinMode(CV_IN3, OUTPUT);
+	randomSeed(analogRead(RANDOM_PIN));
 //    Serial.begin(9600);
     }
 
