@@ -60,14 +60,14 @@
 
 /// You define the three expressions by replacing these three lines:
 
-#define A(w,x,y,z) \
-  x + y + z < z             /// <--- Replace this line as an expression of w, x, y, and/or z
-  
-#define B(w,x,y,z,A) \
-  abs(x - z) < y            /// <--- Replace this line as an expression of w, x, y, z, and/or A, where A is the [0=false or 1=true] output of A(...)
-  
-#define C(w,x,y,z,A,B) \
-  x * y < z                 /// <--- Replace this line as an expression of w, x, y, z, and/or A and B, where A and B are the [0=false or 1=true] output of A(...) and B(...)
+#define A(w,x,y,z)                                                      \
+    x + y + z < z             /// <--- Replace this line as an expression of w, x, y, and/or z
+
+#define B(w,x,y,z,A)                                                    \
+    abs(x - z) < y            /// <--- Replace this line as an expression of w, x, y, z, and/or A, where A is the [0=false or 1=true] output of A(...)
+
+#define C(w,x,y,z,A,B)                                                  \
+    x * y < z                 /// <--- Replace this line as an expression of w, x, y, z, and/or A and B, where A and B are the [0=false or 1=true] output of A(...) and B(...)
 
 
 /// 5-INPUT ALTERNATIVE CONFIGURATION
@@ -76,10 +76,10 @@
 /// You don't need to comment out the earlier #define expressions.
 
 // #define AA(w,x,y,z,c) \
-//	w + x + y + z < c
+//      w + x + y + z < c
 
 // #define BB(w,x,y,z,c,aa) \
-//	w * x * y * z * aa < c
+//      w * x * y * z * aa < c
 
 
 /// 6-INPUT ALTERNATIVE CONFIGURATION
@@ -89,7 +89,7 @@
 /// You don't need to comment out the earlier #define expressions.
 
 // #define AAA(w,x,y,z,c,b) \
-//	sin(w) + cos(x) + y + z < c * b
+//      sin(w) + cos(x) + y + z < c * b
 
 
 //////// USEFUL MATH FUNCTIONS AND DEFINES
@@ -100,25 +100,25 @@
 ///
 /// You can also use the following constants:
 ///
-/// INFINITY	positive infinity
-/// M_E			E
-/// M_PI		Pi
-/// HALF_PI		1/2 * Pi
-/// M_PI_2		also 1/2 * Pi
-/// M_PI_4		1/4 * Pi
-/// M_1_PI		1/Pi
-/// M_2_PI		2/Pi
-/// TWO_PI		2 * Pi
-/// M_SQRT2		sqrt(2)
-/// M_SQRT1_2	1/sqrt(2)
-/// M_2_SQRTPI	2/sqrt(pi)
-/// M_LOG2E		log_2(E)
-/// M_LOG10E	log_10(E)
-/// M_LN2		log_e(2)
-/// M_LN10		log_e(10)
-/// DEG_TO_RAD	(2 * Pi) / 360
-/// RAD_TO_DEG	360 / (2 * Pi)
-/// NAN			not a number -- likely not so useful for you.  You can test to see if x is NAN with (x != x).
+/// INFINITY    positive infinity
+/// M_E                 E
+/// M_PI                Pi
+/// HALF_PI             1/2 * Pi
+/// M_PI_2              also 1/2 * Pi
+/// M_PI_4              1/4 * Pi
+/// M_1_PI              1/Pi
+/// M_2_PI              2/Pi
+/// TWO_PI              2 * Pi
+/// M_SQRT2             sqrt(2)
+/// M_SQRT1_2   1/sqrt(2)
+/// M_2_SQRTPI  2/sqrt(pi)
+/// M_LOG2E             log_2(E)
+/// M_LOG10E    log_10(E)
+/// M_LN2               log_e(2)
+/// M_LN10              log_e(10)
+/// DEG_TO_RAD  (2 * Pi) / 360
+/// RAD_TO_DEG  360 / (2 * Pi)
+/// NAN                 not a number -- likely not so useful for you.  You can test to see if x is NAN with (x != x).
 
 /// Also I am providing frand(), which returns a random value between 0.0 and 1.0 not including 1.0
 /// Additionally, frand1(), which returns a random value between 0.0 and 1.0 INCLUDING BOTH 0.0 and 1.0
@@ -126,15 +126,15 @@
 float frand() { return random(16777216) / ((float)(1 << 24)); }
 
 float frand1() 
-	{ 
-	int v = random(16777217);
-	if (v == 16777216) return 1.0;
-	else return v / ((float)(1 << 24)); 
-	}
+    { 
+    int v = random(16777217);
+    if (v == 16777216) return 1.0;
+    else return v / ((float)(1 << 24)); 
+    }
 
 /// Example: 
 /// #define A(w,x,y,z) \
-///	       x + y + frand() * z
+///            x + y + frand() * z
 ///
 
 /// Also I am providing some macros on floating-point numbers which treat them as if 
@@ -142,12 +142,12 @@ float frand1()
 ///
 /// Example: 
 /// #define A(w,x,y,z) \
-///	       OR(AND(x,y), AND(w,z + 0.3))
+///            OR(AND(x,y), AND(w,z + 0.3))
 ///
 
 #define PUSH(x) (x < 0.5)         // you can ignore this one
 #define NOT(x) (1 - PUSH(x))
-#define INV(x) (NOT(x))        			// Same thing as NOT
+#define INV(x) (NOT(x))                         // Same thing as NOT
 #define AND(x,y) (PUSH(x) * PUSH(y))
 #define NAND(x,y) (1 - AND(x,y))
 #define OR(x,y) (max(PUSH(x), PUSH(y)))
@@ -171,11 +171,11 @@ float frand1()
 #define CV_AUDIO_OUT  11    // A
 #define CV_GATE_OUT   8     // B
 
-#define RANDOM_PIN 		A5
+#define RANDOM_PIN              A5
 
 void setup()
-  {
-	randomSeed(analogRead(RANDOM_PIN));
+    {
+    randomSeed(analogRead(RANDOM_PIN));
 
 #if defined(AAA)
     pinMode(CV_AUDIO_OUT, OUTPUT);
@@ -190,29 +190,29 @@ void setup()
 #endif
 //    Serial.begin(9600);
     }
-    
+
 
 void loop()
-  {
-	// this throwaway is advisable because Analog In has high impedance,
-   // and so sometimes it can't charge the capacitors fast enough in the ADC.
-   // As a result, the PREVIOUS analogRead() may bleed into this one.
-   // The throwaway blocks the bleed in most cases.  We might need two throwaways.    
-	analogRead(CV_AUDIO_IN);
-	
+    {
+// this throwaway is advisable because Analog In has high impedance,
+// and so sometimes it can't charge the capacitors fast enough in the ADC.
+// As a result, the PREVIOUS analogRead() may bleed into this one.
+// The throwaway blocks the bleed in most cases.  We might need two throwaways.    
+    analogRead(CV_AUDIO_IN);
+
     float w = analogRead(CV_AUDIO_IN) * 0.0009775171;   // that is, / 1023
     float x = analogRead(CV_POT_IN1) * 0.0009775171;   // that is, / 1023
     float y = analogRead(CV_POT_IN2) * 0.0009775171;   // that is, / 1023
     float z = analogRead(CV_POT3) * 0.0009775171;   // that is, / 1023
 
 #if defined(AAA)
-	float c = analogRead(CV_IN3) * 0.0009775171;   // that is, / 1023
-	float b = digitalRead(CV_GATE_OUT);
+    float c = analogRead(CV_IN3) * 0.0009775171;   // that is, / 1023
+    float b = digitalRead(CV_GATE_OUT);
     uint8_t a = AAA(w,x,y,z,c,b);
 
     digitalWrite(CV_AUDIO_OUT, a);
 #elif defined(AA)
-	float c = analogRead(CV_IN3) * 0.0009775171;   // that is, / 1023
+    float c = analogRead(CV_IN3) * 0.0009775171;   // that is, / 1023
     uint8_t a = AA(w,x,y,z,c);
     uint8_t b = BB(w,x,y,z,c,a); 
 
@@ -227,9 +227,9 @@ void loop()
     digitalWrite(CV_GATE_OUT, b);
     digitalWrite(CV_IN3, c);
 #endif
-  }
-  
-  
-  
-  
-  
+    }
+
+
+
+
+

@@ -95,7 +95,7 @@ int16_t last_option1 = -1;
 int16_t last_option2 = -1;
 
 void reset()
-  {
+    {
     counter = 0;
     pulseInterval = 0;
     counter1 = 0;
@@ -107,28 +107,28 @@ void reset()
     clock = false;
     digitalWrite(CV_AUDIO_OUT, 0);
     digitalWrite(CV_GATE_OUT, 0);
- }
- 
+    }
+
 void setup()
-  {
+    {
     pinMode(CV_AUDIO_OUT, OUTPUT);
     pinMode(CV_GATE_OUT, OUTPUT);
-   reset();
+    reset();
     Serial.begin(115200);
-}
+    }
 
 
 void pulse1()
-  {
-  digitalWrite(CV_AUDIO_OUT, 1);
-  state1 = 1;
-  }
-  
+    {
+    digitalWrite(CV_AUDIO_OUT, 1);
+    state1 = 1;
+    }
+
 void pulse2()
-  {
-  digitalWrite(CV_GATE_OUT, 1);
-  state2 = 1;
-  }
+    {
+    digitalWrite(CV_GATE_OUT, 1);
+    state2 = 1;
+    }
 
 // Range of 0...32773
 uint16_t div7(uint16_t dividend)
@@ -137,7 +137,7 @@ uint16_t div7(uint16_t dividend)
     uint16_t div = (uint16_t) ((invDivisor * (dividend + 1)) >> 16);
     return div;
     }
-                
+
 // Range of 0...65535   
 uint16_t div5(uint16_t dividend)
     {
@@ -155,168 +155,168 @@ uint16_t div3(uint16_t dividend)
     }
 
 uint16_t computeJump(uint8_t out)
-  {
-  uint8_t option = (out == 0 ? option1 : option2);
-  switch(option)
     {
-    case 0: // 16
-      if (out == 0)  max1 = 16; else  max2 = 16;
-      return pulseInterval >> 4;
-    break;
-    //case 1: // 12
-    //  if (out == 0)  max1 = 12; else  max2 = 12;
-    //  return div3(pulseInterval >> 2);   // div12 doesn't have a large enough range
-    //break;
-    //case 2: // 9
-    //  if (out == 0)  max1 = 9; else  max2 = 9;
-    //  return div3(div3(pulseInterval));   // div9 doesn't have a large enough range
-    //break;
-    //case 3: // 8
-    //   if (out == 0)  max1 = 8; else  max2 = 8;
-    // return pulseInterval >> 3;
-    //break;
-    case 1: // 7
-      if (out == 0)  max1 = 7; else  max2 = 7;
-      return div7(pulseInterval);
-    break;
-    case 2: // 6
-       if (out == 0)  max1 = 6; else  max2 = 6;
-     return div3(pulseInterval >> 1);    // div6 doesn't have a large enough range
-    break;
-    case 3: // 5
-       if (out == 0)  max1 = 5; else  max2 = 5;
-     return div5(pulseInterval);
-    break;
-    case 4: // 4
-      if (out == 0)  max1 = 4; else  max2 = 4;
-      return pulseInterval >> 2;
-    break;
-    case 5: // 3
-      if (out == 0)  max1 = 3; else  max2 = 3;
-      return div3(pulseInterval);
-    break;
-    case 6: // 2 Swing
-       if (out == 0)  max1 = 3; else  max2 = 3;
-      return div3(pulseInterval);
-    break;
-   case 7: // 2
-      if (out == 0)  max1 = 2; else  max2 = 2;
-      return pulseInterval >> 1;
-     break;
-    //case 11: // 3/2
-    //   if (out == 0)  max1 = 3; else  max2 = 3;
-    // return (pulseInterval * 3) >> 2;
-    //break;
-    //case 12: // 4/3
-    //   if (out == 0)  max1 = 4; else  max2 = 4;
-    // return div3(pulseInterval * 4);
-    //break;
-    //case 13: // 5/4
-    //   if (out == 0)  max1 = 5; else  max2 = 5;
-    // return (pulseInterval * 5) >> 2;
-    //break;
-    //case 14: // 3/4
-    //  if (out == 0)  max1 = 3; else  max2 = 3;
-    //  return div3(pulseInterval * 4);
-    //break;
-    //case 15: // 2/3
-    //   if (out == 0)  max1 = 2; else  max2 = 2;
-    // return (pulseInterval * 3) >> 1;
-    //break;
+    uint8_t option = (out == 0 ? option1 : option2);
+    switch(option)
+        {
+        case 0: // 16
+            if (out == 0)  max1 = 16; else  max2 = 16;
+            return pulseInterval >> 4;
+            break;
+//case 1: // 12
+//  if (out == 0)  max1 = 12; else  max2 = 12;
+//  return div3(pulseInterval >> 2);   // div12 doesn't have a large enough range
+//break;
+//case 2: // 9
+//  if (out == 0)  max1 = 9; else  max2 = 9;
+//  return div3(div3(pulseInterval));   // div9 doesn't have a large enough range
+//break;
+//case 3: // 8
+//   if (out == 0)  max1 = 8; else  max2 = 8;
+// return pulseInterval >> 3;
+//break;
+        case 1: // 7
+            if (out == 0)  max1 = 7; else  max2 = 7;
+            return div7(pulseInterval);
+            break;
+        case 2: // 6
+            if (out == 0)  max1 = 6; else  max2 = 6;
+            return div3(pulseInterval >> 1);    // div6 doesn't have a large enough range
+            break;
+        case 3: // 5
+            if (out == 0)  max1 = 5; else  max2 = 5;
+            return div5(pulseInterval);
+            break;
+        case 4: // 4
+            if (out == 0)  max1 = 4; else  max2 = 4;
+            return pulseInterval >> 2;
+            break;
+        case 5: // 3
+            if (out == 0)  max1 = 3; else  max2 = 3;
+            return div3(pulseInterval);
+            break;
+        case 6: // 2 Swing
+            if (out == 0)  max1 = 3; else  max2 = 3;
+            return div3(pulseInterval);
+            break;
+        case 7: // 2
+            if (out == 0)  max1 = 2; else  max2 = 2;
+            return pulseInterval >> 1;
+            break;
+//case 11: // 3/2
+//   if (out == 0)  max1 = 3; else  max2 = 3;
+// return (pulseInterval * 3) >> 2;
+//break;
+//case 12: // 4/3
+//   if (out == 0)  max1 = 4; else  max2 = 4;
+// return div3(pulseInterval * 4);
+//break;
+//case 13: // 5/4
+//   if (out == 0)  max1 = 5; else  max2 = 5;
+// return (pulseInterval * 5) >> 2;
+//break;
+//case 14: // 3/4
+//  if (out == 0)  max1 = 3; else  max2 = 3;
+//  return div3(pulseInterval * 4);
+//break;
+//case 15: // 2/3
+//   if (out == 0)  max1 = 2; else  max2 = 2;
+// return (pulseInterval * 3) >> 1;
+//break;
+        }
     }
-  }
 
 void loop()
-  {
-    
-  // Determine if we need to reset
-  
-  analogRead(CV_AUDIO_IN);    // throwaway because it has high impedance :-(
-  uint16_t b = analogRead(CV_AUDIO_IN);
-  if (b > MINIMUM_RESET)
     {
-    reset();
-    return;
-    }
 
-  // Update our counters
-  counter++;
-  counter1++;
-  counter2++;
+// Determine if we need to reset
+
+    analogRead(CV_AUDIO_IN);    // throwaway because it has high impedance :-(
+    uint16_t b = analogRead(CV_AUDIO_IN);
+    if (b > MINIMUM_RESET)
+        {
+        reset();
+        return;
+        }
+
+// Update our counters
+    counter++;
+    counter1++;
+    counter2++;
 
 
-  // Compute pulsewidth
-  pulsewidth = analogRead(CV_POT3) + 1;
+// Compute pulsewidth
+    pulsewidth = analogRead(CV_POT3) + 1;
 
 
-   // Determine if we need to turn OFF outgoing triggers
+// Determine if we need to turn OFF outgoing triggers
 
 // max1 originally 3??
 
-if (state1 && total1 <= max1 && counter1 >= (jump1 * (total1 - 1) + ((jump1 * pulsewidth) >> 10)))
-    {
-      digitalWrite(CV_AUDIO_OUT, 0);
-      state1 = 0;
+    if (state1 && total1 <= max1 && counter1 >= (jump1 * (total1 - 1) + ((jump1 * pulsewidth) >> 10)))
+        {
+        digitalWrite(CV_AUDIO_OUT, 0);
+        state1 = 0;
+        }
+
+    if (state2 && total2 <= max2 && counter2 >= (jump2 * (total2 - 1) + ((jump2 * pulsewidth) >> 10)))
+        {
+        digitalWrite(CV_GATE_OUT, 0);
+        state2 = 0;
+        }
+
+
+// Determine if the user changed an option
+
+    uint8_t opt = analogRead(CV_POT_IN1) >> 7;
+    if (opt != option1) { option1 = opt; total1 = BIG_NUMBER; }   // reset
+    opt = analogRead(CV_POT_IN2) >> 7;
+    if (opt != option2) { option2 = opt; total2 = BIG_NUMBER; }   // reset
+
+// Determine if we received a clock
+
+    uint16_t a = analogRead(CV_IN3);
+    if (a < MINIMUM_CLOCK)
+        {
+        clock = false;
+        }
+    else if (!clock)
+        {
+// update the pulse interval and lock the clock
+        pulseInterval = counter;
+        counter = 0;
+        clock = true;
+
+// If either of our outgoing triggers is done with their sequence,
+// pulse them the first time in sync with the clock and get them going
+
+        if (total1 >= max1)
+            {
+            jump1 = computeJump(0);
+            pulse1();
+            total1 = 1;
+            counter1 = 0;
+            }
+        if (total2 >= max2)
+            {
+            jump2 = computeJump(1);
+            pulse2();
+            total2 = 1;
+            counter2 = 0;
+            }
+        }
+
+// Determine if we need to do a pulse
+
+    if (total1 < max1 && counter1 >= jump1 * total1) // time to jump!
+        {
+        if (option1 != SWING_2 || total1 != 1) pulse1();
+        total1++;
+        }
+
+    if (total2 < max2 && counter2 >= jump2 * total2) // time to jump!
+        {
+        if (option2 != SWING_2 || total2 != 1) pulse2();
+        total2++;
+        }
     }
-
-  if (state2 && total2 <= max2 && counter2 >= (jump2 * (total2 - 1) + ((jump2 * pulsewidth) >> 10)))
-    {
-      digitalWrite(CV_GATE_OUT, 0);
-      state2 = 0;
-     }
-     
-
-  // Determine if the user changed an option
-  
-  uint8_t opt = analogRead(CV_POT_IN1) >> 7;
-  if (opt != option1) { option1 = opt; total1 = BIG_NUMBER; }   // reset
-  opt = analogRead(CV_POT_IN2) >> 7;
-  if (opt != option2) { option2 = opt; total2 = BIG_NUMBER; }   // reset
-
-  // Determine if we received a clock
-  
-  uint16_t a = analogRead(CV_IN3);
-  if (a < MINIMUM_CLOCK)
-    {
-    clock = false;
-    }
-  else if (!clock)
-    {
-    // update the pulse interval and lock the clock
-    pulseInterval = counter;
-    counter = 0;
-    clock = true;
-      
-    // If either of our outgoing triggers is done with their sequence,
-    // pulse them the first time in sync with the clock and get them going
-
-    if (total1 >= max1)
-      {
-      jump1 = computeJump(0);
-      pulse1();
-      total1 = 1;
-      counter1 = 0;
-      }
-    if (total2 >= max2)
-      {
-      jump2 = computeJump(1);
-      pulse2();
-      total2 = 1;
-      counter2 = 0;
-      }
-     }
-
-  // Determine if we need to do a pulse
-
-  if (total1 < max1 && counter1 >= jump1 * total1) // time to jump!
-    {
-    if (option1 != SWING_2 || total1 != 1) pulse1();
-    total1++;
-    }
-
-  if (total2 < max2 && counter2 >= jump2 * total2) // time to jump!
-    {
-    if (option2 != SWING_2 || total2 != 1) pulse2();
-    total2++;
-    }
-   }

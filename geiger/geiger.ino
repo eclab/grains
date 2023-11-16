@@ -61,17 +61,17 @@
 #define CV_AUDIO_OUT  11    // Output 1
 #define CV_GATE_OUT   8     // Output 2
 
-#define RANDOM_PIN 		A5
+#define RANDOM_PIN              A5
 
 
 #define CLOCK_TRIGGER 800
 #define CLOCK_COUNT 16
 
 void setup()
-  {
-	randomSeed(analogRead(RANDOM_PIN));
+    {
+    randomSeed(analogRead(RANDOM_PIN));
 
-  //// Change the pin modes, even for the analog in
+//// Change the pin modes, even for the analog in
     pinMode(CV_AUDIO_OUT, OUTPUT);
     pinMode(CV_GATE_OUT, OUTPUT);
     pinMode(CV_IN3, OUTPUT);
@@ -80,86 +80,86 @@ void setup()
 
 int state = 0;
 void pulse()
-  {
+    {
     state = !state;
     if (state) 
-      {
+        {
         digitalWrite(CV_AUDIO_OUT, 0);
         digitalWrite(CV_GATE_OUT, 0);
         digitalWrite(CV_IN3, 0);
         return;
-      }
-      
-  uint16_t threshold1 = analogRead(CV_POT_IN1);
-  uint16_t threshold2 = analogRead(CV_POT_IN2);
-  uint16_t threshold3 = analogRead(CV_POT3);
+        }
+
+    uint16_t threshold1 = analogRead(CV_POT_IN1);
+    uint16_t threshold2 = analogRead(CV_POT_IN2);
+    uint16_t threshold3 = analogRead(CV_POT3);
 
 // We do 1000 rather than 1023 because we want fully-right
 // to essentially be guaranteed to fire.  We might want to do
 // that for the bottom bound too..
 
-  if (threshold3 > 1000)
-    {
-    // Bernoulli
-    if (random(1000) < threshold1)
-    {
-    digitalWrite(CV_AUDIO_OUT, 1);
-    }
-  else if (random(1000) < threshold2)
-    {
-    digitalWrite(CV_GATE_OUT, 1);
-    }
-  else
-    {
-    digitalWrite(CV_IN3, 1);
-    }
-    }
-  else
-    {
-    if (random(1000) < threshold1)
-    {
-    digitalWrite(CV_AUDIO_OUT, 1);
-    }
+    if (threshold3 > 1000)
+        {
+// Bernoulli
+        if (random(1000) < threshold1)
+            {
+            digitalWrite(CV_AUDIO_OUT, 1);
+            }
+        else if (random(1000) < threshold2)
+            {
+            digitalWrite(CV_GATE_OUT, 1);
+            }
+        else
+            {
+            digitalWrite(CV_IN3, 1);
+            }
+        }
+    else
+        {
+        if (random(1000) < threshold1)
+            {
+            digitalWrite(CV_AUDIO_OUT, 1);
+            }
 
-    if (random(1000) < threshold2)
-    {
-    digitalWrite(CV_GATE_OUT, 1);
-    }
+        if (random(1000) < threshold2)
+            {
+            digitalWrite(CV_GATE_OUT, 1);
+            }
 
-    if (random(1000) < threshold3)
-    {
-    digitalWrite(CV_IN3, 1);
-    }
-  }
+        if (random(1000) < threshold3)
+            {
+            digitalWrite(CV_IN3, 1);
+            }
+        }
 
- }
+    }
 
 
 int countup = 0;
 int clock = 0;
 
 void loop()
-  {
-   // this throwaway is advisable because Analog In has high impedance,
-   // and so sometimes it can't charge the capacitors fast enough in the ADC.
-   // As a result, the PREVIOUS analogRead() may bleed into this one.
-   // The throwaway blocks the bleed in most cases.  We might need two throwaways.
+    {
+// this throwaway is advisable because Analog In has high impedance,
+// and so sometimes it can't charge the capacitors fast enough in the ADC.
+// As a result, the PREVIOUS analogRead() may bleed into this one.
+// The throwaway blocks the bleed in most cases.  We might need two throwaways.
     analogRead(CV_AUDIO_IN);     
- 
+
     uint16_t a = analogRead(CV_AUDIO_IN);
     if (a < CLOCK_TRIGGER)
-      {
-      countup = 0;
-      clock = 0;
-      }
-    else if (!clock)
-      {
-      countup++;
-      if (countup >= CLOCK_COUNT)
         {
-        countup = CLOCK_COUNT;
-        clock = 1;
-        pulse();
+        countup = 0;
+        clock = 0;
         }
-      }
-  }
+    else if (!clock)
+        {
+        countup++;
+        if (countup >= CLOCK_COUNT)
+            {
+            countup = CLOCK_COUNT;
+            clock = 1;
+            pulse();
+            }
+        }
+    }

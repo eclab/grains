@@ -111,13 +111,13 @@
 
 ////////// PINOUTS
 
-#define CV_POT_IN1    A2  		// Rate 1 CV
-#define CV_POT_IN2    A1		// Rate 2 CV
-#define CV_POT3       A0		// Pulsewidth 1, Rate 3, or Rate 3 percentage
-#define CV_IN3        A3		// Pusewidth 1 CV, Rate 3 percentage CV, or LFO 3 Out
-#define CV_AUDIO_IN   A4		// Reset
-#define CV_AUDIO_OUT  11		// LFO 1 Out 
-#define CV_GATE_OUT   8			// LFO 2 Out or Mixed LFO Out
+#define CV_POT_IN1    A2                // Rate 1 CV
+#define CV_POT_IN2    A1                // Rate 2 CV
+#define CV_POT3       A0                // Pulsewidth 1, Rate 3, or Rate 3 percentage
+#define CV_IN3        A3                // Pusewidth 1 CV, Rate 3 percentage CV, or LFO 3 Out
+#define CV_AUDIO_IN   A4                // Reset
+#define CV_AUDIO_OUT  11                // LFO 1 Out 
+#define CV_GATE_OUT   8                 // LFO 2 Out or Mixed LFO Out
 
 
 #define MAXIMUM (1000)
@@ -125,19 +125,19 @@
 
 // dividend can have a range 0 ... 1824
 uint16_t div25(uint16_t dividend)
-{
-  uint32_t invDivisor = 0x0a3c;
-  uint16_t div = (uint16_t) ((invDivisor * (dividend + 1)) >> 16);
-  return div;
-}
+    {
+    uint32_t invDivisor = 0x0a3c;
+    uint16_t div = (uint16_t) ((invDivisor * (dividend + 1)) >> 16);
+    return div;
+    }
 
 // dividend can have a range 0 ... 1874
 uint16_t div125(uint16_t dividend)
-{
-  uint32_t invDivisor = 0x020c;
-  uint16_t div = (uint16_t) ((invDivisor * (dividend + 1)) >> 16);
-  return div;
-}
+    {
+    uint32_t invDivisor = 0x020c;
+    uint16_t div = (uint16_t) ((invDivisor * (dividend + 1)) >> 16);
+    return div;
+    }
 
 boolean running = false;
 
@@ -158,339 +158,339 @@ boolean lfo2 = false;
 boolean lfo3 = false;
 
 void pulseMain()
-{
-  // grab current values
+    {
+// grab current values
 
-  uint16_t r1 = analogRead(CV_POT_IN1);
-  uint16_t r2 = analogRead(CV_POT_IN2);
-  uint16_t p1 = analogRead(CV_POT3);
-  if (p1 > 1000)
-  {
-    p1 = analogRead(CV_IN3) + 1;
-  }
-  else p1 = (int16_t)min(1023, (((uint32_t)p1) * (uint32_t) 131 / 125)) + 1;
+    uint16_t r1 = analogRead(CV_POT_IN1);
+    uint16_t r2 = analogRead(CV_POT_IN2);
+    uint16_t p1 = analogRead(CV_POT3);
+    if (p1 > 1000)
+        {
+        p1 = analogRead(CV_IN3) + 1;
+        }
+    else p1 = (int16_t)min(1023, (((uint32_t)p1) * (uint32_t) 131 / 125)) + 1;
 
-  // ugh costly division, but div125 doesn't go far enough
-  // We multiply by 131 rather than 128 to give a little breathing room
-  // at the top before we jump straight to the analog input:
-  // values 977 through 1000 will be bumped to 1024.
+// ugh costly division, but div125 doesn't go far enough
+// We multiply by 131 rather than 128 to give a little breathing room
+// at the top before we jump straight to the analog input:
+// values 977 through 1000 will be bumped to 1024.
 
 
-  // filter values
+// filter values
 
-  if (!running)
-  {
-    rate1 = r1;
-    pw1 = p1;
-    rate2 = r2;
-    running = true;
-  }
-  else
-  {
-    rate1 = (rate1 + r1) >> 1;
-    pw1 = (pw1 + p1) >> 1;
-    rate2 = (rate2 + r2) >> 1;
-  }
-  pw2 = 512;
+    if (!running)
+        {
+        rate1 = r1;
+        pw1 = p1;
+        rate2 = r2;
+        running = true;
+        }
+    else
+        {
+        rate1 = (rate1 + r1) >> 1;
+        pw1 = (pw1 + p1) >> 1;
+        rate2 = (rate2 + r2) >> 1;
+        }
+    pw2 = 512;
 
-  // update states
+// update states
 
-  state1 = state1 + (rate1 + 1);
-  state2 = state2 + (rate2 + 1);
+    state1 = state1 + (rate1 + 1);
+    state2 = state2 + (rate2 + 1);
 
-  // send LFO signals
+// send LFO signals
 
-  // state1 UP
-  if (
+// state1 UP
+    if (
 #ifdef FAST
-    state1 >= 1024
+        state1 >= 1024
 #else
-    state1 >= 1024 * 16
+        state1 >= 1024 * 16
 #endif
-  )
-  {
-    state1 = 0;
-    digitalWrite(CV_AUDIO_OUT, 1);
-    lfo1 = true;
-  }
-  // state1 DOWN
-  else if (lfo1 &&
+        )
+        {
+        state1 = 0;
+        digitalWrite(CV_AUDIO_OUT, 1);
+        lfo1 = true;
+        }
+// state1 DOWN
+    else if (lfo1 &&
 #ifdef FAST
-           state1 >= ((1024 * (uint32_t)pw1) >> 10)
+        state1 >= ((1024 * (uint32_t)pw1) >> 10)
 #else
-           state1 >= ((1024 * 16 * (uint32_t)pw1) >> 10)
+        state1 >= ((1024 * 16 * (uint32_t)pw1) >> 10)
 #endif
-          )
-  {
-    digitalWrite(CV_AUDIO_OUT, 0);
-    lfo1 = false;
-  }
+        )
+        {
+        digitalWrite(CV_AUDIO_OUT, 0);
+        lfo1 = false;
+        }
 
-  // state2 UP
-  if (
+// state2 UP
+    if (
 #ifdef FAST
-    state2 >= 1024
+        state2 >= 1024
 #else
-    state2 >= 1024 * 16
+        state2 >= 1024 * 16
 #endif
-  )
-  {
-    state2 = 0;
-    digitalWrite(CV_GATE_OUT, 1);
-    lfo2 = true;
-  }
-  // state2 DOWN
-  else if (lfo2 &&
+        )
+        {
+        state2 = 0;
+        digitalWrite(CV_GATE_OUT, 1);
+        lfo2 = true;
+        }
+// state2 DOWN
+    else if (lfo2 &&
 #ifdef FAST
-           state2 >= ((1024 * (uint32_t)pw2) >> 10)
+        state2 >= ((1024 * (uint32_t)pw2) >> 10)
 #else
-           state2 >= ((1024 * 16 * (uint32_t)pw2) >> 10)
+        state2 >= ((1024 * 16 * (uint32_t)pw2) >> 10)
 #endif
-          )
-  {
-    digitalWrite(CV_GATE_OUT, 0);
-  }
-}
+        )
+        {
+        digitalWrite(CV_GATE_OUT, 0);
+        }
+    }
 
 
 void pulseMulti()
-{
-  // grab current values
+    {
+// grab current values
 
-  uint16_t r1 = analogRead(CV_POT_IN1);
-  uint16_t r2 = analogRead(CV_POT_IN2);
-  uint16_t r3 = analogRead(CV_POT3);
-  analogRead(CV_AUDIO_IN);   // Let this one bleed because the input impedance on the GRAINS is too high
+    uint16_t r1 = analogRead(CV_POT_IN1);
+    uint16_t r2 = analogRead(CV_POT_IN2);
+    uint16_t r3 = analogRead(CV_POT3);
+    analogRead(CV_AUDIO_IN);   // Let this one bleed because the input impedance on the GRAINS is too high
 //  analogRead(CV_AUDIO_IN);   // Let this one bleed because the input impedance on the GRAINS is too high
 
-  // filter values
+// filter values
 
-  if (!running)
-  {
-    rate1 = r1;
-    rate2 = r2;
-    rate3 = r3;
-    running = true;
-  }
-  else
-  {
-    rate1 = (rate1 + r1) >> 1;
-    rate2 = (rate2 + r2) >> 1;
-    rate3 = (rate3 + r3) >> 1;
-  }
-  pw1 = 512;
-  pw2 = 512;
-  pw3 = 512;
+    if (!running)
+        {
+        rate1 = r1;
+        rate2 = r2;
+        rate3 = r3;
+        running = true;
+        }
+    else
+        {
+        rate1 = (rate1 + r1) >> 1;
+        rate2 = (rate2 + r2) >> 1;
+        rate3 = (rate3 + r3) >> 1;
+        }
+    pw1 = 512;
+    pw2 = 512;
+    pw3 = 512;
 
-  // update states
+// update states
 
-  state1 = state1 + (rate1 + 1);
-  state2 = state2 + (rate2 + 1);
-  state3 = state3 + (rate3 + 1);
+    state1 = state1 + (rate1 + 1);
+    state2 = state2 + (rate2 + 1);
+    state3 = state3 + (rate3 + 1);
 
-  // send LFO signals
+// send LFO signals
 
-  // state1 UP
-  if (
+// state1 UP
+    if (
 #ifdef FAST
-    state1 >= 1024
+        state1 >= 1024
 #else
-    state1 >= 1024 * 16
+        state1 >= 1024 * 16
 #endif
-  )
-  {
-    state1 = 0;
-    digitalWrite(CV_AUDIO_OUT, 1);
-    lfo1 = true;
-  }
-  // state1 DOWN
-  else if (lfo1 &&
+        )
+        {
+        state1 = 0;
+        digitalWrite(CV_AUDIO_OUT, 1);
+        lfo1 = true;
+        }
+// state1 DOWN
+    else if (lfo1 &&
 #ifdef FAST
-           state1 >= ((1024 * (uint32_t)pw1) >> 10)
+        state1 >= ((1024 * (uint32_t)pw1) >> 10)
 #else
-           state1 >= ((1024 * 16 * (uint32_t)pw1) >> 10)
+        state1 >= ((1024 * 16 * (uint32_t)pw1) >> 10)
 #endif
-          )
-  {
-    state1 = 0;
-    digitalWrite(CV_AUDIO_OUT, 0);
-    lfo1 = false;
-  }
+        )
+        {
+        state1 = 0;
+        digitalWrite(CV_AUDIO_OUT, 0);
+        lfo1 = false;
+        }
 
-  // state2 UP
-  if (
+// state2 UP
+    if (
 #ifdef FAST
-    state2 >= 1024
+        state2 >= 1024
 #else
-    state2 >= 1024 * 16
+        state2 >= 1024 * 16
 #endif
-  )
-  {
-    state2 = 0;
-    digitalWrite(CV_GATE_OUT, 1);
-    lfo2 = true;
-  }
-  // state2 DOWN
-  else if (lfo2 &&
+        )
+        {
+        state2 = 0;
+        digitalWrite(CV_GATE_OUT, 1);
+        lfo2 = true;
+        }
+// state2 DOWN
+    else if (lfo2 &&
 #ifdef FAST
-           state2 >= ((1024 * (uint32_t)pw2) >> 10)
+        state2 >= ((1024 * (uint32_t)pw2) >> 10)
 #else
-           state2 >= ((1024 * 16 * (uint32_t)pw2) >> 10)
+        state2 >= ((1024 * 16 * (uint32_t)pw2) >> 10)
 #endif
-          )
-  {
-    state1 = 0;
-    digitalWrite(CV_GATE_OUT, 0);
-    lfo2 = false;
-  }
+        )
+        {
+        state1 = 0;
+        digitalWrite(CV_GATE_OUT, 0);
+        lfo2 = false;
+        }
 
-  // state3 UP
-  if (
+// state3 UP
+    if (
 #ifdef FAST
-    state3 >= 1024
+        state3 >= 1024
 #else
-    state3 >= 1024 * 16
+        state3 >= 1024 * 16
 #endif
-  )
-  {
-    state3 = 0;
-    digitalWrite(CV_IN3, 1);
-    lfo3 = true;
-  }
-  // state3 DOWN
-  else if (lfo3 &&
+        )
+        {
+        state3 = 0;
+        digitalWrite(CV_IN3, 1);
+        lfo3 = true;
+        }
+// state3 DOWN
+    else if (lfo3 &&
 #ifdef FAST
-           state3 >= ((1024 * (uint32_t)pw3) >> 10)
+        state3 >= ((1024 * (uint32_t)pw3) >> 10)
 #else
-           state3 >= ((1024 * 16 * (uint32_t)pw3) >> 10)
+        state3 >= ((1024 * 16 * (uint32_t)pw3) >> 10)
 #endif
-          )
-  {
-    state3 = 0;
-    digitalWrite(CV_IN3, 0);
-    lfo3 = false;
-  }
-}
+        )
+        {
+        state3 = 0;
+        digitalWrite(CV_IN3, 0);
+        lfo3 = false;
+        }
+    }
 
 boolean mixState = false;
 void pulseMix()
-{
-  // grab current values
+    {
+// grab current values
 
-  uint16_t r1 = analogRead(CV_POT_IN1);
-  uint16_t r2 = analogRead(CV_POT_IN2);
-  uint16_t r3 = analogRead(CV_POT3);
-  if (r3 > 1000)
-  {
-    r3 = analogRead(CV_IN3) + 1;
-  }
-  else r3 = (int16_t)min(1023, (((uint32_t)r3) * (uint32_t) 131 / 125)) + 1;
+    uint16_t r1 = analogRead(CV_POT_IN1);
+    uint16_t r2 = analogRead(CV_POT_IN2);
+    uint16_t r3 = analogRead(CV_POT3);
+    if (r3 > 1000)
+        {
+        r3 = analogRead(CV_IN3) + 1;
+        }
+    else r3 = (int16_t)min(1023, (((uint32_t)r3) * (uint32_t) 131 / 125)) + 1;
 
-  // ugh costly division, but div125 doesn't go far enough
-  // We multiply by 131 rather than 128 to give a little breathing room
-  // at the top before we jump straight to the analog input:
-  // values 977 through 1000 will be bumped to 1024.
+// ugh costly division, but div125 doesn't go far enough
+// We multiply by 131 rather than 128 to give a little breathing room
+// at the top before we jump straight to the analog input:
+// values 977 through 1000 will be bumped to 1024.
 
-  // filter values
+// filter values
 
-  if (!running)
-  {
-    rate1 = r1;
-    rate2 = (uint16_t)(r1 * (uint32_t) r2) / 1024;
-    rate3 = (uint16_t)(r1 * (uint32_t) r3) / 1024;
-    running = true;
-  }
-  else
-  {
-    rate1 = (rate1 + r1) >> 1;
-    r2 = (uint16_t)(r1 * (uint32_t) r2) / 1024;
-    rate2 = (rate2 + r2) >> 1;
-    r3 = (uint16_t)(r1 * (uint32_t) r3) / 1024;
-    rate3 = (rate3 + r3) >> 1;
-  }
-  pw1 = 512;
-  pw2 = 512;
-  pw3 = 512;
+    if (!running)
+        {
+        rate1 = r1;
+        rate2 = (uint16_t)(r1 * (uint32_t) r2) / 1024;
+        rate3 = (uint16_t)(r1 * (uint32_t) r3) / 1024;
+        running = true;
+        }
+    else
+        {
+        rate1 = (rate1 + r1) >> 1;
+        r2 = (uint16_t)(r1 * (uint32_t) r2) / 1024;
+        rate2 = (rate2 + r2) >> 1;
+        r3 = (uint16_t)(r1 * (uint32_t) r3) / 1024;
+        rate3 = (rate3 + r3) >> 1;
+        }
+    pw1 = 512;
+    pw2 = 512;
+    pw3 = 512;
 
-  // update states
+// update states
 
-  state1 = state1 + (rate1 + 1);
-  state2 = state2 + (rate2 + 1);
-  state2 = state2 + (rate3 + 1);
+    state1 = state1 + (rate1 + 1);
+    state2 = state2 + (rate2 + 1);
+    state2 = state2 + (rate3 + 1);
 
-  // send LFO signals
+// send LFO signals
 
-  // state1 UP
-  if (
+// state1 UP
+    if (
 #ifdef FAST
-    state1 >= 1024 || state2 >= 1024 || state3 >= 1024
+        state1 >= 1024 || state2 >= 1024 || state3 >= 1024
 #else
-    state1 >= 1024 * 16 || state2 >= 1024 * 16 || state3 >= 1024 * 16
+        state1 >= 1024 * 16 || state2 >= 1024 * 16 || state3 >= 1024 * 16
 #endif
-  )
-  {
+        )
+        {
 #ifdef FAST
-    if (state1 >= 1024)
-      state1 = 0;
-    if (state2 >= 1024)
-      state2 = 0;
-    if (state3 >= 1024)
-      state3 = 0;
+        if (state1 >= 1024)
+            state1 = 0;
+        if (state2 >= 1024)
+            state2 = 0;
+        if (state3 >= 1024)
+            state3 = 0;
 #else
-    if (state1 >= 1024 * 16)
-      state1 = 0;
-    if (state2 >= 1024 * 16)
-      state2 = 0;
-    if (state3 >= 1024 * 16)
-      state3 = 0;
+        if (state1 >= 1024 * 16)
+            state1 = 0;
+        if (state2 >= 1024 * 16)
+            state2 = 0;
+        if (state3 >= 1024 * 16)
+            state3 = 0;
 #endif
-    mixState = !mixState;
-    digitalWrite(CV_AUDIO_OUT, state1);
-    digitalWrite(CV_GATE_OUT, mixState);
-  }
-}
+        mixState = !mixState;
+        digitalWrite(CV_AUDIO_OUT, state1);
+        digitalWrite(CV_GATE_OUT, mixState);
+        }
+    }
 
 void pulse()
-{
+    {
 #if defined(MIX)
-  pulseMix();
+    pulseMix();
 #elif defined(MULTI)
-  pulseMulti();
+    pulseMulti();
 #else
-  pulseMain();
+    pulseMain();
 #endif
-}
+    }
 
 
 #define RESET_TRIGGER 800
 #define RESET_LOW 400
 
 void setup()
-{
-  //// Change the pin modes, even for the analog in
+    {
+//// Change the pin modes, even for the analog in
 #if defined(MIX)
-  pinMode(CV_AUDIO_OUT, OUTPUT);
-  pinMode(CV_GATE_OUT, INPUT);
+    pinMode(CV_AUDIO_OUT, OUTPUT);
+    pinMode(CV_GATE_OUT, INPUT);
 #elif defined(MULTI)
-  pinMode(CV_AUDIO_OUT, OUTPUT);
-  pinMode(CV_GATE_OUT, OUTPUT);
-  pinMode(CV_IN3, OUTPUT);
+    pinMode(CV_AUDIO_OUT, OUTPUT);
+    pinMode(CV_GATE_OUT, OUTPUT);
+    pinMode(CV_IN3, OUTPUT);
 #else
-  pinMode(CV_AUDIO_OUT, OUTPUT);
-  pinMode(CV_GATE_OUT, OUTPUT);
+    pinMode(CV_AUDIO_OUT, OUTPUT);
+    pinMode(CV_GATE_OUT, OUTPUT);
 #endif
 
-  FlexiTimer2::set(1, 1.0 / 1024, pulse);
-  FlexiTimer2::start();
+    FlexiTimer2::set(1, 1.0 / 1024, pulse);
+    FlexiTimer2::start();
 
-  Serial.begin(115200);
-}
+    Serial.begin(115200);
+    }
 
 
 boolean reset = false;
 void loop()
-{
-  // Handle resets
+    {
+// Handle resets
 
 // NOTE: input impedance on analogRead is too high, so it might not
 // charge the caps fully and the PREVIOUS analogRead -- of a different pin! --
@@ -500,30 +500,30 @@ void loop()
 // Alternatively I could put the throwaway here, an wrap them with a nointerrupts()
 // so the other anaogReads can't sneak in in-between from the timer, but 
 // it would just cut the frequency of the analogReads() in half.
-  uint16_t a = analogRead(CV_AUDIO_IN);
-  if (a <= RESET_LOW)
-  {
-    reset = false;
-  }
-  else if (a >= RESET_TRIGGER && !reset)
-  {
-    state1 = 0;
-    state2 = 0;
-    state3 = 0;
-    reset = true;
-  }
-
-  /*
-    #ifdef MIX
-      else
+    uint16_t a = analogRead(CV_AUDIO_IN);
+    if (a <= RESET_LOW)
         {
-        uint16_t b = analogRead(CV_GATE_OUT);
-        if (b >= RESET_TRIGGER)
-          {
+        reset = false;
+        }
+    else if (a >= RESET_TRIGGER && !reset)
+        {
+        state1 = 0;
         state2 = 0;
         state3 = 0;
-          }
+        reset = true;
         }
-    #endif
-  */
-}
+
+/*
+  #ifdef MIX
+  else
+  {
+  uint16_t b = analogRead(CV_GATE_OUT);
+  if (b >= RESET_TRIGGER)
+  {
+  state2 = 0;
+  state3 = 0;
+  }
+  }
+  #endif
+*/
+    }

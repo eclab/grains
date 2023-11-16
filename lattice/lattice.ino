@@ -163,7 +163,7 @@
 #define CV_AUDIO_OUT  11    // Drum 1
 #define CV_GATE_OUT   8     // Drum 2
 
-#define RANDOM_PIN 		A5
+#define RANDOM_PIN              A5
 
 #define RESET_IN CV_AUDIO_IN
 #define DRUM_1 CV_GATE_OUT
@@ -198,25 +198,25 @@ uint8_t chaos = 0;
 
 // Loads parameters from EEPROM
 void loadEEPROM()
-  {
+    {
     x = EEPROM.read(X_EEPROM);
     y = EEPROM.read(Y_EEPROM);
     complexity[0] = EEPROM.read(COMPLEXITY1_EEPROM);
     complexity[1] = EEPROM.read(COMPLEXITY2_EEPROM);
     complexity[2] = EEPROM.read(COMPLEXITY3_EEPROM);
     chaos = EEPROM.read(CHAOS_EEPROM);
- }
+    }
 
 // Saves parameters to EEPROM.  Don't do this more than 100,000 times.
 void saveEEPROM()
-  {
+    {
     EEPROM.update(X_EEPROM, x);
     EEPROM.update(Y_EEPROM, y);
     EEPROM.update(COMPLEXITY1_EEPROM, complexity[0]);
     EEPROM.update(COMPLEXITY2_EEPROM, complexity[1]);
     EEPROM.update(COMPLEXITY3_EEPROM, complexity[2]);
     EEPROM.update(CHAOS_EEPROM, chaos);
-  }
+    }
 
 
 
@@ -630,7 +630,7 @@ void decrement(uint8_t drum)
     if (count[drum] == 1) { digitalWrite(drums[drum], 0); }
     count[drum]--; 
     }
-  
+
 // Triggers a drum and starts the countdown
 void pulse(uint8_t drum)
     {
@@ -644,66 +644,66 @@ void processPots()
     uint16_t p1 = analogRead(CV_POT_IN1);
     uint16_t p2 = analogRead(CV_POT_IN2);
     uint16_t p3 = analogRead(CV_POT3) >> 2;
-      
+
     if (p1 < POT_TRIGGER_MAX)
-  {
-  pot1 = POT_TRIGGER;
-  }
+        {
+        pot1 = POT_TRIGGER;
+        }
     else if (p1 < POT_TRIGGER_RANGE)
-  {
-  pot1 = 0;
-  }
+        {
+        pot1 = 0;
+        }
     else
-  {
-  // (1024 - POT_TRIGGER_RANGE) = (1024 - 128) = 896
-  // We want to divide by 896 and multiply by 256
-  // That is multiplying by 2 and dividing by 7
-  pot1 = div7((p1 - POT_TRIGGER_RANGE) * (uint16_t)2);
-  }
+        {
+// (1024 - POT_TRIGGER_RANGE) = (1024 - 128) = 896
+// We want to divide by 896 and multiply by 256
+// That is multiplying by 2 and dividing by 7
+        pot1 = div7((p1 - POT_TRIGGER_RANGE) * (uint16_t)2);
+        }
 
- //   if (p2 < POT_TRIGGER_MAX)
- //{
- // pot2 = POT_TRIGGER;
- // }
- //   else if (p2 < POT_TRIGGER_RANGE)
- // {
- // pot2 = 0;
- // }
- //   else
- // {
- // // (1024 - POT_TRIGGER_RANGE) = (1024 - 128) = 896
- // // We want to divide by 896 and multiply by 256
- // // That is multiplying by 2 and dividing by 7
- // pot2 = div7((p2 - POT_TRIGGER_RANGE) * (uint16_t)2);
- // }
+//   if (p2 < POT_TRIGGER_MAX)
+//{
+// pot2 = POT_TRIGGER;
+// }
+//   else if (p2 < POT_TRIGGER_RANGE)
+// {
+// pot2 = 0;
+// }
+//   else
+// {
+// // (1024 - POT_TRIGGER_RANGE) = (1024 - 128) = 896
+// // We want to divide by 896 and multiply by 256
+// // That is multiplying by 2 and dividing by 7
+// pot2 = div7((p2 - POT_TRIGGER_RANGE) * (uint16_t)2);
+// }
 
- pot2 = p2 >> 2;
+    pot2 = p2 >> 2;
 
 #ifdef COMPLEX
 #define SLACK 10
 
-  pot3Changed = 0;
-    // Finally, we divide pot 3 into 3 parts
+    pot3Changed = 0;
+// Finally, we divide pot 3 into 3 parts
 
-  // We do a little trick here to deal with noise
+// We do a little trick here to deal with noise
     if (pot3 == 0)
-      {
-        // did we get far enough?
+        {
+// did we get far enough?
         if (p3 > 170) { pot3Changed = 1; pot3 = 2; }
         else if (p3 > 85 + SLACK) { pot3Changed = 1; pot3 = 1; }
-      }
-     else if (pot3 == 1)
-      {
-        // did we get far enough?
+        }
+    else if (pot3 == 1)
+        {
+// did we get far enough?
         if (p3 <= 85 - SLACK) { pot3Changed = 1; pot3 = 0; }
         else if (p3 > 170 + SLACK) { pot3Changed = 1; pot3 = 2; }
-      }
-     else // pot3 == 2
-      {
-        // did we get far enough?
+        }
+    else // pot3 == 2
+        {
+// did we get far enough?
         if (p3 <= 85) { pot3Changed = 1; pot3 = 0; }
         else if (p3 <= 170 - SLACK) { pot3Changed = 1; pot3 = 1; }
-      }
+        }
 #else
     pot3 = p3;
 #endif
@@ -749,52 +749,52 @@ uint8_t readDrumMap(uint8_t step, uint8_t instrument, uint8_t x, uint8_t y)
 void play(uint8_t step, uint8_t x, uint8_t y, uint8_t* complexity, uint8_t chaos) 
     {
     for (uint8_t drum = 0; drum < NUM_DRUMS; ++drum) 
-  {
-    uint8_t threshold = 255 - complexity[drum];
-  uint8_t level = readDrumMap(step, drum, x, y);
+        {
+        uint8_t threshold = 255 - complexity[drum];
+        uint8_t level = readDrumMap(step, drum, x, y);
 // NOTE: I don't like Mutable's approach here, since randomness only INCREASES
 // note complexity, never DECREASES it below the base value.  Better would be
 // to center the randomness at the base value, but whatever -- Sean
-  if (level < 255 - rnd[drum]) 
-      {
-      level += rnd[drum];
-      } 
-  else 
-      {
-      level = 255;
-      }
-  if (level > threshold) 
-      {
-      pulse(drum);
-      }
-  }
+        if (level < 255 - rnd[drum]) 
+            {
+            level += rnd[drum];
+            } 
+        else 
+            {
+            level = 255;
+            }
+        if (level > threshold) 
+            {
+            pulse(drum);
+            }
+        }
     }
 
 //// Resets the sequencer to step 0 and turns off all drums
 void _reset()
     {
     for(uint8_t drum = 0; drum < NUM_DRUMS; drum++)
-  {
-  digitalWrite(drums[drum], 0);
-  count[drum] = 0;
-  }
+        {
+        digitalWrite(drums[drum], 0);
+        count[drum] = 0;
+        }
     step = 0;
     }
-    
+
 //// Clocks the sequencer and increments the step.
 //// At the beginning of a sequence, we pick new random values for chaos
 void _clock()
     {
     if (step >= NUM_STEPS_PER_PATTERN) 
-  {
-  step = 0;
-  for(uint8_t drum = 0; drum < NUM_DRUMS; drum++)
-      {
-      rnd[drum] = ((random(64) * (uint16_t)chaos) >> 8);
-      }
-  }
-  
-  play(step, (uint8_t)x, (uint8_t)y, complexity, chaos);
+        {
+        step = 0;
+        for(uint8_t drum = 0; drum < NUM_DRUMS; drum++)
+            {
+            rnd[drum] = ((random(64) * (uint16_t)chaos) >> 8);
+            }
+        }
+
+    play(step, (uint8_t)x, (uint8_t)y, complexity, chaos);
 
 
     step++;
@@ -811,17 +811,17 @@ void _clock()
 
 void setup()
     {
-	randomSeed(analogRead(RANDOM_PIN));
+    randomSeed(analogRead(RANDOM_PIN));
 
-    //// Change the pin modes, even for the analog in
+//// Change the pin modes, even for the analog in
     pinMode(DRUM_1, OUTPUT);
     pinMode(DRUM_2, OUTPUT);
     pinMode(DRUM_3, OUTPUT);
-    
+
 #ifdef COMPLEX
-  loadEEPROM();
+    loadEEPROM();
 #endif
-  //Serial.begin(115200);
+//Serial.begin(115200);
     }
 
 
@@ -838,171 +838,171 @@ uint16_t div7(uint16_t dividend)
 // The "Simple" version
 void simpleLoop()
     {
-    // Decrement the drum release clock
+// Decrement the drum release clock
     for(uint8_t drum = 0; drum < NUM_DRUMS; drum++)
-  {
-  decrement(drum);
-  }
-  
-   // this throwaway is advisable because Analog In has high impedance,
-   // and so sometimes it can't charge the capacitors fast enough in the ADC.
-   // As a result, the PREVIOUS analogRead() may bleed into this one.
-   // The throwaway blocks the bleed in most cases.  We might need two throwaways.
+        {
+        decrement(drum);
+        }
+
+// this throwaway is advisable because Analog In has high impedance,
+// and so sometimes it can't charge the capacitors fast enough in the ADC.
+// As a result, the PREVIOUS analogRead() may bleed into this one.
+// The throwaway blocks the bleed in most cases.  We might need two throwaways.
     digitalRead(RESET_IN);     
- 
-    // did we reset?
+
+// did we reset?
     uint8_t r = digitalRead(RESET_IN);
     if (r == 0)
-  {
-  reset = 0;
-  }
+        {
+        reset = 0;
+        }
     else if (!reset)
-  {
-  reset = 1;
-  _reset();
-  }
+        {
+        reset = 1;
+        _reset();
+        }
 
     processPots();
-  
-    // Manual reset trigger
-    if (pot2 != POT_TRIGGER)
-  {
-        manualReset = 0;   // no reset
-  }
-    else if (!manualReset)
-  {
-  manualReset = 1;
-  _reset();
-  } 
 
- // compute x, y, complexities, and chaos
-if (pot1 != POT_TRIGGER)
-      x = pot1;
-  if (pot2 != POT_TRIGGER)
-      y = pot2;
+// Manual reset trigger
+    if (pot2 != POT_TRIGGER)
+        {
+        manualReset = 0;   // no reset
+        }
+    else if (!manualReset)
+        {
+        manualReset = 1;
+        _reset();
+        } 
+
+// compute x, y, complexities, and chaos
+    if (pot1 != POT_TRIGGER)
+        x = pot1;
+    if (pot2 != POT_TRIGGER)
+        y = pot2;
 #ifdef CHAOTIC
     chaos = pot3;
     complexity[0] = DRUM1_COMPLEXITY;
     complexity[1] = DRUM2_COMPLEXITY;
     complexity[2] = DRUM3_COMPLEXITY;
- #else
+#else
     chaos = CHAOS;
     complexity[0] = pot3;
     complexity[1] = pot3;
     complexity[2] = pot3;
 #endif
 
-    // Clock
+// Clock
     if (pot1 == POT_TRIGGER)    // clock off or no clock
-  {
-  // kill clock
-  countup = 0;
-  clock = 0;
-  }
+        {
+// kill clock
+        countup = 0;
+        clock = 0;
+        }
     else if (!clock) 
-  {
-  countup++;
-  if (countup >= COUNT)
-      {
-      countup = COUNT;
-      clock = 1;  
-      _clock();
-      }
-  }
+        {
+        countup++;
+        if (countup >= COUNT)
+            {
+            countup = COUNT;
+            clock = 1;  
+            _clock();
+            }
+        }
     }
-  
+
 
 // The "Complex" version
 void complexLoop()
     {
-    // Decrement the drum release clock
+// Decrement the drum release clock
     for(uint8_t drum = 0; drum < NUM_DRUMS; drum++)
-  {
-  decrement(drum);
-  }
-  
-   // this throwaway is advisable because Analog In has high impedance,
-   // and so sometimes it can't charge the capacitors fast enough in the ADC.
-   // As a result, the PREVIOUS analogRead() may bleed into this one.
-   // The throwaway blocks the bleed in most cases.  We might need two throwaways.
+        {
+        decrement(drum);
+        }
+
+// this throwaway is advisable because Analog In has high impedance,
+// and so sometimes it can't charge the capacitors fast enough in the ADC.
+// As a result, the PREVIOUS analogRead() may bleed into this one.
+// The throwaway blocks the bleed in most cases.  We might need two throwaways.
     digitalRead(RESET_IN);     
- 
-    // did we reset?
+
+// did we reset?
     uint8_t r = digitalRead(RESET_IN);
     if (r == 0)
-  {
-  reset = 0;
-  }
+        {
+        reset = 0;
+        }
     else if (!reset)
-  {
-  reset = 1;
-  _reset();
-  }
+        {
+        reset = 1;
+        _reset();
+        }
 
     processPots();
-  
-    // Manual reset trigger
-    if (pot2 != POT_TRIGGER)
-  {
-        manualReset = 0;   // no reset
-  }
-    else if (!manualReset)
-  {
-  manualReset = 1;
-  _reset();
-  } 
-      
-    // compute x, y, complexities, and chaos
-  if (pot3Changed)
-    {
-    saveEEPROM();
-    }
 
-     // Clock
+// Manual reset trigger
+    if (pot2 != POT_TRIGGER)
+        {
+        manualReset = 0;   // no reset
+        }
+    else if (!manualReset)
+        {
+        manualReset = 1;
+        _reset();
+        } 
+
+// compute x, y, complexities, and chaos
+    if (pot3Changed)
+        {
+        saveEEPROM();
+        }
+
+// Clock
     if (pot1 == POT_TRIGGER)    // clock off or no clock
-  {
-  // kill clock
-  countup = 0;
-  clock = 0;
-  }
+        {
+// kill clock
+        countup = 0;
+        clock = 0;
+        }
     else if (!clock) 
-  {
-  countup++;
-  if (countup >= COUNT)
-      {
+        {
+        countup++;
+        if (countup >= COUNT)
+            {
 
 // Take a snapshot of current pot values
-   if (pot3 == 0)
-  {
-  if (pot1 != POT_TRIGGER)
-      x = pot1;
-  if (pot2 != POT_TRIGGER)
-      y = pot2;
-  }
-    else if (pot3 == 1)
-  {
-  if (pot1 != POT_TRIGGER)
-      complexity[0] = pot1;
-  if (pot2 != POT_TRIGGER)
-      complexity[1] = pot2;
-  }
-    else if (pot3 == 2)
-  {
-  if (pot1 != POT_TRIGGER)
-      complexity[2] = pot1;
-  if (pot2 != POT_TRIGGER)
-      chaos = pot2;
-  }
+            if (pot3 == 0)
+                {
+                if (pot1 != POT_TRIGGER)
+                    x = pot1;
+                if (pot2 != POT_TRIGGER)
+                    y = pot2;
+                }
+            else if (pot3 == 1)
+                {
+                if (pot1 != POT_TRIGGER)
+                    complexity[0] = pot1;
+                if (pot2 != POT_TRIGGER)
+                    complexity[1] = pot2;
+                }
+            else if (pot3 == 2)
+                {
+                if (pot1 != POT_TRIGGER)
+                    complexity[2] = pot1;
+                if (pot2 != POT_TRIGGER)
+                    chaos = pot2;
+                }
 
-      // clock it!
-      countup = COUNT;
-      clock = 1;  
-      _clock();
-      }
-  }
+// clock it!
+            countup = COUNT;
+            clock = 1;  
+            _clock();
+            }
+        }
     }
 
-    
+
 // Top-level loop
 void loop()
     {
@@ -1012,7 +1012,7 @@ void loop()
     simpleLoop();
 #endif
     }
-  
+
 
 
 
