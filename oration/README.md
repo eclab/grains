@@ -32,7 +32,7 @@ Oration has a large vocabulary.  You can build sentences out of any of the Talki
 - Vocab_Soundbites.h 		(various soundbites, such as "That's one Small Step for Man...")
 - Vocab_Toms_Diner.h		(yes, this really is the entire Suzanne Vega song)
 
-You can make your own words and sounds too!  See [the Talkie page]([https://github.com/ArminJo/Talkie](https://github.com/ArminJo/Talkie#own-vocabulary) for more information.
+You can make your own words and sounds too!  See [the Talkie page](https://github.com/ArminJo/Talkie#own-vocabulary) for more information.
 
 ## Configuration
 
