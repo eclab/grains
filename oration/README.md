@@ -7,7 +7,7 @@ Set your Grains to **GRAINS MODE**.  Talkie does not work in Mozzi mode.
 Oration is different in several ways from the [SpellOrSpeak](https://github.com/aemodular/GRAINS/tree/master/GrainsSpellOrSpeak) program that's part of AE Modular's GRAINS distribution:
 
 - Oration is based on a [much newer version of Talkie](https://github.com/ArminJo/Talkie/)
-- It gives you access to a far larger vocabulary: about 820 words in total.
+- It gives you access to a much larger vocabulary: about 820 words in total.
 - In Oration, you set up multiple full sentences to speak, then choose which sentence you want (or it will speak words at random from a "sentence" -- a collection of words you have designated).  You can realistically speak sentences containing up to about 800 (non-unique) words, but the actual number of unique words will be limited to your available memory.
 - It's non-blocking: you can cancel or change sentences after any word.
 
