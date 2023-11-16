@@ -55,7 +55,7 @@ Select the Sentence to Speak
 #### POT 2
 Pitch [Changing pitch also changes word speed]
 #### POT 3
-Speed [Spacing between words].  Far right is an INFINITE pause.
+Speed [Spacing between words].  Far right is an INFINITE pause when RANDOM is turned on.  See Audio In and In 3.
 
 
 ### GRAINS BUG
