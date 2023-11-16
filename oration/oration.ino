@@ -1,20 +1,7 @@
 // Copyright 2023 Sean Luke
 // (sean@cs.gmu.edu)
 //
-// Released under the GPL 3.0 License
-
-//  Oration is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-//  See the GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+// Released under the Apache 2.0 License
 
 
 #include "Talkie.h"
@@ -70,7 +57,7 @@
 /// or will pick random words in the sentence and say them, in random order forever.
 /// To do random order forever, change the following #define to 1.
 
-#define RANDOM_ORDERING 0
+#define RANDOM_ORDERING 1
 
 /// When picking random words, if we have THREE OR MORE words in a sentence, we can 
 /// try to avoid saying the same word twice.  If you want this, set the following to 1.
@@ -110,14 +97,14 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
 ///
 /// IN 1            Select Sentence
 /// IN 2            Pitch
-/// IN 3            Speak Selected Sentence
-/// AUDIO IN (A)    Speak Next Sentence
+/// IN 3            Speak Selected Sentence, or if RANDOM_ORDERING and INFINITE PAUSE, move to next Sentence and wait.
+/// AUDIO IN (A)    Speak Next Sentence, or if RANDOM_ORERING, then Speak Next Word.
 /// AUDIO OUT       Speech Output
 /// DIGITAL OUT (D) Sentence Finished Trigger
 ///
 /// POT 1           Select Sentence
 /// POT 2           Pitch [changing pitch also changes word speed]
-/// POT 3           Speed [spacing between words]
+/// POT 3           Speed [spacing between words].  Far right is INFINITE PAUSE.
 
 
 

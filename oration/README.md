@@ -42,9 +42,9 @@ Select the Sentence to Speak
 #### IN 2
 Pitch [Changing pitch also changes speaking speed]
 #### IN 3
-Trigger Speaking the Selected Sentence	
+Trigger Speaking the Selected Sentence.  If RANDOM is turned on and Speed is INFINITE, then Oration will wait until AUDIO IN (A) is trigggered.
 #### AUDIO IN (A)
-Trigger Speaking the Next Sentence
+Trigger Speaking the Next Sentence, or if RANDOM is turned on and Speed is INFINITE, Trigger Speaking the Next Random Word 
 #### AUDIO OUT
 Speech Output
 #### DIGITAL OUT (D) 
@@ -54,7 +54,7 @@ Select the Sentence to Speak
 #### POT 2
 Pitch [Changing pitch also changes word speed]
 #### POT 3
-Speed [Spacing between words]
+Speed [Spacing between words].  Far right is an INFINITE pause.
 
 
 ### GRAINS BUG
