@@ -163,6 +163,8 @@
 #define CV_AUDIO_OUT  11    // Drum 1
 #define CV_GATE_OUT   8     // Drum 2
 
+#define RANDOM_PIN 		A5
+
 #define RESET_IN CV_AUDIO_IN
 #define DRUM_1 CV_GATE_OUT
 #define DRUM_2 CV_AUDIO_OUT
@@ -809,6 +811,8 @@ void _clock()
 
 void setup()
     {
+	randomSeed(analogRead(RANDOM_PIN));
+
     //// Change the pin modes, even for the analog in
     pinMode(DRUM_1, OUTPUT);
     pinMode(DRUM_2, OUTPUT);

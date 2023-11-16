@@ -198,6 +198,8 @@ PROGMEM const struct pattern seq[PATTERNS] =      // don't fool with this line
 #define CV_AUDIO_OUT  11    // Drum 1
 #define CV_GATE_OUT   8     // Drum 2
 
+#define RANDOM_PIN 		A5
+
 #define ADVANCE_TRIGGER 64      // How high must IN 2 be to trigger an advance?
 #define RESET_TRIGGER 800       // How high must IN 2 be to trigger a reset?
 
@@ -243,6 +245,7 @@ void reset()
   
 void setup()
   {
+	randomSeed(analogRead(RANDOM_PIN));
     pinMode(CV_AUDIO_OUT, OUTPUT);
     pinMode(CV_AUDIO_IN, OUTPUT);
     pinMode(CV_GATE_OUT, OUTPUT);

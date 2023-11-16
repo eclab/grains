@@ -171,8 +171,12 @@ float frand1()
 #define CV_AUDIO_OUT  11    // A
 #define CV_GATE_OUT   8     // B
 
+#define RANDOM_PIN 		A5
+
 void setup()
   {
+	randomSeed(analogRead(RANDOM_PIN));
+
 #if defined(AAA)
     pinMode(CV_AUDIO_OUT, OUTPUT);
     pinMode(CV_GATE_OUT, INPUT);
