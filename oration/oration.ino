@@ -95,12 +95,12 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
 ///
 /// CONFIGURATION
 ///
-/// IN 1            Select Sentence
-/// IN 2            Pitch
-/// IN 3            Speak Selected Sentence, or if RANDOM_ORDERING and INFINITE PAUSE, move to next Sentence and wait.
-/// AUDIO IN (A)    Speak Next Sentence, or if RANDOM_ORERING, then Speak Next Word.
+/// IN 1            Select Sentence CV
+/// IN 2            Pitch CV
+/// IN 3            (Trigger) Speak Selected Sentence, or if RANDOM_ORDERING and INFINITE PAUSE, move to next Sentence and wait.
+/// AUDIO IN (A)    (Trigger) Speak Next Sentence, or if RANDOM_ORERING, then Speak Next Word.
 /// AUDIO OUT       Speech Output
-/// DIGITAL OUT (D) Sentence Finished Trigger
+/// DIGITAL OUT (D) Sentence Finished Outgoing Trigger
 ///
 /// POT 1           Select Sentence
 /// POT 2           Pitch [changing pitch also changes word speed]
