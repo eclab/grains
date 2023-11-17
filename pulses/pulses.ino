@@ -1,3 +1,18 @@
+WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
+
+/// WARNING
+///
+/// This program uses IN3 as an OUTPUT.  This works fine normally.
+/// However on the Arduino, a pin used as an output must have a resistor
+/// placed in series, because if you short it to ground, or to 5V, you
+/// will destroy the pin otherwise.  You don't need this for pins used as INPUTS.
+/// It is not yet clear from TangibleWaves if IN3 has a resistor.
+/// This program works great if you connect IN3 to trigger
+/// inputs, but I am concerned people will damage their GRAINS by attaching 
+/// to outputs (probably okay), ground, or 5V.
+
+
+
 // Copyright 2023 Sean Luke
 // (sean@cs.gmu.edu)
 //
@@ -469,15 +484,15 @@ void setup()
     {
 //// Change the pin modes, even for the analog in
 #if defined(MIX)
-    pinMode(CV_AUDIO_OUT, OUTPUT);
-    pinMode(CV_GATE_OUT, INPUT);
+//    pinMode(CV_AUDIO_OUT, OUTPUT);
+//    pinMode(CV_GATE_OUT, INPUT);
 #elif defined(MULTI)
-    pinMode(CV_AUDIO_OUT, OUTPUT);
-    pinMode(CV_GATE_OUT, OUTPUT);
+//    pinMode(CV_AUDIO_OUT, OUTPUT);
+//    pinMode(CV_GATE_OUT, OUTPUT);
     pinMode(CV_IN3, OUTPUT);
 #else
-    pinMode(CV_AUDIO_OUT, OUTPUT);
-    pinMode(CV_GATE_OUT, OUTPUT);
+//    pinMode(CV_AUDIO_OUT, OUTPUT);
+//    pinMode(CV_GATE_OUT, OUTPUT);
 #endif
 
     FlexiTimer2::set(1, 1.0 / 1024, pulse);

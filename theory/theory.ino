@@ -1,3 +1,19 @@
+WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
+
+/// WARNING
+///
+/// This program uses IN3 and/oor Audio In as OUTPUTS.  This works fine normally.
+/// However on the Arduino, a pin used as an output must have a resistor
+/// placed in series, because if you short it to ground, or to 5V, you
+/// will destroy the pin otherwise.  You don't need this for pins used as INPUTS.
+/// It is not yet clear from TangibleWaves if these two pins have a resistor.
+/// This program works great if you connect IN3 and Audio IN to trigger
+/// inputs, but I am concerned people will damage their GRAINS by attaching 
+/// to outputs (probably okay), ground, or 5V.
+
+
+
+
 // Copyright 2023 Sean Luke 
 // (sean@cs.gmu.edu)
 //
@@ -88,8 +104,8 @@
 /// and b is now a DIGITAL INPUT (0 or 1 only).
 /// You don't need to comment out the earlier #define expressions.
 
-// #define AAA(w,x,y,z,c,b) \
-//      sin(w) + cos(x) + y + z < c * b
+ #define AAA(w,x,y,z,c,b) \
+     sin(w) + cos(x) + y + z < c * b
 
 
 //////// USEFUL MATH FUNCTIONS AND DEFINES
@@ -179,7 +195,7 @@ void setup()
 
 #if defined(AAA)
     pinMode(CV_AUDIO_OUT, OUTPUT);
-    pinMode(CV_GATE_OUT, INPUT);
+    pinMode(CV_GATE_OUT, INPUT_PULLUP);
 #elif defined(AA)
     pinMode(CV_AUDIO_OUT, OUTPUT);
     pinMode(CV_GATE_OUT, OUTPUT);
@@ -228,8 +244,3 @@ void loop()
     digitalWrite(CV_IN3, c);
 #endif
     }
-
-
-
-
-

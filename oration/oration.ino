@@ -197,8 +197,8 @@ const uint8_t* nextWord()
 void setup()
   {
     randomSeed(analogRead(RANDOM_PIN));
-  pinMode(CV_AUDIO_OUT, OUTPUT);
-    pinMode(CV_GATE_OUT, OUTPUT);
+	//  pinMode(CV_AUDIO_OUT, OUTPUT);
+    //	pinMode(CV_GATE_OUT, OUTPUT);
 
    // compute sentence sizes for randomnessn
    uint8_t j = 0;

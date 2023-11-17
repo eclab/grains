@@ -111,8 +111,8 @@ void reset()
 
 void setup()
     {
-    pinMode(CV_AUDIO_OUT, OUTPUT);
-    pinMode(CV_GATE_OUT, OUTPUT);
+    // pinMode(CV_AUDIO_OUT, OUTPUT);
+    // pinMode(CV_GATE_OUT, OUTPUT);
     reset();
     Serial.begin(115200);
     }
