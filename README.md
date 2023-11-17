@@ -1,6 +1,14 @@
 # GRAINS Projects
 By Sean Luke (sean@cs.gmu.edu)
 
+## WARNING
+
+Many of these projecgts (except Oration and Multiple) use In3 and/or AudioIn as OUTPUTS.  It is not yet clear from TangibleWaves if this can be done safely.  The Arduino is designed to use them as outputs, but only with a resistor inline.  If you attach them to a trigger input then everything is fine.  But if they do not have the proper circuitry protection, and you attach them to GROUND or the 5V, or possibly (but less likely) to another output, you could destroy the In3 or AudioIn pin.    
+
+As a result I have set most of these projects as UNCOMPILABLE.  You can remove the offending comment, but you're on your own: I won't be held responsible for damage to your Grains.
+
+## About the Projects
+
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code) and Oration, which is released under GPL 3.0 (as is Talkie).
 
 ## Oration
