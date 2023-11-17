@@ -40,7 +40,7 @@ Degree of Swing.  No swing is at FULL (far right), then increasing swing as you 
 
 ### Randomness CV
 
-Normally you just attach clock to In 1, and then set randomness with the dial.  But if you really wanted to, you could attach a CV for Randomness to In 1 as well.  You'd do this by using the CV to attenuate the clock signal.  For example, you'd have the clock sent to a VCA set to DC mode, and use feed your CV into the VCA's CV.  The output of the VCA would go into In 1.  If you did this, you probably should set POT 1 to FULL (far right).  Note that below a certain minimum (about 1/16 full) the clock will no longer trigger Beats.
+Normally you just attach clock to In 1, and then set randomness with the dial.  But if you really wanted to, you could attach a CV for Randomness to In 1 as well.  You'd do this by using the CV to attenuate the clock signal.  For example, you'd have the clock sent to a VCA set to DC mode, and feed your CV into the VCA's CV.  The output of the VCA would go into In 1.  If you did this, you probably should set POT 1 to FULL (far right).  Note that below a certain minimum (about 1/16 full) the clock will no longer trigger Beats.
 
 ### GRAINS BUG
 
