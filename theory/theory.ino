@@ -107,6 +107,8 @@ WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
  #define AAA(w,x,y,z,c,b) \
      sin(w) + cos(x) + y + z < c * b
 
+/// NOTE: If nothing is plugged into B, then it will register a 1.
+
 
 //////// USEFUL MATH FUNCTIONS AND DEFINES
 #include <math.h>

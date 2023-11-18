@@ -484,15 +484,15 @@ void setup()
     {
 //// Change the pin modes, even for the analog in
 #if defined(MIX)
-//    pinMode(CV_AUDIO_OUT, OUTPUT);
-//    pinMode(CV_GATE_OUT, INPUT);
+    pinMode(CV_AUDIO_OUT, OUTPUT);
+    pinMode(CV_GATE_OUT, INPUT);
 #elif defined(MULTI)
-//    pinMode(CV_AUDIO_OUT, OUTPUT);
-//    pinMode(CV_GATE_OUT, OUTPUT);
+    pinMode(CV_AUDIO_OUT, OUTPUT);
+    pinMode(CV_GATE_OUT, OUTPUT);
     pinMode(CV_IN3, OUTPUT);
 #else
-//    pinMode(CV_AUDIO_OUT, OUTPUT);
-//    pinMode(CV_GATE_OUT, OUTPUT);
+    pinMode(CV_AUDIO_OUT, OUTPUT);
+    pinMode(CV_GATE_OUT, OUTPUT);
 #endif
 
     FlexiTimer2::set(1, 1.0 / 1024, pulse);

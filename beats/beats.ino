@@ -264,8 +264,8 @@ void reset()
 void setup()
     {
     randomSeed(analogRead(RANDOM_PIN));
-    // pinMode(CV_AUDIO_OUT, OUTPUT);
-    // pinMode(CV_GATE_OUT, OUTPUT);
+    pinMode(CV_AUDIO_OUT, OUTPUT);
+    pinMode(CV_GATE_OUT, OUTPUT);
     pinMode(CV_AUDIO_IN, OUTPUT);
     pinMode(CV_IN3, OUTPUT);
     reset();

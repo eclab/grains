@@ -87,8 +87,8 @@ void setup()
     randomSeed(analogRead(RANDOM_PIN));
 
 //// Change the pin modes, even for the analog in
-//    pinMode(CV_AUDIO_OUT, OUTPUT);
-//    pinMode(CV_GATE_OUT, OUTPUT);
+    pinMode(CV_AUDIO_OUT, OUTPUT);
+    pinMode(CV_GATE_OUT, OUTPUT);
     pinMode(CV_IN3, OUTPUT);
 //    Serial.begin(9600);
     }
