@@ -4,6 +4,23 @@ Oration is a new implementation of the Talkie program for GRAINS.  Oration is me
 
 Set your Grains to **GRAINS MODE**.  Talkie does not work in Mozzi mode.
 
+
+### Oration 2 vs. Oration
+
+NOTE: There is a variation called ORATION 2 in this repository.  Oration 2 differs from Oration in a few ways that you may prefer.  The primary advantages of Oration 2 over Oration are:
+
+- Rather Louder
+- Able to change both pitch and talking speed independently
+
+The primary disadvantage is:
+
+- Sound quality seems lower: loud elements tend to distort due to some kind of clipping
+
+At present Oration's controls are different from Oration 2.  I may adjust Oration's controls to be more similar in the future (or eliminate it entirely...)
+
+## About Oration
+
+
 Oration is different in several ways from the [SpellOrSpeak](https://github.com/aemodular/GRAINS/tree/master/GrainsSpellOrSpeak) program that's part of AE Modular's GRAINS distribution:
 
 - Oration is based on a [much newer version of Talkie](https://github.com/ArminJo/Talkie/)
@@ -15,7 +32,7 @@ Because Oration is based on a newer version of Talkie, it can no longer change t
 
 ## Setup
 
-You'll need to specify the maximum number of words per sentence, the number of sentences, whether talkie will speak through the whole sentences or pick random words from them, whether in picking random words it will try to avoid repeating itself, and whether it will speak all the sentences in order ONCE, or loop through them forever.
+You'll need to specify the maximum number of words per sentence, the number of sentences, whether talkie will speak through the whole sentences or pick random words from them, and whether it will speak all the sentences in order ONCE, or loop through them forever.
 
 You then define the sentences as simple lists of vocabulary words in the code.  It's not hard.
 
@@ -34,29 +51,51 @@ Oration has a large vocabulary.  You can build sentences out of any of the Talki
 
 You can make your own words and sounds too!  See [the Talkie page](https://github.com/ArminJo/Talkie#own-vocabulary) for more information.
 
-## Configuration
+## Non-Random Configuration
 
 If you would like Oration to speak all the sentences one at a time, just take the Speech Finished Trigger (Digital Out (D)) and feed it into the Trigger for Speaking the Next Sentence (Audio In (A)).
 
 #### IN 1
-Select the Sentence to Speak
+Current Sentence to Speak (CV)
 #### IN 2
-Pitch [Changing pitch also changes speaking speed]
+Pitch CV [Changing pitch also changes speaking speed]
 #### IN 3
-Trigger Speaking the Selected Sentence.  If RANDOM is turned on and Speed is INFINITE, then Oration will wait until AUDIO IN (A) is trigggered.
+Trigger Speaking the Selected Sentence
 #### AUDIO IN (A)
-Trigger Speaking the Next Sentence, or if RANDOM is turned on and Speed is INFINITE, Trigger Speaking the Next Random Word 
+Trigger Speaking the Next Sentence
 #### AUDIO OUT
 Speech Output
 #### DIGITAL OUT (D) 
 Sends Trigger when a Sentence is finished
 #### POT 1
-Select the Sentence to Speak
+Current Sentence to Speak
 #### POT 2
 Pitch [Changing pitch also changes word speed]
 #### POT 3
 Speed [Spacing between words].  Far right is an INFINITE pause when RANDOM is turned on.  See Audio In and In 3.
 
+## Random Configuration
+
+This takes effect if RANDOM is turned on.
+
+#### IN 1
+Current Sentence to Speak (CV)
+#### IN 2
+Pitch CV [Changing pitch also changes speaking speed]
+#### IN 3
+Move to next Sentence and wait
+#### AUDIO IN (A)
+Speak Next Word
+#### AUDIO OUT
+Speech Output
+#### DIGITAL OUT (D) 
+Sends Trigger when a Sentence is finished
+#### POT 1
+Current Sentence to Speak
+#### POT 2
+Pitch [Changing pitch also changes word speed]
+#### POT 3
+Speed [Spacing between words].  Far right is an INFINITE pause (the next word is only spoken when Audio In is triggered).
 
 ### GRAINS BUG
 

@@ -17,6 +17,12 @@ A new implementation of Talkie which lets you select and speak multiple sentence
 
 Status: Working
 
+## Oration 2
+
+A variation of Oration which uses an older version of Talkie, and so can vary pitch and speed independently.  It's also a bit louder: but the sound quality is iffy.  Let me know which one you like better.
+
+Status: Working
+
 ## Lattice
 
 A clone of Mutable Instruments GRIDS.  This is essentially a "TOPOGRAF Light".  It does the same thing but, due to limitations in GRAINS's interface, it has to simplify the parameters.  There are different configurations provided for doing so.  

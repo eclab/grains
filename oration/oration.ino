@@ -59,12 +59,6 @@
 
 #define RANDOM_ORDERING 1
 
-/// When picking random words, if we have THREE OR MORE words in a sentence, we can 
-/// try to avoid saying the same word twice.  If you want this, set the following to 1.
-/// (It only has an effect if we're doing RANDOM_ORDERING of course).
-
-#define AVOID_REPEATS 1
-
 /// If you're NOT doing Random Order, then Oration will speak its current sentence
 /// until it is done, then it will emit a trigger on Digital Out (D).  You can feed
 /// this into Audio In (A), which will cause Oration to go on to the next sentence.
@@ -169,7 +163,7 @@ const uint8_t* nextWord()
    if (RANDOM_ORDERING)
     {
       if (sizes[sentence] == 1) return 0;
-      else if (AVOID_REPEATS && sizes[sentence] > 2)
+      else if (sizes[sentence] > 2)
         {
           for(uint8_t tries = 0; tries < 255; tries++)    // try up to 256 times
             {
@@ -197,8 +191,8 @@ const uint8_t* nextWord()
 void setup()
   {
     randomSeed(analogRead(RANDOM_PIN));
-	//  pinMode(CV_AUDIO_OUT, OUTPUT);
-    //	pinMode(CV_GATE_OUT, OUTPUT);
+	pinMode(CV_AUDIO_OUT, OUTPUT);
+	pinMode(CV_GATE_OUT, OUTPUT);
 
    // compute sentence sizes for randomnessn
    uint8_t j = 0;
