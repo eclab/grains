@@ -94,6 +94,8 @@ Pitch
 #### POT 3
 Speech Rate
 
+Note that if you trigger AUDIO IN, because it picks a random sentence, and THEN a random word in that sentence, this means that words in short sentences will be picked more often than words in long sentences.  You can use this to your advantage to bias certain words over others.  If you want all the words to be picked with even probability, stick them all in the same sentence, or each in their own one-word sentences.
+
 ### GRAINS BUG
 
 There is a bug in GRAINS that affects Pots (Dials) 1 and 2.  If you set the switch to "Man", then the range of the Pot is correct.  But if you set the switch to "In 1" (or "In 2"), then the range of the Dial is maximum at about the 2 o'clock position on the Dial.  Beyond that it stays at maximum.
