@@ -38,13 +38,23 @@
 ///
 /// Elements pumps out the sequence via AUDIO OUT, and the reversed sequence via DIGITAL_OUT.
 ///
-/// OPTION
+/// Having a hard time determining the length of your sequence?  If you set the NUMBER OF BEATS
+/// to 100% (full right), the DIGITAL OUT (D) will change to instead trigger once each sequence 
+/// iteration.
 ///
-/// Having a hard time determining the length of your sequence?  Instead of pumping out
-/// the reversed sequence, DIGITAL_OUT can be set to trigger every time the sequence starts,
-/// which makes it much easier to count the beats.  You do this by changing the following to 1:
+/// Perhaps it's hard for you to dial in the right sequence length, and you don't need or want
+/// 23 or 32 or 17 steps as options.  If you change the following to a 1...
 
-#define TRIGGER_ON_SEQUENCE_START 1
+#define USE_SIMPLE_SIZES 0
+
+/// ... then Elements will instead only permit the sizes 6, 8, 9, 12, 16, 18, 24, and 32.  That'd
+/// be a lot easier to dial in.  If you have a custom size, you could change one of the eight
+/// values below to that custom size too.  For example, in you might change 16 to 17 if for some
+/// reason you want 17 steps to be easy to select (and don't want 16!)
+
+#define NUM_SIMPLE_SIZES 8
+uint8_t simpleSizes[NUM_SIMPLE_SIZES] = { 6, 8, 9, 12, 16, 18, 24, 32 };
+
 
 ///
 /// CONFIGURATION
@@ -89,11 +99,12 @@ uint8_t position = 0;
 int8_t counter1 = -1;
 int8_t counter2 = -1;
 
+
 void setup()
     {
     pinMode(CV_AUDIO_OUT, OUTPUT);
     pinMode(CV_GATE_OUT, OUTPUT);
-  Serial.begin(115200);
+  // Serial.begin(115200);
     }
 
 // From https://github.com/ducroq/EuclidSeqNano/blob/master/src/EuclidRhythm.cpp
@@ -186,19 +197,24 @@ void loop()
     // Determine if we need to recompute the rhythm
 
     boolean change = false;
+    
+#ifdef USE_SIMPLE_SIZES
+    uint8_t newSize = simpleSizes[(analogRead(CV_POT_IN1) * (uint32_t)NUM_SIMPLE_SIZES) >> 10];
+#else
     uint8_t newSize = (uint8_t)((analogRead(CV_POT_IN1) * (uint32_t)(MAX_LENGTH - 1)) >> 10) + 1;
+#endif
     if (newSize != size)
       {
         if (sizeCount++ > COUNT_TO)
           {
-            Serial.println("Changed");
             size = newSize;
             sizeCount = 0;
             change = true;
           }  
       }
-        else sizeCount = 0;      
-    uint8_t newBeats = (uint8_t)((analogRead(CV_POT_IN2) * (uint32_t)(newSize + 1)) >> 10);
+        else sizeCount = 0;    
+  
+    uint8_t newBeats = (uint8_t)((analogRead(CV_POT_IN2) * (uint32_t)(size + 1)) >> 10);
     if (newBeats != beats)
       {
         if (beatsCount++ > COUNT_TO)
@@ -209,7 +225,7 @@ void loop()
           }        
       }
         else beatsCount = 0;      
-    uint8_t newRotation = (uint8_t)((analogRead(CV_POT3) * (uint32_t)(newSize)) >> 10);
+    uint8_t newRotation = (uint8_t)((analogRead(CV_POT3) * (uint32_t)(size)) >> 10);
    if (newRotation != rotation)
       {
         if (rotationCount++ > COUNT_TO)
@@ -226,7 +242,7 @@ void loop()
     	// rebuild
     	position = 0;
     	bresenhamEuclidean(newSize, newBeats, newRotation, rhythm);
-      printIt();
+      // printIt();
     	}
   
     // Reset and Clock
@@ -253,22 +269,20 @@ void loop()
 			digitalWrite(CV_AUDIO_OUT, 1);
 			counter1 = TRIGGER_WIDTH;
 			}
-		if (TRIGGER_ON_SEQUENCE_START)
+
+	if (beats >= size - 1)
+		{
+		if (position == 0) 
 			{
-			if (position == 0) 
-				{
-				digitalWrite(CV_GATE_OUT, 1);
-				counter2 = TRIGGER_WIDTH;
-				}
+			digitalWrite(CV_GATE_OUT, 1);
+			counter2 = TRIGGER_WIDTH;
 			}
-		else
-			{
-			if (rhythm[size - position] == 1) 
-				{
-				digitalWrite(CV_GATE_OUT, 1);
-				counter2 = TRIGGER_WIDTH;
-				}
-			}
+		}
+	else if (rhythm[size - position - 1] == 1) 
+		{
+		digitalWrite(CV_GATE_OUT, 1);
+		counter2 = TRIGGER_WIDTH;
+		}
     position++;
     if (position >= size) position = 0;
 		}

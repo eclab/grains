@@ -13,7 +13,7 @@ This is a collection of code which runs on the Tangible Waves GRAINS module, tho
 
 ## Elements
 
-A Euclidian trigger sequencer with up to 32 steps and both forward and backward sequences and other options.
+A Euclidian trigger sequencer with up to 32 steps and both forward and backward sequences and various other options.
 
 Status: Working
 

@@ -18,7 +18,9 @@ We have three major parameters:
 
 If you change these parameters, Elements will have to recompute and restart the sequence.  
 
-Elements pumps out the sequence via AUDIO OUT, and the reversed sequence via DIGITAL OUT (D).  Alternatively, if you're having a hard time determing the length of your sequence, there's a code option that wil set DIGITAL OUT (D) to instead trigger at the start of every sequence, so you can more easily count steps.
+Elements pumps out the sequence via AUDIO OUT, and the reversed sequence via DIGITAL OUT (D). Alternatively, if you're having a hard time determing the length of your sequence, then if you set the NUMBER OF BEATS to 100% (full right), then DIGITAL OUT (D) will change to instead trigger once each sequence iteration.
+
+Perhaps it's hard for you to dial in the right sequence length, and you don't need or want 23 or 32 or 17 steps as options.  There is #define in the code which permits you to restrict Elements to only offering 6, 8, 9, 12, 16, 18, 24, and 32 steps as options.  That's a lot easier to dial in!  You could customize those too if you wanted.
 
 
 ##  Configuration
