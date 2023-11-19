@@ -8,7 +8,7 @@ The Euclidian sequence fad started with the paper "The Euclidean Algorithm Gener
 
 See https://en.wikipedia.org/wiki/Euclidean_rhythm
 
-All a Euclidian Sequencer attempts to do is evenly distribute K beats within N >= K steps, using a certain uniform statistical pattern.  This pattern was originally derived from Bjorklund's Algorithm, but in fact it is actually a trivial result of Bressenham's Line Algorithm, which is simpler to compute (and we're using it below).
+All a Euclidian Sequencer attempts to do is evenly distribute K beats within N >= K steps, using a certain uniform statistical pattern.  This pattern was originally derived from Bjorklund's Algorithm (which is related to Euclid's Algorithm), but in fact it is also a trivial result of Bressenham's Line Algorithm, which is simpler to compute (and we're using it below).
 
 We have three major parameters:
 
