@@ -3,7 +3,7 @@ By Sean Luke (sean@cs.gmu.edu)
 
 ## WARNING
 
-Many of these projects (except Oration, Oration 2, Multiple, and Elements) use In3 and/or AudioIn as OUTPUTS.  The Arduino is designed to use them as outputs, but only with a resistor inline.  Without it, if you attach them to GROUND or the 5V, or possibly (but less likely) to another output, you could destroy the In3 or AudioIn pin.    
+Many of these projects (except Oration, Oration 2, Multiple, and Elements) use In3 and/or AudioIn as OUTPUTS.  The Arduino is designed to use them as outputs, but only with a resistor inline.  Without it, if you attach them to GROUND or to 5V, or possibly (but less likely) to another output, you could destroy the In3 or AudioIn pin.    
 
 Reports from the forum, and my own experimentation with the multimeter, suggest that there is in fact a roughly 4.5kOhm resistor between In3 and AudioIn and their respective pins.  That's good news!  However until I get official confirmation from TangibleWaves, I have temporarily set most of these projects as UNCOMPILABLE.  You can remove the offending comment in the code (it's easy), but you're on your own: I won't be held responsible for damage to your Grains.
 
