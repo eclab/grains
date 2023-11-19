@@ -73,6 +73,11 @@ uint8_t simpleSizes[NUM_SIMPLE_SIZES] = { 6, 8, 9, 12, 16, 18, 24, 32 };
 /// POT 3           Rotation (as a percentage of Size)
 ///
 ///
+/// USING DRUMKIT010
+///
+/// Be sure to set DrumKit1010's TRIG MODE switch to "D" (Digital), so it properly 
+/// responds to triggers.
+///
 /// GRAINS BUG
 /// There is a bug in GRAINS that affects Pots (Dials) 1 and 2.  If you set the switch to "Man", 
 /// then the range of the Pot is correct.  But if you set the switch to "In 1" (or "In 2"), 

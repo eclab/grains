@@ -58,6 +58,11 @@
 ///
 /// If you change the pot to a value "in between" two options, Multiple will get confused and may
 /// not pulse at all.  Move the pot until Multiple is locked on.
+///
+/// USING DRUMKIT010
+///
+/// Be sure to set DrumKit1010's TRIG MODE switch to "D" (Digital), so it properly 
+/// responds to triggers.
 
 ////////// PINOUTS
 

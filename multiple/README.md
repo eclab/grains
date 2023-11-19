@@ -47,3 +47,8 @@ Choice of Clock Multiple 1   [Set the switch to MAN]
 Choice of Clock Multiple 2   [Set the switch to MAN]
 #### POT 3
 Pulsewidth
+
+
+### USING DRUMKIT010
+Be sure to set DrumKit1010's TRIG MODE switch to "D" (Digital), so it properly responds to triggers.
+

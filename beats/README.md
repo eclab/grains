@@ -44,6 +44,10 @@ Degree of Swing.  No swing is at FULL (far right), then increasing swing as you 
 
 Normally you just attach clock to In 1, and then set randomness with the dial.  But if you really wanted to, you could attach a CV for Randomness to In 1 as well.  You'd do this by using the CV to attenuate the clock signal.  For example, you'd have the clock sent to a VCA set to DC mode, and feed your CV into the VCA's CV.  The output of the VCA would go into In 1.  If you did this, you probably should set POT 1 to FULL (far right).  Note that below a certain minimum (about 1/16 full) the clock will no longer trigger Beats.
 
+
+### USING DRUMKIT010
+Be sure to set DrumKit1010's TRIG MODE switch to "D" (Digital), so it properly responds to triggers.
+
 ### GRAINS BUG
 
 There is a bug in GRAINS that affects Pots (Dials) 1 and 2.  If you set the switch to "Man", then the range of the Pot is correct.  But if you set the switch to "In 1" (or "In 2"), then the range of the Dial is maximum (1.0 probability for our purposes) at about the 2 o'clock position on the Dial.  Beyond that it stays at 1.0.

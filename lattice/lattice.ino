@@ -93,6 +93,11 @@ WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
 /// Put the CV signal into the CV of the 2VCA module.  The output of the 2VCA is the two multiplied,
 /// so take that and feed it into IN 1 on your GRAINS.
 ///
+/// USING DRUMKIT010
+///
+/// Be sure to set DrumKit1010's TRIG MODE switch to "D" (Digital), so it properly 
+/// responds to triggers.
+///
 /// GRAINS BUG.  If you set Pot P1 or P2 to "Man" then these pot have full range.  But if you set
 /// them to "In1 1" or "In 2", then the maximum possible value is no longer at full right, but rather
 /// is at about the 2 o'clock position: the range is cut down by 1/3.  I think it is an error in the 

@@ -50,6 +50,9 @@ IN 1 is **BOTH** a CV for POT 1 **AND** a CLOCK source.  You should ALWAYS set P
 
 The Chaos is fixed to 0 (no randomness), but you can change it by changing a #define in the code.  You can set it to any value from 0 to 255 (maximum chaos).  Do not exceed those values.
 
+### USING DRUMKIT010
+Be sure to set DrumKit1010's TRIG MODE switch to "D" (Digital), so it properly responds to triggers.
+
 ### GRAINS BUG.  
 
 If you set Pot P1 or P2 to "Man" then these pot have full range.  But if you set them to "In1 1" or "In 2", then the maximum possible value is no longer at full right, but rather is at about the 2 o'clock position: the range is cut down by 1/3.  I think it is an error in the GRAINS pot circuitry.  This is a particular problem for us because P1 **must** be set to "In 1" due to the incoming clock.  Additionally, we take out about 1/8 at the other end to handle the clock not being on, so the total range of these pots, at "In 1" or "In 2", is about 1/2.  :-( 

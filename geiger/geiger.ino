@@ -53,6 +53,11 @@ WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
 /// POT 2           Probability for Output 2 [Set to "In 2" only if using In 2 CV]
 /// POT 3           Probability for Output 3 [Turn to far right to change to BERNOULLI]
 
+///
+/// USING DRUMKIT010
+///
+/// Be sure to set DrumKit1010's TRIG MODE switch to "D" (Digital), so it properly 
+/// responds to triggers.
 
 /// GRAINS BUG
 /// 

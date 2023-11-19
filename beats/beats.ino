@@ -68,6 +68,11 @@ WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
 /// POT 1 to FULL (far right).  Note that below a certain minimum (about 1/16 full) the 
 /// clock will no longer trigger Beats.
 ///
+/// 
+/// USING DRUMKIT010
+///
+/// Be sure to set DrumKit1010's TRIG MODE switch to "D" (Digital), so it properly 
+/// responds to triggers
 ///
 /// GRAINS BUG
 /// 

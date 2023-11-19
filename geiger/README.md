@@ -31,6 +31,10 @@ Probability for Output 2 [Set to "In 2" only if using In 2 CV]
 #### POT 3
 Probability for Output 3 [Turn to far right to change to BERNOULLI]
 
+
+### USING DRUMKIT010
+Be sure to set DrumKit1010's TRIG MODE switch to "D" (Digital), so it properly responds to triggers.
+
 ### GRAINS BUG
 
 There is a bug in GRAINS that affects Pots (Dials) 1 and 2.  If you set the switch to "Man", then the range of the Pot is correct.  But if you set the switch to "In 1" (or "In 2"), then the range of the Dial is maximum (1.0 probability for our purposes) at about the 2 o'clock position on the Dial.  Beyond that it stays at 1.0.
