@@ -12,14 +12,14 @@ NOTE: There is a variation called ORATION 2 in this repository.  Oration 2 diffe
 - Rather Louder
 - Able to change both pitch and talking speed independently
 
-The primary disadvantage is:
+The primary disadvantages are:
 
 - Sound quality seems lower: loud elements tend to distort due to some kind of clipping
+- Pauses between words must be defined in code: there is no knob for them.
 
 At present Oration's controls are different from Oration 2.  I may adjust Oration's controls to be more similar in the future (or eliminate it entirely...)
 
 ## About Oration
-
 
 Oration is different in several ways from the [SpellOrSpeak](https://github.com/aemodular/GRAINS/tree/master/GrainsSpellOrSpeak) program that's part of AE Modular's GRAINS distribution:
 
@@ -53,16 +53,16 @@ You can make your own words and sounds too!  See [the Talkie page](https://githu
 
 ## Non-Random Configuration
 
-If you would like Oration to speak all the sentences one at a time, just take the Speech Finished Trigger (Digital Out (D)) and feed it into the Trigger for Speaking the Next Sentence (Audio In (A)).
+If you would like Oration 2 to speak all the sentences one at a time, just take the Speech Finished Trigger (Digital Out (D)) and feed it into the Trigger for Speaking the Next Sentence (Audio In (A)).
 
 #### IN 1
 Current Sentence to Speak (CV)
 #### IN 2
 Pitch CV [Changing pitch also changes speaking speed]
 #### IN 3
-Trigger Speaking the Selected Sentence
-#### AUDIO IN (A)
 Trigger Speaking the Next Sentence
+#### AUDIO IN (A)
+Trigger Speaking the Current Sentence
 #### AUDIO OUT
 Speech Output
 #### DIGITAL OUT (D) 
@@ -70,32 +70,34 @@ Sends Trigger when a Sentence is finished
 #### POT 1
 Current Sentence to Speak
 #### POT 2
-Pitch [Changing pitch also changes word speed]
+Pitch
 #### POT 3
-Speed [Spacing between words].  Far right is an INFINITE pause when RANDOM is turned on.  See Audio In and In 3.
+Pause Between Words
 
 ## Random Configuration
 
-This takes effect if RANDOM is turned on.
+This configuration is used when RANDOM_ORDERING has been turned on in the code.
 
 #### IN 1
 Current Sentence to Speak (CV)
 #### IN 2
 Pitch CV [Changing pitch also changes speaking speed]
 #### IN 3
-Move to next Sentence and wait
+Trigger Speaking Random Word in Current Sentence
 #### AUDIO IN (A)
-Speak Next Word
+Trigger Selecting a Random Sentence, then Speaking a Random Word in that Sentence
 #### AUDIO OUT
 Speech Output
 #### DIGITAL OUT (D) 
-Sends Trigger when a Sentence is finished
+Sends Trigger when a Word is finished
 #### POT 1
 Current Sentence to Speak
 #### POT 2
-Pitch [Changing pitch also changes word speed]
+Pitch
 #### POT 3
-Speed [Spacing between words].  Far right is an INFINITE pause (the next word is only spoken when Audio In is triggered).
+Pause Between Words.  Far Right is INFINITE PAUSE: trigger words with IN 3 or AUDIO IN.
+
+Note that if you trigger AUDIO IN, because it picks a random sentence, and THEN a random word in that sentence, this means that words in short sentences will be picked more often than words in long sentences.  You can use this to your advantage to bias certain words over others.  If you want all the words to be picked with even probability, stick them all in the same sentence, or each in their own one-word sentences.
 
 ### GRAINS BUG
 

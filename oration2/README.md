@@ -13,9 +13,10 @@ The primary advantages of Oration 2 over Oration are:
 - Rather Louder
 - Able to change both pitch and talking speed independently
 
-The primary disadvantage is:
+The primary disadvantages are:
 
 - Sound quality seems lower: loud elements tend to distort due to some kind of clipping
+- Pauses between words must be defined in code: there is no knob for them.
 
 
 ## About Oration 2

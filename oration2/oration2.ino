@@ -60,18 +60,19 @@
 #define MAX_WORDS 32
 #define NUM_SENTENCES 3
 
-/// Next you need to state whether Oration will speak through its current sentence.
-/// Unlike Oration, Oration 2 at present only says one random word, and then stops:
-/// you need to trigger it to say the next word.  To do random order, change the 
-/// following #define to 1.
+/// Next you need to state whether Oration 2 will speak through its current sentence
+/// or will pick random words in the sentence and say them in random order.  When
+/// in random order, Oration 2 will only say one word at a time, then wait until
+/// you trigger it via IN3 or AUDIO_IN.  You might use DIGITAL OUT to do this trigger. 
+/// To do random order, change the following #define to 1.
 
 #define RANDOM_ORDERING 0
 
-/// If you're NOT doing Random Order, then Oration will speak its current sentence
+/// If you're NOT doing Random Order, then Oration 2 will speak its current sentence
 /// until it is done, then it will emit a trigger on Digital Out (D).  You can feed
-/// this into Audio In (A), which will cause Oration to go on to the next sentence.
-/// When it has finished the last sentence, Oration will stop, unless you have set
-/// the following LOOPING define to 1, which will cause Oration to restart with the
+/// this into Audio In (A), which will cause Oration 2 to go on to the next sentence.
+/// When it has finished the last sentence, Oration 2 will stop, unless you have set
+/// the following LOOPING define to 1, which will cause Oration 2 to restart with the
 /// first sentence.  Set to 0 to prevent this behavior.
 
 #define LOOPING 1
@@ -213,7 +214,7 @@ void selectNextSentence()
 const uint8_t* nextWord()
   {
    if (sentence < 0 || sentence >= NUM_SENTENCES) return NULL;
-    waiting = 0;			// let's speak!
+    waiting = 0;			// let's speak!  Undo inifinite pause
    if (RANDOM_ORDERING)
     {
       if (sizes[sentence] == 1)    // only one word!

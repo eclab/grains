@@ -163,19 +163,7 @@ static uint8_t ISRCounterToNextData = 0;
 static uint16_t ISRCounterToNextData = 0;
 #endif
 
-uint16_t buildSampleRate()
-	{
-	uint16_t a = analogRead(A1);
-	if (a < 512)
-		{
-		a = (uint16_t)((a * (uint32_t)4000) >> 9) + 4000;		// 4000 to 8000
-		}
-	else
-		{
-		a = (uint16_t)((a * (uint32_t)16000) >> 10);			// 8000 to 16000
-		}
-	return a;
-	}
+extern uint16_t buildSampleRate();
 
 /*
  * Pin numbers must only used here!
