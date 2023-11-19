@@ -14,11 +14,11 @@ We have three major parameters:
 
 - The SIZE of the sequence (N)
 - The NUMBER OF BEATS in the sequence (K)
-- The ROTATION of the sequence -- which step the sequence starts on (from 0..N-1)
+- The ROTATION of the sequence -- which step the sequence starts on (from 1..N), or 0, which steps on step 1 but changes DIGITAL OUT to only pulse once per sequence start [see below].
 
 If you change these parameters, Elements will have to recompute and restart the sequence.  
 
-Elements pumps out the sequence via AUDIO OUT, and the reversed sequence via DIGITAL OUT (D). Alternatively, if you're having a hard time determing the length of your sequence, then if you set the NUMBER OF BEATS to 100% (full right), then DIGITAL OUT (D) will change to instead trigger once each sequence iteration.
+Elements pumps out the sequence via AUDIO OUT, and the reversed sequence via DIGITAL OUT (D). Alternatively, if you're having a hard time determing the length of your sequence, then if you set the ROTATION to 0% (full left), then DIGITAL OUT (D) will change to instead trigger once each sequence iteration.
 
 Perhaps it's hard for you to dial in the right sequence length, and you don't need or want 23 or 32 or 17 steps as options.  There is #define in the code which permits you to restrict Elements to only offering 6, 8, 9, 12, 16, 18, 24, and 32 steps as options.  That's a lot easier to dial in!  You could customize those too if you wanted.
 
@@ -36,7 +36,7 @@ Reset
 #### AUDIO OUT
 Euclidian Rhythm Out
 #### DIGITAL OUT (D) 
-Reverse Euclidian Rhythm Out
+Reverse Euclidian Rhythm Out, or just the first step of sequence if POT3 is fully left
 #### POT 1
 Size, up to 32 steps
 #### POT 2

@@ -31,15 +31,17 @@
 ///
 /// - The SIZE of the sequence (N)
 /// - The NUMBER OF BEATS in the sequence (K)
-/// - The ROTATION of the sequence -- which step the sequence starts on (from 0..N-1)
+/// - The ROTATION of the sequence -- which step the sequence starts on (from 1..N), or 0,
+///   which steps on step 1 but changes DIGITAL OUT to only pulse once per sequence start.
+///   [See below].
 ///
 /// If you change these parameters, Elements will have to recompute and restart
 /// the sequence.  
 ///
 /// Elements pumps out the sequence via AUDIO OUT, and the reversed sequence via DIGITAL_OUT.
 ///
-/// Having a hard time determining the length of your sequence?  If you set the NUMBER OF BEATS
-/// to 100% (full right), the DIGITAL OUT (D) will change to instead trigger once each sequence 
+/// Having a hard time determining the length of your sequence?  If you set the ROTATION
+/// to 0% (full left), then DIGITAL OUT (D) will change to instead trigger once each sequence 
 /// iteration.
 ///
 /// Perhaps it's hard for you to dial in the right sequence length, and you don't need or want
@@ -64,7 +66,7 @@ uint8_t simpleSizes[NUM_SIMPLE_SIZES] = { 6, 8, 9, 12, 16, 18, 24, 32 };
 /// IN 3            Clock
 /// AUDIO IN (A)    Reset
 /// AUDIO OUT       Euclidian Rhythm Out
-/// DIGITAL OUT (D) Reverse Euclidian Rhythm Out, or first step of sequence if TRIGGER_ON_SEQUENCE_START is 1
+/// DIGITAL OUT (D) Reverse Euclidian Rhythm Out, or just the first step of sequence if POT3 is fully left
 ///
 /// POT 1           Size, up to 32 steps
 /// POT 2           Number of Beats (as a percentage of Size)
@@ -165,6 +167,7 @@ void printIt()
     }
   Serial.println();
   }
+  
 
 #define COUNT_TO 10
 uint8_t sizeCount = 0;
@@ -225,11 +228,12 @@ void loop()
           }        
       }
         else beatsCount = 0;      
-    uint8_t newRotation = (uint8_t)((analogRead(CV_POT3) * (uint32_t)(size)) >> 10);
+    uint8_t newRotation = (uint8_t)((analogRead(CV_POT3) * (uint32_t)(size + 1)) >> 10);
    if (newRotation != rotation)
       {
         if (rotationCount++ > COUNT_TO)
           {
+      // Serial.println(newRotation);
             rotation = newRotation;
             rotationCount = 0;
             change = true;
@@ -241,7 +245,7 @@ void loop()
     	{
     	// rebuild
     	position = 0;
-    	bresenhamEuclidean(newSize, newBeats, newRotation, rhythm);
+    	bresenhamEuclidean(size, beats, rotation == 0 ? 0 : rotation - 1, rhythm);
       // printIt();
     	}
   
@@ -270,7 +274,7 @@ void loop()
 			counter1 = TRIGGER_WIDTH;
 			}
 
-	if (beats >= size - 1)
+	if (rotation == 0)
 		{
 		if (position == 0) 
 			{
