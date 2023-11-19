@@ -14,6 +14,7 @@ In the code you will define:
 - The number of patterns in your sequence
 - Whether we loop the whole sequence forever, or just play it once
 - Whether randomness ADDS and REMOVES triggers, or just REMOVES them
+- Which tracks are subject to randomness
 
 Then you will describe the patterns.  Each pattern has a LENGTH, a NUMBER OF ITERATIONS (including FOREVER), and then four tracks of ones and zeros representing the steps.  It's pretty easy.
 

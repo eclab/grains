@@ -1,4 +1,4 @@
-WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
+//WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
 
 /// WARNING
 ///
@@ -47,14 +47,14 @@ WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
 /// DIGITAL OUT (D) Drum 2
 ///
 /// POT 1           Randomness [Minimum Randomness at 2 o'clock, Maximum a bit below 9 o'clock] 
+///                 [Turn to far left to pause the clock]
 ///                 [Switch must be set to IN 1]
-///                                             [Turn to far left to pause the clock]
 ///
 /// POT 2           [Set to 9 O'clock for IN 2 to ADVANCE] 
 ///                 [Set to FULL for IN 2 to RESET] 
 ///                 [Switch must be set to IN 2]
 ///
-/// POT 3           Swing
+/// POT 3           Swing (No swing is far right, maximum swing is far left)
 ///
 ///
 /// ABOUT THE RANDOMNESS CV
@@ -99,9 +99,17 @@ WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
 
 #define LOOP 1          // Set this to 0 to prevent the sequence from looping forever
 
-/// Finally, we determine whether randomness ADDS and REMOVES beats or if it just REMOVES them.
+/// We determine whether randomness ADDS and REMOVES beats or if it just REMOVES them.
 
-#define ADDS 1          // Set this to 0 if you want randomness to just remove beats
+#define ADDS 0          // Set this to 0 if you want randomness to just remove beats
+
+/// We also define which tracks are subject to randomness.  In the example below, 
+/// all the tracks except the first one are subject to randomness
+
+#define TRACK_1_IS_RANDOM	0
+#define TRACK_2_IS_RANDOM	1
+#define TRACK_3_IS_RANDOM	1
+#define TRACK_4_IS_RANDOM	1
 
 
 /// Based on this information, Beats defines a pattern (don't fool with this):
@@ -221,16 +229,18 @@ PROGMEM const struct pattern seq[PATTERNS] =      // don't fool with this line
 #define ADVANCE_TRIGGER 64      // How high must IN 2 be to trigger an advance?
 #define RESET_TRIGGER 800       // How high must IN 2 be to trigger a reset?
 
+#define LOWER_CLOCK_TRIGGER 32
 #define CLOCK_TRIGGER 64        // How high must IN 1 be to trigger a clock?  This has to be low so we can have a large sweep of the pot for randomness.  But we might trigger early?
+#define UPPER_CLOCK_TRIGGER 64
 #define CLOCK_COUNT 20          // How long must we wait after receiving the clock to do a pulse (so we have an accurate measure for randomness) 
 #define TRIGGER_OFF_COUNT 100   // How long do we wait after triggering before we set the pulses OFF?  It looks like Kick requires about 100 when the pitch is high and the decay is long.  :-(
-#define MAX_RANDOMNESS 105      // 11025
+#define MAX_RANDOMNESS (105 * 105)
 
 struct pattern sequence;        // local sequence in memory
 
 void loadSequence(uint16_t s)
     {
-    memcpy_P(&sequence, &seq[s], 128 * 4 + 16);
+    memcpy_P(&sequence, &seq[s], MAX_PATTERN_LENGTH * 4 + 2);
     }
 
 
@@ -269,7 +279,7 @@ void setup()
     pinMode(CV_AUDIO_IN, OUTPUT);
     pinMode(CV_IN3, OUTPUT);
     reset();
-//Serial.begin(115200);
+Serial.begin(115200);
     }
 
 void advance()
@@ -277,7 +287,7 @@ void advance()
     doAdvance = true;
     }
 
-void pulse()    // randomness goes 0...11025 (0 least random)
+void pulse()    // randomness goes 0...105 (0 least random)
     {
     if (patternPos >= PATTERNS) return;
 
@@ -308,11 +318,11 @@ void pulse()    // randomness goes 0...11025 (0 least random)
 
 // play!
     uint8_t s = sequence.track1[step];
-    if (random(MAX_RANDOMNESS) < randomness)
+    if (TRACK_1_IS_RANDOM && random(MAX_RANDOMNESS) < randomness)
         {
         if (ADDS)
             {
-            s = !s;
+            s = random(2);
             }
         else
             {
@@ -320,15 +330,14 @@ void pulse()    // randomness goes 0...11025 (0 least random)
             }
         }
 
-    if (s) { digitalWrite(CV_AUDIO_OUT, 1); }
     if (s) digitalWrite(CV_AUDIO_OUT, 1);
 
     s = sequence.track2[step];
-    if (random(MAX_RANDOMNESS) < randomness)
+    if (TRACK_2_IS_RANDOM && random(MAX_RANDOMNESS) < randomness)
         {
         if (ADDS)
             {
-            s = !s;
+            s = random(2);
             }
         else
             {
@@ -339,11 +348,11 @@ void pulse()    // randomness goes 0...11025 (0 least random)
     if (s) digitalWrite(CV_GATE_OUT, 1);
 
     s = sequence.track3[step];
-    if (random(MAX_RANDOMNESS) < randomness)
+    if (TRACK_3_IS_RANDOM && random(MAX_RANDOMNESS) < randomness)
         {
         if (ADDS)
             {
-            s = !s;
+            s = random(2);
             }
         else
             {
@@ -354,11 +363,11 @@ void pulse()    // randomness goes 0...11025 (0 least random)
     if (s) digitalWrite(CV_IN3, 1);
 
     s = sequence.track4[step];
-    if (random(MAX_RANDOMNESS) < randomness)
+   if (TRACK_4_IS_RANDOM && random(MAX_RANDOMNESS) < randomness)
         {
         if (ADDS)
             {
-            s = !s;
+            s = random(2);
             }
         else
             {
@@ -380,14 +389,14 @@ uint16_t div15(uint16_t dividend)
     return div;
     }
 
-// Returns a value from 0 (least random) to 11025 (most random / inverted)
+// Returns a value from 0 (least random) to 105 (most random / inverted)
 uint16_t computeRandomness(uint16_t input)
     {
 // we square the randomness to make the least random parts more sensitive
     if (input >= 896) return 0;
-    else if (input < 64)  return 105; // * 105;
+    else if (input < 64)  return 105 * 105;
     uint16_t sq = 105 - ((input - 56) >> 3);
-    return sq;  //* sq;
+    return sq * sq;
     }
 
 int8_t countdown = 0;
@@ -458,11 +467,11 @@ void loop()
 
 // compute trigger for pulse.  This is only 64, so we might trigger early -- it's maybe another 20 steps before we have settled down.  
 // But if randomness is low, we're triggering right on time.  So dunno what to do.
-    if (a < CLOCK_TRIGGER)
+    if (a < LOWER_CLOCK_TRIGGER)
         {
         clock = 0;
         }
-    else if (!clock)            // start the trigger clock
+    else if (a > UPPER_CLOCK_TRIGGER && !clock)            // start the trigger clock
         {
         clock = 1;
         if (!even || !swung)        // do we pulse?  We do if we're ODD or if it's even but we haven't swung yet
