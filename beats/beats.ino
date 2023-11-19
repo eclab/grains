@@ -1,4 +1,4 @@
-//WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
+WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
 
 /// WARNING
 ///
@@ -47,6 +47,7 @@
 /// DIGITAL OUT (D) Drum 2
 ///
 /// POT 1           Randomness [Minimum Randomness at 2 o'clock, Maximum a bit below 9 o'clock] 
+///					[Note that at very high randomness, there is a slight chance we will hit a beat early]
 ///                 [Turn to far left to pause the clock]
 ///                 [Switch must be set to IN 1]
 ///

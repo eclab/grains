@@ -33,8 +33,9 @@ Drum 1
 #### DIGITAL OUT (D) 
 Drum 2
 #### POT 1
-Randomness: further right is LESS randomness.  Because of the Grains Bug below, Minimum Randomness at 2 o'clock, Maximum a bit below 9 o'clock.  If you turn to the far left, you will PAUSE the CLOCK.  The switch must be set to IN 1.
+Randomness: further right is LESS randomness.  Because of the Grains Bug below, Minimum Randomness at 2 o'clock, Maximum a bit below 9 o'clock.  If you turn to the far left, you will PAUSE the CLOCK.  Note that at very high randomness, there is a slight chance we will hit a beat early by mistake.  The switch must be set to IN 1.
 #### POT 2
+
 Sets whether IN 2 Resets or Advances.  Set to about 9 O'clock for IN 2 to ADVANCE.  Set to FULL (far right) for IN 2 to RESET.  The switch must be set to IN 2.
 #### POT 3
 Degree of Swing.  No swing is at FULL (far right), then increasing swing as you turn to the left.  
