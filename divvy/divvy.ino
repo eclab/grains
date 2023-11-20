@@ -79,7 +79,7 @@ uint8_t clockOffsets[NUM_DIVISION_OPTIONS] = { 0, 1, 0, 0, 2, 0, 0,  0,  0,  0, 
 #define MINIMUM_RESET 800   // How high the trigger should be to trigger a reset
 #define MINIMUM_CLOCK 800   // How high the trigger should be to trigger an incoming clock pulse
 #define PULSEWIDTH_COUNTDOWN 100
-#define OPTION_WAIT 10
+#define OPTION_WAIT 16
 
 uint32_t counter;         // A counter starting at the last pulse
 uint8_t clock = false;    // Did we clock?  So we don't clock again
