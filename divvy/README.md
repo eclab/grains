@@ -4,7 +4,7 @@ Divvy is a two-track beat divider with pulsewidth. Divvy is meant to run on the 
 
 Set your Grains to **GRAINS MODE**.  (If you want MOZZI mode, change CV_AUDIO_OUT to 9)
 
-Multiple takes a clock input and produces a division of it.  By default your options are:
+Divvy takes a clock input and produces a division of it.  By default your options are:
 
 ## Clock Division Choices
 
@@ -39,7 +39,7 @@ Reset
 #### AUDIO OUT
 Clock Division 1
 #### Division OUT (D) 
-Clock Multiple 2
+Clock Division 2
 #### POT 1
 Choice of Clock Division 1   [Set the switch to MAN].  Note that changing this value triggers a reset.
 #### POT 2
