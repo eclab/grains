@@ -59,6 +59,12 @@ One, Two, or Three digital outputs set up as functions of four, five, or six ana
 
 Status: Working
 
+## Divvy
+
+A two-track clock divider with a variety of division options.
+
+Status: Working.  I've had a few rare premature resets: let me know if the beat gets off and when.
+
 ## Multiple
 
 A two-track clock multiplier with a variety of multiplication options.
