@@ -15,7 +15,7 @@ Instead of three expressions of four inputs, you can also set up Theory to have 
 
 ### SIX-INPUT OPTION
 
-You can also do a single expression (A) of six real-valued inputs (W, X, Y, Z, C) plus one input (B) which is digital (0 or 1).  Note: if nothing is plugged into B, then it will register a 1.
+You can also do a single expression (A) of five real-valued inputs (W, X, Y, Z, C) plus one input (B) which is digital (0 or 1).  Note: if nothing is plugged into B, then it will register a 1.
 
 
 ## Configuration

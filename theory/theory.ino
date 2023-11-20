@@ -41,7 +41,7 @@ WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
 /// up Theory to have two expressions (A and B) of five inputs (W, X, Y, Z, and C,
 /// now repurposed as real-valued input).
 ///
-/// SIX-INPUT OPTION.  You can also do a single expression (A) of six real-valued inputs
+/// SIX-INPUT OPTION.  You can also do a single expression (A) of five real-valued inputs
 /// (W, X, Y, Z, C) plus one input (B) which is digital (0 or 1).
 ///
 ///
