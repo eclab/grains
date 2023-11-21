@@ -88,7 +88,7 @@
 /// and b is now a DIGITAL INPUT (0 or 1 only).
 /// You don't need to comment out the earlier #define expressions.
 
- #define AAA(w,x,y,z,c,b) \
+// #define AAA(w,x,y,z,c,b) \
      sin(w) + cos(x) + y + z < c * b
 
 /// NOTE: If nothing is plugged into B, then it will register a 1.
@@ -192,6 +192,11 @@ void setup()
 #endif
 //    Serial.begin(9600);
     }
+
+
+
+/// FIXME: smooth the analogReads?
+
 
 
 void loop()
