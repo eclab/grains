@@ -18,16 +18,16 @@
 ///
 /// CONFIGURATION
 ///
-/// IN 1           	Input CV
+/// IN 1           	Input CV		Clock/Advance
 /// IN 2            [Unused]
 /// IN 3            Output 3
 /// AUDIO IN (A)    Output 4
 /// AUDIO OUT       Output 1
 /// DIGITAL OUT (D) Output 2
 ///
-/// POT 1           Input
+/// POT 1           [Unused, Keep High]
 ///
-/// POT 2           Style
+/// POT 2           Style + Zero?
 ///
 /// POT 3           Complexity and Gate/Trigger. 
 ///                 Left to right: Complexity 1, 2, 3 as gates, 
@@ -76,6 +76,7 @@
 /// Here are the seven styles and three complexity levels, and the resulting patterns.
 ///
 ///
+/// DELETE
 ///	MOVEMENT
 ///		2		0001 0010
 ///		3		0001 0010 0100
@@ -84,6 +85,7 @@
 ///		2		0000 0001 0010
 ///		3		0000 0001 0010 0100
 ///		4		0000 0001 0010 0100 1000
+/// DELETE
 ///	MOVEMENT WITH TWO ZEROS
 ///		2		0000 0001 0010 0000
 ///		3		0000 0001 0010 0100 0000
@@ -208,8 +210,45 @@ int8_t complexityCounter = -1;
 int8_t valueCounter = -1;
 int8_t triggerCounter = -1;
 
+#define MEDIAN_OF_THREE(a,b,c) (((a) <= (b)) ? (((b) <= (c)) ? (b) : (((a) < (c)) ? (c) : (a))) : (((a) <= (c)) ? (a) : (((b) < (c)) ? (c) : (b))))
 
-
+// From https://stackoverflow.com/questions/480960/how-do-i-calculate-the-median-of-five-in-c
+static double medianOfFive(double a, double b, double c, double d, double e)
+{
+    return b < a ? d < c ? b < d ? a < e ? a < d ? e < d ? e : d
+                                                 : c < a ? c : a
+                                         : e < d ? a < d ? a : d
+                                                 : c < e ? c : e
+                                 : c < e ? b < c ? a < c ? a : c
+                                                 : e < b ? e : b
+                                         : b < e ? a < e ? a : e
+                                                 : c < b ? c : b
+                         : b < c ? a < e ? a < c ? e < c ? e : c
+                                                 : d < a ? d : a
+                                         : e < c ? a < c ? a : c
+                                                 : d < e ? d : e
+                                 : d < e ? b < d ? a < d ? a : d
+                                                 : e < b ? e : b
+                                         : b < e ? a < e ? a : e
+                                                 : d < b ? d : b
+                 : d < c ? a < d ? b < e ? b < d ? e < d ? e : d
+                                                 : c < b ? c : b
+                                         : e < d ? b < d ? b : d
+                                                 : c < e ? c : e
+                                 : c < e ? a < c ? b < c ? b : c
+                                                 : e < a ? e : a
+                                         : a < e ? b < e ? b : e
+                                                 : c < a ? c : a
+                         : a < c ? b < e ? b < c ? e < c ? e : c
+                                                 : d < b ? d : b
+                                         : e < c ? b < c ? b : c
+                                                 : d < e ? d : e
+                                 : d < e ? a < d ? b < d ? b : d
+                                                 : e < a ? e : a
+                                         : a < e ? b < e ? b : e
+                                                 : d < a ? d : a;
+                                }
+                                
 void setup()
     {
     pinMode(CV_IN3, OUTPUT);
@@ -228,6 +267,8 @@ void sendTriggers()		// FIXME broke these out in case we want to do a clock late
 	triggerCounter = TRIGGER_WIDTH;
 	}
 	
+int16_t ins[5];
+
 void loop()
     {
 	// reset triggers
@@ -245,8 +286,24 @@ void loop()
 		} 
 
     // smoothed input
-    if (input < 0) input = analogRead(CV_POT_IN1);
-    else input = (analogRead(CV_POT_IN1) + input * 3) >> 2;	// a little smoothing.  FIXME: Do we need more?
+    analogRead(CV_POT_IN1);
+    int16_t in0 = analogRead(CV_POT_IN1);
+    int16_t in1 = analogRead(CV_POT_IN1);
+    int16_t in2 = analogRead(CV_POT_IN1);
+    int16_t in3 = analogRead(CV_POT_IN1);
+    int16_t in = (in0 + in1 + in2 + in3) >> 2;
+    
+	ins[0] = ins[1];
+	ins[1] = ins[2];
+	ins[2] = ins[3];
+	ins[3] = ins[4];
+	ins[4] = in;
+
+	//in = MEDIAN_OF_THREE(ins[2],ins[3],ins[4]);
+    if (abs(in - input) > 32) 
+    //{Serial.print(in); Serial.print(" -> " ); Serial.println(input); 
+    input = in; 
+    //}
 
     uint8_t opt = (uint8_t)((analogRead(CV_POT_IN2) * NUM_STYLES) >> 10);
     if (opt != style)
@@ -269,11 +326,8 @@ void loop()
 	uint8_t val = (uint8_t)((input * patternLengths[style][complexity > 2 ? complexity - 3 : complexity]) >> 10);
     if (lastVal != val)
     	{
-		  if (valueCounter < 0) valueCounter = OPTION_WAIT;
-		  else if (valueCounter == 0) 
-			{
+    	Serial.println(val);
 			lastVal = val;
-			valueCounter = -1;
 			if (complexity >= 3) // trigger
 				{
 				sendTriggers();
@@ -285,8 +339,6 @@ void loop()
 				digitalWrite(CV_IN3, patterns[style][complexity][val][2]);
 				digitalWrite(CV_AUDIO_IN, patterns[style][complexity][val][3]);
 				}
-			}
-		   else valueCounter--;
-		  }
-    else valueCounter = -1;
+		}
     }
+    

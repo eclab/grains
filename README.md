@@ -7,7 +7,7 @@ This is a collection of code which runs on the Tangible Waves GRAINS module, tho
 
 A four-channel boolean pattern generator based on an analog input, with 21 interesting patterns.  Can output its patterns as gates or as triggers.
 
-Status: Working
+Status: Working, but use with LFOs is poor due to noise.
 
 ## Elements
 

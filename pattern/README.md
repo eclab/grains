@@ -6,6 +6,12 @@ SET GRAINS TO GRAINS MODE.  (If you want MOZZI mode, change CV_AUDIO_OUT to 9)
 
 PATTERN takes an analog input and outputs four digital outputs which are high or low depending on the value of the input.  You can output gates or triggers.
 
+## NOTE
+
+Pattern is kind of useless because the Arduino's analog inputs are noisy.  I was hoping to cleanly generate a consistent discretized or beat pattern based on a sawtooth LFO or a triangle LFO but the amount of noise smoothing I am forced to add results in a kind of janky movement.  It works well with SEQ16 though.
+
+So I'm not sure where Pattern is going -- I may make big changes in it towards a divider like MM-DIV...
+
 ## What is a Pattern?
 
 PATTERN outputs, well, patterns.  A pattern is a sequence of 4 ones or zeros, such as 0111, which here I will call a 4-tuple.  For example, 0100, 1100, 1111, 0010, 0101 is a pattern. The four ones or zeros in a 4-tuple correspond to each of the four outputs, in the order 4321.  For example, 0101 means that outputs 1 and 3 are ON and outputs 2 and 4 are OFF.
