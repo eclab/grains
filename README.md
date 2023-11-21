@@ -55,7 +55,7 @@ Status: Working
 
 One, Two, or Three digital outputs set up as functions of four, five, or six analog+digital inputs.  You specify the functions in the code (it's set up to make it easy!), including special randomness and logic functions.
 
-Status: Working
+Status: Working, but like Patterns, usefulness may be limited due to noise.
 
 ## Divvy
 
