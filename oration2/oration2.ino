@@ -62,7 +62,8 @@
 
 /// Next you need to state whether Oration 2 will speak through its current sentence
 /// or will pick random words in the sentence and say them in random order.  When
-/// in random order, Oration 2 will only say one word at a time, then wait until
+/// in random order, Oration 2 will say one random word at a time.  If PAUSE_BETWEEN_WORDS
+/// (see below) is set to WAIT_FOREVER, then it will wait after each word until
 /// you trigger it via IN3 or AUDIO_IN.  You might use DIGITAL OUT to do this trigger. 
 /// To do random order, change the following #define to 1.
 
@@ -79,9 +80,15 @@
 
 /// The original Oration had a knob to specify the pause between words.  Oration 2
 /// uses this knob to define speaking speed, so we have a #define here to define
-/// the pause between words.  By default this is 0 but you might want to change it:
+/// the pause between words.  By default this is 0 but you might want to change it.
+/// You can alternatively set PAUSE_BETWEEN_WORDS to be WAIT_FOREVER.  This only
+/// has an effect on RANDOM_ORDERING: it causes it to stop speaking after each word
+/// until you trigger it via IN 3 or AUDIO_IN.
 
-#define PAUSE_BETWEEN_WORDS 0		// Don't exceed 32,000 or so.  1 Second is about 2500.
+#define PAUSE_BETWEEN_WORDS 0		// Any value from 0...32766.  1 Second is about 2500.
+// #define PAUSE_BETWEEN_WORDS RANDOM_ORDERING		// An alternative
+
+
 
 /// Now we define sentences.
 
@@ -109,7 +116,7 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
 /// IN 3            (Trigger) Speak Next Sentence
 /// AUDIO IN (A)    (Trigger) Speak Selected Sentence
 /// AUDIO OUT       Speech Output
-/// DIGITAL OUT (D) Sentence Finished Outgoing Trigger, or if RANDOM_ORDERING, Word Finished Outgoing Trigger
+/// DIGITAL OUT (D) Sentence Finished Outgoing Trigger
 ///
 /// POT 1           Current Sentence
 /// POT 2           Pitch
@@ -146,6 +153,7 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
 #define CV_GATE_OUT   8     // Finished
 
 #define RANDOM_PIN              A5
+#define WAIT_FOREVER 32767		// Note in Oration this is 16000
 
 #define MINIMUM_RESET 800
 #define LOW 400
@@ -156,7 +164,7 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
 
 int8_t sentence = RESET_SPEAKING;       // STOP_SPEAKING means "no sentence", i.e., stop looping. RESET_SPEAKING  means "no sentence now, but if next sentence is chosen, we'll start with 0"
 int8_t _word = RESET_SPEAKING;          // -1 means 
-Talkie voice;   // (false, true);		// inverted pin (pin 11) only
+Talkie voice;
 
 uint8_t sizes[NUM_SENTENCES];
 int16_t waiting = 0;					// no wait initially
@@ -288,7 +296,7 @@ void setup()
       sizes[i] = j;
       } 
 
-  Serial.begin(112500);
+  //Serial.begin(112500);
   }
   
 void loop()
@@ -369,6 +377,17 @@ void loop()
   	}
    else // We are waiting...
 		{
-		if (!RANDOM_ORDERING) waiting--;      // when we're random, our wait is infinite
+		if (RANDOM_ORDERING)
+			{
+    		if (!_triggerSent)
+    			{
+    			digitalWrite(CV_GATE_OUT, 1);		// send word trigger
+    			countdown = COUNTDOWN;
+    			_triggerSent = true;
+    			}
+    		// now wait forever
+			if (waiting < WAIT_FOREVER) waiting--;
+			}
+		else waiting--;
 		}
-}
+	}

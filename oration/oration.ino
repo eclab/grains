@@ -54,19 +54,23 @@
 #define NUM_SENTENCES 3
 
 /// Next you need to state whether Oration will speak through its current sentence
-/// or will pick random words in the sentence and say them, in random order forever.
-/// To do random order forever, change the following #define to 1.
+/// or will pick random words in the sentence and say them in random order.  When
+/// in random order, Oration will say one random word at a time.  If POT 3 is set to
+/// far right, then it will wait after each word until
+/// you trigger it via IN3 or AUDIO_IN.  You might use DIGITAL OUT to do this trigger. 
+/// To do random order, change the following #define to 1.
 
 #define RANDOM_ORDERING 1
 
-/// If you're NOT doing Random Order, then Oration will speak its current sentence
+/// If you're NOT doing Random Order, then Oration 2 will speak its current sentence
 /// until it is done, then it will emit a trigger on Digital Out (D).  You can feed
-/// this into Audio In (A), which will cause Oration to go on to the next sentence.
+/// this into Audio In (A), which will cause Oration 2 to go on to the next sentence.
 /// When it has finished the last sentence, Oration will stop, unless you have set
 /// the following LOOPING define to 1, which will cause Oration to restart with the
 /// first sentence.  Set to 0 to prevent this behavior.
 
 #define LOOPING 1
+
 
 
 /// Now we define sentences.
@@ -95,7 +99,7 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
 /// IN 3            (Trigger) Speak Next Sentence
 /// AUDIO IN (A)    (Trigger) Speak Selected Sentence
 /// AUDIO OUT       Speech Output
-/// DIGITAL OUT (D) Sentence Finished Outgoing Trigger, or if RANDOM_ORDERING, Word Finished Outgoing Trigger
+/// DIGITAL OUT (D) Sentence Finished Outgoing Trigger
 ///
 /// POT 1           Current Sentence
 /// POT 2           Pitch
@@ -114,7 +118,7 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
 ///
 /// POT 1           Current Sentence
 /// POT 2           Pitch
-/// POT 3           Pause Between Words.  Far Right is Infinite Pause (trigger words with In3 or Audio In Triggers)
+/// POT 3           Pause Between Words.  Far Right is Infinite Pause (you must trigger words with In3 or Audio In Triggers)
 
 
 
@@ -133,7 +137,7 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
 
 #define RANDOM_PIN              A5
 #define WAITING_SCALE 16
-#define WAIT_FOREVER (1000 * 16)
+#define WAIT_FOREVER (1000 * 16)		// Note in Oration 2 this is 32767
 
 #define MINIMUM_RESET 800
 #define LOW 400
@@ -144,7 +148,7 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
 
 int8_t sentence = RESET_SPEAKING;       // STOP_SPEAKING means "no sentence", i.e., stop looping. RESET_SPEAKING  means "no sentence now, but if next sentence is chosen, we'll start with 0"
 int8_t _word = RESET_SPEAKING;          // -1 means 
-Talkie voice;   // (false, true);		// inverted pin (pin 11) only
+Talkie voice(false, true);				// inverted pin (pin 11) only
 
 uint8_t sizes[NUM_SENTENCES];
 int16_t waiting = 0;					// no wait initially
@@ -264,7 +268,7 @@ void setup()
       sizes[i] = j;
       } 
 
-  Serial.begin(112500);
+  //Serial.begin(112500);
   }
   
 void loop()
@@ -344,6 +348,17 @@ void loop()
   	}
    else // We are waiting...
 		{
-		if (!RANDOM_ORDERING || waiting < WAIT_FOREVER) waiting--;      // when we're random, our wait is infinite
+		if (RANDOM_ORDERING)
+			{
+    		if (!_triggerSent)
+    			{
+    			digitalWrite(CV_GATE_OUT, 1);		// send word trigger
+    			countdown = COUNTDOWN;
+    			_triggerSent = true;
+    			}
+    		// now wait forever
+			if (waiting < WAIT_FOREVER) waiting--;
+			}
+		else waiting--;
 		}
 }

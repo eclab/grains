@@ -1,21 +1,3 @@
-WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
-
-/// WARNING
-///
-/// This program uses IN3 and Audio In as OUTPUTS.  This works fine normally.
-/// However on the Arduino, a pin used as an output must have a resistor
-/// placed in series, because if you short it to ground, or to 5V, you
-/// will destroy the pin otherwise.  You don't need this for pins used as INPUTS.
-/// It is not yet clear from TangibleWaves if these two pins have a resistor.
-/// This program works great if you connect IN3 and Audio IN to trigger
-/// inputs, but I am concerned people will damage their GRAINS by attaching 
-/// to outputs (probably okay), ground, or 5V.
-
-
-
-
-
-
 // Copyright 2023 Sean Luke
 // (sean@cs.gmu.edu)
 //
@@ -84,18 +66,17 @@ WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
 ///
 /// PROGRAMMING BEATS
 ///
-/// First we need to define the MAXIMUM LENGTH for any pattern in your song.  The simple approach is to just
-/// stick with 256:
+/// First we need to define the MAXIMUM LENGTH for any pattern in your song.  The simple 
+/// approach is to just stick with 256. However, this restricts you to just 25 patterns in 
+/// your GRAINS memory (actually 26 but who's counting?). That might be plenty, but if you 
+/// need more memory, you can reduce the maximum pattern length to 128, 64, 32, 16, or 8, 
+/// which will increase your available of patterns correspondingly to roughly 50, 100, 200, 400, and 800.
+/// You change the MAXIMUM LENGTH here:
 
 #define MAX_PATTERN_LENGTH 256
 
-/// However, this restricts you to just 25 patterns in your GRAINS memory (actually 26 but who's counting?). 
-/// That might be plenty, but if you need more memory, you can reduce the maximum pattern length to 
-/// 128, 64, 32, 16, or 8, which will increase your available of patterns correspondingly to roughly 
-/// 50, 100, 200, 400, and 800.
 
-
-/// Now we define the actual number of 4-track patterns in your sequence, given available memory as discussed
+/// Now we define the number of 4-track patterns in your sequence, given available memory as discussed
 /// above.  By default you can fit about 25.
 
 #define PATTERNS 2        // Set this to the number of patterns in your sequence (any number > 0)
@@ -105,12 +86,15 @@ WONT_COMPILE_ON_PURPOSE_PLEASE_SEE_TEXT_FOR_WARNING
 
 #define LOOP 1          // Set this to 0 to prevent the sequence from looping forever
 
-/// We determine whether randomness ADDS and REMOVES beats or if it just REMOVES them.
 
-#define ADDS 0          // Set this to 0 if you want randomness to just remove beats
+/// Now we determine whether randomness ADDS and REMOVES beats or if it just REMOVES them.
+/// By default we just remove beats.
 
-/// We also define which tracks are subject to randomness.  In the example below, 
-/// all the tracks except the first one are subject to randomness
+#define ADDS 0          // Set this to 1 if you want randomness to add AND remove beats
+
+
+/// And we also define which tracks are subject to randomness.  In the example below, 
+/// all the tracks except the first one (notionally the kick drum, say) are subject to randomnes.
 
 #define TRACK_1_IS_RANDOM	0
 #define TRACK_2_IS_RANDOM	1
