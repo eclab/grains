@@ -1,6 +1,6 @@
 # Booker
 
-Booker is Hammond Organ simulator complete with a Leslie. Booker is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.  booker was written by Sean Luke [sean@cs.gmu.edu]
+Booker is Hammond Organ simulator complete with a Leslie. Booker is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.  Booker was written by Sean Luke [sean@cs.gmu.edu]
 
 Set your Grains to **MOZZI MODE**.  You will need to install the Mozzi Library.  You can do this from the Library Manager in your Arduino IDE.
 
