@@ -184,7 +184,7 @@ uint8_t drawbars[NUM_DRAWBAR_SELECTIONS][9] =
 // Grains can only do about 3.75 octaves due to its circuit design.  I have positioned 
 // it to start at the C two octaves below middle C.  For the same reason, I have to 
 // "stretch" Grains from 3.75V to 5V, so to speak, in software.  I have tuned this 
-// stretch for my own Grains, but if Booker is tracking well in your Grains, get with 
+// stretch for my own Grains, but if Booker is tracking poorly in your Grains, get with 
 // me and we might be able to customize it for you.
 //
 // In short, you can play with the function that has "pow(...)" in it below to get the
