@@ -3,11 +3,17 @@ By Sean Luke (sean@cs.gmu.edu)
 
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code) and Oration, which is released under GPL 3.0 (as is Talkie).
 
+## Booker
+
+A Hammond Organ simulator with a built-in Leslie and a variety of organ drawbar combinations.
+
+Status: Working, but it pushes Mozzi to its limits I think.
+
 ## Pattern
 
 A four-channel boolean pattern generator based on an analog input, with 21 interesting patterns.  Can output its patterns as gates or as triggers.
 
-Status: Working, but use with LFOs is poor due to noise.
+Status: Working, but its use with LFOs is poor due to noise.
 
 ## Elements
 
