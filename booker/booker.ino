@@ -31,7 +31,8 @@
 /// I have to "stretch" Grains from 3.75V to 5V, so to speak, in software.  I have tuned 
 /// this stretch for my own Grains, but it changes over time as the resistors warm up 
 /// unfortunately.  If Booker is tracking badly in your Grains, you can tweak it in code.  
-/// See the file "tuning.txt" for more information.
+/// See the file "tuning.txt" for more information. REMEMBER TO UNPLUG THE USB WHEN TUNING!
+/// Otherwise you'll be affected by the extra voltage from the USB.
 ///
 /// THE LESLIE.  Booker comes with a Leslie, which is on by default:
 
@@ -41,8 +42,8 @@
 // You can adjust them here
 
 #define LESLIE_FREQUENCY 5.66			// This is the 450 speed.  The classic slower speed is 0.66, but it's too slow
-#define LESLIE_VOLUME 2					// Values are 0 (off), 1, 2, 3, 4, 5, 6, 7, or 8 (max).
-#define LESLIE_PITCH 5					// Values are 0.0 (none) ... 63.0 (max).  Can be floating point.
+#define LESLIE_VOLUME 3					// Values are 0 (min), 1, 2, 3, 4, 5, 6, 7, 8, or 9 (max).
+#define LESLIE_PITCH 45					// Values are 1.0 (lots) ... 60.0 (little).  Can be floating point.
 
 /// CONFIGURATION
 ///
@@ -423,7 +424,7 @@ void updateControl()
 	// leslie!
 #ifdef LESLIE_ON
 	int8_t les = leslie.next();
-	frequency += les * (1.0 / (64 - LESLIE_PITCH));
+	frequency += les * (1.0 / LESLIE_PITCH);
 #endif
 
 	// set the drawbars
@@ -433,9 +434,12 @@ void updateControl()
   	}
 
 	// determine the gain
-	gain = 1 + mozziAnalogRead(CV_POT3) >> 2
+	gain = 1 + (mozziAnalogRead(CV_POT3) >> 2)
 #ifdef LESLIE_ON
-   + (les >> (8 - LESLIE_VOLUME))
+#if LESLIE_VOLUME==0
+#else
+   + ((les + 128) >> (9 - LESLIE_VOLUME));				// note: >> 0 still goes between -1 and 0 depending on whether it's positive or negative initially
+#endif
 #endif
 ;
 

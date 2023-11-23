@@ -8,7 +8,7 @@ Booker comes with a Leslie, which is on by default, but you can turn it off in t
 
 ## Adjusting Tracking
 
-Grains can only do about 3.75 octaves due to its circuit design.  I have positioned it to start at the C two octaves below middle C.  For the same reason, I have to "stretch" Grains from 3.75V to 5V, so to speak, in software.  I have tuned this stretch for my own Grains, but it changes over time as the resistors warm up unfortunately.  If Booker is tracking badly in your Grains, you can tweak it in code.  See the file "tuning.txt" for more information.
+Grains can only do about 3.75 octaves due to its circuit design.  I have positioned it to start at the C two octaves below middle C.  For the same reason, I have to "stretch" Grains from 3.75V to 5V, so to speak, in software.  I have tuned this stretch for my own Grains, but it changes over time as the resistors warm up unfortunately.  I have it set to 46.9 notes stretch, which seems to be the amount my own Grains settles on after it has warmed up.  Yours may be different.  If Booker is tracking badly in your Grains, you can tweak it in code.  See the file "tuning.txt" for more information.  REMEMBER TO UNPLUG THE USB WHEN TUNING!  Otherwise you'll be affected by the extra voltage from the USB.
 
 ## Volume
 
