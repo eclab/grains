@@ -20,7 +20,7 @@
 /// All Evolution does is randomly (and usually slowly) change the amplitudes of 8 of 
 /// the partials, leaving the fundamental alone.  You have 8 choices of frequency 
 /// combinations.  The frequencies of the partials can be found 
-/// in partialFrequencies[] if you wanted to modify them.
+/// in drawbarFrequencies[] if you wanted to modify them.
 ///
 /// SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 ///
@@ -71,7 +71,7 @@
 
 
 
-#define CONTROL_RATE 100			// More than this and we're gonna get clicks probably
+#define CONTROL_RATE 64			// More than this and we're gonna get clicks probably
 
 #include <MozziGuts.h>
 #include <Oscil.h>
@@ -89,12 +89,30 @@ Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel6(SIN256_DATA);
 Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel7(SIN256_DATA);
 Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel8(SIN256_DATA);
 Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel9(SIN256_DATA);
+Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel10(SIN256_DATA);
+Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel11(SIN256_DATA);
+Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel12(SIN256_DATA);
+Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel13(SIN256_DATA);
+Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel14(SIN256_DATA);
+Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel15(SIN256_DATA);
+Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel16(SIN256_DATA);
+Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel17(SIN256_DATA);
+Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel18(SIN256_DATA);
+Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel19(SIN256_DATA);
+Oscil<SIN256_NUM_CELLS, AUDIO_RATE> tonewheel20(SIN256_DATA);
 
-Oscil<SIN256_NUM_CELLS, AUDIO_RATE> oscils[9] = 
+#define NUM_TONEWHEELS 9
+
+Oscil<SIN256_NUM_CELLS, AUDIO_RATE> oscils[NUM_TONEWHEELS] = 
 	{ 
 	tonewheel1, tonewheel2, tonewheel3,
 	tonewheel4, tonewheel5, tonewheel6, 
-	tonewheel7, tonewheel8, tonewheel9 
+	tonewheel7, tonewheel8, tonewheel9, 
+	/*
+	tonewheel10,
+  tonewheel11, tonewheel12, tonewheel13,
+  tonewheel14, tonewheel15, tonewheel16, 
+  tonewheel17, tonewheel18, tonewheel19, tonewheel20,*/
 	};
 
 // This has custom tracking for my Grains module.  To change the base note, you need to specify
@@ -206,7 +224,7 @@ PROGMEM const float pitches[1024+512] = {
 
 #define FREQUENCY(pitch) pgm_read_float_near(&pitches[pitch]);
 
-const float partialFrequencies[8][9] = 
+const float drawbarFrequencies[8][NUM_TONEWHEELS] = 
 	{ 
 	{ 1, 2, 3, 4, 5, 6, 7, 8, 9 },
 	{ 1, 2, 4, 6, 8, 10, 12, 14, 16 },
@@ -218,7 +236,6 @@ const float partialFrequencies[8][9] =
 	{ 1, 1.01, 1.02, 1.03, 1.04, .99, .98, .97, .96 },
 	};
 	
-uint8_t cutdowns[8][9];
 
 #define CV_POT_IN1    A2    // Partials Selection
 #define CV_POT_IN2    A1    // Pitch Tune
@@ -229,11 +246,8 @@ uint8_t cutdowns[8][9];
 #define CV_GATE_OUT   8     // Clock
 #define RANDOM_PIN    A5
 
-uint8_t targets[9];
-uint8_t amplitudes[9];
-uint8_t cutdownAmplitudes1[8][9];
-uint8_t cutdownAmplitudes2[8][9];
-uint8_t finalAmplitudes[9];
+uint8_t targets[NUM_TONEWHEELS];
+uint8_t amplitudes[NUM_TONEWHEELS];
 
 void setup()
 {
@@ -243,19 +257,10 @@ void setup()
   pinMode(CV_GATE_OUT, INPUT_PULLUP);		// duh
   
   amplitudes[0] = 255;
-  for(uint8_t i = 1; i < 9; i++)
+  for(uint8_t i = 1; i < NUM_TONEWHEELS; i++)
   	{
   	targets[i] = rand(256);
   	amplitudes[i] = rand(256);
-  	}
-  	
-  for(uint8_t i = 0; i < 8; i++)
-  	{
-  	for(uint8_t j = 0; j < 9; j++)
-  		{
-  		cutdownAmplitudes1[i][j] = (uint8_t)(255.0 / partialFrequencies[i][j]);			// dark
-  		cutdownAmplitudes2[i][j] = (uint8_t)(255.0 / sqrt(partialFrequencies[i][j]));	// medium
-  		}
   	}
 }
 
@@ -276,33 +281,8 @@ uint16_t inB = 0;
 uint16_t pitchCV;
 uint16_t tuneCV;
 uint16_t pitch;
-uint8_t gainDivide = 11;
-uint8_t draw = 0;
 
-// For the time being we're making sure that the amplitudes follow a sawtooth/square cut-down with frequency
-void convertAmplitudes(uint8_t draw)
-	{
-	if (draw < 8)
-		{
-		gainDivide = 10;		// they're dark and quiet
-		for(uint8_t i = 1; i < 9; i++)
-			finalAmplitudes[i] = (amplitudes[i] * cutdownAmplitudes1[draw][i]) >> 8;
-		}
-	else if (draw < 16)
-		{
-		gainDivide = 10;		// they're medium
-		for(uint8_t i = 1; i < 9; i++)
-			finalAmplitudes[i] = (amplitudes[i] * cutdownAmplitudes2[draw][i]) >> 8;
-		}
-	else
-		{
-		gainDivide = 11;		// they're bright and loud
-		for(uint8_t i = 1; i < 9; i++)
-			finalAmplitudes[i] = amplitudes[i];
-		}
-	}
 
-int8_t drawCounter = -1;
 void updateControl()                          
 {
 	uint16_t in = mozziAnalogRead(CV_IN3);
@@ -310,28 +290,20 @@ void updateControl()
 	uint16_t pitchCV = MEDIAN_OF_THREE(in, inA, inB);
 	inA = inB;
 	inB = in;
-	tuneCV = mozziAnalogRead(CV_POT_IN2);
-//	tuneCV = (tuneCV * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3;
-	pitch = (pitch * 7 + pitchCV + (tuneCV >> 1)) >> 3;
-	
+	tuneCV = (tuneCV * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3;
+	pitch = (pitch * 3 + pitchCV + (tuneCV >> 1)) >> 2;
+
 	
 	// convert to frequency.  This oughta be a lookup table
 	// INCREDIBLY, pow is almost cheap enough to use here
 	//float frequency = pow(2.0, pitch * ( 46.9 / 1023.0 / 12.0)) * 34.65;
 	float frequency = FREQUENCY(pitch);
 	
- 	uint8_t d = (mozziAnalogRead(CV_POT_IN1) * 24) >> 10;
- 	if (d != draw)
- 		{
- 		if (drawCounter == -1) drawCounter = 10;
- 		else if (drawCounter == 0) draw = d;
- 		drawCounter--;
- 		}
- 	else drawCounter = -1;
+ 	uint8_t draw = (mozziAnalogRead(CV_POT_IN1) >> 7);
  	
-	// set the partials
-	const float* freq = partialFrequencies[draw >= 16 ? draw - 16: draw >= 8 ? draw - 8 : draw];
-	  for(uint8_t i = 0; i < 9; i++)
+	// set the drawbars
+	const float* freq = drawbarFrequencies[draw];
+	  for(uint8_t i = 0; i < NUM_TONEWHEELS; i++)
 		{
 		oscils[i].setFreq(frequency * freq[i]);
 		}
@@ -344,7 +316,7 @@ void updateControl()
 			{
 			counter = 1;		// rate must be > 0 here remember
 			// update the targets
-			  for(uint8_t i = 1; i < 9; i++)
+			  for(uint8_t i = 1; i < NUM_TONEWHEELS; i++)
 				{
 				if (amplitudes[i] < targets[i])
 					{
@@ -357,7 +329,6 @@ void updateControl()
 					else targets[i] = rand(256);
 					}
 				}
-			convertAmplitudes(draw);
 			}
 		else counter += rate;
 		}
@@ -369,11 +340,10 @@ void updateControl()
 			if (!locked)
 				{
 				locked = true;
-				  for(uint8_t i = 1; i < 9; i++)
+				  for(uint8_t i = 1; i < NUM_TONEWHEELS; i++)
 					{
 					amplitudes[i] = rand(256);
 					}
-				convertAmplitudes(draw);
 				}
 			}
 		else { locked = false; }
@@ -383,10 +353,10 @@ void updateControl()
 
 int updateAudio()                             
 {
-  int32_t val = oscils[0].next() * 256;
-  for(uint8_t i = 1; i < 9; i++)
+  int32_t val = oscils[0].next() * 256;		
+  for(uint8_t i = 1; i < NUM_TONEWHEELS; i++)
   	{
-	  val += (oscils[i].next() * finalAmplitudes[i]);
+	  val += (oscils[i].next() * amplitudes[i]);
   	}
-  return (int)(val >> gainDivide);		// seems to get low enough?
+  return (int)(val >> 11);		// seems to get low enough?
 }
