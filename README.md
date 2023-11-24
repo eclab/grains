@@ -3,6 +3,12 @@ By Sean Luke (sean@cs.gmu.edu)
 
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code) and Oration, which is released under GPL 3.0 (as is Talkie).
 
+## Evolution
+
+An evolving drone synthesizer using the same additive synthesis technique as Booker.
+
+Status: Working
+
 ## Booker
 
 A Hammond Organ simulator with a built-in Leslie and a variety of organ drawbar combinations.
@@ -61,7 +67,7 @@ Status: Working
 
 One, Two, or Three digital outputs set up as functions of four, five, or six analog+digital inputs.  You specify the functions in the code (it's set up to make it easy!), including special randomness and logic functions.
 
-Status: Working, but like Patterns, usefulness may be limited due to noise.
+Status: Working, but like Pattern, its usefulness may be limited due to noise.
 
 ## Divvy
 
