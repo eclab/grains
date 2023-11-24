@@ -12,11 +12,11 @@ NOTE: Probably due to the voltage divider on all of its analog inputs, GRAINS is
 
 ## Bright and Dark Partials
 
-Evolution has two spectral envelopes.  The "Dark" envelope cuts down higher frequencies linearly.  The "Light" envelope does not. For each envelope we have the same eight choices of partial frequency combinations: so there are sixteen choices in all.
+Evolution has three spectral envelopes: left-to-right: Dark, Medium, and Bright.  The "Dark" envelope cuts down higher frequencies exponentially.  The "Bright" envelope does not. The "Medium" envelope is in-between.   For each envelope we have the same eight choices of partial frequency combinations: so there are 24 choices in all.
 
 ## Triggering
 
-If you turn the Rate knob (Pot 3) to the far LEFT, so the Rate is Zero, then Evolution will instead change to new random partial amplitudes when you provide a trigger.  Note that Mozzi only checks for triggers 100 times in a second: if your trigger is faster than 1/100 a second, it may not be seen.
+If you turn the Evolution Rate knob (Pot 3) to the far LEFT, so the Rate is Zero, then Evolution will instead change to new random partial amplitudes when you provide a trigger.  Note that Mozzi only checks for triggers 100 times in a second: if your trigger is faster than 1/100 a second, it may not be seen.
 
 ## Adjusting Tracking
 
@@ -42,8 +42,9 @@ Out
 #### DIGITAL OUT (D) 
 Trigger
 #### POT 1
-(Left half of Dial) Choice of Dark Partials 
-(Right half of Dial) Choice of Bright Partials 
+(Left third of Dial) Choice of 8 Dark Partials 
+(Center third of Dial) Choice of 8 Medium Partials
+(Right third of Dial) Choice of 8 Bright Partials 
 [Set the switch to MAN]
 #### POT 2
 Pitch Tune  [Set the switch to MAN]

@@ -38,7 +38,7 @@ Clock
 Reset
 #### AUDIO OUT
 Clock Division 1
-#### Division OUT (D) 
+#### DIGITAL OUT (D) 
 Clock Division 2
 #### POT 1
 Choice of Clock Division 1   [Set the switch to MAN].  Note that changing this value triggers a reset.

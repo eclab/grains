@@ -231,12 +231,13 @@ uint8_t cutdowns[8][9];
 
 uint8_t targets[9];
 uint8_t amplitudes[9];
-uint8_t cutdownAmplitudes[8][9];
+uint8_t cutdownAmplitudes1[8][9];
+uint8_t cutdownAmplitudes2[8][9];
 uint8_t finalAmplitudes[9];
 
 void setup()
 {
-//Serial.begin(9600);
+Serial.begin(9600);
   startMozzi();
   randSeed(RANDOM_PIN);
   pinMode(CV_GATE_OUT, INPUT_PULLUP);		// duh
@@ -252,7 +253,8 @@ void setup()
   	{
   	for(uint8_t j = 0; j < 9; j++)
   		{
-  		cutdownAmplitudes[i][j] = (uint8_t)(255.0 / partialFrequencies[i][j]);
+  		cutdownAmplitudes1[i][j] = (uint8_t)(255.0 / partialFrequencies[i][j]);
+  		cutdownAmplitudes2[i][j] = (uint8_t)(255.0 / sqrt(partialFrequencies[i][j]));
   		}
   	}
 }
@@ -275,6 +277,7 @@ uint16_t pitchCV;
 uint16_t tuneCV;
 uint16_t pitch;
 uint8_t gainDivide = 11;
+uint8_t draw = 0;
 
 // For the time being we're making sure that the amplitudes follow a sawtooth/square cut-down with frequency
 void convertAmplitudes(uint8_t draw)
@@ -283,7 +286,13 @@ void convertAmplitudes(uint8_t draw)
 		{
 		gainDivide = 10;		// they're dark and quiet
 		for(uint8_t i = 1; i < 9; i++)
-			finalAmplitudes[i] = (amplitudes[i] * cutdownAmplitudes[draw][i]) >> 8;
+			finalAmplitudes[i] = (amplitudes[i] * cutdownAmplitudes1[draw][i]) >> 8;
+		}
+	else if (draw < 16)
+		{
+		gainDivide = 10;		// they're medium
+		for(uint8_t i = 1; i < 9; i++)
+			finalAmplitudes[i] = (amplitudes[i] * cutdownAmplitudes2[draw][i]) >> 8;
 		}
 	else
 		{
@@ -292,7 +301,8 @@ void convertAmplitudes(uint8_t draw)
 			finalAmplitudes[i] = amplitudes[i];
 		}
 	}
-	
+
+int8_t drawCounter = -1;
 void updateControl()                          
 {
 	uint16_t in = mozziAnalogRead(CV_IN3);
@@ -302,18 +312,25 @@ void updateControl()
 	inB = in;
 	tuneCV = mozziAnalogRead(CV_POT_IN2);
 //	tuneCV = (tuneCV * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3;
-	pitch = (pitch * 7 + pitchCV + (tuneCV >> 1)) >> 2;
-
+	pitch = (pitch * 7 + pitchCV + (tuneCV >> 1)) >> 3;
+	
 	
 	// convert to frequency.  This oughta be a lookup table
 	// INCREDIBLY, pow is almost cheap enough to use here
 	//float frequency = pow(2.0, pitch * ( 46.9 / 1023.0 / 12.0)) * 34.65;
 	float frequency = FREQUENCY(pitch);
 	
- 	uint8_t draw = (mozziAnalogRead(CV_POT_IN1) >> 6);
+ 	uint8_t d = (mozziAnalogRead(CV_POT_IN1) * 24) >> 10;
+ 	if (d != draw)
+ 		{
+ 		if (drawCounter == -1) drawCounter = 10;
+ 		else if (drawCounter == 0) draw = d;
+ 		drawCounter--;
+ 		}
+ 	else drawCounter = -1;
  	
 	// set the partials
-	const float* freq = partialFrequencies[draw >= 8 ? draw - 8 : draw];
+	const float* freq = partialFrequencies[draw >= 16 ? draw - 16: draw >= 8 ? draw - 8 : draw];
 	  for(uint8_t i = 0; i < 9; i++)
 		{
 		oscils[i].setFreq(frequency * freq[i]);
@@ -371,6 +388,5 @@ int updateAudio()
   	{
 	  val += (oscils[i].next() * finalAmplitudes[i]);
   	}
-  //if (val >> gainDivide > 127 || val >> gainDivide < -128) Serial.println("Overflow");
   return (int)(val >> gainDivide);		// seems to get low enough?
 }

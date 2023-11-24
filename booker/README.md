@@ -49,7 +49,7 @@ Pitch
 [UNUSED]
 #### AUDIO OUT
 Out
-#### Division OUT (D) 
+#### DIGITAL OUT (D) 
 [UNUSED]
 #### POT 1
 Choice of organ [Set the switch to MAN]

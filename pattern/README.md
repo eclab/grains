@@ -80,7 +80,7 @@ Output 3
 Output 4
 #### AUDIO OUT
 Output 1
-#### Division OUT (D) 
+#### DIGITAL OUT (D) 
 Output 2
 #### POT 1
 Input

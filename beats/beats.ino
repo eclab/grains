@@ -66,18 +66,19 @@
 ///
 /// PROGRAMMING BEATS
 ///
-/// First we need to define the MAXIMUM LENGTH for any pattern in your song.  The simple 
+/// First we need to define the MAXIMUM PATTERN LENGTH for any pattern in your song.  
+/// This isn't the length of a track, it's just the longest any track is permitted to be. The simple 
 /// approach is to just stick with 256. However, this restricts you to just 25 patterns in 
 /// your GRAINS memory (actually 26 but who's counting?). That might be plenty, but if you 
 /// need more memory, you can reduce the maximum pattern length to 128, 64, 32, 16, or 8, 
 /// which will increase your available of patterns correspondingly to roughly 50, 100, 200, 400, and 800.
-/// You change the MAXIMUM LENGTH here:
+/// You change the MAXIMUM PATTERN LENGTH here:
 
 #define MAX_PATTERN_LENGTH 256
 
 
 /// Now we define the number of 4-track patterns in your sequence, given available memory as discussed
-/// above.  By default you can fit about 25.
+/// above.  By default you can fit about 25 (since MAX_PATTERN_LENGTH is by default 256).
 
 #define PATTERNS 2        // Set this to the number of patterns in your sequence (any number > 0)
 
@@ -93,7 +94,7 @@
 #define ADDS 0          // Set this to 1 if you want randomness to add AND remove beats
 
 
-/// And we also define which tracks are subject to randomness.  In the example below, 
+/// And we also can define which tracks are subject to randomness.  In the example below, 
 /// all the tracks except the first one (notionally the kick drum, say) are subject to randomnes.
 
 #define TRACK_1_IS_RANDOM	0
@@ -115,7 +116,7 @@ struct pattern
 
 
 /// Beats also uses this information to construct some #defines you will use later.  Don't fool with these:
-/// The defines are EMPTY and FOREVER
+/// The useful #defines are EMPTY and FOREVER
 
 #define FOREVER 0
 #if MAX_PATTERN_LENGTH == 256
@@ -149,7 +150,7 @@ struct pattern
 
 
 /// Now finally we get to the part that you will code.  This the SEQUENCE.  It is a list
-/// of PATTERNS.  Each PATTERN has an INTERATIONS indicator, followed by for TRACKS.  Each TRACK
+/// of PATTERNS.  Each PATTERN has an ITERATIONS indicator, followed by four TRACKS.  Each TRACK
 /// is an array of ones and zeros, representing the BEATS.  The PATTERNS must be the the number 
 /// you had said before or Bad Things will Happen.  Furthermore, Strange Things will happen if
 /// you don't set each pattern length to the actual number of beats used.  Don't do that.
@@ -165,6 +166,7 @@ PROGMEM const struct pattern seq[PATTERNS] =      // don't fool with this line
 // A pattern has a LENGTH (with a comma)
 // A pattern then has an ITERATIONS (with a comma),
 // followed by four TRACKS (each ending with a comma)
+
         {
         32,           // THE LENGTH.   Set this to 1..255 steps, or to 0 for 256 steps
         3,            // THE ITERATIONS.  This must be >= 1, or FOREVER (0) to loop forever until the musician ADVANCES
@@ -182,6 +184,7 @@ PROGMEM const struct pattern seq[PATTERNS] =      // don't fool with this line
 // Either way, it doesn't matter.
 // [If you have for some reason changed MAX_PATTERN_LENGTH to something other than 256, 128, 64, 32, 16, or 8,
 // EMPTY won't be defined.  So don't do that. ]
+
         {
         16,     // THE LENGTH.  Set this to 1..255 steps, or to 0 for 256 steps
         1,      // THE ITERATIONS.  This must be >= 1, or FOREVER (0) to loop forever until the musician ADVANCES
@@ -269,7 +272,7 @@ void setup()
     pinMode(CV_AUDIO_IN, OUTPUT);
     pinMode(CV_IN3, OUTPUT);
     reset();
-Serial.begin(115200);
+// Serial.begin(115200);
     }
 
 void advance()

@@ -86,6 +86,7 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
     
     { spt_WELL, spt_WHAT, spt_WERE, spt_YOU, spt_DOING, NULL },
     { spt_HELLO, spt_PARTNER, NULL },
+    // { sp3_ONE, sp3_FIFTEEN, sp3_SEVEN, sp5_CLEARANCE_DELIVERY, NULL },
     { spONE_SMALL_STEP, NULL },
     
   };    // don't touch this line
