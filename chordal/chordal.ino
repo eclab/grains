@@ -35,7 +35,7 @@
 /// IN 3            Pitch CV	[This isn't IN2, like Pitch Tune, because Pitch Tune must be +/-]
 /// AUDIO IN (A)    [Unused]
 /// AUDIO OUT       Out
-/// DIGITAL OUT (D) 
+/// DIGITAL OUT (D) [Unused]
 ///
 /// POT 1           Mix			[Low: all Sine, High: all Square]
 ///					[If you're not using Mix CV, set the switch to MAN]

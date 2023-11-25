@@ -10,6 +10,10 @@ You will need to install the Mozzi Library.  You can do this from the Library Ma
 
 NOTE: Probably due to the voltage divider on all of its analog inputs, GRAINS is limited to about a 45 note range.  
 
+## Mixing
+
+A single note has 256 levels of mixing resolution.  Intervals have 128.  Triads and Sevenths etc. have 64.  This is a tradeoff I had to make to keep the sound quality reasonably high.  Sorry.
+
 ## Adjusting Tracking
 
 Grains can only do about 3.75 octaves due to its circuit design.  I have positioned it to start at the C two octaves below middle C.  For the same reason, I have to "stretch" Grains from 3.75V to 5V, so to speak, in software.  I have tuned this stretch for my own Grains, but if Evolution is tracking poorly in your Grains, get with me and we might be able to customize it for you.
