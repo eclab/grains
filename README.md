@@ -3,6 +3,12 @@ By Sean Luke (sean@cs.gmu.edu)
 
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code) and Oration/Oration 2, which are released under GPL 3.0 (as is Talkie).
 
+## Chordal
+
+A mixed square- and sine-wave chording oscillator.
+
+Status: Working.  I'll add some #defines later to allow sine/saw and sine/triangle too. [Can't have saw/square, say, because GRAINS doesn't have enough memory]
+
 ## Evolution
 
 An evolving drone synthesizer using the same additive synthesis technique as Booker.
