@@ -7,7 +7,7 @@ This is a collection of code which runs on the Tangible Waves GRAINS module, tho
 
 A chording oscillator which can cross-fade between sine and either square, saw, or triangle (selectable in code).
 
-Status: Working.
+Status: Working.  Some of the waves are a bit buzzy in certain locations: we have about 25% memory left, perhaps we could fit a few more oscillators to smooth things out.
 
 ## Evolution
 
