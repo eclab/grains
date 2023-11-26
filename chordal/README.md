@@ -1,8 +1,10 @@
 # Chordal
 
-Chordal is a mixed square- and sine-wave chording oscillator.  Evolution is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
+Chordal is a chording oscillator.  Evolution is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 
-You can set the pitch CV and tune, the amount of square vs sine wave, and the chord choice.
+Chordal can play chords of your choice, using a mixture of either square waves and sine waves, or sawtooth waves and sine waves, or triangle waves and sine waves.  (It can't be a mixture of, say, square and saw because GRAINS doesn't have enough memory.  It has to be sine.).   You select sawtooth, square, or triangle as a #define in the code. The default is square.
+
+You can set the pitch CV and tune, the amount of square/saw/tri vs sine wave, and the chord choice.
 
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
