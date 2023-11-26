@@ -5,9 +5,9 @@ This is a collection of code which runs on the Tangible Waves GRAINS module, tho
 
 ## Chordal
 
-A mixed square- and sine-wave chording oscillator.
+A chording oscillator which can cross-fade between sine and either square, saw, or triangle (selectable in code).
 
-Status: Working.  I'll add some #defines later to allow sine/saw and sine/triangle too. [Can't have saw/square, say, because GRAINS doesn't have enough memory]
+Status: Working.
 
 ## Evolution
 
