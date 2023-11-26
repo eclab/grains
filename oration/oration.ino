@@ -76,7 +76,7 @@
 /// Now we define sentences.
 
 const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
-  {                    // don't touch this line
+    {                    // don't touch this line
 
     // Each sentence is an array of WORDS that you can select from any of the
     // Vocabulary Files. The sentence MUST end with NULL as shown.  If you forget
@@ -89,7 +89,7 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
     // { sp3_ONE, sp3_FIFTEEN, sp3_SEVEN, sp5_CLEARANCE_DELIVERY, NULL },
     { spONE_SMALL_STEP, NULL },
     
-  };    // don't touch this line
+    };    // don't touch this line
 
 
 
@@ -138,228 +138,228 @@ const uint8_t* sentences[NUM_SENTENCES][MAX_WORDS] =    // don't touch this line
 
 #define RANDOM_PIN              A5
 #define WAITING_SCALE 16
-#define WAIT_FOREVER (1000 * 16)		// Note in Oration 2 this is 32767
+#define WAIT_FOREVER (1000 * 16)                // Note in Oration 2 this is 32767
 
 #define MINIMUM_RESET 800
 #define LOW 400
 #define COUNTDOWN 100       // we need about 100 to trigger Kick drums properly
 
-#define STOP_SPEAKING (-2)			// for sentence
-#define RESET_SPEAKING (-1)			// for sentence or word
+#define STOP_SPEAKING (-2)                      // for sentence
+#define RESET_SPEAKING (-1)                     // for sentence or word
 
 int8_t sentence = RESET_SPEAKING;       // STOP_SPEAKING means "no sentence", i.e., stop looping. RESET_SPEAKING  means "no sentence now, but if next sentence is chosen, we'll start with 0"
 int8_t _word = RESET_SPEAKING;          // -1 means 
-Talkie voice(false, true);				// inverted pin (pin 11) only
+Talkie voice(false, true);                              // inverted pin (pin 11) only
 
 uint8_t sizes[NUM_SENTENCES];
-int16_t waiting = 0;					// no wait initially
+int16_t waiting = 0;                                    // no wait initially
 
 uint8_t _nextSentenceSelected = false;
 uint8_t _sentenceSelected = false;
-uint8_t _triggerSent = false;	
-int8_t countdown = -1;					// countdown from after we set the trigger to when we release it.  -1 is COUNTDOWN FINISHED
+uint8_t _triggerSent = false;   
+int8_t countdown = -1;                                  // countdown from after we set the trigger to when we release it.  -1 is COUNTDOWN FINISHED
 
 
 // Selects a sentence.  If the user selects the "top" value, we select STOP.
 void selectSentence()
-  {
-  if (RANDOM_ORDERING)
-  	{
-  	uint8_t newSentence = random(NUM_SENTENCES);
-  	if (newSentence != sentence) _word = -1; 	// don't try to avoid duplicates
-  	sentence = newSentence;
-	nextWord();
-  	}
-  else
-  	{
-	  sentence = (analogRead(CV_POT_IN1) * (NUM_SENTENCES + 1)) >> 10;
-	  _word = RESET_SPEAKING;
-	  if (sentence == NUM_SENTENCES)
-	    sentence = STOP_SPEAKING;  // stop the loop
-	  _triggerSent = false;
+    {
+    if (RANDOM_ORDERING)
+        {
+        uint8_t newSentence = random(NUM_SENTENCES);
+        if (newSentence != sentence) _word = -1;        // don't try to avoid duplicates
+        sentence = newSentence;
+        nextWord();
+        }
+    else
+        {
+        sentence = (analogRead(CV_POT_IN1) * (NUM_SENTENCES + 1)) >> 10;
+        _word = RESET_SPEAKING;
+        if (sentence == NUM_SENTENCES)
+            sentence = STOP_SPEAKING;  // stop the loop
+        _triggerSent = false;
+        }
     }
-  }
   
 
 // Selects the next sentence
 void selectNextSentence()
-  {
-  if (RANDOM_ORDERING)
-  	{
-    sentence = (analogRead(CV_POT_IN1) * NUM_SENTENCES) >> 10;
-  	nextWord();
-  	}
-  else
-  	{
-	  sentence++;							// RESET_SPEAKING will go to 0
-	  _word = RESET_SPEAKING;
-	  if (sentence >= NUM_SENTENCES)
-		{
-		if (LOOPING) sentence = 0;
-		else sentence = STOP_SPEAKING;
-		}
-	  _triggerSent = false;
-	}
-  }
+    {
+    if (RANDOM_ORDERING)
+        {
+        sentence = (analogRead(CV_POT_IN1) * NUM_SENTENCES) >> 10;
+        nextWord();
+        }
+    else
+        {
+        sentence++;                                                   // RESET_SPEAKING will go to 0
+        _word = RESET_SPEAKING;
+        if (sentence >= NUM_SENTENCES)
+            {
+            if (LOOPING) sentence = 0;
+            else sentence = STOP_SPEAKING;
+            }
+        _triggerSent = false;
+        }
+    }
 
 // Extracts and returns the next word.  _word is set to the index of the word
 // in the sentences array.  If there is no word, NULL is returned
 const uint8_t* nextWord()
-  {
-   if (sentence < 0 || sentence >= NUM_SENTENCES) return NULL;
-    waiting = 0;			// let's speak!  Undo inifinite pause
-   if (RANDOM_ORDERING)
     {
-      if (sizes[sentence] == 1)    // only one word!
-      	{
-      	_word = 0;
-    	return sentences[sentence][_word];
-      	}
-      else if (sizes[sentence] > 2)
+    if (sentence < 0 || sentence >= NUM_SENTENCES) return NULL;
+    waiting = 0;                        // let's speak!  Undo inifinite pause
+    if (RANDOM_ORDERING)
         {
-          for(uint8_t tries = 0; tries < 255; tries++)    // try up to 256 times
+        if (sizes[sentence] == 1)    // only one word!
             {
-            uint8_t newWord = random(sizes[sentence]);
-            if (newWord != _word)
-              {
-              _word = newWord;
-              return sentences[sentence][_word];
-              }
+            _word = 0;
+            return sentences[sentence][_word];
             }
-         }
-      // not avoiding repeats, or giving up
-     _word = random(sizes[sentence]);
-     return sentences[sentence][_word];
+        else if (sizes[sentence] > 2)
+            {
+            for(uint8_t tries = 0; tries < 255; tries++)    // try up to 256 times
+                {
+                uint8_t newWord = random(sizes[sentence]);
+                if (newWord != _word)
+                    {
+                    _word = newWord;
+                    return sentences[sentence][_word];
+                    }
+                }
+            }
+        // not avoiding repeats, or giving up
+        _word = random(sizes[sentence]);
+        return sentences[sentence][_word];
+        }
+    else
+        {
+        if (_word >= sizes[sentence]) return NULL;
+        if (_word >= 0 && sentences[sentence][_word] == NULL) return NULL;
+        _word++;                                                            // RESET_SPEAKING will go to 0
+        return sentences[sentence][_word];
+        }
     }
-   else
-    {
-    if (_word >= sizes[sentence]) return NULL;
-    if (_word >= 0 && sentences[sentence][_word] == NULL) return NULL;
-    _word++;								// RESET_SPEAKING will go to 0
-    return sentences[sentence][_word];
-    }
-  }
 
 
 uint16_t buildSampleRate()
-	{
-	uint16_t a = analogRead(CV_POT_IN2);
-	if (a < 512)
-		{
-		a = (uint16_t)((a * (uint32_t)4000) >> 9) + 4000;		// 4000 to 8000
-		}
-	else
-		{
-		a = (uint16_t)((a * (uint32_t)16000) >> 10);			// 8000 to 16000
-		}
-	return a;
-	}
+    {
+    uint16_t a = analogRead(CV_POT_IN2);
+    if (a < 512)
+        {
+        a = (uint16_t)((a * (uint32_t)4000) >> 9) + 4000;               // 4000 to 8000
+        }
+    else
+        {
+        a = (uint16_t)((a * (uint32_t)16000) >> 10);                    // 8000 to 16000
+        }
+    return a;
+    }
 
 
 void setup()
-  {
+    {
     pinMode(CV_GATE_OUT, OUTPUT);
     randomSeed(analogRead(RANDOM_PIN));
 
-   // compute sentence sizes
-   uint8_t j = 0;
+    // compute sentence sizes
+    uint8_t j = 0;
     for(uint8_t i = 0; i < NUM_SENTENCES; i++)
-      {
-      for(j = 0; sentences[i][j] != NULL; j++);
-      sizes[i] = j;
-      } 
+        {
+        for(j = 0; sentences[i][j] != NULL; j++);
+        sizes[i] = j;
+        } 
 
-  //Serial.begin(112500);
-  }
+    //Serial.begin(112500);
+    }
   
 void loop()
-  {
-  // Determine if we need to go to the next sentence
-  uint16_t b = analogRead(CV_IN3);
-  if (b < LOW)
     {
-    _nextSentenceSelected = 0;
-    }
-  else if (b > MINIMUM_RESET && !_nextSentenceSelected)
-    {
-    _nextSentenceSelected = true;
-    selectNextSentence();
-    }  
+    // Determine if we need to go to the next sentence
+    uint16_t b = analogRead(CV_IN3);
+    if (b < LOW)
+        {
+        _nextSentenceSelected = 0;
+        }
+    else if (b > MINIMUM_RESET && !_nextSentenceSelected)
+        {
+        _nextSentenceSelected = true;
+        selectNextSentence();
+        }  
 
-  // Determine if we need to go to the selected sentence.  This takes precedence.
-  analogRead(CV_AUDIO_IN);    // throwaway because it has high impedance :-(
-  uint16_t a = analogRead(CV_AUDIO_IN);
-  if (a < LOW)
-    {
-      _sentenceSelected = 0;
-    }
-   else if (a > MINIMUM_RESET && !_sentenceSelected)
-    {
-    _sentenceSelected = true;
-    selectSentence();
-    }
+    // Determine if we need to go to the selected sentence.  This takes precedence.
+    analogRead(CV_AUDIO_IN);    // throwaway because it has high impedance :-(
+    uint16_t a = analogRead(CV_AUDIO_IN);
+    if (a < LOW)
+        {
+        _sentenceSelected = 0;
+        }
+    else if (a > MINIMUM_RESET && !_sentenceSelected)
+        {
+        _sentenceSelected = true;
+        selectSentence();
+        }
   
-  // is the digital write countdown finished?
-  if (countdown == 0)
-    {
-    digitalWrite(CV_GATE_OUT, 0);
-    countdown--;						// go to -1
-    }
-   else if (countdown > 0)
-    {
-    countdown--;
-    }
+    // is the digital write countdown finished?
+    if (countdown == 0)
+        {
+        digitalWrite(CV_GATE_OUT, 0);
+        countdown--;                                                // go to -1
+        }
+    else if (countdown > 0)
+        {
+        countdown--;
+        }
     
 
 
-  // Speak!
+    // Speak!
 
-  // Are we talking?
-  if (voice.isTalking())
-    {
-      // do nothing
+    // Are we talking?
+    if (voice.isTalking())
+        {
+        // do nothing
+        }
+    // We're not talking.  So are we ready to say the next word?
+    else if (waiting <= 0)
+        {
+        if (sentence >= 0)                              // do we have a sentence?
+            {
+            if (nextWord() != NULL)         // do we have a word to say?
+                {
+                buildSampleRate();
+                //buildSpeechRate();
+                voice.sayQ(sentences[sentence][_word]);
+                _triggerSent = false;
+                waiting = analogRead(CV_POT3) * WAITING_SCALE + 1;              // should not be zero, so we can wait forever
+                }
+            else                                            // at end of sentence.  Trigger if we haven't already.
+                {
+                if (!_triggerSent)
+                    {
+                    digitalWrite(CV_GATE_OUT, 1);
+                    countdown = COUNTDOWN;
+                    _triggerSent = true;
+                    }
+                }
+            }
+        else                                // No sentence.  We wait.
+            {
+            // do nothing
+            }
+        }
+    else // We are waiting...
+        {
+        if (RANDOM_ORDERING)
+            {
+            if (!_triggerSent)
+                {
+                digitalWrite(CV_GATE_OUT, 1);           // send word trigger
+                countdown = COUNTDOWN;
+                _triggerSent = true;
+                }
+            // now wait forever
+            if (waiting < WAIT_FOREVER) waiting--;
+            }
+        else waiting--;
+        }
     }
-   // We're not talking.  So are we ready to say the next word?
-  else if (waiting <= 0)
-  	{
-  	if (sentence >= 0)				// do we have a sentence?
-  	 	{
-  	 	if (nextWord() != NULL)		// do we have a word to say?
-			{
-		     buildSampleRate();
-    		 //buildSpeechRate();
-  			 voice.sayQ(sentences[sentence][_word]);
-  			 _triggerSent = false;
-    		waiting = analogRead(CV_POT3) * WAITING_SCALE + 1;		// should not be zero, so we can wait forever
-    		}
-    	else						// at end of sentence.  Trigger if we haven't already.
-  	 		{
-    		if (!_triggerSent)
-    			{
-    			digitalWrite(CV_GATE_OUT, 1);
-    			countdown = COUNTDOWN;
-    			_triggerSent = true;
-    			}
-  	 		}
-    	}
-    else				// No sentence.  We wait.
-    	{
-    	// do nothing
-    	}
-  	}
-   else // We are waiting...
-		{
-		if (RANDOM_ORDERING)
-			{
-    		if (!_triggerSent)
-    			{
-    			digitalWrite(CV_GATE_OUT, 1);		// send word trigger
-    			countdown = COUNTDOWN;
-    			_triggerSent = true;
-    			}
-    		// now wait forever
-			if (waiting < WAIT_FOREVER) waiting--;
-			}
-		else waiting--;
-		}
-}

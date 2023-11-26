@@ -111,7 +111,7 @@ void setup()
     {
     pinMode(CV_AUDIO_OUT, OUTPUT);
     pinMode(CV_GATE_OUT, OUTPUT);
-  // Serial.begin(115200);
+    // Serial.begin(115200);
     }
 
 // From https://github.com/ducroq/EuclidSeqNano/blob/master/src/EuclidRhythm.cpp
@@ -119,59 +119,59 @@ void setup()
 
 bool bresenhamEuclidean(int n, int k, int o, uint8_t *s)
 /*
-	Constructs a cyclic n-bit binary sequence with k 1s,
-	such that the 1s are distributed as evenly as possible.
-	@param n is the length of the sequence (beats or pulses)
-	@param k is the number of 1s (onsets)
-	@param o is the offset (shift)
-	@param s is a pointer to store the resulting sequence
-	returns true on success and false on failure
+  Constructs a cyclic n-bit binary sequence with k 1s,
+  such that the 1s are distributed as evenly as possible.
+  @param n is the length of the sequence (beats or pulses)
+  @param k is the number of 1s (onsets)
+  @param o is the offset (shift)
+  @param s is a pointer to store the resulting sequence
+  returns true on success and false on failure
 */
-{
-	if (k > n)
-		return false;
-
-   if (k == 0)
     {
-    for(uint8_t i = 0; i < n; i++)
-      s[i] = 0;
+    if (k > n)
+        return false;
+
+    if (k == 0)
+        {
+        for(uint8_t i = 0; i < n; i++)
+            s[i] = 0;
+        return true;
+        }
+    
+    uint8_t c[n];
+    float slope = float(k) / float(n);
+    uint8_t prev_y = -1;
+
+    for (uint8_t i = 0; i < n; i++)
+        // approximate a pixelated line and mark vertical changes
+        {
+        uint8_t y = (uint8_t)floor((float(i) * slope));
+        c[i] = (y != prev_y) ? 1 : 0;
+        prev_y = y;
+        }
+    for (uint8_t i = 0; i < n; i++)
+        // shift the pattern to produce sequence
+        s[i] = (i - (int8_t)o >=  0) ? c[i - (int8_t)o] : c[i - (int8_t)o + n];
+    //      (i + o < n) ? c[i + o] : c[i + o - n];
+
     return true;
     }
-    
-	uint8_t c[n];
-	float slope = float(k) / float(n);
-	uint8_t prev_y = -1;
-
-	for (uint8_t i = 0; i < n; i++)
-	// approximate a pixelated line and mark vertical changes
-	{
-		uint8_t y = (uint8_t)floor((float(i) * slope));
-		c[i] = (y != prev_y) ? 1 : 0;
-		prev_y = y;
-	}
-	for (uint8_t i = 0; i < n; i++)
-		// shift the pattern to produce sequence
-		s[i] = (i - (int8_t)o >=  0) ? c[i - (int8_t)o] : c[i - (int8_t)o + n];
-	//	(i + o < n) ? c[i + o] : c[i + o - n];
-
-	return true;
-}
 
 void printIt()
-  {
-  Serial.print("Size ");
-  Serial.println(size);
-  Serial.print("Beats ");
-  Serial.println(beats);
-  Serial.print("Rotation ");
-  Serial.println(rotation);
-  for(int i = 0; i < size; i++)
     {
-    Serial.print(rhythm[i]);
-    Serial.print(" ");
+    Serial.print("Size ");
+    Serial.println(size);
+    Serial.print("Beats ");
+    Serial.println(beats);
+    Serial.print("Rotation ");
+    Serial.println(rotation);
+    for(int i = 0; i < size; i++)
+        {
+        Serial.print(rhythm[i]);
+        Serial.print(" ");
+        }
+    Serial.println();
     }
-  Serial.println();
-  }
   
 
 #define COUNT_TO 10
@@ -181,26 +181,26 @@ uint8_t rotationCount = 0;
 uint8_t clock = 0;
 void loop()
     {
-	// reset triggers
-	if (counter1 == 0)
-		{
-		digitalWrite(CV_AUDIO_OUT, 0);
-		}
-		
-	if (counter1 >= 0)
-		{
-		counter1--;
-		} 
-		
-	if (counter2 == 0)
-		{
-		digitalWrite(CV_GATE_OUT, 0);
-		}
-		
-	if (counter2 >= 0)
-		{
-		counter2--;
-		} 
+    // reset triggers
+    if (counter1 == 0)
+        {
+        digitalWrite(CV_AUDIO_OUT, 0);
+        }
+                
+    if (counter1 >= 0)
+        {
+        counter1--;
+        } 
+                
+    if (counter2 == 0)
+        {
+        digitalWrite(CV_GATE_OUT, 0);
+        }
+                
+    if (counter2 >= 0)
+        {
+        counter2--;
+        } 
     
     // Determine if we need to recompute the rhythm
 
@@ -212,87 +212,87 @@ void loop()
     uint8_t newSize = (uint8_t)((analogRead(CV_POT_IN1) * (uint32_t)(MAX_LENGTH - 1)) >> 10) + 1;
 #endif
     if (newSize != size)
-      {
+        {
         if (sizeCount++ > COUNT_TO)
-          {
+            {
             size = newSize;
             sizeCount = 0;
             change = true;
-          }  
-      }
-        else sizeCount = 0;    
+            }  
+        }
+    else sizeCount = 0;    
   
     uint8_t newBeats = (uint8_t)((analogRead(CV_POT_IN2) * (uint32_t)(size + 1)) >> 10);
     if (newBeats != beats)
-      {
+        {
         if (beatsCount++ > COUNT_TO)
-          {
+            {
             beats = newBeats;
             beatsCount = 0;
             change = true;
-          }        
-      }
-        else beatsCount = 0;      
+            }        
+        }
+    else beatsCount = 0;      
     uint8_t newRotation = (uint8_t)((analogRead(CV_POT3) * (uint32_t)(size + 1)) >> 10);
-   if (newRotation != rotation)
-      {
+    if (newRotation != rotation)
+        {
         if (rotationCount++ > COUNT_TO)
-          {
-      // Serial.println(newRotation);
+            {
+            // Serial.println(newRotation);
             rotation = newRotation;
             rotationCount = 0;
             change = true;
-          }        
-     }
-         else rotationCount = 0;      
+            }        
+        }
+    else rotationCount = 0;      
     
     if (change)
-    	{
-    	// rebuild
-    	position = 0;
-    	bresenhamEuclidean(size, beats, rotation == 0 ? 0 : rotation - 1, rhythm);
-      // printIt();
-    	}
+        {
+        // rebuild
+        position = 0;
+        bresenhamEuclidean(size, beats, rotation == 0 ? 0 : rotation - 1, rhythm);
+        // printIt();
+        }
   
     // Reset and Clock
 
-	if (size == 0) return;
+    if (size == 0) return;
 
-	analogRead(CV_AUDIO_IN);		// throwaway
-	if (analogRead(CV_AUDIO_IN) > HIGH_CLOCK)
-		{
-		position = 0;
-		return;
-		}
-	
-	uint16_t clockVal = analogRead(CV_IN3);
-	if (clockVal < LOW_CLOCK)
-		{
-		clock = false;
-		}
-	else if (clockVal > HIGH_CLOCK && !clock)
-		{
-		clock = true;
-		if (rhythm[position] == 1) 
-			{
-			digitalWrite(CV_AUDIO_OUT, 1);
-			counter1 = TRIGGER_WIDTH;
-			}
+    analogRead(CV_AUDIO_IN);                // throwaway
+    if (analogRead(CV_AUDIO_IN) > HIGH_CLOCK)
+        {
+        position = 0;
+        return;
+        }
+        
+    uint16_t clockVal = analogRead(CV_IN3);
+    if (clockVal < LOW_CLOCK)
+        {
+        clock = false;
+        }
+    else if (clockVal > HIGH_CLOCK && !clock)
+        {
+        clock = true;
+        if (rhythm[position] == 1) 
+            {
+            digitalWrite(CV_AUDIO_OUT, 1);
+            counter1 = TRIGGER_WIDTH;
+            }
 
-	if (rotation == 0)
-		{
-		if (position == 0) 
-			{
-			digitalWrite(CV_GATE_OUT, 1);
-			counter2 = TRIGGER_WIDTH;
-			}
-		}
-	else if (rhythm[size - position - 1] == 1) 
-		{
-		digitalWrite(CV_GATE_OUT, 1);
-		counter2 = TRIGGER_WIDTH;
-		}
-    position++;
-    if (position >= size) position = 0;
-		}
+        if (rotation == 0)
+            {
+            if (position == 0) 
+                {
+                digitalWrite(CV_GATE_OUT, 1);
+                counter2 = TRIGGER_WIDTH;
+                }
+            }
+        else if (rhythm[size - position - 1] == 1) 
+            {
+            digitalWrite(CV_GATE_OUT, 1);
+            counter2 = TRIGGER_WIDTH;
+            }
+        position++;
+        if (position >= size) position = 0;
+        }
     }

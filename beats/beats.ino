@@ -29,7 +29,7 @@
 /// DIGITAL OUT (D) Drum 2
 ///
 /// POT 1           Randomness [Minimum Randomness at 2 o'clock, Maximum a bit below 9 o'clock] 
-///					[Note that at very high randomness, there is a slight chance we will hit a beat early]
+///                                     [Note that at very high randomness, there is a slight chance we will hit a beat early]
 ///                 [Turn to far left to pause the clock]
 ///                 [Switch must be set to IN 1]
 ///
@@ -97,10 +97,10 @@
 /// And we also can define which tracks are subject to randomness.  In the example below, 
 /// all the tracks except the first one (notionally the kick drum, say) are subject to randomnes.
 
-#define TRACK_1_IS_RANDOM	0
-#define TRACK_2_IS_RANDOM	1
-#define TRACK_3_IS_RANDOM	1
-#define TRACK_4_IS_RANDOM	1
+#define TRACK_1_IS_RANDOM       0
+#define TRACK_2_IS_RANDOM       1
+#define TRACK_3_IS_RANDOM       1
+#define TRACK_4_IS_RANDOM       1
 
 
 /// Based on this information, Beats defines a pattern (don't fool with this):
@@ -356,7 +356,7 @@ void pulse()    // randomness goes 0...105 (0 least random)
     if (s) digitalWrite(CV_IN3, 1);
 
     s = sequence.track4[step];
-   if (TRACK_4_IS_RANDOM && random(MAX_RANDOMNESS) < randomness)
+    if (TRACK_4_IS_RANDOM && random(MAX_RANDOMNESS) < randomness)
         {
         if (ADDS)
             {

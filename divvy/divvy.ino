@@ -34,13 +34,13 @@
 ///
 /// At present the options are (left to right):
 ///
-/// 96 clocks per pulse		          (MIDI Clock bars)
+/// 96 clocks per pulse                   (MIDI Clock bars)
 /// 64 clocks per pulse
 /// 32 clocks per pulse
-/// 24 clocks per pulse		          (MIDI Clock quarter notes)
+/// 24 clocks per pulse                   (MIDI Clock quarter notes)
 /// 16 clocks per pulse
 /// 8 clocks per pulse
-/// 6 clocks per pulse		          (MIDI Clock 16th notes)
+/// 6 clocks per pulse                    (MIDI Clock 16th notes)
 /// 4 clocks per pulse offset by 2    (Binary 4 digit)
 /// 4 clocks per pulse
 /// 3 clocks per pulse
@@ -115,27 +115,27 @@ void setup()
 
 
 uint16_t getPulseWidth(uint8_t which, uint16_t pulsewidth)
-	{
-	if (which == 0)
-		return (uint16_t) ((pulsewidth * (uint32_t)clockPulses[option1]) >> 10);
-	else
-		return (uint16_t) ((pulsewidth * (uint32_t)clockPulses[option2]) >> 10);
-	}
+    {
+    if (which == 0)
+        return (uint16_t) ((pulsewidth * (uint32_t)clockPulses[option1]) >> 10);
+    else
+        return (uint16_t) ((pulsewidth * (uint32_t)clockPulses[option2]) >> 10);
+    }
 
 void pulse1()
     {
     digitalWrite(CV_AUDIO_OUT, 1);
-	counter1 = clockPulses[option1] - 1;		// no offset now
-	if (getPulseWidth(0, pulsewidth) == 0) { offCounter1 = PULSEWIDTH_COUNTDOWN; }
-	else offCounter1 = -1;
+    counter1 = clockPulses[option1] - 1;            // no offset now
+    if (getPulseWidth(0, pulsewidth) == 0) { offCounter1 = PULSEWIDTH_COUNTDOWN; }
+    else offCounter1 = -1;
     }
     
 void pulse2()
     {
     digitalWrite(CV_GATE_OUT, 1);
-	counter2 = clockPulses[option2] - 1;		// no offset now
-	if (getPulseWidth(1, pulsewidth) == 0) offCounter2 = PULSEWIDTH_COUNTDOWN;
-	else offCounter2 = -1;
+    counter2 = clockPulses[option2] - 1;            // no offset now
+    if (getPulseWidth(1, pulsewidth) == 0) offCounter2 = PULSEWIDTH_COUNTDOWN;
+    else offCounter2 = -1;
     }
 
 void loop()
@@ -164,19 +164,19 @@ void loop()
 
     uint8_t opt = (uint8_t)((analogRead(CV_POT_IN1) * NUM_DIVISION_OPTIONS) >> 10);
     if (opt != option1)
-    	{
-    	if (option1Counter < 0) option1Counter = OPTION_WAIT;
-		else if (option1Counter == 0) { option1 = opt; reset(); option1Counter = -1; }
-		else option1Counter--;
-    	}
+        {
+        if (option1Counter < 0) option1Counter = OPTION_WAIT;
+        else if (option1Counter == 0) { option1 = opt; reset(); option1Counter = -1; }
+        else option1Counter--;
+        }
     else option1Counter = -1;
     opt = (uint8_t)((analogRead(CV_POT_IN2) * NUM_DIVISION_OPTIONS) >> 10);
     if (opt != option2)
-    	{
-    	if (option2Counter < 0) option2Counter = OPTION_WAIT;
-		else if (option2Counter == 0) { option2 = opt; reset(); option2Counter = -1; }
-		else option2Counter--;
-    	}
+        {
+        if (option2Counter < 0) option2Counter = OPTION_WAIT;
+        else if (option2Counter == 0) { option2 = opt; reset(); option2Counter = -1; }
+        else option2Counter--;
+        }
     else option2Counter = -1;
     pulsewidth = analogRead(CV_POT3);
 
@@ -190,9 +190,9 @@ void loop()
         {
         clock = true;
     
-		if (counter1 == 0) { pulse1();}
-		else if (counter1 >= 0) counter1--;
-		if (counter2 == 0) pulse2();
-		else if (counter2 >= 0) counter2--;
-		}
+        if (counter1 == 0) { pulse1();}
+        else if (counter1 >= 0) counter1--;
+        if (counter2 == 0) pulse2();
+        else if (counter2 >= 0) counter2--;
+        }
     }

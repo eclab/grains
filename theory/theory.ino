@@ -89,7 +89,7 @@
 /// You don't need to comment out the earlier #define expressions.
 
 // #define AAA(w,x,y,z,c,b) \
-     sin(w) + cos(x) + y + z < c * b
+sin(w) + cos(x) + y + z < c * b
 
 /// NOTE: If nothing is plugged into B, then it will register a 1.
 

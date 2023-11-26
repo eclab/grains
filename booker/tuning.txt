@@ -18,7 +18,7 @@
 //	//float frequency = FREQUENCY(pitch);
 //
 ///// ... and note the 46.9 -- that's the number you increase or decrease for the tracking stretch.
-///// Recompile and test.  When you get the tunint number you want, replace the "pitches" table
+///// Recompile and test.  When you get the tuning number you want, replace the "pitches" table
 ///// with the appropriate one below, and change the code above back to:
 //
 //	//float frequency = pow(2.0, pitch * ( 46.9 / 1023.0 / 12.0)) * 34.65;
