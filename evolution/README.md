@@ -20,11 +20,7 @@ If you turn the Evolution Rate knob (Pot 3) to the far LEFT, so the Rate is Zero
 
 ## Adjusting Tracking
 
-Grains can only do about 3.75 octaves due to its circuit design.  I have positioned it to start at the C two octaves below middle C.  For the same reason, I have to "stretch" Grains from 3.75V to 5V, so to speak, in software.  I have tuned this stretch for my own Grains, but if Evolution is tracking poorly in your Grains, get with me and we might be able to customize it for you.
-
-In short, you can play with the function that has "pow(...)" in it below to get the tracking you need.  65.41 is the frequency two octaves below middle C.  45.2 is the stretch factor appropriate for my grains -- higher is more stretched.  60 is a full 5V, 5-octave (60 note) stretch.  You might need to stretch or decrease by just a tad, like .1 or .2.  I don't know how consistent Grains' internal resistors are from unit to unit.
-
-Once you have a desired base frequency and stretch value, you could pump out all the values from 0 to 1023 and put them into the "pitch[]" table.  I use some lisp code as below but you can choose whatever language suits your fancy.  :-)  Then use the FREQUENCIES macro instead of the pow() function, it's significantly faster.
+Grains's Inputs 1, 2, and 3 (and A) track at about 1.3V/octave, not 1V/octave.  The exact amount varies from unit to unit.  You may need to tweak things in the code to get it to track better.  It's just a matter of setting a single number, but you'll probably need to adjust it.  The code has instructions for doing this.  Likely once you've identified the number, you can use it in all my Grains projects.
 
 
 ## Configuration

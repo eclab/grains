@@ -47,7 +47,7 @@
 ///// In C, the equation is: float frequency = pow(2.0, pitch * ( 46.9 / 1023.0 / 12.0)) * 32.70;
 ///// this file contains lookup values so you can just say float frequency = frequencies[pitch].
 /////
-///// I generated the values in this file using the following Common Lisp code:
+///// For posterity's sake, I generated the values in this file using the following Common Lisp code:
 
 /*
 

@@ -218,10 +218,6 @@ void updateControl()
 //      tuneCV = (tuneCV * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3;
     pitch = (pitch * 7 + pitchCV + (tuneCV >> 1)) >> 3;
         
-        
-    // convert to frequency.  This oughta be a lookup table
-    // INCREDIBLY, pow is almost cheap enough to use here
-    //float frequency = pow(2.0, pitch * ( 46.9 / 1023.0 / 12.0)) * 34.65;
     float frequency = FREQUENCY(pitch);
         
     uint8_t d = (mozziAnalogRead(CV_POT_IN1) * 24) >> 10;
