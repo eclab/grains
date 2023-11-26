@@ -34,14 +34,14 @@
 
 /// CONFIGURATION
 ///
-/// IN 1            Mix CV              [Low: all Sine, High: all Square]
+/// IN 1            Mix CV              [Low: all Sine, High: all Square/Saw/Tri]
 /// IN 2            [Unused]
 /// IN 3            Pitch CV    [This isn't IN2, like Pitch Tune, because Pitch Tune must be +/-]
 /// AUDIO IN (A)    [Unused]
 /// AUDIO OUT       Out
 /// DIGITAL OUT (D) [Unused]
 ///
-/// POT 1           Mix                 [Low: all Sine, High: all Square]
+/// POT 1           Mix                 [Low: all Sine, High: all Square/Saw/Tri]
 ///                                     [If you're not using Mix CV, set the switch to MAN]
 ///
 /// POT 2           Pitch Tune  [Set the switch to MAN]

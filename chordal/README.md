@@ -59,7 +59,7 @@ The chords are, in order:
 ## Configuration
 
 #### IN 1
-Mix CV [Low: all Sine, High: all Square]
+Mix CV [Low: all Sine, High: all Square/Saw/Tri]
 #### IN 2
 [UNUSED]
 #### IN 3
@@ -71,7 +71,7 @@ Out
 #### DIGITAL OUT (D) 
 [UNUSED]
 #### POT 1
-Mix [Low: all Sine, high: all Square]
+Mix [Low: all Sine, high: all Square/Saw/Tri]
 
 [If you're not using MixCV, set the switch to MAN]
 #### POT 2
