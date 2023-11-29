@@ -28,9 +28,9 @@
 /// 
 /// SWITCHBLADE works like this:
 ///
-/// 1. It first takes the input in IN 1, attenuated by POT1, and adds in IN 3.  Note that IN3
+/// 1. It first takes the input in IN 1, attenuated by POT 1, and adds in IN 3.  Note that IN 3
 ///    reaches its maximum early due to same problem as the GRAINS bug.  If nothing is plugged 
-///    into IN3, it will be 0. 
+///    into IN 3, it will be 0. 
 ///
 /// 2. It then smooths the result to the degree instructed.  
 ///
@@ -90,6 +90,7 @@
 
 void setup() 
     {
+    randomSeed(A5);						// FIXME: We're using randomSeed() and random() when we could be using the faster Mozzi versions
     startMozzi();
     }
 

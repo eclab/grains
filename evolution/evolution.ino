@@ -72,7 +72,9 @@
 // 3. Plug in the USB cable.  
 // 4. Compile and upload the code
 // 5. UNPLUG the USB cable.  This is important: USB boosts GRAINS voltage, which messes things up 
-// 6. Test.  How close does my code on the GRAINS get to correct tracking? 
+// 6. Test.  How close does my code on the GRAINS get to correct tracking?  You might use a tuning 
+//    phone app, tuned to C two octaves below middle C, and then and working your way up to see how
+//    badly it gets off.
 // 7. If it's too stretched, reduce the number.  If it's too compressed, increase.
 // 8. Go to step 2 and repeat until the tracking looks good.
 //
