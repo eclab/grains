@@ -3,21 +3,33 @@ By Sean Luke (sean@cs.gmu.edu)
 
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code) and Oration/Oration 2, which are released under GPL 3.0 (as is Talkie).
 
+## Stochastic
+
+A random walk generator (free or about a mean), plus sample and hold, plus added fuzz.   Requires Mozzi. 
+
+Status: Working
+
+## Switchblade
+
+A combination fixed-lag smoother (slew), summed attenuverter, and noise-fuzzer.  Requires Mozzi.
+
+Status: Working
+
 ## Chordal
 
-A chording oscillator which can cross-fade between sine and either square, saw, or triangle (selectable in code).
+A chording oscillator which can cross-fade between sine and either square, saw, or triangle (selectable in code).  Requires Mozzi.
 
 Status: Working.  Some of the waves are a bit buzzy in certain locations: we have about 25% memory left, perhaps we could fit a few more oscillators to smooth things out.
 
 ## Evolution
 
-An evolving drone synthesizer using the same additive synthesis technique as Booker.
+An evolving drone synthesizer using the same additive synthesis technique as Booker.  Requires Mozzi.
 
 Status: Working
 
 ## Booker
 
-A Hammond Organ simulator with a built-in Leslie and a variety of organ drawbar combinations.
+A Hammond Organ simulator with a built-in Leslie and a variety of organ drawbar combinations.  Requires Mozzi.
 
 Status: Working, but it pushes Mozzi to its limits I think.
 
