@@ -4,7 +4,7 @@ Voice is a complete synthesizer voice, with an oscillator, a filter, and an ampl
 
 Voice has an saw, square, or triangle oscillator, four filter options, and an amplifier.   You can control the pitch, amplitude, filter cutoff, and resonance with CV values.   You can also control the amplitude and filter cutoff with the pots, and you can tune the pitch (+/-) with a pot.  You cannot control resonance from the pot (not enough pots!)
 
-You can choose from square, triangle, and sawtooth waves, and from low-pass, high-pass,  band-pass, and notch filter types.  There is no pulse width or PWM. The filter is a simple two-pole filter consisting of two one-pole filters plus resonance. It's what's provided by the Mozzi distribution but it's not great, particularly at high frequencies and high resonance.  I might replace it with my own filter later.
+You can choose from square, triangle, and sawtooth waves, and from low-pass, high-pass,  band-pass, and notch filter types.  This is done by changing #defines in the code, it's easy.  There is no pulse width or PWM. The filter is a simple two-pole filter consisting of two one-pole filters plus resonance. It's what's provided by the Mozzi distribution but it's not great, particularly at high frequencies and high resonance.  I might replace it with my own filter later.
 
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
