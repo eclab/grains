@@ -15,7 +15,7 @@
 /// CHORDAL
 ///
 /// Chordal is a mixed square/saw/triangle- and sine-wave chording oscillator.
-/// Evolution is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
+/// Chordal is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
 /// Chordal can mix between square and sine, saw and sine, or triangle and sine.  You select
 /// which one you want in the code.  The default is square and sine.

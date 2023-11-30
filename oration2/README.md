@@ -51,7 +51,7 @@ You can make your own words and sounds too!  See [the Talkie page](https://githu
 
 ## Non-Random Configuration
 
-If you would like Oration 2 to speak all the sentences one at a time, just take the Speech Finished Trigger (Digital Out (D)) and feed it into the Trigger for Speaking the Next Sentence (Audio In (A)).
+If you would like Oration 2 to speak all the sentences one at a time, just take the Speech Finished Trigger (Digital Out (D)) and feed it into the Trigger for Speaking the Next Sentence (In 3)).
 
 #### IN 1
 Current Sentence to Speak (CV)
