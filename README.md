@@ -7,7 +7,7 @@ This is a collection of code which runs on the Tangible Waves GRAINS module, tho
 
 A complete synthesizer voice: oscillator, 2-pole filter, and amplifier.  You provide the envelopes.  Square, Sawtooth, and Triangle waves offered, plus Low-pass, High-pass, Band-pass, and Notch filter types.  Requires Mozzi.
 
-Status: Working, but the filter is not amazing, particularly at high resonance and frequency.
+Status: Working, but the filter is not amazing, particularly at high resonance and frequency.  Sawtooth is a bit buzzy here and there (just not enough memory to put in more waves).
 
 ## Stochastic
 
