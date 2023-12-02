@@ -16,7 +16,7 @@
 
 /// 808
 ///
-/// 808 is five-voice drum synthesizer with low-rent, noisy 8-bit drum samples presently
+/// 808 is five-voice drum sampler with low-rent, noisy 8-bit drum samples presently
 /// taken from an 808.
 /// 808 is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
