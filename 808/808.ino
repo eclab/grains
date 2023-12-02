@@ -101,7 +101,7 @@ void setup()
     {
     pinMode(CV_GATE_OUT, INPUT);
     startMozzi();
-   	kick808.setFreq(16384 / (float) KICK_808_LENGTH / (float)1.5); 
+   	kick808.setFreq(16384 / (float) KICK_808_LENGTH); 
    	clap808.setFreq(16384 / (float) CLAP_808_LENGTH); 
    	rim808.setFreq(16384 / (float) RIM_808_LENGTH); 
    	hat808.setFreq(16384 / (float) HAT_808_LENGTH); 
