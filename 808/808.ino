@@ -36,11 +36,23 @@
 ///   which will be grouped to the same trigger (you can only play one sample from a group
 ///   on a given trigger at a given time).
 ///
+/// FORMATS differ in capability based on the number of samples involved so as to maximize 
+/// GRAINS's limited interface.  FORMAT_1 has only one sample but lets you specify the start 
+/// and end sample points, and the pitch.  FORMAT_2 has two samples but you can specify their 
+/// pitch; similarly for FORMAT_3 and FORMAT_4.  FORMAT_5 has up to 5 triggers.  
+/// FORMATS 6, 7, 7A, 8, and 9 have increasing numbers of samples, but they are crammed into 
+/// selectable groups with smaller and smaller numbers of triggers.  
+///
+/// A note about pitch: Mozzi's sampler facility is very primitive, and changes in pitch 
+/// will have a lot of aliasing and other artifacts.
+///
+///
 /// MEMORY ALLOCATION
 /// 808 provides about 26000 bytes of memory for your samples.  The total byte length of
 /// your samples cannot exceed this amount.  [I'll try to squeeze out some more bytes if I have time].
 ///
-/// NOTE ABOUT DIGITAL OUT PIN
+///
+/// A NOTE ABOUT THE DIGITAL OUT PIN
 /// 808 uses the Digital Out pin as its first trigger input.  This pin is different from the
 /// others.  If you leave a bare disconnected wire in this pin, it will cause GRAINS to
 /// receive noise which it will interpret as a bunch of triggers, resulting in your kick 
