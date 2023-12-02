@@ -5,9 +5,9 @@ This is a collection of code which runs on the Tangible Waves GRAINS module, tho
 
 ## 808
 
-A low-rent drum sampler with five TR-808 drum samples.  Requires Mozzi.
+A drum sampler for up to 9 samples and up to 5 triggers.  Comes with several 8-bit drum samples, including, yes, ones from the TR-808.  You can provide your own samples, and there are a variety of configurations.  Will soon permit u-Law samples for very slightly better sound quality.  Requires Mozzi.
 
-Status: Working, but holy cow those samples are noisy.  Probably partly due to Mozzi's simplistic approach to sampling partly due to the sample choices.
+Status: Working.  This is a major upgrade from the previous 808 version. 
 
 ## Voice
 
