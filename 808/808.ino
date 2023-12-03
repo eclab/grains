@@ -77,8 +77,8 @@
 #define SAMPLE_4	"hat808.h"
 #define SAMPLE_5	"claves808.h"
 #define SAMPLE_6	"tomHigh808.h"
-#define SAMPLE_7	"snare.h"		// not enough memory for "tomMid808.h"  We're doing FORMAT_6 anyway
-#define SAMPLE_8	"shaker.h"		// not enough memory for "tomLow808.h"  We're doing FORMAT_6 anyway
+#define SAMPLE_7	"snare.h"		// not enough memory for "tomMid808.h"
+#define SAMPLE_8	"shaker.h"		// not enough memory for "tomLow808.h"
 #define SAMPLE_9	"click.h"
 
 /// Here is an example with all empty samples, showing use of all the "blank" files.
@@ -146,7 +146,7 @@
 /// You set the format by changing the following value.  For example, to set to FORMAT_7,
 /// you would change below to   #define FORMAT FORMAT_7
 
-#define FORMAT FORMAT_6
+#define FORMAT FORMAT_7
 
 
 /// THE FORMATS, and their associated CONFIGURATIONS, are described in detail below:
