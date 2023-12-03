@@ -146,7 +146,7 @@
 /// You set the format by changing the following value.  For example, to set to FORMAT_7,
 /// you would change below to   #define FORMAT FORMAT_7
 
-#define FORMAT FORMAT_9
+#define FORMAT FORMAT_6
 
 
 /// THE FORMATS, and their associated CONFIGURATIONS, are described in detail below:
