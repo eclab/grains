@@ -81,11 +81,11 @@
 
 
 #define SAMPLE_1        "tr808/BD7525.h"                
-#define SAMPLE_2        "tr808/SD0050.h"
-#define SAMPLE_3        "tr808/CP.h"
+#define SAMPLE_2        "tr808/CB.h"
+#define SAMPLE_3        "tr808/CP.h"		
 #define SAMPLE_4        "tr808/CH.h"
 #define SAMPLE_5        "tr808/OH00.h"
-#define SAMPLE_6        "tr808/CB.h"
+#define SAMPLE_6        "tr808/SD0050.h"
 #define SAMPLE_7        "tr808/HC00.h"		
 #define SAMPLE_8        "tr808/RS.h"
 #define SAMPLE_9        "tr808/MA.h"
@@ -161,7 +161,7 @@
 /// You set the format by changing the following value.  For example, to set to FORMAT_7,
 /// you would change below to   #define FORMAT FORMAT_7
 
-#define FORMAT FORMAT_1
+#define FORMAT FORMAT_2
 
 
 /// The CONTROL_RATE value below indicates how often per second Mozzi checks for incoming
@@ -397,6 +397,9 @@ int16_t previousStart = UNDEFINED;
 int16_t previousEnd = UNDEFINED;
 int16_t previousVolume = UNDEFINED;
 
+#define HIGH_TRIGGER_BOUNDARY 700
+#define LOW_TRIGGER_BOUNDARY 400
+
 
 
 // I want a lookup table from 0...1024 which maps to 1/2 ... 2 exponentially.
@@ -582,14 +585,14 @@ void updateControl2()
     if (counter > 0) counter--;
         
     uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-    if (!triggered[1] && val1 > 800) 
+    if (!triggered[1] && val1 > HIGH_TRIGGER_BOUNDARY) 
         { 
         // set pitch only when we start
         sample1.setFreq(computeFrequency(pot[1], inverseLengths1));
         triggered[1] = 1; 
         sample1.start(); 
         }
-    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+    else if (triggered[1] && val1 < LOW_TRIGGER_BOUNDARY) { triggered[1] = 0; }
     }
 
 void updateControl3()
@@ -626,18 +629,18 @@ void updateControl3()
     if (counter > 0) counter--;
         
     uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-    if (!triggered[1] && val1 > 800) 
+    if (!triggered[1] && val1 > HIGH_TRIGGER_BOUNDARY) 
         { 
         // set pitch only when we start
         sample1.setFreq(computeFrequency(pot[1], inverseLengths1));
         triggered[1] = 1;
         sample1.start(); 
         }
-    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+    else if (triggered[1] && val1 < LOW_TRIGGER_BOUNDARY) { triggered[1] = 0; }
         
     uint16_t val2 = mozziAnalogRead(CV_IN3);
-    if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
-    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    if (!triggered[2] && val2 > HIGH_TRIGGER_BOUNDARY) { triggered[2] = 1; sample2.start(); }
+    else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
     }
 
 void updateControl4()
@@ -673,16 +676,16 @@ void updateControl4()
     if (counter > 0) counter--;
         
     uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-    if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
-    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+    if (!triggered[1] && val1 > HIGH_TRIGGER_BOUNDARY) { triggered[1] = 1; sample1.start(); }
+    else if (triggered[1] && val1 < LOW_TRIGGER_BOUNDARY) { triggered[1] = 0; }
 
     uint16_t val2 = mozziAnalogRead(CV_IN3);
-    if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
-    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    if (!triggered[2] && val2 > HIGH_TRIGGER_BOUNDARY) { triggered[2] = 1; sample2.start(); }
+    else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
 
     uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
-    if (!triggered[3] && val3 > 800) { triggered[3] = 1; sample3.start(); }
-    else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
+    if (!triggered[3] && val3 > HIGH_TRIGGER_BOUNDARY) { triggered[3] = 1; sample3.start(); }
+    else if (triggered[3] && val3 < LOW_TRIGGER_BOUNDARY) { triggered[3] = 0; }
         
     }
 
@@ -716,20 +719,20 @@ void updateControl5()
     if (counter > 0) counter--;
         
     uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-    if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
-    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+    if (!triggered[1] && val1 > HIGH_TRIGGER_BOUNDARY) { triggered[1] = 1; sample1.start(); }
+    else if (triggered[1] && val1 < LOW_TRIGGER_BOUNDARY) { triggered[1] = 0; }
 
     uint16_t val2 = mozziAnalogRead(CV_IN3);
-    if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
-    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    if (!triggered[2] && val2 > HIGH_TRIGGER_BOUNDARY) { triggered[2] = 1; sample2.start(); }
+    else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
 
     uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
-    if (!triggered[3] && val3 > 800) { triggered[3] = 1; sample3.start(); }
-    else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
+    if (!triggered[3] && val3 > HIGH_TRIGGER_BOUNDARY) { triggered[3] = 1; sample3.start(); }
+    else if (triggered[3] && val3 < LOW_TRIGGER_BOUNDARY) { triggered[3] = 0; }
 
     uint16_t val4 = mozziAnalogRead(CV_POT_IN1);
-    if (!triggered[4] && val4 > 800) { triggered[4] = 1; sample4.start(); }
-    else if (triggered[4] && val4 < 400) { triggered[4] = 0; }
+    if (!triggered[4] && val4 > HIGH_TRIGGER_BOUNDARY) { triggered[4] = 1; sample4.start(); }
+    else if (triggered[4] && val4 < LOW_TRIGGER_BOUNDARY) { triggered[4] = 0; }
     }
 
 void updateControl5A()
@@ -762,16 +765,16 @@ void updateControl5A()
     if (counter > 0) counter--;
         
     uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-    if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
-    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+    if (!triggered[1] && val1 > HIGH_TRIGGER_BOUNDARY) { triggered[1] = 1; sample1.start(); }
+    else if (triggered[1] && val1 < LOW_TRIGGER_BOUNDARY) { triggered[1] = 0; }
 
     uint16_t val2 = mozziAnalogRead(CV_IN3);
-    if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
-    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    if (!triggered[2] && val2 > HIGH_TRIGGER_BOUNDARY) { triggered[2] = 1; sample2.start(); }
+    else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
 
     uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
-    if (!triggered[3] && val3 > 800) { triggered[3] = 1; if (pot[0] < 512) sample3.start(); else sample4.start(); }
-    else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
+    if (!triggered[3] && val3 > HIGH_TRIGGER_BOUNDARY) { triggered[3] = 1; if (pot[0] < 512) sample3.start(); else sample4.start(); }
+    else if (triggered[3] && val3 < LOW_TRIGGER_BOUNDARY) { triggered[3] = 0; }
     }
 
 void updateControl6()
@@ -804,16 +807,16 @@ void updateControl6()
     if (counter > 0) counter--;
 
     uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-    if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
-    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+    if (!triggered[1] && val1 > HIGH_TRIGGER_BOUNDARY) { triggered[1] = 1; sample1.start(); }
+    else if (triggered[1] && val1 < LOW_TRIGGER_BOUNDARY) { triggered[1] = 0; }
 
     uint16_t val2 = mozziAnalogRead(CV_IN3);
-    if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
-    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    if (!triggered[2] && val2 > HIGH_TRIGGER_BOUNDARY) { triggered[2] = 1; sample2.start(); }
+    else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
 
     uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
-    if (!triggered[3] && val3 > 800) { triggered[3] = 1; if (pot[0] < 341) sample3.start(); else if (pot[0] < 682) sample4.start(); else sample5.start(); }
-    else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
+    if (!triggered[3] && val3 > HIGH_TRIGGER_BOUNDARY) { triggered[3] = 1; if (pot[0] < 341) sample3.start(); else if (pot[0] < 682) sample4.start(); else sample5.start(); }
+    else if (triggered[3] && val3 < LOW_TRIGGER_BOUNDARY) { triggered[3] = 0; }
     }
 
 void updateControl7()
@@ -846,16 +849,16 @@ void updateControl7()
     if (counter > 0) counter--;
         
     uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-    if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
-    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+    if (!triggered[1] && val1 > HIGH_TRIGGER_BOUNDARY) { triggered[1] = 1; sample1.start(); }
+    else if (triggered[1] && val1 < LOW_TRIGGER_BOUNDARY) { triggered[1] = 0; }
 
     uint16_t val2 = mozziAnalogRead(CV_IN3);
-    if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
-    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    if (!triggered[2] && val2 > HIGH_TRIGGER_BOUNDARY) { triggered[2] = 1; sample2.start(); }
+    else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
 
     uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
-    if (!triggered[3] && val3 > 800) { triggered[3] = 1; if (pot[0] < 256) sample3.start(); else if (pot[0] < 512) sample4.start(); else if (pot[0] < 768) sample5.start(); else sample6.start(); }
-    else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
+    if (!triggered[3] && val3 > HIGH_TRIGGER_BOUNDARY) { triggered[3] = 1; if (pot[0] < 256) sample3.start(); else if (pot[0] < 512) sample4.start(); else if (pot[0] < 768) sample5.start(); else sample6.start(); }
+    else if (triggered[3] && val3 < LOW_TRIGGER_BOUNDARY) { triggered[3] = 0; }
     }
 
 void updateControl7A()
@@ -888,12 +891,12 @@ void updateControl7A()
     if (counter > 0) counter--;
         
     uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-    if (!triggered[1] && val1 > 800) { triggered[1] = 1; if (pot[1] < 341) sample1.start(); else if (pot[1] < 682) sample2.start(); else sample3.start(); }
-    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+    if (!triggered[1] && val1 > HIGH_TRIGGER_BOUNDARY) { triggered[1] = 1; if (pot[1] < 341) sample1.start(); else if (pot[1] < 682) sample2.start(); else sample3.start(); }
+    else if (triggered[1] && val1 < LOW_TRIGGER_BOUNDARY) { triggered[1] = 0; }
 
     uint16_t val2 = mozziAnalogRead(CV_IN3);
-    if (!triggered[2] && val2 > 800) { triggered[2] = 1; if (pot[0] < 341) sample4.start(); else if (pot[0] < 682) sample5.start(); else sample6.start(); }
-    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    if (!triggered[2] && val2 > HIGH_TRIGGER_BOUNDARY) { triggered[2] = 1; if (pot[0] < 341) sample4.start(); else if (pot[0] < 682) sample5.start(); else sample6.start(); }
+    else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
     }
 
 void updateControl8()
@@ -926,12 +929,12 @@ void updateControl8()
     if (counter > 0) counter--;
         
     uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-    if (!triggered[1] && val1 > 800) { triggered[1] = 1; if (pot[1] < 341) sample1.start(); else if (pot[1] < 682) sample2.start(); else sample3.start(); }
-    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+    if (!triggered[1] && val1 > HIGH_TRIGGER_BOUNDARY) { triggered[1] = 1; if (pot[1] < 341) sample1.start(); else if (pot[1] < 682) sample2.start(); else sample3.start(); }
+    else if (triggered[1] && val1 < LOW_TRIGGER_BOUNDARY) { triggered[1] = 0; }
 
     uint16_t val2 = mozziAnalogRead(CV_IN3);
-    if (!triggered[2] && val2 > 800) { triggered[2] = 1; if (pot[0] < 256) sample4.start(); else if (pot[0] < 512) sample5.start(); else if (pot[0] < 768) sample6.start(); else sample7.start(); }
-    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    if (!triggered[2] && val2 > HIGH_TRIGGER_BOUNDARY) { triggered[2] = 1; if (pot[0] < 256) sample4.start(); else if (pot[0] < 512) sample5.start(); else if (pot[0] < 768) sample6.start(); else sample7.start(); }
+    else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
     }
 
 void updateControl9()
@@ -964,7 +967,7 @@ void updateControl9()
     if (counter > 0) counter--;
         
     uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-    if (!triggered[1] && val1 > 800) 
+    if (!triggered[1] && val1 > HIGH_TRIGGER_BOUNDARY) 
     	{ 
     	triggered[1] = 1; 
     	if (pot[1] < 512) 
@@ -976,10 +979,10 @@ void updateControl9()
     		if (pot[1] < 768) sample3.start(); else sample4.start();
     		}
     	}
-    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+    else if (triggered[1] && val1 < LOW_TRIGGER_BOUNDARY) { triggered[1] = 0; }
 
     uint16_t val2 = mozziAnalogRead(CV_IN3);
-    if (!triggered[2] && val2 > 800) 
+    if (!triggered[2] && val2 > HIGH_TRIGGER_BOUNDARY) 
     	{ 
     	triggered[2] = 1; 
     	if (pot[0] < 512) 
@@ -991,7 +994,7 @@ void updateControl9()
     		if (pot[0] < 768) sample7.start(); else sample8.start(); 
     		}
     	}
-    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
     }
 
 
