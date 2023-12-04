@@ -1,6 +1,6 @@
 # 808
 
-808 is a drum sampler with up to 9 voices and up to 5 triggers.  In some cases you choose which voices sound for a given trigger.  It's comes with an assortment of 8-bit u-law TR-808 drum samples.  808 is meant to run on the AE Modular GRAINS, but it could be  adapted to any Arduino.
+808 is a drum sampler with up to 9 voices and up to 5 triggers.  There are many options depending on the number of voices you are using.  808 comes with an assortment of 8-bit u-Law TR-808 drum samples.  808 is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
@@ -20,7 +20,7 @@ A note about pitch: Mozzi's sampler facility is very primitive, and changes in p
 
 GRAINS does not have much memory!  You can cram in 9 samples if they're very short: toms and kicks are not short, you won't get many of those in.
 
-808 provides about 26000 bytes of memory for your samples.  The total byte length of your samples cannot exceed this amount.  [I'll try to squeeze out some more bytes if I have time].
+808 provides about 26000 bytes of memory for your samples.  The total byte length of your samples cannot exceed this amount.
 
 ### Computational Power
 
@@ -35,12 +35,13 @@ As you increase the number of triggers (to say, 4 or 5), Mozzi will start to str
 
 You set the sample files by setting up to 9 #define statements in the code to the filenames of the samples.   Each sample file is a ".h" file which has been converted from a WAV file using Mozzi's tools, and slightly tweaked so it can be loaded by 808 easily.  I provide a bunch of examples. 
 
+You can load samples as **8-bit signed** or **8-bit u-Law**.  u-Law samples have a **much lower noise floor**, and I strongly urge you to use them instead.  All the samples in your GRAINS module must be one or the other format: you cannot mix them.  You specify which format as a #define in the code.
+
 Is a sample too loud compared to the others?  You can adjust the relative gain of each sample by setting certain #defines in the code.
 
-I have untested code in the 808.ino file (which no doubt does not work yet) to do U-Law samples instead of linear samples, for potentially *slightly* better sound quality.  I'll get that finished when I can.
 
 
-## Setting the Sample Files
+## Setting the Format
 
 There are 11 formats, and they dictate the number of samples used, how they're grouped, and how the interface is presented.   You set the format with a #define in the code.  Here is a summary of the formats:
 
@@ -171,7 +172,7 @@ There are seven samples, SAMPLE_1 through SAMPLE_7.  You can change the total vo
     IN 1        UNUSED 
 
 ### FORMAT_7A
-There are seven samples, SAMPLE_1 through SAMPLE_7.  You can change the total volume with a pot.  Set the volume such that when the two samples play simultaneously you don't have pops or clipping. There are only FOUR triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4 share a trigger, and SAMPLE_5, SAMPLE_6, and SAMPLE_7 share a different trigger.  Two pots determine which samples play on these triggers.  If you would like to group more samples on one trigger and off the other, try FORMAT_7 instead.
+There are seven samples, SAMPLE_1 through SAMPLE_7.  You can change the total volume with a pot.  Set the volume such that when the two samples play simultaneously you don't have pops or clipping. There are only THREE triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4 share a trigger, and SAMPLE_5, SAMPLE_6, and SAMPLE_7 share a different trigger.  Two pots determine which samples play on these triggers.  If you would like to group more samples on one trigger and off the other, try FORMAT_7 instead.
 
     POT 3       VOLUME
     POT 2       SELECT SAMPLES FOR TRIGGER 2 -> { 2, 3, 4 }      [SET TO MAN]
@@ -183,7 +184,7 @@ There are seven samples, SAMPLE_1 through SAMPLE_7.  You can change the total vo
     IN 1        UNUSED 
 
 ### FORMAT_8
-There are eight samples, SAMPLE_1 through SAMPLE_8.  You can change the total volume with a pot.  Set the volume such that when the two samples play simultaneously you don't have pops or clipping. There are only FOUR triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4 share a trigger, and SAMPLE_5, SAMPLE_6, SAMPLE_7, and SAMPLE_8 share a different trigger.  Two pots determine which samples play on these triggers.
+There are eight samples, SAMPLE_1 through SAMPLE_8.  You can change the total volume with a pot.  Set the volume such that when the two samples play simultaneously you don't have pops or clipping. There are only THREE triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4 share a trigger, and SAMPLE_5, SAMPLE_6, SAMPLE_7, and SAMPLE_8 share a different trigger.  Two pots determine which samples play on these triggers.
 
     POT 3       VOLUME
     POT 2       SELECT SAMPLES FOR TRIGGER 2 -> { 2, 3, 4 }      [SET TO MAN]
@@ -195,7 +196,7 @@ There are eight samples, SAMPLE_1 through SAMPLE_8.  You can change the total vo
     IN 1        UNUSED 
 
 ### FORMAT_9
-There are nine samples, SAMPLE_1 through SAMPLE_9.  You can change the total volume with a pot.  Set the volume such that when the two samples play simultaneously you don't have pops or clipping. There are only FOUR triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4, and SAMPLE_5 share a trigger, and SAMPLE_6, SAMPLE_7, SAMPLE_8, and SAMPLE_9 share a different trigger.  Two pots determine which samples play on these triggers.
+There are nine samples, SAMPLE_1 through SAMPLE_9.  You can change the total volume with a pot.  Set the volume such that when the two samples play simultaneously you don't have pops or clipping. There are only THREE triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4, and SAMPLE_5 share a trigger, and SAMPLE_6, SAMPLE_7, SAMPLE_8, and SAMPLE_9 share a different trigger.  Two pots determine which samples play on these triggers.
 
     POT 3       VOLUME
     POT 2       SELECT SAMPLES FOR TRIGGER 2 -> { 2, 3, 4, 5 }   [SET TO MAN]

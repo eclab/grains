@@ -49,12 +49,12 @@
 ///
 /// MEMORY ALLOCATION
 /// 808 provides about 26000 bytes of memory for your samples.  The total byte length of
-/// your samples cannot exceed this amount.  [I'll try to squeeze out some more bytes if I have time].
+/// your samples cannot exceed this amount.
 ///
 ///
 /// COMPUTATIONAL POWER
 /// As you increase the number of triggers (to say, 4 or 5), Mozzi will start to struggle
-/// to keep up.  You might occasionally got a little click.  You can reduce the clicks by
+/// to keep up.  You might occasionally get a little click.  You can reduce the clicks by
 /// reducing the CONTROL_RATE from 64 to something less, but the drum machine will start
 /// to get sloppy in its response to triggers.  It's already really sloppy as it is: 64 means
 /// that it checks for triggers only 64 times a second, or every 15 ms.
@@ -86,12 +86,12 @@
 #define SAMPLE_4        "tr808/CH.h"
 #define SAMPLE_5        "tr808/OH00.h"
 #define SAMPLE_6        "tr808/CB.h"
-#define SAMPLE_7        "blank7.h"
-#define SAMPLE_8        "blank8.h"
-#define SAMPLE_9        "blank9.h"
+#define SAMPLE_7        "tr808/HC00.h"		
+#define SAMPLE_8        "tr808/RS.h"
+#define SAMPLE_9        "tr808/MA.h"
 
 /// Here is an example with all empty samples, showing use of all the "blank" files.
-/// You probably don't want this!  :-)q
+/// You probably don't want this!  :-)
 
 ///             #define SAMPLE_1        "blank1.h"
 ///             #define SAMPLE_2        "blank2.h"
@@ -123,10 +123,15 @@
 /// Is a sample too loud compared to the others?  
 /// You can adjust the relative gain of each sample by reducing any of the following values.
 /// The values go between 0 (fully muted) to 8 (standard volume).  You can go higher but risk clipping.
+/// NOTE: this feature is turned off for FORMAT_5, because with 5 triggers, the computational
+/// cost is just too high.
+///
+/// NOTE 2: this feature is particularly useful for FORMAT_1, which has a fixed volume.  For many sounds
+/// you might get away with a slightly larger gain (perhaps 9? 10?) for GAIN_0.
 
 #define GAIN_0          8
 #define GAIN_1          8
-#define GAIN_2          8                       // rim808.h is quiet: it would benefit from being boosted, though it'll clip in one spot
+#define GAIN_2          8
 #define GAIN_3          8
 #define GAIN_4          8
 #define GAIN_5          8
@@ -156,7 +161,31 @@
 /// You set the format by changing the following value.  For example, to set to FORMAT_7,
 /// you would change below to   #define FORMAT FORMAT_7
 
-#define FORMAT FORMAT_6
+#define FORMAT FORMAT_1
+
+
+/// The CONTROL_RATE value below indicates how often per second Mozzi checks for incoming
+/// triggers and changes to knobs.  You want this as large as possible, so Mozzi checks for
+/// triggers a lot and so its drumming is tight.  Low values are very sloppy.  But higher 
+/// values also means Mozzi's audio engine will struggle to keep up.  This has two impacts:
+///
+/// 1. You'll hear a background hum related to output sound generator.  The pitch of the 
+///    hum is directly related to the control rate, and is particularly high (well, mid-level)
+///    especially for the formats with more samples (7, 8, 9, etc.)  It's fairly low and 
+///    ina around 100 (but 100 is pretty sloppy).
+///
+/// 2. Higher values and you'll start getting pops and crackles here and there as Mozzi can't
+///    keep the audio going.
+///
+/// A value of 256 seems to be pretty good except for formats 5A and 7, which can't handle that
+/// speed.  I keep them down to 200.  But you might drop down into the sloppy range (64 to 128)
+/// if it bothers you.
+
+#if ((FORMAT == FORMAT_5A) || (FORMAT == FORMAT_7))
+#define CONTROL_RATE 200
+#else
+#define CONTROL_RATE 256
+#endif
 
 
 /// THE FORMATS, and their associated CONFIGURATIONS, are described in detail below:
@@ -219,6 +248,7 @@
 /// total volume with a pot.
 /// Set the volume such that when the two samples play
 /// simultaneously you don't have pops or clipping.
+/// Note that in FORMAT_5 the per-sound gain #define feature is turned OFF.
 // POT 3                VOLUME
 // POT 2                UNUSED          [SET TO MAXIMUM, AND SET SWITCH TO IN2]
 // POT 1                UNUSED          [SET TO MAXIMUM, AND SET SWITCH TO IN1]
@@ -280,7 +310,7 @@
 /// There are seven samples, SAMPLE_1 through SAMPLE_7.  You can change the
 /// total volume with a pot.  Set the volume such that when the two samples play
 /// simultaneously you don't have pops or clipping.
-/// There are only FOUR triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4 share a trigger,
+/// There are only THREE triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4 share a trigger,
 /// and SAMPLE_5, SAMPLE_6, and SAMPLE_7 share a different trigger.  Two pots
 /// determine which samples play on these triggers.  If you would like to
 /// group more samples on one trigger and off the other, try FORMAT_7 instead.
@@ -297,7 +327,7 @@
 /// There are eight samples, SAMPLE_1 through SAMPLE_8.  You can change the
 /// total volume with a pot.  Set the volume such that when the two samples play
 /// simultaneously you don't have pops or clipping.
-/// There are only FOUR triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4 share a trigger,
+/// There are only THREE triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4 share a trigger,
 /// and SAMPLE_5, SAMPLE_6, SAMPLE_7, and SAMPLE_8 share a different trigger.  
 /// Two pots determine which samples play on these triggers.
 // POT 3                VOLUME
@@ -313,7 +343,7 @@
 /// There are nine samples, SAMPLE_1 through SAMPLE_9.  You can change the
 /// total volume with a pot.  Set the volume such that when the two samples play
 /// simultaneously you don't have pops or clipping.
-/// There are only FOUR triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4, and SAMPLE_5 
+/// There are only THREE triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4, and SAMPLE_5 
 /// share a trigger, and SAMPLE_6, SAMPLE_7, SAMPLE_8, and SAMPLE_9 share a 
 /// different trigger.  Two pots determine which samples play on these triggers.
 // POT 3                VOLUME
@@ -342,12 +372,24 @@
 #define CV_GATE_OUT   8
 #define RANDOM_PIN    A5
 
+// Mozzi's setFreq function (which we use for setting sample pitch)
+// requires dividing by the total length of the sample as a float.
+// We precompute the inverse lengths of Sample 0 and Sample 1 so we
+// don't have to divide, but can multiply.
 float inverseLengths0;
 float inverseLengths1;
 
+// When a pin goes high, and we are triggered, we need to indicate this
+// so next time we check we don't think we're triggered a second time just
+// because it's stayed high.  We then set this back to 0 when the pin has
+// gone low.
 uint16_t triggered[5] = { 0, 0, 0, 0, 0 };
-uint16_t trigger[5];
+
+// The current values of our three pots.
 uint16_t pot[3];
+
+// The smoothed estimates of our pitches for Samples 0 and 1,
+// Start and End for Sample 0, and Volume for everyone else
 #define UNDEFINED (-1)
 int16_t previousPitch1 = UNDEFINED;
 int16_t previousPitch2 = UNDEFINED;
@@ -355,11 +397,14 @@ int16_t previousStart = UNDEFINED;
 int16_t previousEnd = UNDEFINED;
 int16_t previousVolume = UNDEFINED;
 
+
+
 // I want a lookup table from 0...1024 which maps to 1/2 ... 2 exponentially.
 // I don't have the memory for it in floats though, nor 1024 elements.  So
 // we take 0...1024 and divide by 4 to get 0...255.  Then we look it up in FREQUENCIES.
 // Finally we divide by 128.
-const uint8_t FREQUENCIES[] = {64, 64, 64, 65, 65, 65, 66, 66, 66, 67, 67, 67, 68, 68, 69, 69, 69,
+const uint8_t FREQUENCIES[] = {
+    64, 64, 64, 65, 65, 65, 66, 66, 66, 67, 67, 67, 68, 68, 69, 69, 69,
     70, 70, 70, 71, 71, 72, 72, 72, 73, 73, 74, 74, 74, 75, 75, 76, 76,
     76, 77, 77, 78, 78, 79, 79, 79, 80, 80, 81, 81, 82, 82, 82, 83, 83,
     84, 84, 85, 85, 86, 86, 87, 87, 88, 88, 89, 89, 90, 90, 91, 91, 91,
@@ -378,6 +423,9 @@ const uint8_t FREQUENCIES[] = {64, 64, 64, 65, 65, 65, 66, 66, 66, 67, 67, 67, 6
     233, 234, 236, 237, 238, 239, 241, 242, 243, 245, 246, 247, 249, 250,
     251, 253, 254};
 
+// Computes the frequency for a given pitch.  We set it up so that "Normal Pitch"
+// dominates the center region with a big sweet spot, and you have to get out of
+// that sweet spot to start bending the pitch up or down.
 float computeFrequency(uint16_t pitch, float inverseLength)
     {
     float freq = 1.0;   // dead center
@@ -394,9 +442,6 @@ float computeFrequency(uint16_t pitch, float inverseLength)
 
 
 
-
-
-#define CONTROL_RATE 64
 
 #include <MozziGuts.h>
 #include <Sample.h>
@@ -459,7 +504,7 @@ uint16_t lengths8 = DATA_LENGTH;
 //// DIGITAL OUT registers a trigger faster than the analog reads, either
 //// because I have them triggering at 800 just to be sure, or because mozziAnalogRead
 //// does a delayed read.  At any rate, to get Digital Out to line up with the others
-//// in its triggering, we have to delay it one beat.  We do that with a little countdown
+//// in its triggering, we have to delay it one tick.  We do that with a little countdown
 //// timer here.
 #define COUNTDOWN 2
 uint8_t counter = 1;
@@ -904,7 +949,7 @@ void updateControl9()
     pot[1] = mozziAnalogRead(CV_POT_IN2);
     if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
     else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
-        
+                
     uint8_t val = digitalRead(CV_GATE_OUT);
     if (!triggered[0] && val) 
         { 
@@ -916,14 +961,36 @@ void updateControl9()
         {
         sample0.start(); 
         }
-    if (counter > 1) counter--;
+    if (counter > 0) counter--;
         
     uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-    if (!triggered[1] && val1 > 800) { triggered[1] = 1; if (pot[1] < 256) sample1.start(); else if (pot[1] < 512) sample2.start(); else if (pot[1] < 768) sample3.start(); else sample4.start(); }
+    if (!triggered[1] && val1 > 800) 
+    	{ 
+    	triggered[1] = 1; 
+    	if (pot[1] < 512) 
+    		{
+    		if (pot[1] < 256) sample1.start(); else sample2.start();
+    		}
+    	else
+    		{
+    		if (pot[1] < 768) sample3.start(); else sample4.start();
+    		}
+    	}
     else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
 
     uint16_t val2 = mozziAnalogRead(CV_IN3);
-    if (!triggered[2] && val2 > 800) { triggered[2] = 1; if (pot[0] < 256) sample5.start(); else if (pot[0] < 512) sample6.start(); else if (pot[0] < 768) sample7.start(); else sample8.start(); }
+    if (!triggered[2] && val2 > 800) 
+    	{ 
+    	triggered[2] = 1; 
+    	if (pot[0] < 512) 
+    		{
+    		if (pot[0] < 256) sample5.start(); else sample6.start(); 
+    		}
+    	else 
+    		{
+    		if (pot[0] < 768) sample7.start(); else sample8.start(); 
+    		}
+    	}
     else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
     }
 
@@ -980,42 +1047,17 @@ void updateControl9()
 
 
 
-/*
-  const int16_t exp_lut[8] = {0,132,396,924,1980,4092,8316,16764};
-  int16_t ulaw2linear(uint8_t ulawbyte)
-  {
-  ulawbyte = ~ulawbyte;
-  uint8_t sign = (ulawbyte & 0x80);
-  uint8_t exponent = (ulawbyte >> 4) & 0x07;
-  uint8_t mantissa = ulawbyte & 0x0F;
-  int16_t sample = exp_lut[exponent] + (mantissa << (exponent + 3));
-  if (sign != 0) sample = -sample;
-  return sample;
-  }
-*/
-
-/*
-  const int16_t __ULAW[] = {
-  -240, -232, -224, -217, -209, -202, -194, -186, -179, -171, -163, -156, -148, -141, -133, -125, 
-  -120, -116, -112, -108, -104, -101, -97, -93, -89, -85, -81, -78, -74, -70, -66, -62, 
-  -60, -58, -56, -54, -52, -50, -48, -46, -44, -42, -41, -39, -37, -35, -33, -31, 
-  -30, -29, -28, -27, -26, -25, -24, -23, -22, -21, -20, -19, -18, -17, -16, -15, 
-  -15, -14, -14, -13, -13, -12, -12, -11, -11, -10, -10, -9, -9, -8, -8, -7, 
-  -7, -7, -7, -6, -6, -6, -6, -5, -5, -5, -5, -4, -4, -4, -4, -3, 
-  -3, -3, -3, -3, -3, -3, -3, -2, -2, -2, -2, -2, -2, -2, -2, -1, 
-  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 
-  239, 231, 223, 216, 208, 201, 193, 185, 178, 170, 162, 155, 147, 140, 132, 124, 
-  119, 115, 111, 107, 103, 100, 96, 92, 88, 84, 80, 77, 73, 69, 65, 61, 
-  59, 57, 55, 53, 51, 49, 47, 45, 43, 41, 40, 38, 36, 34, 32, 30, 
-  29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 
-  14, 13, 13, 12, 12, 11, 11, 10, 10, 9, 9, 8, 8, 7, 7, 6, 
-  6, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4, 3, 3, 3, 3, 2, 
-  2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 0, 
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-  };
-*/
+//// NOTE about ULAW.  ULAW is stupidly encoded: 0 encoded does not map to 0 output.  As a result
+//// we cannot just use the lookup table below and call it a day, because when the sound is not
+//// playing, Mozzi (of course) outputs a 0, which when we push it through the ULAW decoder
+//// comes out as 32124.  That's a big DC offset, making a huge click when you start the sound.
+//// Hence the CC(...) #define, which does the decoding but ALSO multiplies it against isPlaying()
+//// to force it to zero when there's no sound.  C(...) is the actual decoder, plus tweaks for volume.
+//// Note that I keep the result between -4K and 4K so we can add all five of the triggers together
+//// in 16 bit.
 
 #ifdef USE_ULAW
+/*
 const int16_t __ULAW[] = {
     -32124, -31100, -30076, -29052, -28028, -27004, -25980, -24956, -23932, -22908, -21884, -20860, -19836, -18812, -17788, -16764, 
     -15996, -15484, -14972, -14460, -13948, -13436, -12924, -12412, -11900, -11388, -10876, -10364, -9852, -9340, -8828, -8316, 
@@ -1034,16 +1076,39 @@ const int16_t __ULAW[] = {
     372, 356, 340, 324, 308, 292, 276, 260, 244, 228, 212, 196, 180, 164, 148, 132, 
     120, 112, 104, 96, 88, 80, 72, 64, 56, 48, 40, 32, 24, 16, 8, 0, 
     };
-
+*/
+// this version is 1/8 size 
+const int16_t __ULAW2[] = {
+-4015, -3887, -3759, -3631, -3503, -3375, -3247, -3119, -2991, -2863, -2735, -2607, -2479, -2351, -2223, -2095,
+-1999, -1935, -1871, -1807, -1743, -1679, -1615, -1551, -1487, -1423, -1359, -1295, -1231, -1167, -1103, -1039, 
+-991, -959, -927, -895, -863, -831, -799, -767, -735, -703, -671, -639, -607, -575, -543, -511, 
+-487, -471, -455, -439, -423, -407, -391, -375, -359, -343, -327, -311, -295, -279, -263, -247, 
+-235, -227, -219, -211, -203, -195, -187, -179, -171, -163, -155, -147, -139, -131, -123, -115, 
+-109, -105, -101, -97, -93, -89, -85, -81, -77, -73, -69, -65, -61, -57, -53, -49, 
+-46, -44, -42, -40, -38, -36, -34, -32, -30, -28, -26, -24, -22, -20, -18, -16,
+ -15, -14, -13, -12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 
+ 4015, 3887, 3759, 3631, 3503, 3375, 3247, 3119, 2991, 2863, 2735, 2607, 2479, 2351, 2223, 2095, 
+ 1999, 1935, 1871, 1807, 1743, 1679, 1615, 1551, 1487, 1423, 1359, 1295, 1231, 1167, 1103, 1039, 
+ 991, 959, 927, 895, 863, 831, 799, 767, 735, 703, 671, 639, 607, 575, 543, 511, 
+ 487, 471, 455, 439, 423, 407, 391, 375, 359, 343, 327, 311, 295, 279, 263, 247, 
+ 235, 227, 219, 211, 203, 195, 187, 179, 171, 163, 155, 147, 139, 131, 123, 115, 
+ 109, 105, 101, 97, 93, 89, 85, 81, 77, 73, 69, 65, 61, 57, 53, 49, 
+ 46, 44, 42, 40, 38, 36, 34, 32, 30, 28, 26, 24, 22, 20, 18, 16, 
+ 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 
+ 	};
 // Gain is maximal at 8
 // ranges (-4K .. 4K)...
-int16_t C(int8_t value, uint8_t volume) { return ((__ULAW[value + 128] >> 3) * volume) >> 3; } 
+#if (FORMAT == FORMAT_5)
+int16_t C(int8_t value, uint8_t volume) { return (__ULAW2[value + 128]); }			// too expensive
+#else
+int16_t C(int8_t value, uint8_t volume) { return ((__ULAW2[value + 128]) * volume) >> 3; } 
+#endif
 #else
 int16_t C(int8_t value, uint8_t volume) { return ((value * volume) * 32) >> 3; }
 #endif
-
 #define CC(sample, volume) (C(sample.next(), volume) * sample.isPlaying())
 
+uint16_t sum;
 
 int updateAudio1()
     {
@@ -1056,7 +1121,12 @@ int updateAudio1()
     // IN 2             UNUSED
     // IN 1             PITCH CV 1
 
-    return MonoOutput::from16Bit(CC(sample0, GAIN_0) >> 3);
+// believe it or not, the background hum is lower when more samples are computing.
+// so we add some dummy samples here.
+	sum += CC(sample1, GAIN_1);		// sum is to outwit the compiler
+	sum += CC(sample2, GAIN_2);
+	sum += CC(sample3, GAIN_3);
+    return MonoOutput::from16Bit(CC(sample0, GAIN_0) * 8);
     }
         
 int updateAudio2()
@@ -1069,8 +1139,10 @@ int updateAudio2()
     // IN 3             UNUSED
     // IN 2             PITCH CV 2
     // IN 1             PITCH CV 1 
-// volume goes twice as loud as needed 
 
+// believe it or not, the background hum is lower when more samples are computing.
+// so we add some dummy samples here.
+	sum += CC(sample2, GAIN_2);		// sum is to outwit the compiler
     return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1)) * (uint32_t) pot[2]) >> 6); 
     }
 
@@ -1113,7 +1185,7 @@ int updateAudio5()
     // IN 2             TRIGGER 4
     // IN 1             TRIGGER 5 
 
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + CC(sample3, GAIN_3) + CC(sample4, GAIN_4)) * (uint32_t) pot[2]) >> 6);
+    return MonoOutput::from16Bit((((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + CC(sample3, GAIN_3) + CC(sample4, GAIN_4))) * (uint32_t) pot[2]) >> 6);
     }
 
 int updateAudio5A()
@@ -1155,7 +1227,10 @@ int updateAudio7()
     // IN 2             TRIGGER 4
     // IN 1             UNUSED 
 
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + (pot[0] < 256 ? CC(sample3, GAIN_3) : (pot[0] < 512 ? CC(sample4, GAIN_4) : (pot[0] < 768 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6))))) * (uint32_t) pot[2]) >> 6);
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + 
+    	(pot[0] < 512 ? 
+    		(pot[0] < 256 ? CC(sample3, GAIN_3) : CC(sample4, GAIN_4)) :
+    		(pot[0] < 768 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6)))) * (uint32_t) pot[2]) >> 6);
     }
 
 int updateAudio7A()
@@ -1183,7 +1258,11 @@ int updateAudio8()
     // IN 2             UNUSED
     // IN 1             UNUSED 
         
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + (pot[1] < 341 ? CC(sample1, GAIN_1) : (pot[1] < 682 ? CC(sample2, GAIN_2) : CC(sample3, GAIN_3))) + (pot[0] < 256 ? CC(sample4, GAIN_4) : (pot[0] < 512 ? CC(sample5, GAIN_5) : (pot[0] < 768 ? CC(sample6, GAIN_6) : CC(sample7, GAIN_7))))) * (uint32_t) pot[2]) >> 6);
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + 
+    	(pot[1] < 341 ? CC(sample1, GAIN_1) : (pot[1] < 682 ? CC(sample2, GAIN_2) : CC(sample3, GAIN_3))) + 
+    	(pot[0] < 512 ?
+    		(pot[0] < 256 ? CC(sample4, GAIN_4) : CC(sample5, GAIN_5)) :
+    		(pot[0] < 768 ? CC(sample6, GAIN_6) : CC(sample7, GAIN_7)))) * (uint32_t) pot[2]) >> 6);
     }
 
 int updateAudio9()
@@ -1197,7 +1276,13 @@ int updateAudio9()
     // IN 2             UNUSED
     // IN 1             UNUSED 
         
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + (pot[1] < 256 ? CC(sample1, GAIN_1) : (pot[1] < 512 ? CC(sample2, GAIN_2) : (pot[1] < 768 ? CC(sample3, GAIN_3) : CC(sample4, GAIN_4)))) + (pot[0] < 256 ? CC(sample5, GAIN_5) : (pot[0] < 512 ? CC(sample6, GAIN_6) : (pot[0] < 768 ? CC(sample7, 7) : CC(sample8, 8))))) * (uint32_t) pot[2]) >> 6);
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + 
+    	(pot[1] < 512 ?
+    		(pot[1] < 256 ? CC(sample1, GAIN_1) : CC(sample2, GAIN_2)) :
+    		(pot[1] < 768 ? CC(sample3, GAIN_3) : CC(sample4, GAIN_4))) + 
+    	(pot[0] < 512 ? 
+    		(pot[0] < 256 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6)) : 
+    		(pot[0] < 768 ? CC(sample7, GAIN_7) : CC(sample8, GAIN_8)))) * (uint32_t) pot[2]) >> 6);
     }
 
 
