@@ -1,0 +1,16 @@
+These samples are all 8-bit u-law, so be sure to turn on #define USE_ULAW
+
+All files in this directory are under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.  The convert.py file is a modification of Mozzi's char2mozzi.py to make cleaner conversions for purpose of GRAINS.
+
+To convert a file foo.wav, do this:
+
+	[Install sox, then...]
+	sox foo.wav --bits 8 -r 16384 --encoding signed-integer --endian little foo.raw
+
+Then do this:
+
+	[Install python 3, then...]
+	python3 convert.py foo.raw foo.h foo 16384
+
+If you don't understand the naming scheme for these files, see the document "TR808.txt" in the wav directory.
+

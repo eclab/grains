@@ -1,6 +1,6 @@
 # 808
 
-808 is a drum sampler with up to 9 voices and up to 5 triggers.  In some cases you choose which voices sound for a given trigger.  It's comes with an assortment of low-rent, noisy 8-bit drum samples.  drum sampler with low-rent, noisy 8-bit drum samples presently taken from a TR-808.  808 is meant to run on the AE Modular GRAINS, but it could be  adapted to any Arduino.
+808 is a drum sampler with up to 9 voices and up to 5 triggers.  In some cases you choose which voices sound for a given trigger.  It's comes with an assortment of 8-bit u-law TR-808 drum samples.  808 is meant to run on the AE Modular GRAINS, but it could be  adapted to any Arduino.
 
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
@@ -21,6 +21,10 @@ A note about pitch: Mozzi's sampler facility is very primitive, and changes in p
 GRAINS does not have much memory!  You can cram in 9 samples if they're very short: toms and kicks are not short, you won't get many of those in.
 
 808 provides about 26000 bytes of memory for your samples.  The total byte length of your samples cannot exceed this amount.  [I'll try to squeeze out some more bytes if I have time].
+
+### Computational Power
+
+As you increase the number of triggers (to say, 4 or 5), Mozzi will start to struggle to keep up.  You might occasionally got a little click.  You can reduce the clicks by reducing the CONTROL_RATE from 64 to something less, but the drum machine will start to get sloppy in its response to triggers.  It's already really sloppy as it is: 64 means that it checks for triggers only 64 times a second, or every 15 ms.
 
 ### A note about the DIGITAL OUT Pin
 

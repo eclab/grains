@@ -52,6 +52,14 @@
 /// your samples cannot exceed this amount.  [I'll try to squeeze out some more bytes if I have time].
 ///
 ///
+/// COMPUTATIONAL POWER
+/// As you increase the number of triggers (to say, 4 or 5), Mozzi will start to struggle
+/// to keep up.  You might occasionally got a little click.  You can reduce the clicks by
+/// reducing the CONTROL_RATE from 64 to something less, but the drum machine will start
+/// to get sloppy in its response to triggers.  It's already really sloppy as it is: 64 means
+/// that it checks for triggers only 64 times a second, or every 15 ms.
+/// 
+///
 /// A NOTE ABOUT THE DIGITAL OUT PIN
 /// 808 uses the Digital Out pin as its first trigger input.  This pin is different from the
 /// others.  If you leave a bare disconnected wire in this pin, it will cause GRAINS to
@@ -71,37 +79,39 @@
 // The default, which you can change, has 6 drum samples and three blank samples.
 // That takes up 89% of memory.  If you want more samples, they have to be SHORT.
 
-#define SAMPLE_1	"kick808.h"
-#define SAMPLE_2	"clap808.h"
-#define SAMPLE_3	"rim808.h"
-#define SAMPLE_4	"hat808.h"
-#define SAMPLE_5	"claves808.h"
-#define SAMPLE_6	"tomHigh808.h"
-#define SAMPLE_7	"snare.h"		// not enough memory for "tomMid808.h"
-#define SAMPLE_8	"shaker.h"		// not enough memory for "tomLow808.h"
-#define SAMPLE_9	"click.h"
+
+#define SAMPLE_1        "tr808/BD7525.h"                
+#define SAMPLE_2        "tr808/SD0050.h"
+#define SAMPLE_3        "tr808/CP.h"
+#define SAMPLE_4        "tr808/CH.h"
+#define SAMPLE_5        "tr808/OH00.h"
+#define SAMPLE_6        "tr808/CB.h"
+#define SAMPLE_7        "blank7.h"
+#define SAMPLE_8        "blank8.h"
+#define SAMPLE_9        "blank9.h"
 
 /// Here is an example with all empty samples, showing use of all the "blank" files.
-/// You probably don't want this!  :-)
+/// You probably don't want this!  :-)q
 
-///		#define SAMPLE_1	"blank1.h"
-///		#define SAMPLE_2	"blank2.h"
-///		#define SAMPLE_3	"blank3.h"
-///		#define SAMPLE_4	"blank4.h"
-///		#define SAMPLE_5	"blank5.h"
-///		#define SAMPLE_6	"blank6.h"
-///		#define SAMPLE_7	"blank7.h"
-///		#define SAMPLE_8	"blank8.h"
-///		#define SAMPLE_9	"blank9.h"
+///             #define SAMPLE_1        "blank1.h"
+///             #define SAMPLE_2        "blank2.h"
+///             #define SAMPLE_3        "blank3.h"
+///             #define SAMPLE_4        "blank4.h"
+///             #define SAMPLE_5        "blank5.h"
+///             #define SAMPLE_6        "blank6.h"
+///             #define SAMPLE_7        "blank7.h"
+///             #define SAMPLE_8        "blank8.h"
+///             #define SAMPLE_9        "blank9.h"
 
 
 /// U-LAW SAMPLES
 ///
-/// NOTE: THE U-LAW CODE HAS NOT BEEN TESTED YET.  DON'T TRY IT UNTIL I HAVE IT VERIFIED.
-/// Your samples can be ALL 8-bit raw linear, or they can ALL be 8-bit raw uLaw.  If they are
+/// Your samples can be ALL 8-bit linear, or they can ALL be 8-bit uLaw.  uLaw sounds a lot better.
+/// The samples in the tr808 directory are a
+/// If they are
 /// uLaw, you need to uncomment the following #define, that is, remove the //
 
-// #define USE_ULAW
+#define USE_ULAW
 
 // Note that when using U-Law, 808 will make the samples sound louder, so you'll need
 // to turn the volume pot down.  The U-Law code also very slightly reduces the available
@@ -112,18 +122,18 @@
 ///
 /// Is a sample too loud compared to the others?  
 /// You can adjust the relative gain of each sample by reducing any of the following values.
-/// The values go between 0 (fully muted) to 16 (standard volume) to 50 (maximum volume)
+/// The values go between 0 (fully muted) to 8 (standard volume).  You can go higher but risk clipping.
 
-#define GAIN_0		16
-#define GAIN_1		16
-#define GAIN_2		16			// rim808.h is quiet: it would benefit from being boosted, though it'll clip in one spot
-#define GAIN_3		16
-#define GAIN_4		16
-#define GAIN_5		16
-#define GAIN_6		16
-#define GAIN_7		16
-#define GAIN_8		16
-#define GAIN_9		16
+#define GAIN_0          8
+#define GAIN_1          8
+#define GAIN_2          8                       // rim808.h is quiet: it would benefit from being boosted, though it'll clip in one spot
+#define GAIN_3          8
+#define GAIN_4          8
+#define GAIN_5          8
+#define GAIN_6          8
+#define GAIN_7          8
+#define GAIN_8          8
+#define GAIN_9          8
 
 
 /// SETTING THE FORMAT
@@ -131,22 +141,22 @@
 /// grouped, and how the interface is presented.   Here are the format names, don't
 /// play with this:
 
-#define FORMAT_1	0		// A single sample, plus editable start/end points and pitch control
-#define FORMAT_2	1		// Two samples, each with pitch control, plus total volume control
-#define FORMAT_3	2		// Three samples, the first two with pitch control, plus total volume control
-#define FORMAT_4	3		// Four samples, the first one with pitch control, plus total volume control
-#define FORMAT_5	4		// Has 5 triggers: thus not for TRIQ164 or GRAINS BEATS
-#define FORMAT_5A	5		// An alternative to FORMAT_5 for people with 4-trigger step sequencers like TRIQ164 or GRAINS BEATS 
-#define FORMAT_6	6		// Six samples and four triggers: the last three samples share a trigger
-#define FORMAT_7	7		// Seven samples and four triggers: the last four samples share a trigger
-#define FORMAT_7A	8		// An alternative to FORMAT_7, with three triggers.  The last three samples share a trigger, and the next three share another
-#define FORMAT_8	9		// Eight samples and three triggers.  The last four samples share a trigger, and the next three share another
-#define FORMAT_9	10		// Eight samples and three triggers.  The last four samples share a trigger, and the next four share another
+#define FORMAT_1        0               // A single sample, plus editable start/end points and pitch control
+#define FORMAT_2        1               // Two samples, each with pitch control, plus total volume control
+#define FORMAT_3        2               // Three samples, the first two with pitch control, plus total volume control
+#define FORMAT_4        3               // Four samples, the first one with pitch control, plus total volume control
+#define FORMAT_5        4               // Has 5 triggers: thus not for TRIQ164 or GRAINS BEATS
+#define FORMAT_5A       5               // An alternative to FORMAT_5 for people with 4-trigger step sequencers like TRIQ164 or GRAINS BEATS 
+#define FORMAT_6        6               // Six samples and four triggers: the last three samples share a trigger
+#define FORMAT_7        7               // Seven samples and four triggers: the last four samples share a trigger
+#define FORMAT_7A       8               // An alternative to FORMAT_7, with three triggers.  The last three samples share a trigger, and the next three share another
+#define FORMAT_8        9               // Eight samples and three triggers.  The last four samples share a trigger, and the next three share another
+#define FORMAT_9        10              // Eight samples and three triggers.  The last four samples share a trigger, and the next four share another
 
 /// You set the format by changing the following value.  For example, to set to FORMAT_7,
 /// you would change below to   #define FORMAT FORMAT_7
 
-#define FORMAT FORMAT_7
+#define FORMAT FORMAT_6
 
 
 /// THE FORMATS, and their associated CONFIGURATIONS, are described in detail below:
@@ -154,69 +164,69 @@
 /// FORMAT_1
 /// In this format there is a single sample, SAMPLE_1.  You can change its pitch and
 /// start and end points with the pots.
-	// POT 3		END 1			[If START > END, they are swapped]	[Set to MAN]
-	// POT 2		START 1			[If START > END, they are swapped]	[Set to MAN]
-	// POT 1		PITCH 1			[CENTER: Original Pitch]
-	// GATE OUT		UNUSED
-	// AUDIO IN		UNUSED
-	// IN 3			TRIGGER 1
-	// IN 2			UNUSED
-	// IN 1			PITCH CV 1
+// POT 3                END 1           [If START > END, they are swapped]      [Set to MAN]
+// POT 2                START 1         [If START > END, they are swapped]      [Set to MAN]
+// POT 1                PITCH 1         [CENTER: Original Pitch]
+// GATE OUT             UNUSED
+// AUDIO IN             UNUSED
+// IN 3                 TRIGGER 1
+// IN 2                 UNUSED
+// IN 1                 PITCH CV 1
 
 /// FORMAT_2
 /// There are two samples, SAMPLE_1 and SAMPLE_2.  You can change the pitch of each
 /// one and the total volume with the pots  Set the volume such that when the two 
 /// samples play simultaneously you don't have pops or clipping.
-	// POT 3		VOLUME
-	// POT 2		PITCH 2		[CENTER: Original Pitch]	[Note GRAINS BUG ABOVE]
-	// POT 1		PITCH 1		[CENTER: Original Pitch]	[Note GRAINS BUG ABOVE]
-	// GATE OUT		UNUSED
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 1
-	// IN 2			PITCH CV 2
-	// IN 1			PITCH CV 1 
+// POT 3                VOLUME
+// POT 2                PITCH 2         [CENTER: Original Pitch]        [Note GRAINS BUG ABOVE]
+// POT 1                PITCH 1         [CENTER: Original Pitch]        [Note GRAINS BUG ABOVE]
+// GATE OUT             UNUSED
+// AUDIO IN             TRIGGER 2
+// IN 3                 TRIGGER 1
+// IN 2                 PITCH CV 2
+// IN 1                 PITCH CV 1 
 
 /// FORMAT_3
 /// There are three samples, SAMPLE_1 through SAMPLE_3.  You can change the pitch
 /// of SAMPLE_1 and SAMPLE_2 with the pots, as well as the total volume.
 /// Set the volume such that when the two samples play
 /// simultaneously you don't have pops or clipping.
-	// POT 3		VOLUME
-	// POT 2		PITCH 2		[CENTER: Original Pitch]	[Note GRAINS BUG ABOVE]
-	// POT 1		PITCH 1		[CENTER: Original Pitch]	[Note GRAINS BUG ABOVE]
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			PITCH CV 2
-	// IN 1			PITCH CV 1 
+// POT 3                VOLUME
+// POT 2                PITCH 2         [CENTER: Original Pitch]        [Note GRAINS BUG ABOVE]
+// POT 1                PITCH 1         [CENTER: Original Pitch]        [Note GRAINS BUG ABOVE]
+// GATE OUT             TRIGGER 1
+// AUDIO IN             TRIGGER 2
+// IN 3                 TRIGGER 3
+// IN 2                 PITCH CV 2
+// IN 1                 PITCH CV 1 
 
 /// FORMAT_4
 /// There are four samples, SAMPLE_1 through SAMPLE_4.  You can change the pitch
 /// of SAMPLE_1 and the total volume with the pots.
 /// Set the volume such that when the two samples play
 /// simultaneously you don't have pops or clipping.
-	// POT 3		VOLUME
-	// POT 2		UNUSED		[SET TO MAXIMUM, AND SET SWITCH TO IN2]
-	// POT 1		PITCH 1		[CENTER: Original Pitch]	[Note GRAINS BUG ABOVE]
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			PITCH CV 1 
+// POT 3                VOLUME
+// POT 2                UNUSED          [SET TO MAXIMUM, AND SET SWITCH TO IN2]
+// POT 1                PITCH 1         [CENTER: Original Pitch]        [Note GRAINS BUG ABOVE]
+// GATE OUT             TRIGGER 1
+// AUDIO IN             TRIGGER 2
+// IN 3                 TRIGGER 3
+// IN 2                 TRIGGER 4
+// IN 1                 PITCH CV 1 
 
 /// FORMAT_5
 /// There are five samples, SAMPLE_1 through SAMPLE_5.  You can change the
 /// total volume with a pot.
 /// Set the volume such that when the two samples play
 /// simultaneously you don't have pops or clipping.
-	// POT 3		VOLUME
-	// POT 2		UNUSED		[SET TO MAXIMUM, AND SET SWITCH TO IN2]
-	// POT 1		UNUSED		[SET TO MAXIMUM, AND SET SWITCH TO IN1]
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			TRIGGER 5 
+// POT 3                VOLUME
+// POT 2                UNUSED          [SET TO MAXIMUM, AND SET SWITCH TO IN2]
+// POT 1                UNUSED          [SET TO MAXIMUM, AND SET SWITCH TO IN1]
+// GATE OUT             TRIGGER 1
+// AUDIO IN             TRIGGER 2
+// IN 3                 TRIGGER 3
+// IN 2                 TRIGGER 4
+// IN 1                 TRIGGER 5 
 
 /// FORMAT_5A
 /// There are five samples, SAMPLE_1 through SAMPLE_5.  You can change the
@@ -226,14 +236,14 @@
 /// pot determines which sample plays.  The purpose of this format is to be
 /// more convenient for people with 4-trigger sequencers such as TRIQ164 or
 /// BEATS on the GRAINS.
-	// POT 3		VOLUME
-	// POT 2		UNUSED		[SET TO MAXIMUM, AND SET SWITCH TO IN2]
-	// POT 1		SELECT SAMPLES FOR TRIGGER 4 -> { 4, 5 }	[SET TO MAN]
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			UNUSED 
+// POT 3                VOLUME
+// POT 2                UNUSED          [SET TO MAXIMUM, AND SET SWITCH TO IN2]
+// POT 1                SELECT SAMPLES FOR TRIGGER 4 -> { 4, 5 }        [SET TO MAN]
+// GATE OUT             TRIGGER 1
+// AUDIO IN             TRIGGER 2
+// IN 3                 TRIGGER 3
+// IN 2                 TRIGGER 4
+// IN 1                 UNUSED 
 
 
 /// FORMAT_6
@@ -242,14 +252,13 @@
 /// simultaneously you don't have pops or clipping.
 /// There are only FOUR triggers.  SAMPLE_4, SAMPLE_5, and SAMPLE_6 share a trigger: a 
 /// pot determines which sample plays.  
-	// POT 3		VOLUME
-	// POT 2		UNUSED		[SET TO MAXIMUM, AND SET SWITCH TO IN2]
-	// POT 1		SELECT SAMPLES FOR TRIGGER 4 -> { 4, 5, 6 }	[SET TO MAN]
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			UNUSED 
+// POT 3                VOLUME
+// POT 2                UNUSED          [SET TO MAXIMUM, AND SET SWITCH TO IN2]
+// POT 1                SELECT SAMPLES FOR TRIGGER 4 -> { 4, 5, 6 }     [SET TO MAN]
+// GATE OUT             TRIGGER 1
+// AUDIO IN             TRIGGER 2
+// IN 3                 TRIGGER 3
+// IN 1                 UNUSED 
 
 /// FORMAT_7
 /// There are seven samples, SAMPLE_1 through SAMPLE_7.  You can change the
@@ -258,14 +267,14 @@
 /// There are only FOUR triggers.  SAMPLE_4, SAMPLE_5, SAMPLE_6, and SAMPLE_7 
 /// share a trigger: a pot determines which sample plays.  If you would like to
 /// spread the sharing love over two triggers, try FORMAT_7A instead.
-	// POT 3		VOLUME
-	// POT 2		UNUSED		[SET TO MAXIMUM, AND SET SWITCH TO IN2]
-	// POT 1		SELECT SAMPLES FOR TRIGGER 4 -> { 4, 5, 6, 7 }	[SET TO MAN]
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			UNUSED 
+// POT 3                VOLUME
+// POT 2                UNUSED          [SET TO MAXIMUM, AND SET SWITCH TO IN2]
+// POT 1                SELECT SAMPLES FOR TRIGGER 4 -> { 4, 5, 6, 7 }  [SET TO MAN]
+// GATE OUT             TRIGGER 1
+// AUDIO IN             TRIGGER 2
+// IN 3                 TRIGGER 3
+// IN 2                 TRIGGER 4
+// IN 1                 UNUSED 
 
 /// FORMAT_7A
 /// There are seven samples, SAMPLE_1 through SAMPLE_7.  You can change the
@@ -275,14 +284,14 @@
 /// and SAMPLE_5, SAMPLE_6, and SAMPLE_7 share a different trigger.  Two pots
 /// determine which samples play on these triggers.  If you would like to
 /// group more samples on one trigger and off the other, try FORMAT_7 instead.
-	// POT 3		VOLUME
-	// POT 2		SELECT SAMPLES FOR TRIGGER 2 -> { 2, 3, 4 }	[SET TO MAN]
-	// POT 1		SELECT SAMPLES FOR TRIGGER 3 -> { 5, 6, 7 }	[SET TO MAN]
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			UNUSED
-	// IN 1			UNUSED 
+// POT 3                VOLUME
+// POT 2                SELECT SAMPLES FOR TRIGGER 2 -> { 2, 3, 4 }     [SET TO MAN]
+// POT 1                SELECT SAMPLES FOR TRIGGER 3 -> { 5, 6, 7 }     [SET TO MAN]
+// GATE OUT             TRIGGER 1
+// AUDIO IN             TRIGGER 2
+// IN 3                 TRIGGER 3
+// IN 2                 UNUSED
+// IN 1                 UNUSED 
 
 /// FORMAT_8
 /// There are eight samples, SAMPLE_1 through SAMPLE_8.  You can change the
@@ -291,14 +300,14 @@
 /// There are only FOUR triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4 share a trigger,
 /// and SAMPLE_5, SAMPLE_6, SAMPLE_7, and SAMPLE_8 share a different trigger.  
 /// Two pots determine which samples play on these triggers.
-	// POT 3		VOLUME
-	// POT 2		SELECT SAMPLES FOR TRIGGER 2 -> { 2, 3, 4 }		[SET TO MAN]
-	// POT 1		SELECT SAMPLES FOR TRIGGER 3 -> { 5, 6, 7, 8 }	[SET TO MAN]
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			UNUSED
-	// IN 1			UNUSED 
+// POT 3                VOLUME
+// POT 2                SELECT SAMPLES FOR TRIGGER 2 -> { 2, 3, 4 }             [SET TO MAN]
+// POT 1                SELECT SAMPLES FOR TRIGGER 3 -> { 5, 6, 7, 8 }  [SET TO MAN]
+// GATE OUT             TRIGGER 1
+// AUDIO IN             TRIGGER 2
+// IN 3                 TRIGGER 3
+// IN 2                 UNUSED
+// IN 1                 UNUSED 
 
 /// FORMAT_9
 /// There are nine samples, SAMPLE_1 through SAMPLE_9.  You can change the
@@ -307,14 +316,14 @@
 /// There are only FOUR triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4, and SAMPLE_5 
 /// share a trigger, and SAMPLE_6, SAMPLE_7, SAMPLE_8, and SAMPLE_9 share a 
 /// different trigger.  Two pots determine which samples play on these triggers.
-	// POT 3		VOLUME
-	// POT 2		SELECT SAMPLES FOR TRIGGER 2 -> { 2, 3, 4, 5 }	[SET TO MAN]
-	// POT 1		SELECT SAMPLES FOR TRIGGER 3 -> { 6, 7, 8, 9 }	[SET TO MAN]
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			UNUSED
-	// IN 1			UNUSED 
+// POT 3                VOLUME
+// POT 2                SELECT SAMPLES FOR TRIGGER 2 -> { 2, 3, 4, 5 }  [SET TO MAN]
+// POT 1                SELECT SAMPLES FOR TRIGGER 3 -> { 6, 7, 8, 9 }  [SET TO MAN]
+// GATE OUT             TRIGGER 1
+// AUDIO IN             TRIGGER 2
+// IN 3                 TRIGGER 3
+// IN 2                 UNUSED
+// IN 1                 UNUSED 
 
 
 
@@ -324,6 +333,64 @@
 
 
 
+#define CV_POT_IN1    A2 
+#define CV_POT_IN2    A1
+#define CV_POT3       A0
+#define CV_IN3        A3
+#define CV_AUDIO_IN   A4
+#define CV_AUDIO_OUT  9
+#define CV_GATE_OUT   8
+#define RANDOM_PIN    A5
+
+float inverseLengths0;
+float inverseLengths1;
+
+uint16_t triggered[5] = { 0, 0, 0, 0, 0 };
+uint16_t trigger[5];
+uint16_t pot[3];
+#define UNDEFINED (-1)
+int16_t previousPitch1 = UNDEFINED;
+int16_t previousPitch2 = UNDEFINED;
+int16_t previousStart = UNDEFINED;
+int16_t previousEnd = UNDEFINED;
+int16_t previousVolume = UNDEFINED;
+
+// I want a lookup table from 0...1024 which maps to 1/2 ... 2 exponentially.
+// I don't have the memory for it in floats though, nor 1024 elements.  So
+// we take 0...1024 and divide by 4 to get 0...255.  Then we look it up in FREQUENCIES.
+// Finally we divide by 128.
+const uint8_t FREQUENCIES[] = {64, 64, 64, 65, 65, 65, 66, 66, 66, 67, 67, 67, 68, 68, 69, 69, 69,
+    70, 70, 70, 71, 71, 72, 72, 72, 73, 73, 74, 74, 74, 75, 75, 76, 76,
+    76, 77, 77, 78, 78, 79, 79, 79, 80, 80, 81, 81, 82, 82, 82, 83, 83,
+    84, 84, 85, 85, 86, 86, 87, 87, 88, 88, 89, 89, 90, 90, 91, 91, 91,
+    92, 92, 93, 94, 94, 95, 95, 96, 96, 97, 97, 98, 98, 99, 99, 100, 100,
+    101, 101, 102, 103, 103, 104, 104, 105, 105, 106, 107, 107, 108, 108,
+    109, 109, 110, 111, 111, 112, 113, 113, 114, 114, 115, 116, 116, 117,
+    118, 118, 119, 119, 120, 121, 121, 122, 123, 123, 124, 125, 125, 126,
+    127, 128, 128, 129, 130, 130, 131, 132, 132, 133, 134, 135, 135, 136,
+    137, 138, 138, 139, 140, 141, 141, 142, 143, 144, 144, 145, 146, 147,
+    148, 148, 149, 150, 151, 152, 153, 153, 154, 155, 156, 157, 158, 158,
+    159, 160, 161, 162, 163, 164, 165, 165, 166, 167, 168, 169, 170, 171,
+    172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 182, 183, 184,
+    185, 186, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199,
+    200, 201, 202, 203, 205, 206, 207, 208, 209, 210, 211, 212, 214, 215,
+    216, 217, 218, 219, 221, 222, 223, 224, 226, 227, 228, 229, 230, 232,
+    233, 234, 236, 237, 238, 239, 241, 242, 243, 245, 246, 247, 249, 250,
+    251, 253, 254};
+
+float computeFrequency(uint16_t pitch, float inverseLength)
+    {
+    float freq = 1.0;   // dead center
+    if (pitch >= 512 + 128)
+        {
+        freq = FREQUENCIES[(pitch - 128) >> 2] * (1.0 / 128.0);
+        }
+    else if (pitch <= 512 - 128)
+        {
+        freq = FREQUENCIES[(pitch + 128) >> 2] * (1.0 / 128.0);
+        }
+    return 16384 * inverseLength * freq;
+    }
 
 
 
@@ -389,28 +456,483 @@ uint16_t lengths8 = DATA_LENGTH;
 #undef DATA_LENGTH
 
 
+//// DIGITAL OUT registers a trigger faster than the analog reads, either
+//// because I have them triggering at 800 just to be sure, or because mozziAnalogRead
+//// does a delayed read.  At any rate, to get Digital Out to line up with the others
+//// in its triggering, we have to delay it one beat.  We do that with a little countdown
+//// timer here.
+#define COUNTDOWN 2
+uint8_t counter = 1;
 
-#define CV_POT_IN1    A2 
-#define CV_POT_IN2    A1
-#define CV_POT3       A0
-#define CV_IN3        A3
-#define CV_AUDIO_IN   A4
-#define CV_AUDIO_OUT  9
-#define CV_GATE_OUT   8
-#define RANDOM_PIN    A5
+void updateControl1()
+    {
+    // POT 3            END 1
+    // POT 2            START 1
+    // POT 1            PITCH 1
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         UNUSED
+    // IN 3             UNUSED
+    // IN 2             UNUSED
+    // IN 1             PITCH CV 1
+        
+    if (previousPitch1 == UNDEFINED) previousPitch1 = pot[0] = mozziAnalogRead(CV_POT3);
+    else pot[0] = previousPitch1 = (previousPitch1 * 7 + mozziAnalogRead(CV_POT3)) >> 3;
+    if (previousStart == UNDEFINED) previousStart = pot[1] = mozziAnalogRead(CV_POT_IN2);
+    else pot[1] = previousStart = (previousStart * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3;
+    if (previousEnd == UNDEFINED) previousEnd = pot[2] = mozziAnalogRead(CV_POT_IN1);
+    else pot[2] = previousEnd = (previousEnd * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3;
 
-float inverseLengths0;
-float inverseLengths1;
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        { 
+        // don't bother with the countdown in this situation, only one drum
+        
+		// set sample lengths and pitch only when we start
+		sample0.setFreq(computeFrequency(pot[0], inverseLengths0));
+		if (pot[2] < pot[1]) // start is after end, need to swap
+			{
+			uint8_t p = pot[2];
+			pot[2] = pot[1];
+			pot[1] = p;
+			}
+					
+		sample0.setStart((pot[1] * (uint32_t)lengths0) >> 10);
+		sample0.setEnd((pot[2] * (uint32_t)lengths0) >> 10);
+		sample0.start(); 
+        }
+    triggered[0] = val;
+    }
+        
+void updateControl2()
+    {
+    // POT 3            VOLUME
+    // POT 2            PITCH 2
+    // POT 1            PITCH 1
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             UNUSED
+    // IN 2             PITCH CV 2
+    // IN 1             PITCH CV 1 
 
-uint16_t triggered[5] = { 0, 0, 0, 0, 0 };
-uint16_t trigger[5];
-uint16_t pot[3];
-#define UNDEFINED (-1)
-int16_t previousPitch1 = UNDEFINED;
-int16_t previousPitch2 = UNDEFINED;
-int16_t previousStart = UNDEFINED;
-int16_t previousEnd = UNDEFINED;
-int16_t previousVolume = UNDEFINED;
+    if (previousPitch1 == UNDEFINED) previousPitch1 = pot[0] = mozziAnalogRead(CV_POT_IN1);
+    else pot[0] = previousPitch1 = (previousPitch1 * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3;
+    if (previousPitch2 == UNDEFINED) previousPitch2 = pot[1] = mozziAnalogRead(CV_POT_IN2);
+    else pot[1] = previousPitch2 = (previousPitch2 * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3;
+    if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
+    else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
+        
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        { 
+        if (counter == 0) counter = COUNTDOWN;
+        }
+    triggered[0] = val;
+        
+    if (counter == 1)
+        {
+        // set pitch only when we start
+        sample0.setFreq(computeFrequency(pot[0], inverseLengths0));
+        sample0.start(); 
+        }
+    if (counter > 0) counter--;
+        
+    uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
+    if (!triggered[1] && val1 > 800) 
+        { 
+        // set pitch only when we start
+        sample1.setFreq(computeFrequency(pot[1], inverseLengths1));
+        triggered[1] = 1; 
+        sample1.start(); 
+        }
+    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+    }
+
+void updateControl3()
+    {
+    // POT 3            VOLUME
+    // POT 2            PITCH 2
+    // POT 1            PITCH 1
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             PITCH CV 2
+    // IN 1             PITCH CV 1 
+
+    if (previousPitch1 == UNDEFINED) previousPitch1 = pot[0] = mozziAnalogRead(CV_POT_IN1);
+    else pot[0] = previousPitch1 = (previousPitch1 * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3;
+    if (previousPitch2 == UNDEFINED) previousPitch2 = pot[1] = mozziAnalogRead(CV_POT_IN2);
+    else pot[1] = previousPitch2 = (previousPitch2 * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3;
+    if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
+    else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
+        
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        {
+        if (counter == 0) counter = COUNTDOWN;
+        }
+    triggered[0] = val;
+
+    if (counter == 1)
+        {
+        // set pitch only when we start
+        sample0.setFreq(computeFrequency(pot[0], inverseLengths0));
+        sample0.start(); 
+        }
+    if (counter > 0) counter--;
+        
+    uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
+    if (!triggered[1] && val1 > 800) 
+        { 
+        // set pitch only when we start
+        sample1.setFreq(computeFrequency(pot[1], inverseLengths1));
+        triggered[1] = 1;
+        sample1.start(); 
+        }
+    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+        
+    uint16_t val2 = mozziAnalogRead(CV_IN3);
+    if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
+    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    }
+
+void updateControl4()
+    {
+    // POT 3            VOLUME
+    // POT 2            UNUSED
+    // POT 1            PITCH 1
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             TRIGGER 4
+    // IN 1             PITCH CV 1 
+        
+    if (previousPitch1 == UNDEFINED) previousPitch1 = pot[0] = mozziAnalogRead(CV_POT_IN1);
+    else pot[0] = previousPitch1 = (previousPitch1 * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3;
+    /// POT[1] USED FOR TRIGGER
+    if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
+    else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
+        
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        { 
+        if (counter == 0) counter = COUNTDOWN;
+        }
+    triggered[0] = val;
+
+    if (counter == 1)
+        {
+        // set pitch only when we start
+        sample0.setFreq(computeFrequency(pot[0], inverseLengths0));
+        sample0.start(); 
+        }
+    if (counter > 0) counter--;
+        
+    uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
+    if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
+    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+
+    uint16_t val2 = mozziAnalogRead(CV_IN3);
+    if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
+    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+
+    uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
+    if (!triggered[3] && val3 > 800) { triggered[3] = 1; sample3.start(); }
+    else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
+        
+    }
+
+void updateControl5()
+    {
+    // POT 3            VOLUME
+    // POT 2            UNUSED
+    // POT 1            UNUSED
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             TRIGGER 4
+    // IN 1             TRIGGER 5 
+
+    /// POT[0] USED FOR TRIGGER
+    /// POT[1] USED FOR TRIGGER
+    if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
+    else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
+        
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        { 
+        if (counter == 0) counter = COUNTDOWN;
+        }
+    triggered[0] = val;
+
+    if (counter == 1)
+        {
+        sample0.start(); 
+        }
+    if (counter > 0) counter--;
+        
+    uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
+    if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
+    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+
+    uint16_t val2 = mozziAnalogRead(CV_IN3);
+    if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
+    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+
+    uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
+    if (!triggered[3] && val3 > 800) { triggered[3] = 1; sample3.start(); }
+    else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
+
+    uint16_t val4 = mozziAnalogRead(CV_POT_IN1);
+    if (!triggered[4] && val4 > 800) { triggered[4] = 1; sample4.start(); }
+    else if (triggered[4] && val4 < 400) { triggered[4] = 0; }
+    }
+
+void updateControl5A()
+    {
+    // POT 3            VOLUME
+    // POT 2            UNUSED
+    // POT 1            SAMPLES 4 -> { 4, 5 }
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             TRIGGER 4
+    // IN 1             UNUSED 
+        
+    pot[0] = mozziAnalogRead(CV_POT_IN1);
+    /// POT[1] USED FOR TRIGGER
+    if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
+    else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
+        
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        { 
+        if (counter == 0) counter = COUNTDOWN;
+        }
+    triggered[0] = val;
+
+    if (counter == 1)
+        {
+        sample0.start(); 
+        }
+    if (counter > 0) counter--;
+        
+    uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
+    if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
+    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+
+    uint16_t val2 = mozziAnalogRead(CV_IN3);
+    if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
+    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+
+    uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
+    if (!triggered[3] && val3 > 800) { triggered[3] = 1; if (pot[0] < 512) sample3.start(); else sample4.start(); }
+    else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
+    }
+
+void updateControl6()
+    {
+    // POT 3            VOLUME
+    // POT 2            UNUSED
+    // POT 1            SAMPLES 4 -> { 4, 5, 6 }
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             TRIGGER 4
+    // IN 1             UNUSED 
+
+    pot[0] = mozziAnalogRead(CV_POT_IN1);
+    /// POT[1] USED FOR TRIGGER
+    if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
+    else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
+        
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        { 
+        if (counter == 0) counter = COUNTDOWN;
+        }
+    triggered[0] = val;
+        
+    if (counter == 1)
+        {
+        sample0.start(); 
+        }
+    if (counter > 0) counter--;
+
+    uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
+    if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
+    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+
+    uint16_t val2 = mozziAnalogRead(CV_IN3);
+    if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
+    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+
+    uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
+    if (!triggered[3] && val3 > 800) { triggered[3] = 1; if (pot[0] < 341) sample3.start(); else if (pot[0] < 682) sample4.start(); else sample5.start(); }
+    else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
+    }
+
+void updateControl7()
+    {
+    // POT 3            VOLUME
+    // POT 2            UNUSED
+    // POT 1            SAMPLES 4 -> { 4, 5, 6, 7 }
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             TRIGGER 4
+    // IN 1             UNUSED 
+
+    pot[0] = mozziAnalogRead(CV_POT_IN1);
+    /// POT[1] USED FOR TRIGGER
+    if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
+    else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
+        
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        { 
+        if (counter == 0) counter = COUNTDOWN;
+        }
+    triggered[0] = val;
+
+    if (counter == 1)
+        {
+        sample0.start(); 
+        }
+    if (counter > 0) counter--;
+        
+    uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
+    if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
+    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+
+    uint16_t val2 = mozziAnalogRead(CV_IN3);
+    if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
+    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+
+    uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
+    if (!triggered[3] && val3 > 800) { triggered[3] = 1; if (pot[0] < 256) sample3.start(); else if (pot[0] < 512) sample4.start(); else if (pot[0] < 768) sample5.start(); else sample6.start(); }
+    else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
+    }
+
+void updateControl7A()
+    {
+    // POT 3            VOLUME
+    // POT 2            SAMPLES 2 -> { 2, 3, 4 }
+    // POT 1            SAMPLES 3 -> { 5, 6, 7 }
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             UNUSED
+    // IN 1             UNUSED 
+
+    pot[0] = mozziAnalogRead(CV_POT_IN1);
+    pot[1] = mozziAnalogRead(CV_POT_IN2);
+    if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
+    else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
+
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        { 
+        if (counter == 0) counter = COUNTDOWN;
+        }
+    triggered[0] = val;
+
+    if (counter == 1)
+        {
+        sample0.start(); 
+        }
+    if (counter > 0) counter--;
+        
+    uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
+    if (!triggered[1] && val1 > 800) { triggered[1] = 1; if (pot[1] < 341) sample1.start(); else if (pot[1] < 682) sample2.start(); else sample3.start(); }
+    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+
+    uint16_t val2 = mozziAnalogRead(CV_IN3);
+    if (!triggered[2] && val2 > 800) { triggered[2] = 1; if (pot[0] < 341) sample4.start(); else if (pot[0] < 682) sample5.start(); else sample6.start(); }
+    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    }
+
+void updateControl8()
+    {
+    // POT 3            VOLUME
+    // POT 2            SAMPLES 2 -> { 2, 3, 4 }
+    // POT 1            SAMPLES 3 -> { 5, 6, 7, 8 }
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             UNUSED
+    // IN 1             UNUSED 
+
+    pot[0] = mozziAnalogRead(CV_POT_IN1);
+    pot[1] = mozziAnalogRead(CV_POT_IN2);
+    if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
+    else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
+        
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        { 
+        if (counter == 0) counter = COUNTDOWN;
+        }
+    triggered[0] = val;
+        
+    if (counter == 1)
+        {
+        sample0.start(); 
+        }
+    if (counter > 0) counter--;
+        
+    uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
+    if (!triggered[1] && val1 > 800) { triggered[1] = 1; if (pot[1] < 341) sample1.start(); else if (pot[1] < 682) sample2.start(); else sample3.start(); }
+    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+
+    uint16_t val2 = mozziAnalogRead(CV_IN3);
+    if (!triggered[2] && val2 > 800) { triggered[2] = 1; if (pot[0] < 256) sample4.start(); else if (pot[0] < 512) sample5.start(); else if (pot[0] < 768) sample6.start(); else sample7.start(); }
+    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    }
+
+void updateControl9()
+    {
+    // POT 3            VOLUME
+    // POT 2            SAMPLES 2 -> { 2, 3, 4, 5 }
+    // POT 1            SAMPLES 3 -> { 6, 7, 8, 9 }
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             UNUSED
+    // IN 1             UNUSED 
+
+    pot[0] = mozziAnalogRead(CV_POT_IN1);
+    pot[1] = mozziAnalogRead(CV_POT_IN2);
+    if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
+    else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
+        
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        { 
+        if (counter == 0) counter = COUNTDOWN;
+        }
+    triggered[0] = val;
+
+    if (counter == 1)
+        {
+        sample0.start(); 
+        }
+    if (counter > 1) counter--;
+        
+    uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
+    if (!triggered[1] && val1 > 800) { triggered[1] = 1; if (pot[1] < 256) sample1.start(); else if (pot[1] < 512) sample2.start(); else if (pot[1] < 768) sample3.start(); else sample4.start(); }
+    else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
+
+    uint16_t val2 = mozziAnalogRead(CV_IN3);
+    if (!triggered[2] && val2 > 800) { triggered[2] = 1; if (pot[0] < 256) sample5.start(); else if (pot[0] < 512) sample6.start(); else if (pot[0] < 768) sample7.start(); else sample8.start(); }
+    else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
+    }
+
+
+
+
+
+
+
 
 
 /*
@@ -430,14 +952,14 @@ int16_t previousVolume = UNDEFINED;
 */
 
 /*
-#include <stdio.h>
+  #include <stdio.h>
 
-typedef unsigned char uint8_t;
-typedef signed short int16_t;
+  typedef unsigned char uint8_t;
+  typedef signed short int16_t;
 
-const int16_t exp_lut[8] = {0,132,396,924,1980,4092,8316,16764};
-int16_t ulaw2linear(uint8_t ulawbyte)
-{
+  const int16_t exp_lut[8] = {0,132,396,924,1980,4092,8316,16764};
+  int16_t ulaw2linear(uint8_t ulawbyte)
+  {
   ulawbyte = ~ulawbyte;
   uint8_t sign = (ulawbyte & 0x80);
   uint8_t exponent = (ulawbyte >> 4) & 0x07;
@@ -445,712 +967,319 @@ int16_t ulaw2linear(uint8_t ulawbyte)
   int16_t sample = exp_lut[exponent] + (mantissa << (exponent + 3));
   if (sign != 0) sample = -sample;
   return sample;
-}
-int main( int argc, char *argv[] )
-        {
-for(int i = 0; i < 256; i++)
-        {
-        printf("%d, ", (ulaw2linear(i) * 244) >> 15);
-        if (i % 16 == 15) printf("\n");
-        }
+  }
+  int main( int argc, char *argv[] )
+  {
+  for(int i = 0; i < 256; i++)
+  {
+  printf("%d, ", (ulaw2linear(i) * 244) >> 15);
+  if (i % 16 == 15) printf("\n");
+  }
 */
 
 
 
 
-const int16_t ULAW[] = {
--240, -232, -224, -217, -209, -202, -194, -186, -179, -171, -163, -156, -148, -141, -133, -125, 
--120, -116, -112, -108, -104, -101, -97, -93, -89, -85, -81, -78, -74, -70, -66, -62, 
--60, -58, -56, -54, -52, -50, -48, -46, -44, -42, -41, -39, -37, -35, -33, -31, 
--30, -29, -28, -27, -26, -25, -24, -23, -22, -21, -20, -19, -18, -17, -16, -15, 
--15, -14, -14, -13, -13, -12, -12, -11, -11, -10, -10, -9, -9, -8, -8, -7, 
--7, -7, -7, -6, -6, -6, -6, -5, -5, -5, -5, -4, -4, -4, -4, -3, 
--3, -3, -3, -3, -3, -3, -3, -2, -2, -2, -2, -2, -2, -2, -2, -1, 
--1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 
-239, 231, 223, 216, 208, 201, 193, 185, 178, 170, 162, 155, 147, 140, 132, 124, 
-119, 115, 111, 107, 103, 100, 96, 92, 88, 84, 80, 77, 73, 69, 65, 61, 
-59, 57, 55, 53, 51, 49, 47, 45, 43, 41, 40, 38, 36, 34, 32, 30, 
-29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 
-14, 13, 13, 12, 12, 11, 11, 10, 10, 9, 9, 8, 8, 7, 7, 6, 
-6, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4, 3, 3, 3, 3, 2, 
-2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 0, 
-0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-};
+/*
+  const int16_t exp_lut[8] = {0,132,396,924,1980,4092,8316,16764};
+  int16_t ulaw2linear(uint8_t ulawbyte)
+  {
+  ulawbyte = ~ulawbyte;
+  uint8_t sign = (ulawbyte & 0x80);
+  uint8_t exponent = (ulawbyte >> 4) & 0x07;
+  uint8_t mantissa = ulawbyte & 0x0F;
+  int16_t sample = exp_lut[exponent] + (mantissa << (exponent + 3));
+  if (sign != 0) sample = -sample;
+  return sample;
+  }
+*/
+
+/*
+  const int16_t __ULAW[] = {
+  -240, -232, -224, -217, -209, -202, -194, -186, -179, -171, -163, -156, -148, -141, -133, -125, 
+  -120, -116, -112, -108, -104, -101, -97, -93, -89, -85, -81, -78, -74, -70, -66, -62, 
+  -60, -58, -56, -54, -52, -50, -48, -46, -44, -42, -41, -39, -37, -35, -33, -31, 
+  -30, -29, -28, -27, -26, -25, -24, -23, -22, -21, -20, -19, -18, -17, -16, -15, 
+  -15, -14, -14, -13, -13, -12, -12, -11, -11, -10, -10, -9, -9, -8, -8, -7, 
+  -7, -7, -7, -6, -6, -6, -6, -5, -5, -5, -5, -4, -4, -4, -4, -3, 
+  -3, -3, -3, -3, -3, -3, -3, -2, -2, -2, -2, -2, -2, -2, -2, -1, 
+  -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 
+  239, 231, 223, 216, 208, 201, 193, 185, 178, 170, 162, 155, 147, 140, 132, 124, 
+  119, 115, 111, 107, 103, 100, 96, 92, 88, 84, 80, 77, 73, 69, 65, 61, 
+  59, 57, 55, 53, 51, 49, 47, 45, 43, 41, 40, 38, 36, 34, 32, 30, 
+  29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 
+  14, 13, 13, 12, 12, 11, 11, 10, 10, 9, 9, 8, 8, 7, 7, 6, 
+  6, 6, 6, 5, 5, 5, 5, 4, 4, 4, 4, 3, 3, 3, 3, 2, 
+  2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 0, 
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+  };
+*/
 
 #ifdef USE_ULAW
-int16_t C(int16_t value, uint8_t volume) { return (ULAW[value + 128] * (uint32_t)volume) >> 4; }
-//int16_t C(int16_t value, uint8_t volume) { return (ULAW[(uint8_t)((value > 128 ? (128 - value) : value + 128)] * volume) >> 4; }
-//#define C(value, volume) ((ULAW[(uint8_t)(value + 128)] * volume) >> 4)
+const int16_t __ULAW[] = {
+    -32124, -31100, -30076, -29052, -28028, -27004, -25980, -24956, -23932, -22908, -21884, -20860, -19836, -18812, -17788, -16764, 
+    -15996, -15484, -14972, -14460, -13948, -13436, -12924, -12412, -11900, -11388, -10876, -10364, -9852, -9340, -8828, -8316, 
+    -7932, -7676, -7420, -7164, -6908, -6652, -6396, -6140, -5884, -5628, -5372, -5116, -4860, -4604, -4348, -4092, 
+    -3900, -3772, -3644, -3516, -3388, -3260, -3132, -3004, -2876, -2748, -2620, -2492, -2364, -2236, -2108, -1980, 
+    -1884, -1820, -1756, -1692, -1628, -1564, -1500, -1436, -1372, -1308, -1244, -1180, -1116, -1052, -988, -924, 
+    -876, -844, -812, -780, -748, -716, -684, -652, -620, -588, -556, -524, -492, -460, -428, -396, 
+    -372, -356, -340, -324, -308, -292, -276, -260, -244, -228, -212, -196, -180, -164, -148, -132, 
+    -120, -112, -104, -96, -88, -80, -72, -64, -56, -48, -40, -32, -24, -16, -8, 0, 
+    32124, 31100, 30076, 29052, 28028, 27004, 25980, 24956, 23932, 22908, 21884, 20860, 19836, 18812, 17788, 16764, 
+    15996, 15484, 14972, 14460, 13948, 13436, 12924, 12412, 11900, 11388, 10876, 10364, 9852, 9340, 8828, 8316, 
+    7932, 7676, 7420, 7164, 6908, 6652, 6396, 6140, 5884, 5628, 5372, 5116, 4860, 4604, 4348, 4092, 
+    3900, 3772, 3644, 3516, 3388, 3260, 3132, 3004, 2876, 2748, 2620, 2492, 2364, 2236, 2108, 1980, 
+    1884, 1820, 1756, 1692, 1628, 1564, 1500, 1436, 1372, 1308, 1244, 1180, 1116, 1052, 988, 924, 
+    876, 844, 812, 780, 748, 716, 684, 652, 620, 588, 556, 524, 492, 460, 428, 396, 
+    372, 356, 340, 324, 308, 292, 276, 260, 244, 228, 212, 196, 180, 164, 148, 132, 
+    120, 112, 104, 96, 88, 80, 72, 64, 56, 48, 40, 32, 24, 16, 8, 0, 
+    };
+
+// Gain is maximal at 8
+// ranges (-4K .. 4K)...
+int16_t C(int8_t value, uint8_t volume) { return ((__ULAW[value + 128] >> 3) * volume) >> 3; } 
 #else
-int16_t C(int16_t value, uint8_t volume) { return (value * volume) >> 4; }
-//#define C(value, volume) ((value * volume) >> 4)
+int16_t C(int8_t value, uint8_t volume) { return ((value * volume) * 32) >> 3; }
 #endif
 
-
-// I want a lookup table from 0...1024 which maps to 1/2 ... 2 exponentially.
-// I don't have the memory for it in floats though, nor 1024 elements.  So
-// we take 0...1024 and divide by 4 to get 0...255.  Then we look it up in FREQUENCIES.
-// Finally we divide by 128.
-const uint8_t FREQUENCIES[] = {64, 64, 64, 65, 65, 65, 66, 66, 66, 67, 67, 67, 68, 68, 69, 69, 69,
-						70, 70, 70, 71, 71, 72, 72, 72, 73, 73, 74, 74, 74, 75, 75, 76, 76,
-						76, 77, 77, 78, 78, 79, 79, 79, 80, 80, 81, 81, 82, 82, 82, 83, 83,
-						84, 84, 85, 85, 86, 86, 87, 87, 88, 88, 89, 89, 90, 90, 91, 91, 91,
-						92, 92, 93, 94, 94, 95, 95, 96, 96, 97, 97, 98, 98, 99, 99, 100, 100,
-						101, 101, 102, 103, 103, 104, 104, 105, 105, 106, 107, 107, 108, 108,
-						109, 109, 110, 111, 111, 112, 113, 113, 114, 114, 115, 116, 116, 117,
-						118, 118, 119, 119, 120, 121, 121, 122, 123, 123, 124, 125, 125, 126,
-						127, 128, 128, 129, 130, 130, 131, 132, 132, 133, 134, 135, 135, 136,
-						137, 138, 138, 139, 140, 141, 141, 142, 143, 144, 144, 145, 146, 147,
-						148, 148, 149, 150, 151, 152, 153, 153, 154, 155, 156, 157, 158, 158,
-						159, 160, 161, 162, 163, 164, 165, 165, 166, 167, 168, 169, 170, 171,
-						172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 182, 183, 184,
-						185, 186, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199,
-						200, 201, 202, 203, 205, 206, 207, 208, 209, 210, 211, 212, 214, 215,
-						216, 217, 218, 219, 221, 222, 223, 224, 226, 227, 228, 229, 230, 232,
-						233, 234, 236, 237, 238, 239, 241, 242, 243, 245, 246, 247, 249, 250,
-						251, 253, 254};
-
-float computeFrequency(uint16_t pitch, float inverseLength)
-	{
-	float freq = 1.0;		// dead center
-	if (pitch >= 512 + 128)
-		{
-		 freq = FREQUENCIES[(pitch - 128) >> 2] * (1.0 / 128.0);
-   		}
-	else // if (pitch >= 512 + 128)
-		{
-		freq = FREQUENCIES[(pitch + 128) >> 2] * (1.0 / 128.0);
-   		}
-   	return 16384 * inverseLength * freq;
-	}
-
-void updateControl1()
-	{
-	// POT 3		END 1
-	// POT 2		START 1
-	// POT 1		PITCH 1
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		UNUSED
-	// IN 3			UNUSED
-	// IN 2			UNUSED
-	// IN 1			PITCH CV 1
-	
-	if (previousPitch1 == UNDEFINED) previousPitch1 = pot[0] = mozziAnalogRead(CV_POT3);
-	else pot[0] = previousPitch1 = (previousPitch1 * 3 + mozziAnalogRead(CV_POT3)) >> 2;
-	if (previousStart == UNDEFINED) previousStart = pot[1] = mozziAnalogRead(CV_POT_IN2);
-	else pot[1] = previousStart = (previousStart * 3 + mozziAnalogRead(CV_POT_IN2)) >> 2;
-	if (previousEnd == UNDEFINED) previousEnd = pot[2] = mozziAnalogRead(CV_POT_IN1);
-	else pot[2] = previousEnd = (previousEnd * 3 + mozziAnalogRead(CV_POT_IN1)) >> 2;
-
-	uint8_t val = digitalRead(CV_GATE_OUT);
-	if (!triggered[0] && val) 
-		{ 
-		// set sample lengths and pitch only when we start
-		sample0.setFreq(computeFrequency(pot[0], inverseLengths0));
-		if (pot[2] < pot[1]) // start is after end, need to swap
-			{
-			uint8_t p = pot[2];
-			pot[2] = pot[1];
-			pot[1] = p;
-			}
-			
-		sample0.setStart((pot[1] * (uint32_t)lengths0) >> 10);
-		sample0.setEnd((pot[2] * (uint32_t)lengths0) >> 10);
-		triggered[0] = 1;
-		sample0.start(); 
-		}
-	triggered[0] = val;
-	}
-	
-void updateControl2()
-	{
-	// POT 3		VOLUME
-	// POT 2		PITCH 2
-	// POT 1		PITCH 1
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			UNUSED
-	// IN 2			PITCH CV 2
-	// IN 1			PITCH CV 1 
-
-	if (previousPitch1 == UNDEFINED) previousPitch1 = pot[0] = mozziAnalogRead(CV_POT_IN1);
-	else pot[0] = previousPitch1 = (previousPitch1 * 3 + mozziAnalogRead(CV_POT_IN1)) >> 2;
-	if (previousPitch2 == UNDEFINED) previousPitch2 = pot[1] = mozziAnalogRead(CV_POT_IN2);
-	else pot[1] = previousPitch2 = (previousPitch2 * 3 + mozziAnalogRead(CV_POT_IN2)) >> 2;
-	if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
-	else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
-	
-	uint8_t val = digitalRead(CV_GATE_OUT);
-	if (!triggered[0] && val) 
-		{ 
-		// set pitch only when we start
-		sample0.setFreq(computeFrequency(pot[0], inverseLengths0));
-		triggered[0] = 1;
-		sample0.start(); 
-		}
-	triggered[0] = val;
-	
-	uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-	if (!triggered[1] && val1 > 800) 
-		{ 
-		// set pitch only when we start
-		sample1.setFreq(computeFrequency(pot[1], inverseLengths1));
-		triggered[1] = 1; 
-		sample1.start(); 
-		}
-	else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
-	}
-
-void updateControl3()
-	{
-	// POT 3		VOLUME
-	// POT 2		PITCH 2
-	// POT 1		PITCH 1
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			PITCH CV 2
-	// IN 1			PITCH CV 1 
-
-	if (previousPitch1 == UNDEFINED) previousPitch1 = pot[0] = mozziAnalogRead(CV_POT_IN1);
-	else pot[0] = previousPitch1 = (previousPitch1 * 3 + mozziAnalogRead(CV_POT_IN1)) >> 2;
-	if (previousPitch2 == UNDEFINED) previousPitch2 = pot[1] = mozziAnalogRead(CV_POT_IN2);
-	else pot[1] = previousPitch2 = (previousPitch2 * 3 + mozziAnalogRead(CV_POT_IN2)) >> 2;
-	if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
-	else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
-	
-	uint8_t val = digitalRead(CV_GATE_OUT);
-	if (!triggered[0] && val) 
-		{ 
-		// set pitch only when we start
-		sample0.setFreq(computeFrequency(pot[0], inverseLengths0));
-		triggered[0] = 1;
-		sample0.start(); 
-		}
-	triggered[0] = val;
-	
-	uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-	if (!triggered[1] && val1 > 800) 
-		{ 
-		// set pitch only when we start
-		sample1.setFreq(computeFrequency(pot[1], inverseLengths1));
-		triggered[1] = 1;
-		sample1.start(); 
-		}
-	else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
-	
-	uint16_t val2 = mozziAnalogRead(CV_IN3);
-	if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
-	else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
-	}
-
-void updateControl4()
-	{
-	// POT 3		VOLUME
-	// POT 2		UNUSED
-	// POT 1		PITCH 1
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			PITCH CV 1 
-	
-	if (previousPitch1 == UNDEFINED) previousPitch1 = pot[0] = mozziAnalogRead(CV_POT_IN1);
-	else pot[0] = previousPitch1 = (previousPitch1 * 3 + mozziAnalogRead(CV_POT_IN1)) >> 2;
-	/// POT[1] USED FOR TRIGGER
-	if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
-	else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
-	
-	uint8_t val = digitalRead(CV_GATE_OUT);
-	if (!triggered[0] && val) 
-		{ 
-		// set pitch only when we start
-		sample0.setFreq(computeFrequency(pot[0], inverseLengths0));
-		triggered[0] = 1;
-		sample0.start(); 
-		}
-	triggered[0] = val;
-	
-	uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-	if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
-	else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
-
-	uint16_t val2 = mozziAnalogRead(CV_IN3);
-	if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
-	else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
-
-	uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
-	if (!triggered[3] && val3 > 800) { triggered[3] = 1; sample3.start(); }
-	else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
-	
-	}
-
-void updateControl5()
-	{
-	// POT 3		VOLUME
-	// POT 2		UNUSED
-	// POT 1		UNUSED
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			TRIGGER 5 
-
-	/// POT[0] USED FOR TRIGGER
-	/// POT[1] USED FOR TRIGGER
-	if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
-	else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
-	
-	uint8_t val = digitalRead(CV_GATE_OUT);
-	if (!triggered[0] && val) { sample0.start(); }
-	triggered[0] = val;
-	
-	uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-	if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
-	else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
-
-	uint16_t val2 = mozziAnalogRead(CV_IN3);
-	if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
-	else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
-
-	uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
-	if (!triggered[3] && val3 > 800) { triggered[3] = 1; sample3.start(); }
-	else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
-
-	uint16_t val4 = mozziAnalogRead(CV_POT_IN1);
-	if (!triggered[4] && val4 > 800) { triggered[4] = 1; sample4.start(); }
-	else if (triggered[4] && val4 < 400) { triggered[4] = 0; }
-	}
-
-void updateControl5A()
-	{
-	// POT 3		VOLUME
-	// POT 2		UNUSED
-	// POT 1		SAMPLES 4 -> { 4, 5 }
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			UNUSED 
-	
-	pot[0] = mozziAnalogRead(CV_POT_IN1);
-	/// POT[1] USED FOR TRIGGER
-	if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
-	else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
-	
-	uint8_t val = digitalRead(CV_GATE_OUT);
-	if (!triggered[0] && val) { sample0.start(); }
-	triggered[0] = val;
-	
-	uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-	if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
-	else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
-
-	uint16_t val2 = mozziAnalogRead(CV_IN3);
-	if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
-	else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
-
-	uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
-	if (!triggered[3] && val3 > 800) { triggered[3] = 1; if (pot[0] < 512) sample3.start(); else sample4.start(); }
-	else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
-	}
-
-void updateControl6()
-	{
-	// POT 3		VOLUME
-	// POT 2		UNUSED
-	// POT 1		SAMPLES 4 -> { 4, 5, 6 }
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			UNUSED 
-
-	pot[0] = mozziAnalogRead(CV_POT_IN1);
-	/// POT[1] USED FOR TRIGGER
-	if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
-	else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
-	
-	uint8_t val = digitalRead(CV_GATE_OUT);
-	if (!triggered[0] && val) { sample0.start(); }
-	triggered[0] = val;
-	
-	uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-	if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
-	else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
-
-	uint16_t val2 = mozziAnalogRead(CV_IN3);
-	if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
-	else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
-
-	uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
-	if (!triggered[3] && val3 > 800) { triggered[3] = 1; if (pot[0] < 341) sample3.start(); else if (pot[0] < 682) sample4.start(); else sample5.start(); }
-	else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
-	}
-
-void updateControl7()
-	{
-	// POT 3		VOLUME
-	// POT 2		UNUSED
-	// POT 1		SAMPLES 4 -> { 4, 5, 6, 7 }
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			UNUSED 
-
-	pot[0] = mozziAnalogRead(CV_POT_IN1);
-	/// POT[1] USED FOR TRIGGER
-	if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
-	else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
-	
-	uint8_t val = digitalRead(CV_GATE_OUT);
-	if (!triggered[0] && val) { sample0.start(); }
-	triggered[0] = val;
-	
-	uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-	if (!triggered[1] && val1 > 800) { triggered[1] = 1; sample1.start(); }
-	else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
-
-	uint16_t val2 = mozziAnalogRead(CV_IN3);
-	if (!triggered[2] && val2 > 800) { triggered[2] = 1; sample2.start(); }
-	else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
-
-	uint16_t val3 = mozziAnalogRead(CV_POT_IN2);
-	if (!triggered[3] && val3 > 800) { triggered[3] = 1; if (pot[0] < 256) sample3.start(); else if (pot[0] < 512) sample4.start(); else if (pot[0] < 768) sample5.start(); else sample6.start(); }
-	else if (triggered[3] && val3 < 400) { triggered[3] = 0; }
-	}
-
-void updateControl7A()
-	{
-	// POT 3		VOLUME
-	// POT 2		SAMPLES 2 -> { 2, 3, 4 }
-	// POT 1		SAMPLES 3 -> { 5, 6, 7 }
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			UNUSED
-	// IN 1			UNUSED 
-
-	pot[0] = mozziAnalogRead(CV_POT_IN1);
-	pot[1] = mozziAnalogRead(CV_POT_IN2);
-	if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
-	else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
-
-	Serial.println(pot[0]);	
-	uint8_t val = digitalRead(CV_GATE_OUT);
-	if (!triggered[0] && val) { sample0.start(); }
-	triggered[0] = val;
-	
-	uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-	if (!triggered[1] && val1 > 800) { triggered[1] = 1; if (pot[1] < 341) sample1.start(); else if (pot[1] < 682) sample2.start(); else sample3.start(); }
-	else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
-
-	uint16_t val2 = mozziAnalogRead(CV_IN3);
-	if (!triggered[2] && val2 > 800) { triggered[2] = 1; if (pot[0] < 341) sample4.start(); else if (pot[0] < 682) sample5.start(); else sample6.start(); }
-	else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
-	}
-
-void updateControl8()
-	{
-	// POT 3		VOLUME
-	// POT 2		SAMPLES 2 -> { 2, 3, 4 }
-	// POT 1		SAMPLES 3 -> { 5, 6, 7, 8 }
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			UNUSED
-	// IN 1			UNUSED 
-
-	pot[0] = mozziAnalogRead(CV_POT_IN1);
-	pot[1] = mozziAnalogRead(CV_POT_IN2);
-	if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
-	else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
-	
-	uint8_t val = digitalRead(CV_GATE_OUT);
-	if (!triggered[0] && val) { sample0.start(); }
-	triggered[0] = val;
-	
-	uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-	if (!triggered[1] && val1 > 800) { triggered[1] = 1; if (pot[1] < 341) sample1.start(); else if (pot[1] < 682) sample2.start(); else sample3.start(); }
-	else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
-
-	uint16_t val2 = mozziAnalogRead(CV_IN3);
-	if (!triggered[2] && val2 > 800) { triggered[2] = 1; if (pot[0] < 256) sample4.start(); else if (pot[0] < 512) sample5.start(); else if (pot[0] < 768) sample6.start(); else sample7.start(); }
-	else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
-	}
-
-void updateControl9()
-	{
-	// POT 3		VOLUME
-	// POT 2		SAMPLES 2 -> { 2, 3, 4, 5 }
-	// POT 1		SAMPLES 3 -> { 6, 7, 8, 9 }
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			UNUSED
-	// IN 1			UNUSED 
-
-	pot[0] = mozziAnalogRead(CV_POT_IN1);
-	pot[1] = mozziAnalogRead(CV_POT_IN2);
-	if (previousVolume == UNDEFINED) previousVolume = pot[2] = mozziAnalogRead(CV_POT3);
-	else pot[2] = previousVolume = (previousVolume * 3 + mozziAnalogRead(CV_POT3)) >> 2;
-	
-	uint8_t val = digitalRead(CV_GATE_OUT);
-	if (!triggered[0] && val) { sample0.start(); }
-	triggered[0] = val;
-	
-	uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
-	if (!triggered[1] && val1 > 800) { triggered[1] = 1; if (pot[1] < 256) sample1.start(); else if (pot[1] < 512) sample2.start(); else if (pot[1] < 768) sample3.start(); else sample4.start(); }
-	else if (triggered[1] && val1 < 400) { triggered[1] = 0; }
-
-	uint16_t val2 = mozziAnalogRead(CV_IN3);
-	if (!triggered[2] && val2 > 800) { triggered[2] = 1; if (pot[0] < 256) sample5.start(); else if (pot[0] < 512) sample6.start(); else if (pot[0] < 768) sample7.start(); else sample8.start(); }
-	else if (triggered[2] && val2 < 400) { triggered[2] = 0; }
-	}
-
-
-
+#define CC(sample, volume) (C(sample.next(), volume) * sample.isPlaying())
 
 
 int updateAudio1()
-	{
-	// POT 3		END 1
-	// POT 2		START 1
-	// POT 1		PITCH 1
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		UNUSED
-	// IN 3			UNUSED
-	// IN 2			UNUSED
-	// IN 1			PITCH CV 1
-	
-#ifdef USE_ULAW
-	return ULAW[(uint8_t)(sample0.next() + 128)];
-#else
-	return (sample0.next() * 244) >> 7;		// stretch to 488
-#endif
-	}
-	
-int updateAudio2()
-	{
-	// POT 3		VOLUME
-	// POT 2		PITCH 2
-	// POT 1		PITCH 1
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			UNUSED
-	// IN 2			PITCH CV 2
-	// IN 1			PITCH CV 1 
+    {
+    // POT 3            END 1
+    // POT 2            START 1
+    // POT 1            PITCH 1
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         UNUSED
+    // IN 3             UNUSED
+    // IN 2             UNUSED
+    // IN 1             PITCH CV 1
 
-	return (int16_t)(((C(sample0.next(), GAIN_0) + C(sample1.next(), GAIN_1)) * (int32_t)pot[2]) >> 9);
-	}
+    return MonoOutput::from16Bit(CC(sample0, GAIN_0) >> 3);
+    }
+        
+int updateAudio2()
+    {
+    // POT 3            VOLUME
+    // POT 2            PITCH 2
+    // POT 1            PITCH 1
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             UNUSED
+    // IN 2             PITCH CV 2
+    // IN 1             PITCH CV 1 
+// volume goes twice as loud as needed 
+
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1)) * (uint32_t) pot[2]) >> 6); 
+    }
 
 int updateAudio3()
-	{
-	// POT 3		VOLUME
-	// POT 2		PITCH 2
-	// POT 1		PITCH 1
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			PITCH CV 2
-	// IN 1			PITCH CV 1 
+    {
+    // POT 3            VOLUME
+    // POT 2            PITCH 2
+    // POT 1            PITCH 1
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             PITCH CV 2
+    // IN 1             PITCH CV 1 
 
-	return (int16_t)(((C(sample0.next(), GAIN_0) + C(sample1.next(), GAIN_1) + C(sample2.next(), GAIN_2)) * (int32_t)pot[2]) >> 9);
-	}
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2)) * (uint32_t) pot[2]) >> 6);
+    }
 
 int updateAudio4()
-	{
-	// POT 3		VOLUME
-	// POT 2		UNUSED
-	// POT 1		PITCH 1
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			PITCH CV 1 
+    {
+    // POT 3            VOLUME
+    // POT 2            UNUSED
+    // POT 1            PITCH 1
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             TRIGGER 4
+    // IN 1             PITCH CV 1 
 
-	return (int16_t)(((C(sample0.next(), GAIN_0) + C(sample1.next(), GAIN_1) + C(sample2.next(), GAIN_2) + C(sample3.next(), GAIN_3)) * (int32_t)pot[2]) >> 9);
-	}
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + CC(sample3, GAIN_3)) * (uint32_t) pot[2]) >> 6);
+    }
 
 int updateAudio5()
-	{
-	// POT 3		VOLUME
-	// POT 2		UNUSED
-	// POT 1		UNUSED
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			TRIGGER 5 
+    {
+    // POT 3            VOLUME
+    // POT 2            UNUSED
+    // POT 1            UNUSED
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             TRIGGER 4
+    // IN 1             TRIGGER 5 
 
-	return (int16_t)(((C(sample0.next(), GAIN_0) + C(sample1.next(), GAIN_1) + C(sample2.next(), GAIN_2) + C(sample3.next(), GAIN_3) + C(sample4.next(), GAIN_4)) * (int32_t)pot[2]) >> 9);
-	}
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + CC(sample3, GAIN_3) + CC(sample4, GAIN_4)) * (uint32_t) pot[2]) >> 6);
+    }
 
 int updateAudio5A()
-	{
-	// POT 3		VOLUME
-	// POT 2		UNUSED
-	// POT 1		SAMPLES 4 -> { 4, 5 }
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			UNUSED 
+    {
+    // POT 3            VOLUME
+    // POT 2            UNUSED
+    // POT 1            SAMPLES 4 -> { 4, 5 }
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             TRIGGER 4
+    // IN 1             UNUSED 
 
-	return (int16_t)(((C(sample0.next(), GAIN_0) + C(sample1.next(), GAIN_1) + C(sample2.next(), GAIN_2) + (pot[0] < 512 ? C(sample3.next(), GAIN_3) : C(sample4.next(), GAIN_4))) * (int32_t)pot[2]) >> 9);
-	}
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + (pot[0] < 512 ? CC(sample3, GAIN_3) : CC(sample4, GAIN_4))) * (uint32_t) pot[2]) >> 6);
+    }
 
 int updateAudio6()
-	{
-	// POT 3		VOLUME
-	// POT 2		UNUSED
-	// POT 1		SAMPLES 4 -> { 4, 5, 6 }
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			UNUSED 
+    {
+    // POT 3            VOLUME
+    // POT 2            UNUSED
+    // POT 1            SAMPLES 4 -> { 4, 5, 6 }
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             TRIGGER 4
+    // IN 1             UNUSED 
 
-	return (int16_t)(((C(sample0.next(), GAIN_0) + C(sample1.next(), GAIN_1) + C(sample2.next(), GAIN_2) + (pot[0] < 341 ? C(sample3.next(), GAIN_3) : (pot[0] < 682 ? C(sample4.next(), GAIN_4) : C(sample5.next(), GAIN_5)))) * (int32_t)pot[2]) >> 9);
-	}
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + (pot[0] < 341 ? CC(sample3, GAIN_3) : (pot[0] < 682 ? CC(sample4, GAIN_4) : CC(sample5, GAIN_5)))) * (uint32_t) pot[2]) >> 6);
+    }
 
 int updateAudio7()
-	{
-	// POT 3		VOLUME
-	// POT 2		UNUSED
-	// POT 1		SAMPLES 4 -> { 4, 5, 6, 7}
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			TRIGGER 4
-	// IN 1			UNUSED 
+    {
+    // POT 3            VOLUME
+    // POT 2            UNUSED
+    // POT 1            SAMPLES 4 -> { 4, 5, 6, 7}
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             TRIGGER 4
+    // IN 1             UNUSED 
 
-	return (int16_t)(((C(sample0.next(), GAIN_0) + C(sample1.next(), GAIN_1) + C(sample2.next(), GAIN_2) + (pot[0] < 256 ? C(sample3.next(), GAIN_3) : (pot[0] < 512 ? C(sample4.next(), GAIN_4) : (pot[0] < 768 ? C(sample5.next(), GAIN_5) : C(sample6.next(), GAIN_6))))) * (int32_t)pot[2]) >> 9);
-	}
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + (pot[0] < 256 ? CC(sample3, GAIN_3) : (pot[0] < 512 ? CC(sample4, GAIN_4) : (pot[0] < 768 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6))))) * (uint32_t) pot[2]) >> 6);
+    }
 
 int updateAudio7A()
-	{
-	// POT 3		VOLUME
-	// POT 2		SAMPLES 2 -> { 2, 3, 4 }
-	// POT 1		SAMPLES 3 -> { 5, 6, 7 }
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			UNUSED
-	// IN 1			UNUSED 
+    {
+    // POT 3            VOLUME
+    // POT 2            SAMPLES 2 -> { 2, 3, 4 }
+    // POT 1            SAMPLES 3 -> { 5, 6, 7 }
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             UNUSED
+    // IN 1             UNUSED 
 
-	return (int16_t)(((C(sample0.next(), GAIN_0) + (pot[1] < 341 ? C(sample1.next(), GAIN_1) : (pot[1] < 682 ? C(sample2.next(), GAIN_2) : C(sample3.next(), GAIN_3))) + (pot[0] < 341 ? C(sample4.next(), GAIN_4) : (pot[0] < 682 ? C(sample5.next(), GAIN_5) : C(sample6.next(), GAIN_6)))) * (int32_t)pot[2]) >> 9);
-	}
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + (pot[1] < 341 ? CC(sample1, GAIN_1) : (pot[1] < 682 ? CC(sample2, GAIN_2) : CC(sample3, GAIN_3))) + (pot[0] < 341 ? CC(sample4, GAIN_4) : (pot[0] < 682 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6)))) * (uint32_t) pot[2]) >> 6);
+    }
 
 int updateAudio8()
-	{
-	// POT 3		VOLUME
-	// POT 2		SAMPLES 2 -> { 2, 3, 4 }
-	// POT 1		SAMPLES 3 -> { 5, 6, 7, 8 }
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			UNUSED
-	// IN 1			UNUSED 
-	
-	return (int16_t)(((C(sample0.next(), GAIN_0) + (pot[1] < 341 ? C(sample1.next(), GAIN_1) : (pot[1] < 682 ? C(sample2.next(), GAIN_2) : C(sample3.next(), GAIN_3))) + (pot[0] < 256 ? C(sample4.next(), GAIN_4) : (pot[0] < 512 ? C(sample5.next(), GAIN_5) : (pot[0] < 768 ? C(sample6.next(), GAIN_6) : C(sample7.next(), GAIN_7))))) * (int32_t)pot[2]) >> 9);
-	}
+    {
+    // POT 3            VOLUME
+    // POT 2            SAMPLES 2 -> { 2, 3, 4 }
+    // POT 1            SAMPLES 3 -> { 5, 6, 7, 8 }
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             UNUSED
+    // IN 1             UNUSED 
+        
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + (pot[1] < 341 ? CC(sample1, GAIN_1) : (pot[1] < 682 ? CC(sample2, GAIN_2) : CC(sample3, GAIN_3))) + (pot[0] < 256 ? CC(sample4, GAIN_4) : (pot[0] < 512 ? CC(sample5, GAIN_5) : (pot[0] < 768 ? CC(sample6, GAIN_6) : CC(sample7, GAIN_7))))) * (uint32_t) pot[2]) >> 6);
+    }
 
 int updateAudio9()
-	{
-	// POT 3		VOLUME
-	// POT 2		SAMPLES 2 -> { 2, 3, 4, 5 }
-	// POT 1		SAMPLES 3 -> { 6, 7, 8, 9 }
-	// GATE OUT		TRIGGER 1
-	// AUDIO IN		TRIGGER 2
-	// IN 3			TRIGGER 3
-	// IN 2			UNUSED
-	// IN 1			UNUSED 
-	
-	return (int16_t)(((C(sample0.next(), GAIN_0) + (pot[1] < 256 ? C(sample1.next(), GAIN_1) : (pot[1] < 512 ? C(sample2.next(), GAIN_2) : (pot[1] < 768 ? C(sample3.next(), GAIN_3) : C(sample4.next(), GAIN_4)))) + (pot[0] < 256 ? C(sample5.next(), GAIN_5) : (pot[0] < 512 ? C(sample6.next(), GAIN_6) : (pot[0] < 768 ? C(sample7.next(), 7) : C(sample8.next(), 8))))) * (int32_t)pot[2]) >> 9);
-	}
+    {
+    // POT 3            VOLUME
+    // POT 2            SAMPLES 2 -> { 2, 3, 4, 5 }
+    // POT 1            SAMPLES 3 -> { 6, 7, 8, 9 }
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER 2
+    // IN 3             TRIGGER 3
+    // IN 2             UNUSED
+    // IN 1             UNUSED 
+        
+    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + (pot[1] < 256 ? CC(sample1, GAIN_1) : (pot[1] < 512 ? CC(sample2, GAIN_2) : (pot[1] < 768 ? CC(sample3, GAIN_3) : CC(sample4, GAIN_4)))) + (pot[0] < 256 ? CC(sample5, GAIN_5) : (pot[0] < 512 ? CC(sample6, GAIN_6) : (pot[0] < 768 ? CC(sample7, 7) : CC(sample8, 8))))) * (uint32_t) pot[2]) >> 6);
+    }
 
 
 
 
 
 void updateControl()
-	{
+    {
 #if (FORMAT == FORMAT_1)
-	updateControl1();
+    updateControl1();
 #elif (FORMAT == FORMAT_2)
-	updateControl2();
+    updateControl2();
 #elif (FORMAT == FORMAT_3)
-	updateControl3();
+    updateControl3();
 #elif (FORMAT == FORMAT_4)
-	updateControl4();
+    updateControl4();
 #elif (FORMAT == FORMAT_5)
-	updateControl5();
+    updateControl5();
 #elif (FORMAT == FORMAT_5A)
-	updateControl5A();
+    updateControl5A();
 #elif (FORMAT == FORMAT_6)
-	updateControl6();
+    updateControl6();
 #elif (FORMAT == FORMAT_7)
-	updateControl7();
+    updateControl7();
 #elif (FORMAT == FORMAT_7A)
-	updateControl7A();
+    updateControl7A();
 #elif (FORMAT == FORMAT_8)
-	updateControl8();
+    updateControl8();
 #elif (FORMAT == FORMAT_9)
-	updateControl9();
+    updateControl9();
 #endif
-	}
+    }
 
 int updateAudio()
-	{
+    {
 #if (FORMAT == FORMAT_1)
-	return updateAudio1();
+    return updateAudio1();
 #elif (FORMAT == FORMAT_2)
-	return updateAudio2();
+    return updateAudio2();
 #elif (FORMAT == FORMAT_3)
-	return updateAudio3();
+    return updateAudio3();
 #elif (FORMAT == FORMAT_4)
-	return updateAudio4();
+    return updateAudio4();
 #elif (FORMAT == FORMAT_5)
-	return updateAudio5();
+    return updateAudio5();
 #elif (FORMAT == FORMAT_5A)
-	return updateAudio5A();
+    return updateAudio5A();
 #elif (FORMAT == FORMAT_6)
-	return updateAudio6();
+    return updateAudio6();
 #elif (FORMAT == FORMAT_7)
-	return updateAudio7();
+    return updateAudio7();
 #elif (FORMAT == FORMAT_7A)
-	return updateAudio7A();
+    return updateAudio7A();
 #elif (FORMAT == FORMAT_8)
-	return updateAudio8();
+    return updateAudio8();
 #elif (FORMAT == FORMAT_9)
-	return updateAudio9();
+    return updateAudio9();
 #endif
-	}
-	
+    }
+        
 void setup()
-	{
-	pinMode(CV_GATE_OUT, INPUT);
+    {
+    pinMode(CV_GATE_OUT, INPUT);
 
-	inverseLengths0 = 1.0 / lengths0;
-	inverseLengths1 = 1.0 / lengths1;
+    inverseLengths0 = 1.0 / lengths0;
+    inverseLengths1 = 1.0 / lengths1;
 
-	sample0.setFreq(16384 / (float) lengths0);
-	sample1.setFreq(16384 / (float) lengths1);
-	sample2.setFreq(16384 / (float) lengths2);
-	sample3.setFreq(16384 / (float) lengths3);
-	sample4.setFreq(16384 / (float) lengths4);
-	sample5.setFreq(16384 / (float) lengths5);
-	sample6.setFreq(16384 / (float) lengths6);
-	sample7.setFreq(16384 / (float) lengths7);
-	sample8.setFreq(16384 / (float) lengths8);
-	startMozzi();
+    sample0.setFreq(16384 / (float) lengths0);
+    sample1.setFreq(16384 / (float) lengths1);
+    sample2.setFreq(16384 / (float) lengths2);
+    sample3.setFreq(16384 / (float) lengths3);
+    sample4.setFreq(16384 / (float) lengths4);
+    sample5.setFreq(16384 / (float) lengths5);
+    sample6.setFreq(16384 / (float) lengths6);
+    sample7.setFreq(16384 / (float) lengths7);
+    sample8.setFreq(16384 / (float) lengths8);
+    startMozzi();
 
-	Serial.begin(9600);
-	}
+    //Serial.begin(9600);
+    }
 
 void loop()
-	{
+    {
     audioHook();
-	}
+    }
