@@ -81,11 +81,11 @@
 
 
 #define SAMPLE_1        "tr808/BD7525.h"                
-#define SAMPLE_2        "tr808/CB.h"
+#define SAMPLE_2        "tr808/SD0050.h"
 #define SAMPLE_3        "tr808/CP.h"		
 #define SAMPLE_4        "tr808/CH.h"
 #define SAMPLE_5        "tr808/OH00.h"
-#define SAMPLE_6        "tr808/SD0050.h"
+#define SAMPLE_6        "tr808/CB.h"
 #define SAMPLE_7        "tr808/HC00.h"		
 #define SAMPLE_8        "tr808/RS.h"
 #define SAMPLE_9        "tr808/MA.h"
