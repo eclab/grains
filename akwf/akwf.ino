@@ -206,7 +206,7 @@ void updateControl()
     
     // let's try a median of three filter to reduce some of the jumpiness
     tuneCV = (tuneCV * 7 + mozziAnalogRead(CV_POT3)) >> 3;
-    pitchCV = (pitchCV + (tuneCV >> 1) + mozziAnalogRead(CV_IN3)) >> 1;
+    pitchCV = (pitchCV * 3 + (tuneCV >> 1) + mozziAnalogRead(CV_IN3)) >> 2;
     uint16_t _pitch = MEDIAN_OF_THREE(pitchCV, inA, inB);
     inA = inB;
     inB = pitchCV;
