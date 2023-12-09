@@ -3,6 +3,12 @@ By Sean Luke (sean@cs.gmu.edu)
 
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code), Oration/Oration 2, which are released under GPL 3.0 (as is Talkie), and likewise Elements, released under GPL 3.0 as it used GPL code.
 
+## AKWF
+
+A wavetable synthesizer over your choice of waveforms from the [Adventure Kid Waveform](https://www.adventurekid.se/akrt/waveforms/) (AKWF) collection.  Requires Mozzi.
+
+Status: Working.  The waveforms are pretty aliased (not AdventureKid's fault, Mozzi's fault), so slight wavers in pitch will cause changes in sound as the wave moves from one aliased state to another.
+
 ## 808
 
 A drum sampler for up to 9 samples and up to 5 triggers.  Comes with several 8-bit drum samples, including, yes, ones from the TR-808.  You can provide your own samples, and there are a variety of configurations.  Will soon permit u-Law samples for very slightly better sound quality.  Requires Mozzi.
@@ -31,7 +37,7 @@ Status: Working
 
 A chording oscillator which can cross-fade between sine and either square, saw, or triangle (selectable in code).  Requires Mozzi.
 
-Status: Working.  Some of the waves are a bit buzzy in certain locations: we have about 25% memory left, perhaps we could fit a few more oscillators to smooth things out.
+Status: Working.  Some of the waves are buzzy in certain locations, but we don't have enough dynamic memory left to smooth things out.
 
 ## Evolution
 
