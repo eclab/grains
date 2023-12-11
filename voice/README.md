@@ -14,29 +14,27 @@ NOTE: Probably due to the voltage divider on all of its analog inputs, GRAINS is
 
 ## Adjusting Tracking
 
-Grains's Inputs 1, 2, and 3 (and A) track at about 1.3V/octave, not 1V/octave.  The exact amount varies from unit to unit.  You may need to tweak things in the code to get it to track better.  It's just a matter of setting a single number, but you'll probably need to adjust it.  The code has instructions for doing this.  Likely once you've identified the number, you can use it in all my Grains projects.
+Grains's Inputs track 1.3V/octave, not 1V/octave: we'll need to scale them to track properly.  To do this, you can adjust the Pitch CV Scaling on Pot 1.  This GRAINS program is set up to play the C two octaves below Middle C when it receives 0V.  You should be able to use Pot 1 to scale the pitch such that high Cs play in tune as well.  Once you have things tracking well, you can then use the Pitch Tune (Audio In) to tune 0V to some other note.  Note that as GRAINS resistors warm up, the scaling will change and you will need to adjust the tracking again, at least until they are fully warmed up.
 
 ## Configuration
 
 #### IN 1
-Filter Cutoff CV
+Pitch CV
 #### IN 2
-Amplitude CV
+Filter Cutoff CV
 #### IN 3
-Pitch CV 
+Amplitude CV
 #### AUDIO IN (A)
-Resonance CV
+Pitch Tune
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 
 [UNUSED]
 #### POT 1
+Pitch Scaling	[Set the switch to IN1]
+#### POT 2
 Filter Cutoff
 
 [If you're not using Filter Cutoff CV, set the switch to MAN]
-#### POT 2
-Amplitude
-
-[If you're not using Amplitude Cutoff CV, set the switch to MAN]
 #### POT 3
-Pitch Tune +/-
+Resonance

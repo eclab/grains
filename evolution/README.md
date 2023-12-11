@@ -20,30 +20,33 @@ If you turn the Evolution Rate knob (Pot 3) to the far LEFT, so the Rate is Zero
 
 ## Adjusting Tracking
 
-Grains's Inputs 1, 2, and 3 (and A) track at about 1.3V/octave, not 1V/octave.  The exact amount varies from unit to unit.  You may need to tweak things in the code to get it to track better.  It's just a matter of setting a single number, but you'll probably need to adjust it.  The code has instructions for doing this.  Likely once you've identified the number, you can use it in all my Grains projects.
+Grains's Inputs track 1.3V/octave, not 1V/octave: we'll need to scale them to track properly.  To do this, you can adjust the Pitch CV Scaling on Pot 1.  This GRAINS program is set up to play the C two octaves below Middle C when it receives 0V.  You should be able to use Pot 1 to scale the pitch such that high Cs play in tune as well.  Once you have things tracking well, you can then use the Pitch Tune (Audio In) to tune 0V to some other note.  Note that as GRAINS resistors warm up, the scaling will change and you will need to adjust the tracking again, at least until they are fully warmed up.
 
 
 ## Configuration
 
 #### IN 1
-[UNUSED]
+Pitch CV
 #### IN 2
 [UNUSED]
 #### IN 3
-Pitch CV 
-#### AUDIO IN (A)
 [UNUSED]
+#### AUDIO IN (A)
+Pitch Tune
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 
 Trigger
 #### POT 1
-(Left third of Dial) Choice of 8 Dark Partials 
-(Center third of Dial) Choice of 8 Medium Partials
-(Right third of Dial) Choice of 8 Bright Partials 
-[Set the switch to MAN]
+Pitch Scaling	[Set the switch to IN1]
 #### POT 2
-Pitch Tune  [Set the switch to MAN]
+- (Left third of Dial) Choice of 8 Dark Partials 
+
+- (Center third of Dial) Choice of 8 Medium Partials
+
+- (Right third of Dial) Choice of 8 Bright Partials 
+
+[Set the switch to MAN]
 #### POT 3
 Evolution Rate.  If set to far left, only evolves when triggered 
 

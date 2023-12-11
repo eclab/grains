@@ -5,9 +5,9 @@ This is a collection of code which runs on the Tangible Waves GRAINS module, tho
 
 ## AKWF
 
-A wavetable synthesizer over your choice of waveforms from the [Adventure Kid Waveform](https://www.adventurekid.se/akrt/waveforms/) (AKWF) collection.  Requires Mozzi.
+A wavetable synthesizer over your choice of waveforms from the [Adventure Kid Waveform](https://www.adventurekid.se/akrt/waveforms/) (AKWF) collection, plus a low-pass filter.  Requires Mozzi.
 
-Status: Working.  The waveforms are pretty aliased (not AdventureKid's fault, Mozzi's fault), so slight wavers in pitch will cause changes in sound as the wave moves from one aliased state to another.
+Status: Working.  The waveforms are pretty aliased (not AdventureKid's fault, Mozzi's fault), and so sound pretty crummy at different positions.
 
 ## 808
 
@@ -43,13 +43,13 @@ Status: Working.  Some of the waves are buzzy in certain locations, but we don't
 
 An evolving drone synthesizer using the same additive synthesis technique as Booker.  Requires Mozzi.
 
-Status: Working
+Status: Working.  Pretty hissy for same reason as Booker.
 
 ## Booker
 
 A Hammond Organ simulator with a built-in Leslie and a variety of organ drawbar combinations.  Requires Mozzi.
 
-Status: Working, but it pushes Mozzi to its limits I think.
+Status: Working, but it pushes Mozzi to its limits I think, and so is pretty hissy.
 
 ## Pattern
 
