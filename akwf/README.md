@@ -11,9 +11,6 @@ There is only one wave for each waveform available (there's no resampling for hi
 You will need to install the Mozzi Library.  You can do this from the Library Manager
 in your Arduino IDE.
 
-NOTE: Probably due to the voltage divider on all of its analog inputs, GRAINS is limited
-to about a 45 note range.  
-
 ## Unpacking
 
 You need to unzip the akwf.zip file.  It's 4MB but unzips to 20MB.
@@ -23,6 +20,12 @@ You need to unzip the akwf.zip file.  It's 4MB but unzips to 20MB.
 There are 4162 AKWF single-cycle waveforms provided, including the new Nintendo waveform collection.  AdventureKid's website is here:  https://www.adventurekid.se/akrt/waveforms/
 
 You specify the five waveform files by filename in the code, as well as the number of waveforms used.
+
+## Adjusting Tuning and Tracking
+
+Grains's Inputs track 1.3V/octave, not 1V/octave: we'll need to scale them to track properly.  To do this, you can adjust the Pitch CV Scaling on Pot 1.  This GRAINS program is set up to play the C two octaves below Middle C when it receives 0V.  You should be able to use Pot 1 to scale the pitch such that high Cs play in tune as well.  Once you have things tracking well, you can then use the Pitch Tune (Audio In) to tune 0V to some other note.  Note that as GRAINS resistors warm up, the scaling will change and you will need to adjust the tracking again, at least until they are fully warmed up.
+
+By default the note corresponding to 0V is C0, three notes below middle C, that is MIDI note 24, or 32.7 Hz.  You can customize the tuning for this Grains program but only UP.  This can be done in two ways.  First, you can add pitch to the tuning with a CV value to Audio In.  Second, you can transpose the pitch up by changing the TRANSPOSE_OCTAVES and/or TRANSPOSE_SEMITONES #defines in the code to positive integers.
 
 ## Configuration
 

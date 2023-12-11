@@ -32,25 +32,6 @@
 ///
 /// You will need to install the Mozzi Library.  You can do this from the Library Manager
 /// in your Arduino IDE.
-///
-/// NOTE: Probably due to the voltage divider on all of its analog inputs, GRAINS is limited
-/// to about a 45 note range.  
-
-
-/// CONFIGURATION
-///
-/// IN 1            Pitch CV
-/// IN 2            Filter Cutoff CV
-/// IN 3            Amplitude CV
-/// AUDIO IN (A)    Pitch Tune
-/// AUDIO OUT       Out
-/// DIGITAL OUT (D) [Unused]
-///
-/// POT 1           Pitch Scaling	[Set the switch to In1]
-///
-/// POT 2           Fiter Cutoff
-///
-/// POT 3           Resonance 
 
 
 /// CHOOSING SAW VS SQUARE VS TRIANGLE
@@ -92,6 +73,39 @@
 // #define RESONANT_FILTER_TYPE 	HIGHPASS
 // #define RESONANT_FILTER_TYPE 	BANDPASS
 // #define RESONANT_FILTER_TYPE 	NOTCH
+
+
+/// ADJUSTING TUNING AND TRACKING
+///
+/// Grains's Inputs track 1.3V/octave, not 1V/octave: we'll need to scale them to track properly.  
+/// To do this, you can adjust the Pitch CV Scaling on Pot 1.  This GRAINS program is set up to play 
+/// the C two octaves below Middle C when it receives 0V.  You should be able to use Pot 1 to scale 
+/// the pitch such that high Cs play in tune as well.  Once you have things tracking well, you can 
+/// then use the Pitch Tune (Audio In) to tune 0V to some other note.  Note that as GRAINS resistors 
+/// warm up, the scaling will change and you will need to adjust the tracking again, at least until 
+/// they are fully warmed up.
+///
+/// By default the note corresponding to 0V is C0, three notes below middle C, that is MIDI note 24, 
+/// or 32.7 Hz.  You can customize the tuning for this Grains program but only UP.  This can be done 
+/// in two ways.  First, you can add pitch to the tuning with a CV value to Audio In.  Second, you 
+/// can transpose the pitch up by changing the TRANSPOSE_OCTAVES and/or TRANSPOSE_SEMITONES #defines 
+/// in the code to positive integers.
+
+
+/// CONFIGURATION
+///
+/// IN 1            Pitch CV
+/// IN 2            Filter Cutoff CV
+/// IN 3            Amplitude CV
+/// AUDIO IN (A)    Pitch Tune
+/// AUDIO OUT       Out
+/// DIGITAL OUT (D) [Unused]
+///
+/// POT 1           Pitch Scaling	[Set the switch to In1]
+///
+/// POT 2           Fiter Cutoff
+///
+/// POT 3           Resonance 
 
 
 
@@ -576,7 +590,8 @@ inline float getFrequency(uint8_t pitch, uint8_t tune)
     	pA = p;
     	pitchCV = (pitchCV * 7 + p1) >> 3;
     	}
-    return FREQUENCY(pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205);
+    uint16_t finalPitch = pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205;
+    return FREQUENCY(finalPitch > 1535 ? 1535 : finalPitch);
     }
 
 void updateControl() 
