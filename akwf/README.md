@@ -4,7 +4,7 @@ AKWF is a wavetable synthesizer with waves available from the [Adventure Kid Wav
 
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
-AKWF can have 2, 3, or 5 waveforms evenly distributed in its wavetable.  You can modulate between them and set the pitch CV and tune.
+AKWF can have 2, 3, or 5 waveforms evenly distributed in its wavetable.  You can modulate between them and set the pitch CV and tune.  There is also a low-pass filter available.
 
 There is only one wave for each waveform available (there's no resampling for higher frequences).  This means that you should expect considerable aliasing.
 
