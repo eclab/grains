@@ -5,7 +5,7 @@ This is a collection of code which runs on the Tangible Waves GRAINS module, tho
 
 ## Multilevel
 
-A multi-stage envelope with exponential transitions and many options, including sustain loops, whole-envelope loops, resetting, optional flat (sample-and-hold style) stages, and per-stage triggering.  You can set the minimum and maximum envelope values. Supports up to 145 stages.
+A multi-stage envelope with exponential transitions and many options, including sustain loops, whole-envelope loops, resetting, optional flat (sample-and-hold style) stages, and per-stage triggering.  You can set the minimum and maximum envelope values. Supports up to 145 stages.  Requires Mozzi, though it could theoretically be adapted to Grains.
 
 Status: Working.  The rate calculation is obnoxious and I should come up with a better mechanism.  One or two minor bugs but it's quite usable.
 
@@ -17,7 +17,7 @@ Status: Working.  The waveforms are pretty aliased (not AdventureKid's fault, Mo
 
 ## 808
 
-A drum sampler for up to 9 samples and up to 5 triggers.  Comes with several 8-bit drum samples, including, yes, ones from the TR-808.  You can provide your own samples, and there are a variety of configurations.  Will soon permit u-Law samples for very slightly better sound quality.  Requires Mozzi.
+A drum sampler for up to 9 samples and up to 5 triggers.  Comes with several 8-bit drum samples, including, yes, ones from the TR-808.  You can provide your own samples, and there are a variety of configurations.  Allows 8-bit raw and u-Law samples.  Requires Mozzi.
 
 Status: Working.  This is a major upgrade from the previous 808 version. 
 
