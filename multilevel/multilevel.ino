@@ -38,8 +38,8 @@
 /// it has terminated.
 ///
 /// Multilevel has three MODES.  The first mode is REGULAR, which acts like a regular
-/// envelope with sustain possibly a looping sustain.  The second mode is ONE SHOT, 
-/// which ignores sustain and just progresses through the envelope until it reaches the
+/// envelope with sustain and possibly a looping sustain.  The second mode is ONE SHOT, 
+/// which ignores sustain and looping and just progresses through the envelope until it reaches the
 /// end.  The third mode is STAGE TRIGGERING, which does not advance from stage to stage
 /// unless it receives a STAGE TRIGGER. There is no sustain or sustain loop.  
 /// STAGE TRIGGERING does not use GATE so the trigger is located in that socket.  
@@ -68,13 +68,13 @@
 /// Next you need to define the SUSTAIN STAGE.  This is the stage which, after it completes,
 /// the system either SUSTAINS or LOOPS BACK to an earlier stage.  In a simple ADSR envelope,
 /// the sustain stage is the DELAY STAGE, which is stage #1 (ATTACK is stage #0 -- we start at 0).
-/// When STAGE TRIGGERING or ONE SHOT, we do not sustain.
+/// When STAGE TRIGGERING or ONE SHOT, we do not sustain, but you should still define this.
 
 #define SUSTAIN_STAGE 		1				// This value must be >= 0 and < NUM_STAGES
 
-/// Next you need to define the LOOP START STAGE.  If you are looping, then when the sustain
-/// stage is COMPLETED, we loop back to the LOOP START STAGE and go from there.  If you are NOT
-/// looping, this is indicated by setting the loop start stage is set to the SUSTAIN STAGE.
+/// Next you need to define the LOOP START STAGE.  If we are looping, then when the sustain
+/// stage is COMPLETED, we loop back to the LOOP START STAGE and go from there.  If we are NOT
+/// looping, this is indicated by setting the loop start stage to be equal to the SUSTAIN STAGE.
 /// Do not set the loop start stage to a value greater than the SUSTAIN STAGE.
 ///
 /// Since we are not looping, we have set the LOOP_START_STAGE to SUSTAIN_STAGE.  If we set it to, 
@@ -95,20 +95,22 @@
 ///    0.9999			7 Seconds
 ///    0.99999			70 Seconds
 ///    0.999999			700	Seconds (about 11.6 minutes)
-///    0.9999999		You're kidding, right?
+///    0.9999999		You're kidding, right?  700 Seconds, a bit less than 2 hours
+///    0.99999991		Roughly the limit, after this it's just equal to 1.0
+///    1.0 				(Forever.  This isn't super useful.)
 ///
-///    I'll work on a more useful measure.  Keep in mind that the actual value will also vary depending on
+///    I'll work on a more useful way to enter rates.  Keep in mind that the actual value will also vary depending on
 ///	   how far the stage has to travel to get to the next target level (below).  Short distances are traversed
 ///    slightly faster (it's not linear).  [I'll work on eliminating this constraint]
 ///
 /// 2. The TARGET LEVEL at the end of the stage.  This is a value from 0.0 to 1.0.  In a typical
 ///    ADSR envelope, Attack's target is often 1.0 (maximum), and then the Decay's target is the
-///    sustain level.  Then the Release's target is often 0.0.
+///    sustain level.  Then the Release's target is often 0.0 (minimum).
 ///
 ///
 /// ADSR EXAMPLE
 /// In this default example, our sustain level is 0.5, we have an immediate attack and a long decay and
-/// release.  Thus we have:
+/// slightly longer release.  Decay is the sustain stage.  Thus we have:
 
 float stages[NUM_STAGES][2] =
 	{
@@ -121,6 +123,7 @@ float stages[NUM_STAGES][2] =
 /// A MORE ELABORATE EXAMPLE
 ///
 /// Here we have 6 stages, and while we are sustained, we loop through four of them.
+/// Important: notice that 0 <= LOOP_START_STAGE <= SUSTAIN_STAGE < NUM_STAGES
 /// 
 ///   #define NUM_STAGES		6
 ///   #define LOOP_START_STAGE	1
@@ -133,7 +136,7 @@ float stages[NUM_STAGES][2] =
 ///	    { 0.999, 0.5 },				// LOOP_START_STAGE
 ///	    { 0.999, 0.9 },
 ///	    { 0.999, 0.3 },
-///	    { 0.999, 0.75 },			// SUSTAIN STAGE
+///	    { 0.999, 0.75 },			// SUSTAIN_STAGE
 ///	    { 0.9995, 0.0 },			// RELEASE 
 ///   };
 
@@ -243,12 +246,9 @@ void doStageTrigger()
 		}
 	}
 	
-float getTarget(uint8_t stage)
+inline float getTarget(uint8_t stage)
 	{
-	float min = minimum;
-	float max = maximum;
-	if (min > max) { float temp = max; max = min; min = temp; }		// swap
-	target = stages[stage][1] * (max - min) + min;
+	target = stages[stage][1] * (maximum - minimum) + minimum;
 	return target;
 	}
 	
@@ -354,13 +354,16 @@ void updateStateMachine()
 	stageTriggered = false;		// only trigger once
 	}
 
-uint16_t mx = 1024;
-uint16_t mn = 1024;
+#define INITIAL (1024)
+uint16_t mx = INITIAL;
+uint16_t mn = INITIAL;
+
+#define TRIGGER_UP (800)
+#define TRIGGER_DOWN (200)
 
 void updateControl() 
     {
     // Revise mode
-    
 	uint8_t val = (mozziAnalogRead(CV_POT3) * 6) >> 10;
 	if (val == 0 || val == 3) mode = MODE_REGULAR;
 	else if (val == 1 || val == 4) mode = MODE_ONE_SHOT;
@@ -369,56 +372,59 @@ void updateControl()
 		    
     // Test for gate changes
 	uint16_t g = mozziAnalogRead(CV_IN3);
+	// Test for reset
 	uint16_t r = mozziAnalogRead(CV_AUDIO_IN);
 	
-	mx = (mx == 1024 ? mozziAnalogRead(CV_POT_IN1) : (mx * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3);
-	mn = (mn == 1024 ? mozziAnalogRead(CV_POT_IN2) : (mn * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3);
-	maximum = mx / 1023.0;
-	minimum = mn / 1023.0;
+	// Get minimum and maximum
+	mx = (mx == INITIAL ? mozziAnalogRead(CV_POT_IN1) : (mx * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3);
+	mn = (mn == INITIAL ? mozziAnalogRead(CV_POT_IN2) : (mn * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3);
+	maximum = mx * (1.0 / 1023.0);
+	minimum = mn * (1.0 / 1023.0);
+	if (minimum > maximum) { float temp = minimum; minimum = maximum; maximum = temp; }
 	
 	if (mode == MODE_STAGE_TRIGGERING)
 		{
 		// Always reset regardless of gate
-		if (r > 800 && !reset)
+		if (r > TRIGGER_UP && !reset)
 			{
 			reset = 1;
 			doReset();
 			}
-		else if (r < 200)
+		else if (r < TRIGGER_DOWN)
 			{
 			reset = 0;
 			}
 
-		if (g > 800 && !gate)
+		if (g > TRIGGER_UP && !gate)
 			{
 			gate = 1;
 			doStageTrigger();
 			}
-		else if (g < 200 && gate)
+		else if (g < TRIGGER_DOWN && gate)
 			{
 			gate = 0;
 			}
 		}
 	else
 		{
-		if (g > 800 && !gate)
+		if (g > TRIGGER_UP && !gate)
 			{
 			gate = 1;
 			doGate();
 			}
-		else if (g < 200 && gate)
+		else if (g < TRIGGER_DOWN && gate)
 			{
 			gate = 0;
 			doRelease();
 			}
 
 		// Only reset if gate is on
-		if (r > 800 && !reset && gate)
+		if (r > TRIGGER_UP && !reset && gate)
 			{
 			reset = 1;
 			doReset();
 			}
-		else if (r < 200)
+		else if (r < TRIGGER_DOWN)
 			{
 			reset = 0;
 			}

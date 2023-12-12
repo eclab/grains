@@ -30,22 +30,24 @@ By default the note corresponding to 0V is C0, three notes below middle C, that 
 ## Configuration
 
 #### IN 1
-Position in Wavetable
+Pitch CV
 #### IN 2
-[UNUSED]
+Position in Wavetable CV
 #### IN 3
-Pitch CV 
+[Unused] 
 #### AUDIO IN (A)
-[UNUSED]
+Pitch Tuning
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 
 [UNUSED]
 #### POT 1
+Pitch
+
+[If you're not using Position in Wavetable CV, set the switch to MAN]
+#### POT 2
 Position in Wavetable
 
-[If you're not using Position CV, set the switch to MAN]
-#### POT 2
-[UNUSED]
+[If you're not using Pitch CV, set the switch to MAN]
 #### POT 3
-Pitch Tune  [Set the switch to MAN]
+Filter Cutoff

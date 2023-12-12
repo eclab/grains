@@ -239,7 +239,6 @@ uint16_t lengths4 = DATA_LENGTH;
 
 uint16_t inC = 0;
 uint16_t inD = 0;
-uint16_t pos;
 int16_t samples[5];
 
 
@@ -304,7 +303,7 @@ uint8_t useFilter = 0;
 
 void updateControl() 
     {
-    uint16_t in = mozziAnalogRead(CV_POT_IN2);
+    uint16_t pos = mozziAnalogRead(CV_POT_IN2);
     
     float frequency = getFrequency(CV_POT_IN1, CV_AUDIO_IN);
 	if (oldFrequency != frequency)
@@ -323,14 +322,17 @@ void updateControl()
 	#endif
 	#endif
 		}
-#if (NUM_WAVES == 2)
+		
+#if (NUM_WAVES == 1)
+// nothing
+#elif (NUM_WAVES == 2)
      alpha = pos >> 2;					// 0...255
 #elif (NUM_WAVES == 3)
-     sampleNum = pos >> 9;  // (pos > 511 ? 1 : 0);		// 0...1
+     sampleNum = pos >> 9;  				// 0...1
      alpha = (pos - (sampleNum ? 512 : 0));	// 0...255
 #else
      sampleNum = pos >> 8;				// 0...3
-     alpha = (pos - (in << 8));			// 0...255
+     alpha = (pos - (sampleNum << 8));			// 0...255
 #endif
 
 	uint16_t filt = mozziAnalogRead(CV_POT3);
@@ -352,9 +354,6 @@ int updateAudio()
 #endif
 #endif
 
-
-//if (true)
-	{
 #if (NUM_WAVES == 1)
 	return MonoOutput::from16Bit(filter.next(samples[0] >> 1) << 9);
 #elif (NUM_WAVES == 2)
@@ -364,21 +363,6 @@ int updateAudio()
 #else
 	return MonoOutput::from16Bit(filter.next((samples[sampleNum] * (int16_t)(255 - alpha) + samples[sampleNum + 1] * (int16_t)alpha) >> 9) << 9);
 #endif
-	}
-/*
-else
-	{
-#if (NUM_WAVES == 1)
-	return MonoOutput::from16Bit(samples[0] << 8);
-#elif (NUM_WAVES == 2)
-	 return  MonoOutput::from16Bit(samples[0] * (255 - alpha) + samples[1] * alpha);
-#elif (NUM_WAVES == 3)
-	return  MonoOutput::from16Bit(samples[sampleNum] * (255 - alpha) + samples[sampleNum + 1] * alpha);
-#else
-	return MonoOutput::from16Bit(samples[sampleNum] * (255 - alpha) + samples[sampleNum + 1] * alpha);
-#endif
-	}
-*/
     }
 
 
