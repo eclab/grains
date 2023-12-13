@@ -14,7 +14,7 @@ Scope uses the Arduino IDE's Serial Plotter functionality.  Do the following:
 4. Set the Baud Rate to 250000
 5. Watch in wonder!
 
-You change the rate of the oscilloscope by turning POT 3.  
+You change the rate of the oscilloscope by turning POT 3.  At 0, it's fast enough to display low VCO waves at audio rates.
 
 Scope lets you hook up Inputs 1, 2, 3, and A as either analog or digital inputs, D as a digital input, and Out as a little digital function generator.
 
@@ -25,6 +25,10 @@ By default, Inputs 3 and A are set up as DIGITAL inputs, because they don't have
 D is always a digital input.
 
 Out is always a digital function generator.  You can change what it outputs.  By default it outputs 0V.
+
+### Analog Noise
+
+GRAINS's analog inputs are noisy: so that noise you're seeing is the Arduino, not your LFO or whatnot.  Now you see what I have to deal with.  I could smooth them but it'd slow the scope down.  Will think about it.
 
 ### Changing the Inputs and Outputs in Real Time from Your Laptop
 

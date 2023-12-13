@@ -20,7 +20,8 @@
 /// 4. Set the Baud Rate to 250000
 /// 5. Watch in wonder!
 ///
-/// You change the rate of the oscilloscope by turning POT 3.  
+/// You change the rate of the oscilloscope by turning POT 3.  At 0, it's fast enough 
+/// to display low VCO waves at audio rates.
 ///
 /// Scope lets you hook up Inputs 1, 2, 3, and A as either analog or digital inputs,
 /// D as a digital input, and Out as a little digital function generator.
