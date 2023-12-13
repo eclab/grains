@@ -61,9 +61,13 @@ Function Generator, outputs 0V by default
 #### DIGITAL OUT (D) 
 Digital Input
 #### POT 1
-Trim for In1 Analog Input
+Trim for In1.  
+
+[Set the switch to In1.  When Analog, trim to about 2 o'clock.  When Digital, trim to full]
 #### POT 2
-Trim for In2 Analog Input
+Trim for In2.  
+
+[Set the switch to In2.  When Analog, trim to about 2 o'clock.  When Digital, trim to full]
 #### POT 3
 Update Rate
 

@@ -68,6 +68,21 @@
 #define BAUD_RATE 250000      // Try changing 250000 to 115200
 
 
+/// CONFIGURATION
+///
+/// IN 1            Analog or Digital Input (Analog by Default)
+/// IN 2            Analog or Digital Input (Analog by Default)
+/// IN 3            Analog or Digital Input (Analog by Default)
+/// AUDIO IN (A)    Analog or Digital Input (Analog by Default)
+/// AUDIO OUT       Function Generator, outputs 0V by default
+/// DIGITAL OUT (D) Digital Input
+///
+/// POT 1           Trim for In1.  [Set the switch to In1.  When Analog, trim to about 2 o'clock.  When Digital, trim to full]
+///
+/// POT 2           Trim for In2.  [Set the switch to In2.  When Analog, trim to about 2 o'clock.  When Digital, trim to full]
+///
+/// POT 3           Update Rate 
+
 
 
 #define CV_POT_IN1    A2 
