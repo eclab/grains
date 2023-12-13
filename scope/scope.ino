@@ -40,6 +40,12 @@
 /// Out is always a digital function generator.  You can change what it outputs.  By default
 /// it outputs 0V.
 ///
+/// ANALOG NOISE
+///
+/// GRAINS's analog inputs are noisy: so that noise you're seeing is the Arduino, not your 
+/// LFO or whatnot.  I smoothed it a little, but more would induce too much lag.
+/// Now you see what I have to deal with in building these programs...
+///
 /// CHANGING THE INPUTS AND OUTPUTS IN REAL TIME FROM YOUR LAPTOP
 ///
 /// It's easy!  In the Serial Plotter, just type one of the numbers or letters below and hit RETURN:
@@ -86,6 +92,12 @@ uint8_t digitalIn2 = 0;
 uint8_t digitalIn3 = 1;
 uint8_t digitalAud = 1;
 
+uint16_t lastIn1 = 1024;
+uint16_t lastIn2 = 1024;
+uint16_t lastIn3 = 1024;
+uint16_t lastAud = 1024;
+
+
 void loop() 
 	{
 	uint16_t in1;
@@ -94,15 +106,15 @@ void loop()
 	uint16_t aud;
 	uint16_t dig;
 	
-	if (digitalIn1) in1 = digitalRead(CV_POT_IN1) * 1023;
-	else { in1 = analogRead(CV_POT_IN1); }
-	if (digitalIn2) in2 = digitalRead(CV_POT_IN2) * 1023;
-	else { in2 = analogRead(CV_POT_IN2); }
-	if (digitalIn3) in3 = digitalRead(CV_IN3) * 1023;
-	else { in3 = analogRead(CV_IN3); }
+	if (digitalIn1) { in1 = digitalRead(CV_POT_IN1) * 1023; lastIn1 = 1024; }
+	else in1 = lastIn1 = (lastIn1 == 1024 ? digitalRead(CV_POT_IN1) : (lastIn1 * 3 + digitalRead(CV_POT_IN1)) >> 2);
+	if (digitalIn2) { in2 = digitalRead(CV_POT_IN2) * 1023; lastIn2 = 1024; }
+	else in2 = lastIn2 = (lastIn2 == 1024 ? digitalRead(CV_POT_IN2) : (lastIn2 * 3 + digitalRead(CV_POT_IN2)) >> 2);
+	if (digitalIn3) { in3 = digitalRead(CV_IN3) * 1023; lastIn3 = 1024; }
+	else in3 = lastIn3 = (lastIn3 == 1024 ? digitalRead(CV_POT3) : (lastIn3 * 3 + digitalRead(CV_POT3)) >> 2);
 	analogRead(CV_AUDIO_IN);		// high impedance throwaway
-	if (digitalAud) aud = digitalRead(CV_AUDIO_IN) * 1023;
-	else { aud = analogRead(CV_AUDIO_IN); }
+	if (digitalAud) { aud = digitalRead(CV_AUDIO_IN) * 1023; lastAud = 1024; }
+	else aud = lastAud = (lastAud == 1024 ? digitalRead(CV_AUDIO_IN) : (lastAud * 3 + digitalRead(CV_AUDIO_IN)) >> 2);
 	dig = digitalRead(CV_GATE_OUT) * 1023;
 		
   uint16_t rate = (analogRead(CV_POT3) * 13) >> 10; // 0...12   (delay: 0...4096)

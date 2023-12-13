@@ -28,7 +28,7 @@ Out is always a digital function generator.  You can change what it outputs.  By
 
 ### Analog Noise
 
-GRAINS's analog inputs are noisy: so that noise you're seeing is the Arduino, not your LFO or whatnot.  Now you see what I have to deal with.  I could smooth them but it'd slow the scope down.  Will think about it.
+GRAINS's analog inputs are noisy: so that noise you're seeing is the Arduino, not your LFO or whatnot.  I smoothed it a little, but more would induce too much lag.  Now you see what I have to deal with in building these programs...
 
 ### Changing the Inputs and Outputs in Real Time from Your Laptop
 
