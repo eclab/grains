@@ -3,6 +3,12 @@ By Sean Luke (sean@cs.gmu.edu)
 
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code), Oration/Oration 2, which are released under GPL 3.0 (as is Talkie), and likewise Elements, released under GPL 3.0 as it used GPL code.
 
+## Scope
+
+An oscilloscope with four switchable analog/digital inputs, an extra digital input, and a little digital function generator.  Uses the Serial Plotter on your laptop's Arduino IDE. 
+
+Status: Working
+
 ## Multilevel
 
 A multi-stage envelope with exponential transitions and many options, including sustain loops, whole-envelope loops, resetting, optional flat (sample-and-hold style) stages, and per-stage triggering.  You can set the minimum and maximum envelope values. Supports up to 145 stages.  Requires Mozzi, though it could theoretically be adapted to Grains.
