@@ -8,8 +8,8 @@ You will need to install the Arduino IDE, but you already have done that, right?
 
 Scope uses the Arduino IDE's Serial Plotter functionality.  Do the following:
 
-1. Attach your GRAINS to your laptop
-2. Select the USB Port
+0. Attach your GRAINS to your laptop
+1. Fire up the Arduino IDE
 3. Call up the Serial Plotter (it's under the Tools menu)
 4. Set the Baud Rate to 250000
 5. Watch in wonder!

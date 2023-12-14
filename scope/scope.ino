@@ -15,10 +15,11 @@
 /// Scope uses the Arduino IDE's Serial Plotter functionality.  Do the following:
 ///
 /// 1. Attach your GRAINS to your laptop
-/// 2. Select the USB Port
-/// 3. Call up the Serial Plotter (it's under the Tools menu)
-/// 4. Set the Baud Rate to 250000
-/// 5. Watch in wonder!
+/// 2. Fire up the Arduino IDE
+/// 3. Select the USB Port
+/// 4. Call up the Serial Plotter (it's under the Tools menu)
+/// 5. Set the Baud Rate to 250000
+/// 6. Watch in wonder!
 ///
 /// You change the rate of the oscilloscope by turning POT 3.  At 0, it's fast enough 
 /// to display low VCO waves at audio rates.
