@@ -254,106 +254,6 @@ float rates[256] = {
 #include <MetaOscil.h>
 #include <tables/sin1024_int8.h>
 
-
-
-#include <tables/BandLimited_TRI/512/tri_max_103_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_106_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_109_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_112_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_115_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_1170_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_118_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_122_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_126_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_130_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_134_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_138_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_143_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_148_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_154_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_160_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_1638_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_167_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_174_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_182_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_190_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_199_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_210_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_221_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_234_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_248_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_264_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_2730_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_282_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_303_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_327_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_356_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_390_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_431_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_481_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_546_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_630_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_744_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_8192_at_16384_512_int8.h>
-#include <tables/BandLimited_TRI/512/tri_max_910_at_16384_512_int8.h>
-
-Oscil <TRI_MAX_106_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri103(TRI_MAX_103_AT_16384_512_DATA);
-Oscil <TRI_MAX_106_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri106(TRI_MAX_106_AT_16384_512_DATA);
-Oscil <TRI_MAX_109_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri109(TRI_MAX_109_AT_16384_512_DATA);
-Oscil <TRI_MAX_112_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri112(TRI_MAX_112_AT_16384_512_DATA);
-Oscil <TRI_MAX_115_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri115(TRI_MAX_115_AT_16384_512_DATA);
-Oscil <TRI_MAX_118_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri118(TRI_MAX_118_AT_16384_512_DATA);
-Oscil <TRI_MAX_122_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri122(TRI_MAX_122_AT_16384_512_DATA);
-Oscil <TRI_MAX_126_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri126(TRI_MAX_126_AT_16384_512_DATA);
-Oscil <TRI_MAX_130_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri130(TRI_MAX_130_AT_16384_512_DATA);
-Oscil <TRI_MAX_134_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri134(TRI_MAX_134_AT_16384_512_DATA);
-Oscil <TRI_MAX_138_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri138(TRI_MAX_138_AT_16384_512_DATA);
-Oscil <TRI_MAX_143_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri143(TRI_MAX_143_AT_16384_512_DATA);
-Oscil <TRI_MAX_148_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri148(TRI_MAX_148_AT_16384_512_DATA);
-Oscil <TRI_MAX_154_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri154(TRI_MAX_154_AT_16384_512_DATA);
-Oscil <TRI_MAX_160_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri160(TRI_MAX_160_AT_16384_512_DATA);
-Oscil <TRI_MAX_167_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri167(TRI_MAX_167_AT_16384_512_DATA);
-Oscil <TRI_MAX_174_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri174(TRI_MAX_174_AT_16384_512_DATA);
-Oscil <TRI_MAX_182_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri182(TRI_MAX_182_AT_16384_512_DATA);
-Oscil <TRI_MAX_190_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri190(TRI_MAX_190_AT_16384_512_DATA);
-Oscil <TRI_MAX_199_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri199(TRI_MAX_199_AT_16384_512_DATA);
-Oscil <TRI_MAX_210_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri210(TRI_MAX_210_AT_16384_512_DATA);
-Oscil <TRI_MAX_221_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri221(TRI_MAX_221_AT_16384_512_DATA);
-Oscil <TRI_MAX_234_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri234(TRI_MAX_234_AT_16384_512_DATA);
-Oscil <TRI_MAX_248_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri248(TRI_MAX_248_AT_16384_512_DATA);
-Oscil <TRI_MAX_264_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri264(TRI_MAX_264_AT_16384_512_DATA);
-Oscil <TRI_MAX_282_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri282(TRI_MAX_282_AT_16384_512_DATA);
-Oscil <TRI_MAX_303_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri303(TRI_MAX_303_AT_16384_512_DATA);
-Oscil <TRI_MAX_327_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri327(TRI_MAX_327_AT_16384_512_DATA);
-Oscil <TRI_MAX_356_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri356(TRI_MAX_356_AT_16384_512_DATA);
-Oscil <TRI_MAX_390_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri390(TRI_MAX_390_AT_16384_512_DATA);
-Oscil <TRI_MAX_431_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri431(TRI_MAX_431_AT_16384_512_DATA);
-Oscil <TRI_MAX_546_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri546(TRI_MAX_546_AT_16384_512_DATA);
-Oscil <TRI_MAX_910_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri910(TRI_MAX_910_AT_16384_512_DATA);
-Oscil <TRI_MAX_2730_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri2730(TRI_MAX_2730_AT_16384_512_DATA);
-Oscil <TRI_MAX_8192_AT_16384_512_NUM_CELLS, AUDIO_RATE> tri8192(TRI_MAX_8192_AT_16384_512_DATA);
-MetaOscil<TRI_MAX_103_AT_16384_512_NUM_CELLS, AUDIO_RATE, 24> meta1 {
-&tri103, &tri106, &tri109, &tri112, &tri115, &tri118, &tri122, &tri126, &tri130, &tri134, &tri138, &tri143, &tri148, &tri154, &tri160, &tri167, &tri174, &tri182, &tri190, &tri199, &tri210, &tri221, &tri234, &tri248, 
-//&tri264, &tri282, 
-//&tri303, &tri327, 
-//&tri356, &tri390, &tri431, &tri546, &tri910, &tri2730, &tri8192
-};
-MetaOscil<TRI_MAX_103_AT_16384_512_NUM_CELLS, AUDIO_RATE, 24> meta2 {&tri103, &tri106, &tri109, &tri112, &tri115, &tri118, &tri122, &tri126, &tri130, &tri134, &tri138, &tri143, &tri148, &tri154, &tri160, &tri167, &tri174, &tri182, &tri190, &tri199, &tri210, &tri221, &tri234, &tri248, 
-//&tri264, &tri282, 
-//&tri303, &tri327, 
-//&tri356, &tri390, &tri431, &tri546, &tri910, &tri2730, &tri8192
-};
-MetaOscil<TRI_MAX_103_AT_16384_512_NUM_CELLS, AUDIO_RATE, 24> meta3 {&tri103, &tri106, &tri109, &tri112, &tri115, &tri118, &tri122, &tri126, &tri130, &tri134, &tri138, &tri143, &tri148, &tri154, &tri160, &tri167, &tri174, &tri182, &tri190, &tri199, &tri210, &tri221, &tri234, &tri248, 
-//&tri264, &tri282, 
-//&tri303, &tri327, 
-//&tri356, &tri390, &tri431, &tri546, &tri910, &tri2730, &tri8192
-};
-MetaOscil<TRI_MAX_103_AT_16384_512_NUM_CELLS, AUDIO_RATE, 24> meta4 {&tri103, &tri106, &tri109, &tri112, &tri115, &tri118, &tri122, &tri126, &tri130, &tri134, &tri138, &tri143, &tri148, &tri154, &tri160, &tri167, &tri174, &tri182, &tri190, &tri199, &tri210, &tri221, &tri234, &tri248, 
-//&tri264, &tri282, 
-//&tri303, &tri327, 
-//&tri356, &tri390, &tri431, &tri546, &tri910, &tri2730, &tri8192
-};
-
 Oscil<SIN1024_NUM_CELLS, AUDIO_RATE> sine1(SIN1024_DATA);
 Oscil<SIN1024_NUM_CELLS, AUDIO_RATE> sine2(SIN1024_DATA);
 Oscil<SIN1024_NUM_CELLS, AUDIO_RATE> sine3(SIN1024_DATA);
@@ -366,12 +266,6 @@ Oscil<SIN1024_NUM_CELLS, AUDIO_RATE> sines[4] =
     { 
     sine1, sine2, sine3, sine4, 
     };
-
-MetaOscil<TRI_MAX_103_AT_16384_512_NUM_CELLS, AUDIO_RATE, 24> _sines[4] = 
-    { 
-meta1, meta2, meta3, meta4
-    };
-
 
 int32_t gains[NUM_SINES];
 
@@ -392,20 +286,7 @@ void setup()
 	pinMode(CV_GATE_OUT, INPUT);
     initializeFrequency(CV_POT_IN1, CV_AUDIO_IN);
     randomSeed(RANDOM_PIN);
-    meta1.setCutoffFreqs(103, 106, 109, 112, 115, 118, 122, 126, 130, 134, 138, 143, 148, 154, 160, 167, 174, 182, 190, 199, 210, 221, 234, 248 
-    //264, 282, 303, 327, 356, 390, 431, 546, 910, 2730, 8192
-    );
-    meta2.setCutoffFreqs(103, 106, 109, 112, 115, 118, 122, 126, 130, 134, 138, 143, 148, 154, 160, 167, 174, 182, 190, 199, 210, 221, 234, 248 
-    //264, 282, 303, 327, 356, 390, 431, 546, 910, 2730, 8192
-    );
-    meta3.setCutoffFreqs(103, 106, 109, 112, 115, 118, 122, 126, 130, 134, 138, 143, 148, 154, 160, 167, 174, 182, 190, 199, 210, 221, 234, 248 
-    //264, 282, 303, 327, 356, 390, 431, 546, 910, 2730, 8192
-    );
-    meta4.setCutoffFreqs(103, 106, 109, 112, 115, 118, 122, 126, 130, 134, 138, 143, 148, 154, 160, 167, 174, 182, 190, 199, 210, 221, 234, 248 
-    //264, 282, 303, 327, 356, 390, 431, 546, 910, 2730, 8192
-    );
     startMozzi();
-    //Serial.begin(115200);
     }
 
 #define MEDIAN_OF_THREE(a,b,c) (((a) <= (b)) ? (((b) <= (c)) ? (b) : (((a) < (c)) ? (c) : (a))) : (((a) <= (c)) ? (a) : (((b) < (c)) ? (c) : (b))))
@@ -540,11 +421,11 @@ PROGMEM const float semitoneFrequencyRatios[] =
 #define _E (4)
 #define _F (5)
 #define _Gb (6)
-#define _G (6)
-#define _Ab (7)
-#define _A (8)
-#define _Bb (9)
-#define _B (10)
+#define _G (7)
+#define _Ab (8)
+#define _A (9)
+#define _Bb (10)
+#define _B (11)
 
 #define _C1 (_C + 12)
 #define _Db1 (_Db + 12)
@@ -608,18 +489,18 @@ uint8_t chord = 0;
 uint8_t lastPitch = 17;	// something bigger than notes
 PROGMEM const float chords[NUM_CHORDS][NUM_NOTES] = 
 	{
-{_C, _C, _C, _C, _E, _G, _C1, _E1, _G1, _C2, _E2, _G2, _C3, _E3, _G3, _C4},			// Maj
-{_C, _C, _C, _C, _Eb, _G, _C1, _Eb1, _G1, _C2, _Eb2, _G2, _C3, _Eb3, _G3, _C4},		// min
-{_C, _C, _C, _C, _E, _G, _B, _C1, _E1, _G1, _B1, _C2, _E2, _G2, _B2, _C3 },			// Maj7
-{_C, _C, _C, _C, _Eb, _G, _Bb, _C1, _Eb1, _G1, _Bb1, _C2, _Eb2, _G2, _Bb2, _C3 },	// min7
-{_C, _C, _C, _C, _E, _G, _Bb, _C1, _Eb, _G1, _Bb1, _C2, _Eb, _G2, _Bb2, _C3 },		// 7
-{_C, _C, _C, _C, _Eb, _Gb, _A, _C1, _Eb, _Gb1, _A1, _C2, _Eb, _Gb2, _A, _C3 },		// dim7
-{_C, _C, _C, _C, _E, _Ab, _C1, _E, _Ab1, _C2, _E, _Ab2, _C3, _E, _Ab2, _C4 },		// Aug7
-{_C, _C, _D, _G, _A, _C1, _D2, _E2, _G2, _A2, _C3, _D3, _E3, _G3, _A3, _C4 },		// Pentatonic
-{_C, _C, _C, _C, _D, _E, _Gb, _Ab, _Bb, _C1, _D1, _E1, _Gb1, _Ab1, _Bb1, _C2},		// Whole Tone
-{_C, _C, _C, _C, _Db, _D, _Eb, _E, _F, _Gb, _G, _Ab, _A, _Bb, _B, _C2 },			// Chromatic
-{_C, _C, _G, _C1, _G2, _C2, _G2, _C3, _G3, _C4, _G, _C1, _G2, _C2, _G3, _C3 },		// 5 + Oct
-{_C, _C, _C, _C, _C1, _C2, _C3, _C4, _C1, _C2, _C3, _C4, _C1, _C2, _C3, _C4 },		// Oct
+{_C, _C, _C, _E, _G, _C1, _E1, _G1, _C2, _E2, _G2, _C3, _E3, _G3, _C4},			// Maj
+{_C, _C, _C, _Eb, _G, _C1, _Eb1, _G1, _C2, _Eb2, _G2, _C3, _Eb3, _G3, _C4},		// min
+{_C, _C, _C, _E, _G, _B, _C1, _E1, _G1, _B1, _C2, _E2, _G2, _B2, _C3 },			// Maj7
+{_C, _C, _C, _Eb, _G, _Bb, _C1, _Eb1, _G1, _Bb1, _C2, _Eb2, _G2, _Bb2, _C3 },	// min7
+{_C, _C, _C, _E, _G, _Bb, _C1, _Eb, _G1, _Bb1, _C2, _Eb, _G2, _Bb2, _C3 },		// 7
+{_C, _C, _C, _Eb, _Gb, _A, _C1, _Eb, _Gb1, _A1, _C2, _Eb, _Gb2, _A, _C3 },		// dim7
+{_C, _C, _C, _E, _Ab, _C1, _E, _Ab1, _C2, _E, _Ab2, _C3, _E, _Ab2, _C4 },		// Aug7
+{_C, _D, _G, _A, _C1, _D2, _E2, _G2, _A2, _C3, _D3, _E3, _G3, _A3, _C4 },		// Pentatonic
+{_C, _C, _C, _D, _E, _Gb, _Ab, _Bb, _C1, _D1, _E1, _Gb1, _Ab1, _Bb1, _C2},		// Whole Tone
+{_C, _C, _C, _Db, _D, _Eb, _E, _F, _Gb, _G, _Ab, _A, _Bb, _B, _C2 },			// Chromatic
+{_C, _G, _C1, _G2, _C2, _G2, _C3, _G3, _C4, _G, _C1, _G2, _C2, _G3, _C3 },		// 5 + Oct
+{_C, _C, _C, _C1, _C2, _C3, _C4, _C1, _C2, _C3, _C4, _C1, _C2, _C3, _C4 },		// Oct
 	};
 	
 #define NYQUIST 16384
