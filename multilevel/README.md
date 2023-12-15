@@ -8,6 +8,8 @@ You will need to install the Mozzi Library.  You can do this from the Library Ma
 
 At present you can probably have about 145 stages.  If you needed more, we could probably convert the stages to PROGMEM and that would get you another 3000 stages or so.  But I'm guessing 145 will be more than plenty!
 
+Note: Multilevel is an **exponential** rate-based envelope.  This means it'll sound best with stuff like filters, and won't be amazing for VCAs.  I might build a **linear** time-based envelope later for the VCA but not now.
+
 In Multilevel you define the envelope here in code.  It's not too hard.  Then in real time you can change the RATE, the MAXIMUM LEVEL, and the MINIMUM LEVEL. (If the maximum level is less than the minimum level, the two are swapped). When the envelope is GATED it starts its run.  When it completes the SUSTAIN stage, it either holds there, or it loops back to the LOOP START STAGE, depending on  whether we have turned LOOPING on.  When the gate is RELEASED, the envelope jumps jumps to the stage just beyond the SUSTAIN stage, and continues from there until it has terminated.
 
 Multilevel has three MODES.  The first mode is REGULAR, which acts like a regular envelope with sustain possibly a looping sustain.  The second mode is ONE SHOT, which ignores sustain and just progresses through the envelope until it reaches the end.  The third mode is STAGE TRIGGERING, which does not advance from stage to stage unless it receives a STAGE TRIGGER. There is no sustain or sustain loop.   STAGE TRIGGERING does not use GATE so the trigger is located in that socket.  

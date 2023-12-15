@@ -23,6 +23,10 @@
 /// You will need to install the Mozzi Library.  You can do this from the Library Manager
 /// in your Arduino IDE.
 ///
+/// Note: Multilevel is an **exponential** rate-based envelope.  This means it'll sound best 
+/// with stuff like filters, and won't be amazing for VCAs.  I might build a **linear** 
+/// time-based envelope later for the VCA but not now.
+///
 /// How many stages are we talking here?  At present you can probably have about 145
 /// stages.  If you needed more, we could probably convert the stages to PROGMEM and
 /// that would get you another 3000 stages or so.  But I'm guessing 145 would be
@@ -116,8 +120,8 @@ float stages[NUM_STAGES][2] =
 	{
 	//RATE //TO LEVEL
 	{ 0.0, 1.0 },				// Stage 0 (Attack) Immediate attack to a level of 1.0.
-	{ 0.999, 0.5 },				// Stage 1 (Decay) Long decay to a sustain level of 0.5.  Thereafter we sustain because this is the SUSTAIN STAGE
-	{ 0.9995, 0.0 },			// Stage 2 (Release) Longer release to a level of 0.0.
+	{ 0.9999, 0.5 },				// Stage 1 (Decay) Long decay to a sustain level of 0.5.  Thereafter we sustain because this is the SUSTAIN STAGE
+	{ 0.99992, 0.0 },			// Stage 2 (Release) Longer release to a level of 0.0.
 	};
 
 /// A MORE ELABORATE EXAMPLE
@@ -151,8 +155,8 @@ float stages[NUM_STAGES][2] =
 
 /// CONFIGURATION
 ///
-/// IN 1            Options
-/// IN 2            Maximum Level CV
+/// IN 1            Maximum Level CV
+/// IN 2            Minimum Level CV
 /// IN 3            Gate or Stage Trigger Input
 /// AUDIO IN (A)    Reset
 /// AUDIO OUT       Output
@@ -189,6 +193,7 @@ uint8_t terminationCounter = 0;
 
 void setup() 
     {
+    Serial.begin(9600);
     pinMode(CV_IN3, INPUT);
     pinMode(CV_GATE_OUT, OUTPUT);
     pinMode(CV_AUDIO_IN, INPUT);
@@ -231,6 +236,7 @@ void doGate()
 
 void doRelease()
 	{
+	Serial.println("Release");
 	gate = false;
 	}
 	
@@ -332,6 +338,10 @@ void updateStateMachine()
 			digitalWrite(CV_GATE_OUT, 1);
 			terminationCounter = TRIGGER_OFF_COUNT;
 			}
+		else if (stage <= SUSTAIN_STAGE)		// immediately advance
+			{
+			stage = SUSTAIN_STAGE + 1;
+			}
 		else
 			{
 			float target = getTarget(stage);
@@ -343,11 +353,6 @@ void updateStateMachine()
 				// Completed the stage
 				state = target;
 				stage++;
-
-				if (stage <= SUSTAIN_STAGE)
-					{
-					stage = SUSTAIN_STAGE + 1;
-					}
 				}
 			}
 		}
