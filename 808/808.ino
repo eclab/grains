@@ -192,7 +192,7 @@
 #if ((FORMAT == FORMAT_5A) || (FORMAT == FORMAT_7))
 #define CONTROL_RATE 200
 #else
-#define CONTROL_RATE 256
+#define CONTROL_RATE 200
 #endif
 
 
