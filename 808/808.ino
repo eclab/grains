@@ -46,7 +46,6 @@
 /// A note about pitch: Mozzi's sampler facility is very primitive, and changes in pitch 
 /// will have a lot of aliasing and other artifacts.
 ///
-///
 /// MEMORY ALLOCATION
 /// 808 provides about 26000 bytes of memory for your samples.  The total byte length of
 /// your samples cannot exceed this amount.
@@ -58,6 +57,15 @@
 /// reducing the CONTROL_RATE from 64 to something less, but the drum machine will start
 /// to get sloppy in its response to triggers.  It's already really sloppy as it is: 64 means
 /// that it checks for triggers only 64 times a second, or every 15 ms.
+///
+/// Small clicks also occur when the samples are too long and must be reset, especially on
+/// top of one another.  I notice this with snare drums + bass drums together, running too
+/// fast.
+///
+/// I have also noticed that occasionally one sample will start slightly before other
+/// samples played at the same time.  I do not know if this is a Mozzi bug or a bug in the
+/// TRIQ164 sequencer I'm using.  If most of your samples are played on different beats,
+/// you will probably never even notice this.
 /// 
 ///
 /// A NOTE ABOUT THE DIGITAL OUT PIN
@@ -80,9 +88,9 @@
 // That takes up 89% of memory.  If you want more samples, they have to be SHORT.
 
 
-#define SAMPLE_1        "tr808/BD7525.h"                
+#define SAMPLE_1        "tr808/BD7500.h" // "tr808/BD7525.h"                
 #define SAMPLE_2        "tr808/SD0050.h"
-#define SAMPLE_3        "tr808/CP.h"		
+#define SAMPLE_3        "tr808/CP.h"	 	
 #define SAMPLE_4        "tr808/CH.h"
 #define SAMPLE_5        "tr808/OH00.h"
 #define SAMPLE_6        "tr808/CB.h"
@@ -161,7 +169,7 @@
 /// You set the format by changing the following value.  For example, to set to FORMAT_7,
 /// you would change below to   #define FORMAT FORMAT_7
 
-#define FORMAT FORMAT_2
+#define FORMAT FORMAT_4
 
 
 /// The CONTROL_RATE value below indicates how often per second Mozzi checks for incoming
@@ -397,8 +405,8 @@ int16_t previousStart = UNDEFINED;
 int16_t previousEnd = UNDEFINED;
 int16_t previousVolume = UNDEFINED;
 
-#define HIGH_TRIGGER_BOUNDARY 700
-#define LOW_TRIGGER_BOUNDARY 400
+#define HIGH_TRIGGER_BOUNDARY 200
+#define LOW_TRIGGER_BOUNDARY 100
 
 
 
@@ -504,12 +512,12 @@ uint16_t lengths8 = DATA_LENGTH;
 #undef DATA_LENGTH
 
 
-//// DIGITAL OUT registers a trigger faster than the analog reads, either
-//// because I have them triggering at 800 just to be sure, or because mozziAnalogRead
+//// DIGITAL OUT registers a trigger faster than the analog reads, particularly Analog In,
+//// partly because the capacitors on them I think and partly because mozziAnalogRead
 //// does a delayed read.  At any rate, to get Digital Out to line up with the others
-//// in its triggering, we have to delay it one tick.  We do that with a little countdown
+//// in its triggering, we have to delay it three ticks.  We do that with a little countdown
 //// timer here.
-#define COUNTDOWN 2
+#define COUNTDOWN 4
 uint8_t counter = 1;
 
 void updateControl1()
@@ -1109,7 +1117,7 @@ int16_t C(int8_t value, uint8_t volume) { return ((__ULAW2[value + 128]) * volum
 #else
 int16_t C(int8_t value, uint8_t volume) { return ((value * volume) * 32) >> 3; }
 #endif
-#define CC(sample, volume) (C(sample.next(), volume) * sample.isPlaying())
+#define CC(sample, volume) (sample.isPlaying() * C(sample.next(), volume))
 
 uint16_t sum;
 
