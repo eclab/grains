@@ -3,9 +3,15 @@ By Sean Luke (sean@cs.gmu.edu)
 
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code), Oration/Oration 2, which are released under GPL 3.0 (as is Talkie), and likewise Elements, released under GPL 3.0 as it used GPL code.
 
+## Droplets
+
+An oscillator which produces random sine waves along a certain chord, much like a wind chime.  Requires Mozzi.
+
+Status: Working.  A bit hissy, but what can you do, it's Mozzi.
+
 ## ADSR
 
-An ADSR envelope generator with an optional AHR configuration.  Requires Mozzi, though it could theoretically be adapted to Grains.
+An ADSR envelope generator with optional ASR and AHR configurations.  Requires Mozzi, though it could theoretically be adapted to Grains.
 
 Status: Working.
 
