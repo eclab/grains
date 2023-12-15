@@ -8,32 +8,21 @@ You will need to install the Mozzi Library.  You can do this from the Library Ma
 
 Note: ADSR is an **exponential** rate-based envelope.  This means it'll sound best with stuff like filters, and won't be amazing for VCAs.  I might build a **linear** time-based envelope later for the VCA but not now.
 
-## Standard ADSR Mode
+ADSR is started by a GATE, which is presented at Digital Out (D).  Yes, it's an INPUT. While ADSR is gated, you can RESET it back to its start position by sending a RESET TRIGGER to Audio In (A). 
 
-ADSR is easy to use: Pot 1 is the attack rate, Pot 2 is the Decay/Release rate, and Pot 3 is the sustain level.  ADSR's attack and decay are triggered when the gate is ON and the release is begin when the gate turns OFF thereafter.  When the envelope is finished, ADSR sends its envelope completion trigger.
+## Modes
 
-Note that Gate (Input) is on **D**.
+ADSR comes in four MODES, settable with #defines in the code:
 
-## Separate Release Mode
+- "Standard" (ADSR) mode.  This is the DEFAULT SETTING.  Here Decay and Release are the same value.  Pot 1 is the attack rate, Pot 2 is the Decay/Release rate, and Pot 3 + In 3  is the sustain level.
 
-Ordinarily RELEASE AND DECAY are the same thing, controlled by Pot 2.  However you can separate them, forming a true ADSR envelope, by changing a #define in the code.  In this configuration, RELEASE will be specified by a CV on IN 3, and DECAY will stay on Pot 2.  
+- Separate Release mode.  Here, Release is separated from Decay, and now occupies In 3 as a CV. Sustain is just Pot 3 (there is no Sustain CV).
 
+- ASR (Attack/Sustain/Release) mode.  Here there is no Decay at all.  Instead, Pot 2 is release.  This is similar to the ASR envelope in 2ENV, except that Sustain can still be adjusted via Pot 3 + In 3.
 
-## AHR One-Shot Mode
+- AHR (Attack/Hold/Release) mode.  This is a one-shot envelope with no sustain and no decay. Instead, after attacking to MAXIMUM (5V), the envelope HOLDS at that value for a certain amount of time and then automatically releases to 0V.  Hold occupies Pot 3 instead of Sustain.  AHR mode sports an ENVELOPE COMPLETION TRIGGER on In 3, which you can attach to RESET to cause the whole envelope to loop over and over again as long as gate is ON. If you set Hold to 0, then this degenerates to an AR envelope similar to that found in 2ENV
 
-You can change ADSR to be a one-shot AHR envelope (Attack Hold Release) instead.  This envelope has no SUSTAIN or DECAY.  It attacks as usual, but instead of DECAYING it HOLDS at 1.0 for the duration of its DECAY stage, then RELEASES when that stage is done.  Pot 2 changes to a HOLD TIME knob (basically the "decay time but not actually decaying"), and Pot 3 changes to a dedicated RELEASE TIME knob. 
-
-You cannot have both RELEASE mode and AHR mode at the same time.  AHR mode will disable RELEASE mode.
-
-When AHR has completed its envelope, the envelope completion trigger is sent.  However if the gate has not yet been turned off, and the trigger output is attached to the RESET input, the whole envelope will loop until the gate is released. 
-
-
-## GRAINS BUG
-
-There is a bug in GRAINS that affects Pots (Dials) 1 and 2.  If you set the 
-switch to "Man", then the range of the Pot is correct.  But if you set the switch 
-to "In 1" (or "In 2"), then the range of the Dial is at maximum at about the 
-2 o'clock position on the Dial.  Beyond that it stays at maximum.
+You can only set one mode.  AHR takes precedence over ASR, which takes precedence over Separate Release, which takes precedence over Standard.
 
 
 ## Grains Bug
@@ -48,7 +37,7 @@ Attack CV
 #### IN 2
 Decay / Release CV
 #### IN 3
-Release Completion Trigger Output 
+Sustain CV 
 #### AUDIO IN (A)
 Reset
 #### AUDIO OUT
@@ -93,12 +82,39 @@ Decay
 Sustain
 
 
+## ASR Configuration
+
+#### IN 1
+Attack CV
+#### IN 2
+Release CV
+#### IN 3
+Sustain CV 
+#### AUDIO IN (A)
+Reset
+#### AUDIO OUT
+Output
+#### DIGITAL OUT (D) 
+Gate
+#### POT 1
+Attack
+
+[If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
+#### POT 2
+Release
+
+[If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
+#### POT 3
+Sustain
+
+
+
 ## AHR One-Shot Configuration
 
 #### IN 1
 Attack CV
 #### IN 2
-Hold CV
+Release CV
 #### IN 3
 Release Completion Trigger Output 
 #### AUDIO IN (A)
@@ -112,10 +128,9 @@ Attack
 
 [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
 #### POT 2
-Hold
+Release
 
 [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
 #### POT 3
-Release
-
+Hold
 

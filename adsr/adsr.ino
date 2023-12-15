@@ -14,10 +14,8 @@
 
 /// ADSR
 ///
-/// ADSR is an Attack/Sustain/Decay/Release envelope, except that the Decay and Release are
-/// normally the same value (because we don't have enough pots!).  Alternatively it can be
-/// an Attack/Hold/Release (AHR) envelope.  ADSR  
-/// is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
+/// ADSR is an Attack/Sustain/Decay/Release envelope with various options, including ASR
+/// and AHR.  ADSR is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
 /// SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode, though it could probably be adapted to it.
 ///
@@ -28,41 +26,57 @@
 /// with stuff like filters, and won't be amazing for VCAs.  I might build a **linear** 
 /// time-based envelope later for the VCA but not now.
 ///
-/// ADSR is easy to use: Pot 1 is the attack rate, Pot 2 is the Decay/Release rate, and Pot 3
-/// is the sustain level.  ADSR's attack and decay are triggered when the gate is ON and 
-/// the release is begin when the gate turns OFF thereafter.  When the envelope is finished,
-/// ADSR sends its envelope completion trigger.
-
+/// ADSR is started by a GATE, which is presented at Digital Out (D).  Yes, it's an INPUT.
+/// While ADSR is gated, you can RESET it back to its start position by sending a RESET TRIGGER
+/// to Audio In (A). 
+///
+/// ADSR comes in four MODES:
+///
+/// - "Standard" (ADSR) mode.  This is the DEFAULT SETTING.  Here Decay and Release are the 
+///   same value.  Pot 1 is the attack rate, Pot 2 is the Decay/Release rate, and Pot 3 + In 3 
+///   is the sustain level.
+///
+/// - Separate Release mode.  Here, Release is separated from Decay, and now occupies In 3 as a CV.
+///   Sustain is just Pot 3 (there is no Sustain CV).
+///
+/// - ASR (Attack/Sustain/Release) mode.  Here there is no Decay at all.  Instead, Pot 2 is
+///   release.  This is similar to the ASR envelope in 2ENV, except that Sustain can still be
+///   adjusted via Pot 3 + In 3.
+///
+/// - AHR (Attack/Hold/Release) mode.  This is a one-shot envelope with no sustain and no decay.
+///   Instead, after attacking to MAXIMUM (5V), the envelope HOLDS at that value for a certain
+///   amount of time and then automatically releases to 0V.  Hold occupies Pot 3 instead of 
+///   Sustain.  AHR mode sports an ENVELOPE COMPLETION TRIGGER on In 3, which you can attach to 
+///   RESET to cause the whole envelope to loop over and over again as long as gate is ON.
+///   If you set Hold to 0, then this degenerates to an AR envelope similar to that found in 2ENV
+///
+/// You can only set one mode.  AHR takes precedence over ASR, which takes precedence over Separate
+/// Release, which takes precedence over Standard.
 
 
 /// SEPARATE RELEASE MODE
 ///
-/// Ordinarily RELEASE AND DECAY are the same thing, controlled by Pot 2.  However you can
-/// separate them, forming a true ADSR envelope.  In this configuration, RELEASE will be specified
-/// by a CV on IN 3, and DECAY will stay on Pot 2.  To turn this on, set RELEASE to 1 rather than
-/// 0 below:
+/// To turn this on, set RELEASE to 1 rather than 0 below.  This also turns off Standard Mode.
 
 #define RELEASE 0					// Change to 1 to turn on SEPARATE RELEASE MODE.
 
 
 
+/// ASR MODE
+///
+/// To turn this on, set ASR to 1 rather than 0 below.  This also turns off Separate Release 
+/// and Standard Mode.
+
+#define ASR 0					// Change to 1 to turn on ASR
+
+
+
 /// AHR ONE-SHOT MODE
 ///
-/// You can change ADSR to be a one-shot AHR envelope (Attack Hold Release) instead.  This
-/// envelope has no SUSTAIN or DECAY.  It attacks as usual, but instead of DECAYING 
-/// it HOLDS at 1.0 for the duration of its DECAY stage, then RELEASES when that stage is 
-/// done.  Pot 2 changes to a HOLD TIME knob (basically the "decay time but not actually decaying"),
-/// and Pot 3 changes to a dedicated RELEASE TIME knob.
-///
-/// You cannot have both RELEASE mode and AHR mode at the same time.  AHR mode will turn off
-/// RELEASE mode.
-///
-/// When AHR has completed its envelope, the envelope completion trigger is sent as usual.  
-/// However if the gate has not yet been  turned off, and the trigger output is attached to 
-/// the RESET input, the whole envelope will loop until the gate is released.
-/// To turn on AHR ONE SHOT mode, set AHR below to 1 rather than 0
+/// To turn on AHR ONE SHOT mode, set AHR below to 1 rather than 0.  This also turns off ASR,
+/// Separate Release, and Standard Mode. 
 
-#define AHR 1					// Change to 1 to turn on AHR ONE SHOT
+#define AHR 0					// Change to 1 to turn on AHR ONE SHOT
 
 
 
@@ -78,7 +92,7 @@
 ///
 /// IN 1            Attack CV
 /// IN 2            Decay/Release CV
-/// IN 3            Release Completion Trigger Output
+/// IN 3            Sustain CV
 /// AUDIO IN (A)    Reset
 /// AUDIO OUT       Output
 /// DIGITAL OUT (D) Gate
@@ -86,10 +100,10 @@
 /// POT 1           Attack
 ///                 [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
 ///
-/// POT 2           Decay
+/// POT 2           Decay/Release
 ///					[If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
 ///
-/// POT 3           Sustain
+/// POT 3           Sustain Level
 	
 	
 	
@@ -108,14 +122,34 @@
 /// POT 2           Decay
 ///					[If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
 ///
-/// POT 3           Sustain
+/// POT 3           Sustain Level
+	
+
+
+/// ASR CONFIGURATION 
+///
+/// IN 1            Attack CV
+/// IN 2            Release CV
+/// IN 3            Sustain CV
+/// AUDIO IN (A)    Reset
+/// AUDIO OUT       Output
+/// DIGITAL OUT (D) Gate
+///
+/// POT 1           Attack
+///                 [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
+///
+/// POT 2           Release
+///					[If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
+///
+/// POT 3           Sustain Level
+	
 	
 
 
 /// AHR ONE-SHOT CONFIGURATION 
 ///
 /// IN 1            Attack CV
-/// IN 2            Hold CV
+/// IN 2            Release CV
 /// IN 3            Release Completion Trigger Output
 /// AUDIO IN (A)    Reset
 /// AUDIO OUT       Output
@@ -124,10 +158,10 @@
 /// POT 1           Attack
 ///                 [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
 ///
-/// POT 2           Hold
+/// POT 2           Release
 ///					[If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
 ///
-/// POT 3           Release
+/// POT 3           Hold
 	
 	
 	
@@ -208,9 +242,9 @@ float rates[256] = {
 #include <MozziGuts.h>
 
 #define CV_POT_IN1    A2    // Attack
-#define CV_POT_IN2    A1    // [ADSR] Decay/Release [RELEASE] Decay [AHR] Hold
-#define CV_POT3       A0    // [ADSR] Sustain [RELEASE] Sustain [AHR] Release
-#define CV_IN3        A3    // [ADSR] Release Trigger [RELEASE] Release [AHR] Release Trigger
+#define CV_POT_IN2    A1    // [ADSR] Decay/Release [RELEASE] Decay [ASR] Release [AHR] Release
+#define CV_POT3       A0    // [ADSR] Sustain [RELEASE] Sustain [ASR] Sustain [AHR] Hold
+#define CV_IN3        A3    // [ADSR] Sustain CV [RELEASE] Release CV [ASR] Sustain CV [AHR] Release Trigger
 #define CV_AUDIO_IN   A4    // Reset 
 #define CV_AUDIO_OUT  9     // Output
 #define CV_GATE_OUT   8     // Gate
@@ -226,12 +260,16 @@ void setup()
     pinMode(CV_IN3, OUTPUT);
     pinMode(CV_GATE_OUT, INPUT);
     pinMode(CV_AUDIO_IN, INPUT);
+#elif (ASR == 1)
+    pinMode(CV_IN3, INPUT);
+    pinMode(CV_GATE_OUT, INPUT);
+    pinMode(CV_AUDIO_IN, INPUT);
 #elif (RELEASE == 1)
     pinMode(CV_IN3, INPUT);
     pinMode(CV_GATE_OUT, INPUT);
     pinMode(CV_AUDIO_IN, INPUT);
 #else
-    pinMode(CV_IN3, OUTPUT);
+    pinMode(CV_IN3, INPUT);
     pinMode(CV_GATE_OUT, INPUT);
     pinMode(CV_AUDIO_IN, INPUT);
 #endif
@@ -274,11 +312,8 @@ void updateStateMachine()
 #if (AHR == 1)
     if (terminationCounter == 1) digitalWrite(CV_IN3, 0);
     if (terminationCounter > 0) terminationCounter--;
-#elif (RELEASE == 1)
-// nothing
 #else
-    if (terminationCounter == 1) digitalWrite(CV_IN3, 0);
-    if (terminationCounter > 0) terminationCounter--;
+// nothing
 #endif
 
 	if (gate)
@@ -298,11 +333,8 @@ void updateStateMachine()
 #if (AHR == 1)
 			digitalWrite(CV_IN3, 1);
 			terminationCounter = TRIGGER_OFF_COUNT;
-#elif (RELEASE == 1)
-// nothing
 #else
-			digitalWrite(CV_IN3, 1);
-			terminationCounter = TRIGGER_OFF_COUNT;
+// nothing
 #endif
 			}
 		else
@@ -337,11 +369,8 @@ void updateStateMachine()
 #if (AHR == 1)
 			digitalWrite(CV_IN3, 1);
 			terminationCounter = TRIGGER_OFF_COUNT;
-#elif (RELEASE == 1)
-// nothing
 #else
-			digitalWrite(CV_IN3, 1);
-			terminationCounter = TRIGGER_OFF_COUNT;
+// nothing
 #endif
 			}
 		else if (stage <= SUSTAIN_STAGE)
@@ -386,20 +415,30 @@ void updateControl()
 
 #if (AHR == 1)
 	stages[0][0] = rates[(at * 8) >> 5];			// attack
-	stages[1][0] = rates[(de * 8) >> 5];			// decay is now HOLD
-	stages[1][1] = 1.0;						// sustain stays at 1.0
-	stages[2][0] = rates[(su * 8) >> 5];			// sustain knob now defines RELEASE
+	stages[1][0] = rates[(su * 8) >> 5];			// sustain knob now is HOLD RATE (decay rate)
+	stages[1][1] = 1.0;								// sustain stays at 1.0
+	stages[2][0] = rates[(de * 8) >> 5];			// decay knob now is RELEASE
+#elif (ASR == 1)
+	re = (re == INITIAL ? mozziAnalogRead(CV_IN3) : (re * 7 + mozziAnalogRead(CV_IN3)) >> 3);
+	stages[0][0] = rates[(at * 8) >> 5];			// attack
+	stages[0][1] = (su + re) / 1023.0;				// attack goes to sustain level
+	if (stages[0][1] > 1.0) stages[0][1] = 1.0;
+	stages[1][0] = 0;								// no decay
+	stages[1][1] = stages[0][1];						// sustain
+	stages[2][0] = rates[(de * 8) >> 5];			// release uses decay rate
 #elif (RELEASE == 1)
 	re = (re == INITIAL ? mozziAnalogRead(CV_IN3) : (re * 7 + mozziAnalogRead(CV_IN3)) >> 3);
 	stages[0][0] = rates[(at * 8) >> 5];			// attack
 	stages[1][0] = rates[(de * 8) >> 5];			// decay
-	stages[1][1] = su / 1023.0;				// sustain
+	stages[1][1] = su / 1023.0;						// sustain
 	stages[2][0] = rates[(re * 8) >> 5];			// release is now IN3
 #else
+	re = (re == INITIAL ? mozziAnalogRead(CV_IN3) : (re * 7 + mozziAnalogRead(CV_IN3)) >> 3);
 	stages[0][0] = rates[(at * 8) >> 5];			// attack
 	stages[1][0] = rates[(de * 8) >> 5];			// decay
-	stages[1][1] = su / 1023.0;				// sustain
-	stages[2][0] = stages[1][0];			// release
+	stages[1][1] = (su + re) / 1023.0;				// sustain
+	if (stages[1][1] > 1.0) stages[1][1] = 1.0;
+	stages[2][0] = stages[1][0];					// release
 #endif	
 	if (g && !gate)
 		{
