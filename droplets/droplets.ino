@@ -405,7 +405,7 @@ void setup()
     //264, 282, 303, 327, 356, 390, 431, 546, 910, 2730, 8192
     );
     startMozzi();
-    Serial.begin(115200);
+    //Serial.begin(115200);
     }
 
 #define MEDIAN_OF_THREE(a,b,c) (((a) <= (b)) ? (((b) <= (c)) ? (b) : (((a) < (c)) ? (c) : (a))) : (((a) <= (c)) ? (a) : (((b) < (c)) ? (c) : (b))))
