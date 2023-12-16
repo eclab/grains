@@ -2,7 +2,7 @@
 
 Droplets produces a tinkly chord of sine waves, like a wind chime. Droplets is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 
-The tinkling is done by choosing a Droplet chord from POT 3.  You can then specify the degree of tinkle (release) with POT 2.  Then every time you trigger Droplets it will issue one tinkle.  
+The tinkling is done by choosing a Droplet chord from POT 3.  You can then specify the degree of tinkle (release), together with the tinkle volume, from POT 2.  Then every time you trigger Droplets it will issue one tinkle.  
 
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
