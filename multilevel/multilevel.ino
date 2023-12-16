@@ -67,14 +67,14 @@
 /// there are THREE STAGES: ATTACK, DECAY, and RELEASE.  SUSTAIN is not a stage in and of
 /// itself
  
-#define NUM_STAGES 			3				// You can make as large as you saw fit, but not less than 1
+#define NUM_STAGES                      3                               // You can make as large as you saw fit, but not less than 1
 
 /// Next you need to define the SUSTAIN STAGE.  This is the stage which, after it completes,
 /// the system either SUSTAINS or LOOPS BACK to an earlier stage.  In a simple ADSR envelope,
 /// the sustain stage is the DELAY STAGE, which is stage #1 (ATTACK is stage #0 -- we start at 0).
 /// When STAGE TRIGGERING or ONE SHOT, we do not sustain, but you should still define this.
 
-#define SUSTAIN_STAGE 		1				// This value must be >= 0 and < NUM_STAGES
+#define SUSTAIN_STAGE           1                               // This value must be >= 0 and < NUM_STAGES
 
 /// Next you need to define the LOOP START STAGE.  If we are looping, then when the sustain
 /// stage is COMPLETED, we loop back to the LOOP START STAGE and go from there.  If we are NOT
@@ -85,26 +85,26 @@
 /// say, 0 in this example, we'd loop back and forth between the decay and attack stages until 
 /// the musician released.
 
-#define LOOP_START_STAGE	SUSTAIN_STAGE	// set this to SUSTAIN_STAGE, or to a value >= 0 and <= SUSTAIN_STAGE
+#define LOOP_START_STAGE        SUSTAIN_STAGE   // set this to SUSTAIN_STAGE, or to a value >= 0 and <= SUSTAIN_STAGE
 
 /// Now we define our envelope, which consists of NUM_STAGES stages.  Each stage has two numbers:
 ///
 /// 1. The RATE at which we complete the stage.  This is a value from 0.0 to 1.0, not including 1.0.
 ///    Higher values are SLOWER.  For the time being the rate is exponential.  Here's a rough guide:
 ///
-///    0.0				Instantaneous
-///    0.9				7 ms
-///    0.99				0.07 Seconds
-///    0.999			0.7 Seconds
-///    0.9999			7 Seconds
-///    0.99999			70 Seconds
-///    0.999999			700	Seconds (about 11.6 minutes)
-///    0.9999999		You're kidding, right?  700 Seconds, a bit less than 2 hours
-///    0.99999991		Roughly the limit, after this it's just equal to 1.0
-///    1.0 				(Forever.  This isn't super useful.)
+///    0.0                              Instantaneous
+///    0.9                              7 ms
+///    0.99                             0.07 Seconds
+///    0.999                    0.7 Seconds
+///    0.9999                   7 Seconds
+///    0.99999                  70 Seconds
+///    0.999999                 700     Seconds (about 11.6 minutes)
+///    0.9999999                You're kidding, right?  700 Seconds, a bit less than 2 hours
+///    0.99999991               Roughly the limit, after this it's just equal to 1.0
+///    1.0                              (Forever.  This isn't super useful.)
 ///
 ///    I'll work on a more useful way to enter rates.  Keep in mind that the actual value will also vary depending on
-///	   how far the stage has to travel to get to the next target level (below).  Short distances are traversed
+///        how far the stage has to travel to get to the next target level (below).  Short distances are traversed
 ///    slightly faster (it's not linear).  [I'll work on eliminating this constraint]
 ///
 /// 2. The TARGET LEVEL at the end of the stage.  This is a value from 0.0 to 1.0.  In a typical
@@ -117,31 +117,31 @@
 /// slightly longer release.  Decay is the sustain stage.  Thus we have:
 
 float stages[NUM_STAGES][2] =
-	{
-	//RATE //TO LEVEL
-	{ 0.0, 1.0 },				// Stage 0 (Attack) Immediate attack to a level of 1.0.
-	{ 0.9999, 0.5 },				// Stage 1 (Decay) Long decay to a sustain level of 0.5.  Thereafter we sustain because this is the SUSTAIN STAGE
-	{ 0.99992, 0.0 },			// Stage 2 (Release) Longer release to a level of 0.0.
-	};
+    {
+    //RATE //TO LEVEL
+    { 0.0, 1.0 },                           // Stage 0 (Attack) Immediate attack to a level of 1.0.
+    { 0.9999, 0.5 },                                // Stage 1 (Decay) Long decay to a sustain level of 0.5.  Thereafter we sustain because this is the SUSTAIN STAGE
+    { 0.99992, 0.0 },                       // Stage 2 (Release) Longer release to a level of 0.0.
+    };
 
 /// A MORE ELABORATE EXAMPLE
 ///
 /// Here we have 6 stages, and while we are sustained, we loop through four of them.
 /// Important: notice that 0 <= LOOP_START_STAGE <= SUSTAIN_STAGE < NUM_STAGES
 /// 
-///   #define NUM_STAGES		6
-///   #define LOOP_START_STAGE	1
-///   #define SUSTAIN_STAGE		4
+///   #define NUM_STAGES                6
+///   #define LOOP_START_STAGE  1
+///   #define SUSTAIN_STAGE             4
 ///
 ///   float stages[NUM_STAGES][2] =
-///	    {
-///	    //RATE //TO LEVEL
-///	    { 0.0, 1.0 },				// INITIAL ATTACK
-///	    { 0.999, 0.5 },				// LOOP_START_STAGE
-///	    { 0.999, 0.9 },
-///	    { 0.999, 0.3 },
-///	    { 0.999, 0.75 },			// SUSTAIN_STAGE
-///	    { 0.9995, 0.0 },			// RELEASE 
+///         {
+///         //RATE //TO LEVEL
+///         { 0.0, 1.0 },                               // INITIAL ATTACK
+///         { 0.999, 0.5 },                             // LOOP_START_STAGE
+///         { 0.999, 0.9 },
+///         { 0.999, 0.3 },
+///         { 0.999, 0.75 },                    // SUSTAIN_STAGE
+///         { 0.9995, 0.0 },                    // RELEASE 
 ///   };
 
 ///
@@ -166,13 +166,13 @@ float stages[NUM_STAGES][2] =
 ///                 [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
 ///
 /// POT 2           Minimum Level
-///					[If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
+///                                     [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
 ///
 /// POT 3           Options. Left to right: CHANGING REGULAR, CHANGING ONE SHOT, CHANGING STAGE TRIGGER,  
 ///                                         FLAT REGULAR, FLAT ONE SHOT, FLAT STAGE TRIGGER
-	
-	
-	
+        
+        
+        
 
 #define CONTROL_RATE 256
 
@@ -199,7 +199,7 @@ void setup()
     pinMode(CV_AUDIO_IN, INPUT);
     startMozzi();
     }
-	
+        
 #define DONE (-1)
 int8_t stage = DONE;
 
@@ -223,141 +223,141 @@ uint8_t mode = MODE_REGULAR;
 uint8_t flat = 0;
 
 void doReset()
-	{
-	stage = 0;
-	state = 0.0;
-	}
+    {
+    stage = 0;
+    state = 0.0;
+    }
 
 void doGate()
-	{
-	gate = true;
-	stage = 0;
-	}
+    {
+    gate = true;
+    stage = 0;
+    }
 
 void doRelease()
-	{
-	Serial.println("Release");
-	gate = false;
-	}
-	
+    {
+    Serial.println("Release");
+    gate = false;
+    }
+        
 void doStageTrigger()
-	{
-	if (stage != DONE)
-		{
-		stage++;
-		}
-	else
-		{
-		stage = 0;
-		}
-	}
-	
+    {
+    if (stage != DONE)
+        {
+        stage++;
+        }
+    else
+        {
+        stage = 0;
+        }
+    }
+        
 inline float getTarget(uint8_t stage)
-	{
-	target = stages[stage][1] * (maximum - minimum) + minimum;
-	return target;
-	}
-	
+    {
+    target = stages[stage][1] * (maximum - minimum) + minimum;
+    return target;
+    }
+        
 void updateStateMachine()
-	{
+    {
     if (terminationCounter == 1) digitalWrite(CV_GATE_OUT, 0);
     if (terminationCounter > 0) terminationCounter--;
 
-	if (mode == MODE_STAGE_TRIGGERING)
-		{
-		if (stage == DONE)			
-			{
-			// do nothing
-			}
-		else if (stage >= NUM_STAGES)
-			{
-			stage = 0;
-			digitalWrite(CV_GATE_OUT, 1);
-			terminationCounter = TRIGGER_OFF_COUNT;
-			}
-		else
-			{
-			float target = getTarget(stage);
-			float alpha = stages[stage][0];
-			state =  alpha * state + (1.0 - alpha) * target;
+    if (mode == MODE_STAGE_TRIGGERING)
+        {
+        if (stage == DONE)                      
+            {
+            // do nothing
+            }
+        else if (stage >= NUM_STAGES)
+            {
+            stage = 0;
+            digitalWrite(CV_GATE_OUT, 1);
+            terminationCounter = TRIGGER_OFF_COUNT;
+            }
+        else
+            {
+            float target = getTarget(stage);
+            float alpha = stages[stage][0];
+            state =  alpha * state + (1.0 - alpha) * target;
 
-			if (abs(state - target) <= EPSILON)
-				{
-				// Completed the stage  But we don't advance
-				state = target;
-				}
-			}
-		}
-	else if (gate)
-		{
-		if (stage == DONE)			
-			{
-			// do nothing
-			}
-		else if (stage == SUSTAIN_STAGE + 1 && mode != MODE_ONE_SHOT)
-			{
-			// we're at the sustain 
-			if (LOOP_START_STAGE < SUSTAIN_STAGE)
-				{
-				// loop back to the loop start
-				stage = LOOP_START_STAGE;
-				}
-			// else do nothing, we're sustaining
-			}
-		else if (stage >= NUM_STAGES)
-			{
-			// all done: probably one-shot
-			stage = DONE;
-			digitalWrite(CV_GATE_OUT, 1);
-			terminationCounter = TRIGGER_OFF_COUNT;
-			}
-		else
-			{
-			float target = getTarget(stage);
-			float alpha = stages[stage][0];
-			state =  alpha * state + (1.0 - alpha) * target;
-			
-			if (abs(state - target) <= EPSILON)
-				{
-				// Completed the stage
-				state = target;
-				stage++;
-				}
-			}
-		}
-	else			// GATE OFF
-		{
-		if (stage == DONE)
-			{
-			// Do nothing
-			}
-		else if (stage >= NUM_STAGES)
-			{
-			// all done
-			stage = DONE;
-			digitalWrite(CV_GATE_OUT, 1);
-			terminationCounter = TRIGGER_OFF_COUNT;
-			}
-		else if (stage <= SUSTAIN_STAGE)		// immediately advance
-			{
-			stage = SUSTAIN_STAGE + 1;
-			}
-		else
-			{
-			float target = getTarget(stage);
-			float alpha = stages[stage][0];
-			state =  alpha * state + (1.0 - alpha) * target;
-			
-			if (abs(state - target) <= EPSILON)  // we're done
-				{
-				// Completed the stage
-				state = target;
-				stage++;
-				}
-			}
-		}
-	stageTriggered = false;		// only trigger once
-	}
+            if (abs(state - target) <= EPSILON)
+                {
+                // Completed the stage  But we don't advance
+                state = target;
+                }
+            }
+        }
+    else if (gate)
+        {
+        if (stage == DONE)                      
+            {
+            // do nothing
+            }
+        else if (stage == SUSTAIN_STAGE + 1 && mode != MODE_ONE_SHOT)
+            {
+            // we're at the sustain 
+            if (LOOP_START_STAGE < SUSTAIN_STAGE)
+                {
+                // loop back to the loop start
+                stage = LOOP_START_STAGE;
+                }
+            // else do nothing, we're sustaining
+            }
+        else if (stage >= NUM_STAGES)
+            {
+            // all done: probably one-shot
+            stage = DONE;
+            digitalWrite(CV_GATE_OUT, 1);
+            terminationCounter = TRIGGER_OFF_COUNT;
+            }
+        else
+            {
+            float target = getTarget(stage);
+            float alpha = stages[stage][0];
+            state =  alpha * state + (1.0 - alpha) * target;
+                        
+            if (abs(state - target) <= EPSILON)
+                {
+                // Completed the stage
+                state = target;
+                stage++;
+                }
+            }
+        }
+    else                    // GATE OFF
+        {
+        if (stage == DONE)
+            {
+            // Do nothing
+            }
+        else if (stage >= NUM_STAGES)
+            {
+            // all done
+            stage = DONE;
+            digitalWrite(CV_GATE_OUT, 1);
+            terminationCounter = TRIGGER_OFF_COUNT;
+            }
+        else if (stage <= SUSTAIN_STAGE)                // immediately advance
+            {
+            stage = SUSTAIN_STAGE + 1;
+            }
+        else
+            {
+            float target = getTarget(stage);
+            float alpha = stages[stage][0];
+            state =  alpha * state + (1.0 - alpha) * target;
+                        
+            if (abs(state - target) <= EPSILON)  // we're done
+                {
+                // Completed the stage
+                state = target;
+                stage++;
+                }
+            }
+        }
+    stageTriggered = false;         // only trigger once
+    }
 
 #define INITIAL (1024)
 uint16_t mx = INITIAL;
@@ -369,81 +369,81 @@ uint16_t mn = INITIAL;
 void updateControl() 
     {
     // Revise mode
-	uint8_t val = (mozziAnalogRead(CV_POT3) * 6) >> 10;
-	if (val == 0 || val == 3) mode = MODE_REGULAR;
-	else if (val == 1 || val == 4) mode = MODE_ONE_SHOT;
-	else mode = MODE_STAGE_TRIGGERING;
-	flat = (val >= 3);
-		    
+    uint8_t val = (mozziAnalogRead(CV_POT3) * 6) >> 10;
+    if (val == 0 || val == 3) mode = MODE_REGULAR;
+    else if (val == 1 || val == 4) mode = MODE_ONE_SHOT;
+    else mode = MODE_STAGE_TRIGGERING;
+    flat = (val >= 3);
+                    
     // Test for gate changes
-	uint16_t g = mozziAnalogRead(CV_IN3);
-	// Test for reset
-	uint16_t r = mozziAnalogRead(CV_AUDIO_IN);
-	
-	// Get minimum and maximum
-	mx = (mx == INITIAL ? mozziAnalogRead(CV_POT_IN1) : (mx * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3);
-	mn = (mn == INITIAL ? mozziAnalogRead(CV_POT_IN2) : (mn * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3);
-	maximum = mx * (1.0 / 1023.0);
-	minimum = mn * (1.0 / 1023.0);
-	if (minimum > maximum) { float temp = minimum; minimum = maximum; maximum = temp; }
-	
-	if (mode == MODE_STAGE_TRIGGERING)
-		{
-		// Always reset regardless of gate
-		if (r > TRIGGER_UP && !reset)
-			{
-			reset = 1;
-			doReset();
-			}
-		else if (r < TRIGGER_DOWN)
-			{
-			reset = 0;
-			}
+    uint16_t g = mozziAnalogRead(CV_IN3);
+    // Test for reset
+    uint16_t r = mozziAnalogRead(CV_AUDIO_IN);
+        
+    // Get minimum and maximum
+    mx = (mx == INITIAL ? mozziAnalogRead(CV_POT_IN1) : (mx * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3);
+    mn = (mn == INITIAL ? mozziAnalogRead(CV_POT_IN2) : (mn * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3);
+    maximum = mx * (1.0 / 1023.0);
+    minimum = mn * (1.0 / 1023.0);
+    if (minimum > maximum) { float temp = minimum; minimum = maximum; maximum = temp; }
+        
+    if (mode == MODE_STAGE_TRIGGERING)
+        {
+        // Always reset regardless of gate
+        if (r > TRIGGER_UP && !reset)
+            {
+            reset = 1;
+            doReset();
+            }
+        else if (r < TRIGGER_DOWN)
+            {
+            reset = 0;
+            }
 
-		if (g > TRIGGER_UP && !gate)
-			{
-			gate = 1;
-			doStageTrigger();
-			}
-		else if (g < TRIGGER_DOWN && gate)
-			{
-			gate = 0;
-			}
-		}
-	else
-		{
-		if (g > TRIGGER_UP && !gate)
-			{
-			gate = 1;
-			doGate();
-			}
-		else if (g < TRIGGER_DOWN && gate)
-			{
-			gate = 0;
-			doRelease();
-			}
+        if (g > TRIGGER_UP && !gate)
+            {
+            gate = 1;
+            doStageTrigger();
+            }
+        else if (g < TRIGGER_DOWN && gate)
+            {
+            gate = 0;
+            }
+        }
+    else
+        {
+        if (g > TRIGGER_UP && !gate)
+            {
+            gate = 1;
+            doGate();
+            }
+        else if (g < TRIGGER_DOWN && gate)
+            {
+            gate = 0;
+            doRelease();
+            }
 
-		// Only reset if gate is on
-		if (r > TRIGGER_UP && !reset && gate)
-			{
-			reset = 1;
-			doReset();
-			}
-		else if (r < TRIGGER_DOWN)
-			{
-			reset = 0;
-			}
-		}
+        // Only reset if gate is on
+        if (r > TRIGGER_UP && !reset && gate)
+            {
+            reset = 1;
+            doReset();
+            }
+        else if (r < TRIGGER_DOWN)
+            {
+            reset = 0;
+            }
+        }
     }
 
 
 int updateAudio()    
     {
-	updateStateMachine();
-if (flat)
-    return ((int16_t)(target * 487)) - 244;
-else
-    return ((int16_t)(state * 487)) - 244;
+    updateStateMachine();
+    if (flat)
+        return ((int16_t)(target * 487)) - 244;
+    else
+        return ((int16_t)(state * 487)) - 244;
     }
 
 void loop() 

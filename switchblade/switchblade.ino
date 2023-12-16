@@ -90,7 +90,7 @@
 
 void setup() 
     {
-    randomSeed(A5);						// FIXME: We're using randomSeed() and random() when we could be using the faster Mozzi versions
+    randomSeed(A5);                                             // FIXME: We're using randomSeed() and random() when we could be using the faster Mozzi versions
     startMozzi();
     }
 
@@ -99,21 +99,21 @@ int16_t output;
 
 float oldIn = 0;
 uint16_t smooth(uint16_t in, uint8_t smoothing)
-	{
-	float s = smoothing;
-	if (oldIn == 0) oldIn = in;
-	else oldIn = (oldIn * s + (in * (128 - s))) * (1.0 / 128.0);
-	return (uint16_t) oldIn;
-	}
+    {
+    float s = smoothing;
+    if (oldIn == 0) oldIn = in;
+    else oldIn = (oldIn * s + (in * (128 - s))) * (1.0 / 128.0);
+    return (uint16_t) oldIn;
+    }
 
 int16_t addNoise(uint16_t in, uint16_t rand)
-	{
-	int16_t result = in + (int16_t)random(rand) - (int16_t)256;
-	if (result < 0) result = 0;
-	if (result > 1023) result = 1023;
-	return result;
-	}
-	
+    {
+    int16_t result = in + (int16_t)random(rand) - (int16_t)256;
+    if (result < 0) result = 0;
+    if (result > 1023) result = 1023;
+    return result;
+    }
+        
 #define MEDIAN_OF_THREE(a,b,c) (((a) <= (b)) ? (((b) <= (c)) ? (b) : (((a) < (c)) ? (c) : (a))) : (((a) <= (c)) ? (a) : (((b) < (c)) ? (c) : (b))))
 uint16_t inA = 0;
 uint16_t inB = 0;
@@ -143,22 +143,22 @@ void updateControl()
     // FIRST SMOOTH OR CURVE
     uint16_t s = mozziAnalogRead(CV_POT3);
     if (s < 512)
-    	{
-    	cv = smooth(cv, (511 - s) >> 2);		// 0...128
-    	}
+        {
+        cv = smooth(cv, (511 - s) >> 2);                // 0...128
+        }
     else
-    	{
-		cv = addNoise(cv, (s - 512));
-    	}
+        {
+        cv = addNoise(cv, (s - 512));
+        }
         
-	// NEXT ATTENUVERT
+    // NEXT ATTENUVERT
     uint16_t y = (y == 0 ? mozziAnalogRead(CV_POT_IN2) : (y * 3 + mozziAnalogRead(CV_POT_IN2) >> 2));
     uint16_t a = MEDIAN_OF_THREE(y, yA, yB);
     yA = yB;
     yB = y;
 
     input = cv;
-	input -= 512;	// make signed    
+    input -= 512;   // make signed    
     if (a >= 512) input = input * (a - 512);
     else input = (512*512) - input * (512 - a);
     input = input >> 9;

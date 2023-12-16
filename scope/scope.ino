@@ -96,12 +96,12 @@
 #define RANDOM_PIN    A5
 
 void setup() 
-	{
- 	Serial.begin(BAUD_RATE);
- 	pinMode(CV_GATE_OUT, INPUT);
- 	pinMode(CV_AUDIO_OUT, OUTPUT);
- 	digitalWrite(CV_AUDIO_OUT, 0);
-	}
+    {
+    Serial.begin(BAUD_RATE);
+    pinMode(CV_GATE_OUT, INPUT);
+    pinMode(CV_AUDIO_OUT, OUTPUT);
+    digitalWrite(CV_AUDIO_OUT, 0);
+    }
 
 uint8_t digitalIn1 = 0;
 uint8_t digitalIn2 = 0;
@@ -115,46 +115,46 @@ uint16_t lastAud = 1024;
 
 
 void loop() 
-	{
-	uint16_t in1;
-	uint16_t in2;
-	uint16_t in3;
-	uint16_t aud;
-	uint16_t dig;
-	
-	if (digitalIn1) { in1 = digitalRead(CV_POT_IN1) * 1023; lastIn1 = 1024; }
-	else in1 = lastIn1 = (lastIn1 == 1024 ? digitalRead(CV_POT_IN1) : (lastIn1 * 3 + digitalRead(CV_POT_IN1)) >> 2);
-	if (digitalIn2) { in2 = digitalRead(CV_POT_IN2) * 1023; lastIn2 = 1024; }
-	else in2 = lastIn2 = (lastIn2 == 1024 ? digitalRead(CV_POT_IN2) : (lastIn2 * 3 + digitalRead(CV_POT_IN2)) >> 2);
-	if (digitalIn3) { in3 = digitalRead(CV_IN3) * 1023; lastIn3 = 1024; }
-	else in3 = lastIn3 = (lastIn3 == 1024 ? digitalRead(CV_POT3) : (lastIn3 * 3 + digitalRead(CV_POT3)) >> 2);
-	analogRead(CV_AUDIO_IN);		// high impedance throwaway
-	if (digitalAud) { aud = digitalRead(CV_AUDIO_IN) * 1023; lastAud = 1024; }
-	else aud = lastAud = (lastAud == 1024 ? digitalRead(CV_AUDIO_IN) : (lastAud * 3 + digitalRead(CV_AUDIO_IN)) >> 2);
-	dig = digitalRead(CV_GATE_OUT) * 1023;
-		
-  uint16_t rate = (analogRead(CV_POT3) * 13) >> 10; // 0...12   (delay: 0...4096)
-  if (rate > 0) delay(1 << (rate - 1));
-	uint8_t first = true;
-  Serial.print("1:"); Serial.print(in1); 
-  Serial.print(",2:"); Serial.print(in2); 
-  Serial.print(",3:"); Serial.print(in3); 
-  Serial.print(",A:"); Serial.print(aud); 
-  Serial.print(",D:"); Serial.print(dig); 
-  Serial.print(",Max:1023,Min:0,");
-  Serial.println();
+    {
+    uint16_t in1;
+    uint16_t in2;
+    uint16_t in3;
+    uint16_t aud;
+    uint16_t dig;
+        
+    if (digitalIn1) { in1 = digitalRead(CV_POT_IN1) * 1023; lastIn1 = 1024; }
+    else in1 = lastIn1 = (lastIn1 == 1024 ? digitalRead(CV_POT_IN1) : (lastIn1 * 3 + digitalRead(CV_POT_IN1)) >> 2);
+    if (digitalIn2) { in2 = digitalRead(CV_POT_IN2) * 1023; lastIn2 = 1024; }
+    else in2 = lastIn2 = (lastIn2 == 1024 ? digitalRead(CV_POT_IN2) : (lastIn2 * 3 + digitalRead(CV_POT_IN2)) >> 2);
+    if (digitalIn3) { in3 = digitalRead(CV_IN3) * 1023; lastIn3 = 1024; }
+    else in3 = lastIn3 = (lastIn3 == 1024 ? digitalRead(CV_POT3) : (lastIn3 * 3 + digitalRead(CV_POT3)) >> 2);
+    analogRead(CV_AUDIO_IN);                // high impedance throwaway
+    if (digitalAud) { aud = digitalRead(CV_AUDIO_IN) * 1023; lastAud = 1024; }
+    else aud = lastAud = (lastAud == 1024 ? digitalRead(CV_AUDIO_IN) : (lastAud * 3 + digitalRead(CV_AUDIO_IN)) >> 2);
+    dig = digitalRead(CV_GATE_OUT) * 1023;
+                
+    uint16_t rate = (analogRead(CV_POT3) * 13) >> 10; // 0...12   (delay: 0...4096)
+    if (rate > 0) delay(1 << (rate - 1));
+    uint8_t first = true;
+    Serial.print("1:"); Serial.print(in1); 
+    Serial.print(",2:"); Serial.print(in2); 
+    Serial.print(",3:"); Serial.print(in3); 
+    Serial.print(",A:"); Serial.print(aud); 
+    Serial.print(",D:"); Serial.print(dig); 
+    Serial.print(",Max:1023,Min:0,");
+    Serial.println();
 
-	// Read
-	if (Serial.available() > 1)
-		{
-		char byte = Serial.read();
-    if (byte == '\n' || byte == '\r') return;
-		else if (byte == '1') digitalIn1 = !digitalIn1;
-		else if (byte == '2') digitalIn2 = !digitalIn2;
-		else if (byte == '3') digitalIn3 = !digitalIn3;
-		else if (byte == 'a' || byte == 'A') digitalAud = !digitalAud;
-		else if (byte == 'h' || byte == 'H') digitalWrite(CV_AUDIO_OUT, 1);
-		else if (byte == 'l' || byte == 'L') digitalWrite(CV_AUDIO_OUT, 0);
-		else if (byte == 's' || byte == 'S') analogWrite(CV_AUDIO_OUT, 128);
-		}
-	}
+    // Read
+    if (Serial.available() > 1)
+        {
+        char byte = Serial.read();
+        if (byte == '\n' || byte == '\r') return;
+        else if (byte == '1') digitalIn1 = !digitalIn1;
+        else if (byte == '2') digitalIn2 = !digitalIn2;
+        else if (byte == '3') digitalIn3 = !digitalIn3;
+        else if (byte == 'a' || byte == 'A') digitalAud = !digitalAud;
+        else if (byte == 'h' || byte == 'H') digitalWrite(CV_AUDIO_OUT, 1);
+        else if (byte == 'l' || byte == 'L') digitalWrite(CV_AUDIO_OUT, 0);
+        else if (byte == 's' || byte == 'S') analogWrite(CV_AUDIO_OUT, 128);
+        }
+    }

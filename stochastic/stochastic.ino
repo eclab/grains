@@ -65,7 +65,7 @@
 /// DIGITAL OUT (D) Output Trigger
 ///
 /// POT 1           Variance / Choice of Random Walk vs Walk About Mean
-///					Low Variance, Random Walk <----> High Variance <----> Low Variance, About Mean
+///                                     Low Variance, Random Walk <----> High Variance <----> Low Variance, About Mean
 ///                 [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
 ///
 /// POT 2           Wander / S&H Rate
@@ -92,30 +92,30 @@
 // This log implementation is from 
 // https://stackoverflow.com/questions/11376288/fast-computing-of-log2-for-64-bit-integers
 const int tab32[32] = {
-     0,  9,  1, 10, 13, 21,  2, 29,
-    11, 14, 16, 18, 22, 25,  3, 30,
-     8, 12, 20, 28, 15, 17, 24,  7,
-    19, 27, 23,  6, 26,  5,  4, 31};
+0,  9,  1, 10, 13, 21,  2, 29,
+11, 14, 16, 18, 22, 25,  3, 30,
+8, 12, 20, 28, 15, 17, 24,  7,
+19, 27, 23,  6, 26,  5,  4, 31};
 
 int log2_32 (uint32_t value)
 {
-    value |= value >> 1;
-    value |= value >> 2;
-    value |= value >> 4;
-    value |= value >> 8;
-    value |= value >> 16;
-    return tab32[(uint32_t)(value*0x07C4ACDD) >> 27];
+value |= value >> 1;
+value |= value >> 2;
+value |= value >> 4;
+value |= value >> 8;
+value |= value >> 16;
+return tab32[(uint32_t)(value*0x07C4ACDD) >> 27];
 }
 */
 
 void setup() 
     {
-    randomSeed(RANDOM_PIN);						// FIXME: We're using randomSeed() and random() when we could be using the faster Mozzi versions
+    randomSeed(RANDOM_PIN);                                             // FIXME: We're using randomSeed() and random() when we could be using the faster Mozzi versions
     pinMode(CV_IN3, INPUT);
     pinMode(CV_GATE_OUT, OUTPUT);
     startMozzi();
     }
-	
+        
 uint16_t randomState = 512;
 uint16_t lastTarget = 0;
 uint16_t randomTarget = 512;
@@ -140,67 +140,67 @@ void updateControl()
     // fuzz ranges 0..511
     
     if (randomState == randomTarget)
-    	{
-    	counter = TRIGGER_OFF_COUNT;
-    	digitalWrite(CV_GATE_OUT, 1);
-    	// pick a new randomTarget
-    	for(uint8_t tries = 0; tries < NUM_TRIES; tries++)	// hopefully this is enough!!!!
-    		{
-	    	int16_t newTarget;
-	    	
-			if (variance >= 512)
-				{
-				uint16_t mean = mozziAnalogRead(CV_AUDIO_IN);
-				variance = 1023 - variance;
-	    		newTarget = mean - (variance >> 1) + random(variance + 1);
-	    		}
-	    	else
-	    		{
-	    		newTarget = randomTarget - (variance >> 1) + random(variance + 1);
-	    		}
-	    	if (newTarget >= 0 && newTarget < 1024 && newTarget != randomTarget &&
-	    		((lastTarget < randomTarget && newTarget < randomTarget) ||
-	    		(lastTarget > randomTarget && newTarget > randomTarget))) 
-	    		{ lastTarget = randomTarget; randomTarget = newTarget; break; }
-	    	}
-	    time = 0;
-		current = randomState;		// for S&H
-	   	}
+        {
+        counter = TRIGGER_OFF_COUNT;
+        digitalWrite(CV_GATE_OUT, 1);
+        // pick a new randomTarget
+        for(uint8_t tries = 0; tries < NUM_TRIES; tries++)      // hopefully this is enough!!!!
+            {
+            int16_t newTarget;
+                
+            if (variance >= 512)
+                {
+                uint16_t mean = mozziAnalogRead(CV_AUDIO_IN);
+                variance = 1023 - variance;
+                newTarget = mean - (variance >> 1) + random(variance + 1);
+                }
+            else
+                {
+                newTarget = randomTarget - (variance >> 1) + random(variance + 1);
+                }
+            if (newTarget >= 0 && newTarget < 1024 && newTarget != randomTarget &&
+                    ((lastTarget < randomTarget && newTarget < randomTarget) ||
+                    (lastTarget > randomTarget && newTarget > randomTarget))) 
+                { lastTarget = randomTarget; randomTarget = newTarget; break; }
+            }
+        time = 0;
+        current = randomState;          // for S&H
+        }
 
-	if (sampleAndHold)
-		{
-		output = current;
-		}
-	else
-		{
-		output = randomState;
-		}
-		
-    for(uint8_t tries = 0; tries < NUM_TRIES; tries++)	// hopefully this is enough!!!!
-		{
-		output = output -fuzz + random(fuzz + 1);
-		if (output >= 0 && output < 1024) break;
-		}
-		
-	// convert to 0...488
-	output = ((((uint32_t)output) * 488) >> 10);
+    if (sampleAndHold)
+        {
+        output = current;
+        }
+    else
+        {
+        output = randomState;
+        }
+                
+    for(uint8_t tries = 0; tries < NUM_TRIES; tries++)  // hopefully this is enough!!!!
+        {
+        output = output -fuzz + random(fuzz + 1);
+        if (output >= 0 && output < 1024) break;
+        }
+                
+    // convert to 0...488
+    output = ((((uint32_t)output) * 488) >> 10);
     }
 
 int updateAudio()    
     {
-		time++;
-		if (time >= rate)
-			{
-			time = 0;
-			if (randomState < randomTarget)
-				{
-				randomState++;
-				}
-			else if (randomState > randomTarget)
-				{
-				randomState--;
-				}
-			}
+    time++;
+    if (time >= rate)
+        {
+        time = 0;
+        if (randomState < randomTarget)
+            {
+            randomState++;
+            }
+        else if (randomState > randomTarget)
+            {
+            randomState--;
+            }
+        }
 
     return output - 244;
     }
