@@ -55,9 +55,9 @@
 /// 2       Toggles Input 2 between analog and digital
 /// 3       Toggles Input 3 between analog and digital
 /// a or A  Toggles Input A between analog and digital
-/// h or H  Sets Out to generate 5V ("H" for High)
-/// l or L  Sets Out to generate 0V ("L" for Low)
-/// s or S  Sets Out to generate a square wave.  No, you can't set the frequency.
+/// h or H  Sets Audio Out to generate 5V ("H" for High)
+/// l or L  Sets Audio Out to generate 0V ("L" for Low)
+/// s or S  Sets Audio Out to generate a square wave.  No, you can't set the frequency.
 ///
 ///
 /// CHANGING THE BAUD RATE
