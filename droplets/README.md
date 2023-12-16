@@ -47,22 +47,6 @@ By default the note corresponding to 0V is C0, three octaves below middle C, tha
 
 I recognize that Droplets will be hard to tune because of the tinkles.  By far the easiest to tune with is OCTAVES, which is the very last droplet option (turn the droplet knob fully to the right).
 
-CONFIGURATION
-
-IN 1            Pitch CV
-IN 2            Release and Volume CV
-IN 3            Trigger
-AUDIO IN (A)    Pitch Tune
-AUDIO OUT       Out
-DIGITAL OUT (D) [Unused]
-
-POT 1           Pitch Scaling	[Set the switch to In1]
-
-POT 2           Release and Volume
-
-POT 3           Choice of Droplets
-
-
 ## Configuration
 
 #### IN 1
