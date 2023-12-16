@@ -36,7 +36,7 @@ One potentiometer controls both the length of release of the individual tinkles 
 
 NOISE
 
-This program is pretty hissy.  Most of the problem is due to Mozzi I'm afraid.
+Droplets are pretty hissy.  Most of the problem is due to Mozzi I'm afraid.
 
 
 ADJUSTING TUNING AND TRACKING
