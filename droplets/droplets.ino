@@ -247,7 +247,7 @@ float rates[256] = {
 
 
 #define FREQUENCY(pitch) pgm_read_float_near(&frequencies[pitch])
-#define CONTROL_RATE 64
+#define CONTROL_RATE 256
 
 #include <MozziGuts.h>
 #include <Oscil.h>
@@ -282,6 +282,7 @@ int32_t gains[NUM_SINES];
 
 void setup() 
     {
+    Serial.begin(115200);
     // some reasonable initial defaults
 	pinMode(CV_GATE_OUT, INPUT);
     initializeFrequency(CV_POT_IN1, CV_AUDIO_IN);
@@ -530,12 +531,12 @@ void updateControl()
 	if (releaseAndCut < 5)
 		{
 		release = releaseAndCut;
-		overallGain = 2;
+		overallGain = 1;
 		}
 	else if (releaseAndCut < 10)
 		{
 		release = releaseAndCut - 5;
-		overallGain = 3;
+		overallGain = 2;
 		}
 	else
 		{
