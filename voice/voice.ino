@@ -85,7 +85,7 @@
 /// warm up, the scaling will change and you will need to adjust the tracking again, at least until 
 /// they are fully warmed up.
 ///
-/// By default the note corresponding to 0V is C0, three notes below middle C, that is MIDI note 24, 
+/// By default the note corresponding to 0V is C0, three octaves below middle C, that is MIDI note 24, 
 /// or 32.7 Hz.  You can customize the tuning for this Grains program but only UP.  This can be done 
 /// in two ways.  First, you can add pitch to the tuning with a CV value to Audio In.  Second, you 
 /// can transpose the pitch up by changing the TRANSPOSE_OCTAVES and/or TRANSPOSE_SEMITONES #defines 
