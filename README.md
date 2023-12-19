@@ -3,6 +3,12 @@ By Sean Luke (sean@cs.gmu.edu)
 
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code), Oration/Oration 2, which are released under GPL 3.0 (as is Talkie), and likewise Elements, released under GPL 3.0 as it used GPL code.
 
+## Ruckus
+
+A filtered and unfiltered white noise generator.  Requires Mozzi.
+
+Status: Working, but I was hoping to do pink noise as well, but am having some hiccups.  Ran into a lot of Mozzi bugs, reported.
+
 ## Droplets
 
 An oscillator which produces random sine waves along a certain chord, much like a wind chime.  Requires Mozzi.
