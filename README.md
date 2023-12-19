@@ -3,6 +3,12 @@ By Sean Luke (sean@cs.gmu.edu)
 
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code), Oration/Oration 2, which are released under GPL 3.0 (as is Talkie), and likewise Elements, released under GPL 3.0 as it used GPL code.
 
+## Quant
+
+A Note Quantizer.  Requires Mozzi.
+
+Status: Working, but requires a lookup table to deal with some nonlinearity in the pitch output of GRAINS.  I do not know if this nonlinearity varies from unit to unit, or if it changes as the unit warms up.  I could use some help from other people with GRAINS units.
+
 ## Ruckus
 
 A filtered and unfiltered white noise generator.  Requires Mozzi.
