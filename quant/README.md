@@ -14,6 +14,8 @@ The range is a bit nonlinear.  I have a lookup table in QUANT which gets as clos
 
 - Does it change as the GRAINS warms up?  This is hard to nail down because I am driving VCOs, which also warm up...
 
+- I'm trying to match my QUANTIZER.  But I'm not sure if it's properly tuned. :-(
+
 I could use some help here: if I can't get it to match, it'll be hard to output notes from GRAINS for some other projects I have in mind.  Send me mail and let me know how it does on your unit.
 
 Also note that GRAINS's resolution is only about 100 ticks per octave.  This means I can maybe get within 7 cents of a note but not nail it exactly.

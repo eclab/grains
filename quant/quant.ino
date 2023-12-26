@@ -218,10 +218,10 @@ const uint8_t scales[NUM_SCALES][NUM_NOTES] =
 // for each octave and then hand-tuned a bit.  I do not know
 // if this table is consistent from GRAINS to GRAINS.  :-(
 uint16_t positions[42] = 
-{   0,  14,   23,  32,  41,  50,  59,  68,  78,  87,  96, 105, 	// by 9, except first, with one jump of 10
-   115, 124, 134, 143, 153, 163, 173, 182, 192, 201, 211, 220,	// by 9.666
-   230, 240, 250, 259, 269, 279, 289, 298, 308, 318, 328, 337, 	// by 9.75
-   347, 357, 366, 374, 384, 394 };		// one more pitch is available but highly nonlinear	
+{   0,  13,   23,  32,  41,  50,  59,  68,  78,  87,  96, 106, 	// by 9, except first, with one jump of 10
+   116, 125, 135, 144, 154, 163, 173, 182, 192, 202, 212, 222,	// by 9.666
+   232, 242, 251, 261, 271, 281, 291, 300, 310, 320, 330, 339, 	// by 9.75
+   349, 358, 368, 377, 386, 397 };		// one more pitch is available but highly nonlinear	
 
 uint8_t quantizeToScale(uint8_t pitch, uint8_t scale)
 	{
