@@ -22,17 +22,21 @@
 ///
 /// RANGE AND RESOLUTION
 /// 
-/// It looks like GRAINS's range is about 50 notes (4 octaves and a bit), starting at 0V.
-/// It's not capable of higher values.  I'm not sure why.
+/// Mozzi's output is capable of a range of 42 notes. That's about 3.5 octaves.  This 
+/// is also the quantizer's range: values above that will just get quantized to the 
+/// top note.
 ///
-/// Furthermore, the range is a bit nonlinear. I have a lookup table in QUANT which gets
-/// as close as I can to my own GRAINS but I do not know if it matches other people's GRAINS.
-/// I could use some help here: if I can't get it to match, it'll be hard to output notes
-/// from GRAINS for some other projects I have in mind.  Send me mail and let me know how
-/// it does on your unit.
+/// The range is a bit nonlinear.  I have a lookup table in QUANT which gets as close 
+/// as I can to my own GRAINS but I do not yet know: 
 ///
-/// Also note that GRAINS's resolution is only about 100 ticks per octave.  This means I
-/// can maybe get within 7 cents of a note but not nail it exactly.
+/// - Does it match other people's GRAINS? 
+/// 
+/// - Does it change as the GRAINS warms up?  This is hard to nail down because I am 
+/// driving VCOs, which also warm up... 
+///
+/// I could use some help here: if I can't get it to match, it'll be hard to output 
+/// notes from GRAINS for some other projects I have in mind.  Send me mail and let 
+/// me know how it does on your unit.
 ///
 /// SCALES
 ///
@@ -210,21 +214,18 @@ const uint8_t scales[NUM_SCALES][NUM_NOTES] =
 	{ 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1 },		// Minor-Major 7
 	};
 
-
 // This table is not uniform.  It was generated piecewise
 // for each octave and then hand-tuned a bit.  I do not know
 // if this table is consistent from GRAINS to GRAINS.  :-(
-uint16_t positions[54] = 
-{   1,   11,   19,  26,  34,  41,  48,  55,  63,  70,  78,  85, 
-   92,   100, 107, 114, 122, 129, 137, 144, 152, 159, 166, 174,
-  181, 189, 196, 204, 211, 219, 226, 234, 241, 249, 256, 264, 
-  271, 279, 287, 294, 302, 309, 317, 325, 332, 340, 347, 355,
-  362, 369, 376, 384, 391, 400 } // 362, 395 }	// we can eek out one more note but it's highly nonlinear
-;
+uint16_t positions[42] = 
+{   0,  14,   23,  32,  41,  50,  59,  68,  78,  87,  96, 105, 	// by 9, except first, with one jump of 10
+   115, 124, 134, 143, 153, 163, 173, 182, 192, 201, 211, 220,	// by 9.666
+   230, 240, 250, 259, 269, 279, 289, 298, 308, 318, 328, 337, 	// by 9.75
+   347, 357, 366, 374, 384, 394 };		// one more pitch is available but highly nonlinear	
 
 uint8_t quantizeToScale(uint8_t pitch, uint8_t scale)
 	{
-	if (pitch >= 53) pitch = 53;
+	if (pitch >= 59) pitch = 59;
 	// avoid a % ...
 	uint8_t octave = (pitch < 36 ? 
 		( pitch < 24 ? (pitch < 12 ? 0 : 1 ) : 2 ) :
@@ -238,7 +239,9 @@ uint8_t quantizeToScale(uint8_t pitch, uint8_t scale)
 		note--;
 		}
 	
-	return octave + note; 
+	pitch = octave + note; 
+	if (pitch > 41) pitch = 41;		// highest position
+	return pitch;
 	}
 
 int16_t pitchOut;
@@ -262,8 +265,8 @@ void setup()
     {
 	initializePitch(CV_POT_IN1);
     startMozzi();
-    Serial.begin(9600);
-    
+    //Serial.begin(9600);
+    //digitalWrite(CV_GATE_OUT, 1);
     }
 
 void loop() 

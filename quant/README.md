@@ -6,9 +6,15 @@ Quant is pretty simple.  You provide a CV on IN 1, and specify the scale you wou
 
 ## Range and Resolution
 
-It looks like GRAINS's range is about 50 notes (4 octaves and a bit), starting at 0V. It's not capable of higher values.  I'm not sure why yet.
+Mozzi's output is capable of a range of 42 notes. That's about 3.5 octaves.  This is also the quantizer's range: values above that will just get quantized to the top note. 
 
-Furthermore, the range is a bit nonlinear. I have a lookup table in QUANT which gets as close as I can to my own GRAINS but I do not know if it matches other people's GRAINS. I could use some help here: if I can't get it to match, it'll be hard to output notes from GRAINS for some other projects I have in mind.  Send me mail and let me know how it does on your unit.
+The range is a bit nonlinear.  I have a lookup table in QUANT which gets as close as I can to my own GRAINS but I do not yet know:
+
+- Does it match other people's GRAINS?
+
+- Does it change as the GRAINS warms up?  This is hard to nail down because I am driving VCOs, which also warm up...
+
+I could use some help here: if I can't get it to match, it'll be hard to output notes from GRAINS for some other projects I have in mind.  Send me mail and let me know how it does on your unit.
 
 Also note that GRAINS's resolution is only about 100 ticks per octave.  This means I can maybe get within 7 cents of a note but not nail it exactly.
 
