@@ -7,7 +7,7 @@ This is a collection of code which runs on the Tangible Waves GRAINS module, tho
 
 A Note Quantizer.  Requires Mozzi.
 
-Status: Working, but requires a lookup table to deal with some nonlinearity in the pitch output of GRAINS.  I do not know if this nonlinearity varies from unit to unit, or if it changes as the unit warms up.  I could use some help from other people with GRAINS units.
+Status: Working, but requires a lookup table to deal with some nonlinearity in the pitch output of GRAINS.  The table is tuned for my GRAINS: I do not know if it matches other people's GRAINS.  I need feedback from prople regarding this.
 
 ## Ruckus
 
