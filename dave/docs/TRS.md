@@ -18,6 +18,8 @@ All we need to do is connect 5V to the SOURCE (TIP) and connect the GRAINS's MID
 
 To do this, you first need to buy a **3.5 mm Male TRS Screw Terminal Block**.  That's the magic term.  [Google for it](https://www.google.com/search?q=3.5+mm+male+TRS+Screw+Terminal+Block).  They're very cheap, like $5.
 
+You can attach bare wires, Dupont 0.1" cables, or your nice TangibleWaves cables to the block: they all work fine.
+
 The screw terminal block breaks out the TRS tip, ring, and sleeve to three wire screws so we can easily attach our two wires.  Here's the configuration I am using.  Note that my block says "L" (for "Left" -- the TIP), "R" (for "Right" -- the RING) and the Ground symbol for the Sleeve.  I have connected the GRAINS output to "R" and +5V to "L".  You can get +5V from current Master I/O units, or from modules 4ATT/MIX, or even directly from the bus cable itself if you're careful.  I'd make the +5V wire red to make it clear what's what.
 
 Once you've hooked up the wires, you just plug the terminal block into the TRS socket.  It's working so for the MB/1.  Haven't tried the MASTER I/O yet.  Once again, I'm providing this information to early adopters, but I WILL NOT BE HELD RESPONSIBLE if this information is wrong and/or somehow you damage something.  Caveat Emptor.
