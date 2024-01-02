@@ -8,9 +8,9 @@ This code compiles, but I have so far only tested USB_ROUTER MODE with and witho
 
 Dave is a MIDI router and utility which can do many things.  Dave is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 
-Dave runs in a variety of modes.  Many of these modes are meant to receive MIDI over USB.  The GRAINS USB port cannot present itself as a MIDI Device, so Dave works with a Java program, also called Dave, which receives MIDI from your DAW or controller and sends it over the USB port to the GRAINS.  The source code for this program is located in the "java" subdirectory, and binaries for MacOS, Windows, and Linux can be found in "java/install".
+Dave can receive MIDI locally in your synth or over USB.  The GRAINS USB port cannot present itself as a MIDI Device, so Dave works with a Java program, also called Dave, which receives MIDI from your DAW or controller and sends it over the USB port to the GRAINS.  The source code for this program is located in the "java" subdirectory, and binaries for MacOS, Windows, and Linux can be found in "java/install".
 
-DAVE has a lot of configuration options.  However it also has six basic MODES, and you can just choose a mode and most of the configurations will be automatically set for you to make things simple.
+DAVE has a lot of configuration options.  However it also has six basic MODES, and you can just choose a mode and most of the configurations will be automatically set for you to make things simple.  Several of these modes are desiged to work with the WonkyStuff MB/1; others are designed to replace it in a limited fashion; and others work without it at all.
 
 Let's start with the basics:
 
@@ -27,13 +27,14 @@ These are in fact the ONLY ports that GRAINS can send or receive MIDI on!
    MIDI over PORT2 or PORT3.
 
 3. DAVE sends MIDI on any combination of PORT1, PORT2, and PORT3.  You can set
-   the channel that each of these ports listens in on.
+   the channel that each of these ports listens in on.  (Technically the GRAINS
+   could also send MIDI out USB, but DAVE is not set up to do this).
 
 4. DAVE always sends CLOCK signals on AUDIO OUT.  It only sends them between
    a MIDI START / CONTINUE and a MIDI STOP.
 
 5. Depending on how it's set up, DAVE can also send RESET (START), STOP,
-   or START/STOP GATE signals on PORT1, PORT2, and/or PORT3.
+   or START/STOP GATE signals on PORT1, PORT2, and/or PORT3 as CV (not MIDI).
 
 6. You can set each of the three pots to output a CC.  You can choose the CC
    parameter and the CC channel, and when you change a pot, it will inject a CC
@@ -58,10 +59,10 @@ These are in fact the ONLY ports that GRAINS can send or receive MIDI on!
 
 
 
-## MODES
+## Modes
 Here are the basic modes:
 
-### USB CLOCK MODE
+### USB Clock Mode
 This mode takes MIDI input over USB and outputs clock signals. Specifically:
 - AUDIO OUT outputs gated clock as usual
 - DIGITAL OUT (PORT 1) outputs a GATE: it goes high when receiving a START or CONTINUE,
@@ -71,7 +72,7 @@ This mode takes MIDI input over USB and outputs clock signals. Specifically:
 - The Pots should NOT be set to output anything
 
 
-### USB ROUTER MODE
+### USB Router Mode
 This mode takes MIDI input over USB and outputs directly to PORT 1. This can be useful
 to send MIDI to the Wonkystuff MB/1, or as a simple way to send MIDI data directly to
 a Wonkystuff MCO/1, MCC/4, MTR/8, or MDIV.  You could also use this to route MIDI data to
@@ -82,7 +83,7 @@ the MASTER I/O.  Additionally:
 - The Pots *can* be set to output CCs of your choice.
 
 
-### USB DISTRIBUTOR MODE
+### USB Distributor Mode
 This mode takes MIDI input over USB and redistributes Channel 1 to several other channels.
 It only sends MIDI out PORT 1.
 It's particularly useful to use in combination with a WonkyStuff MB/1, which would then
@@ -100,7 +101,7 @@ redistribute channel 1 to channels 2, 3, 4, and 5.  To set this highest channel 
 make a change in the source code as shown.
 
 
-### USB MPE MODE
+### USB MPE Mode
 This mode takes MIDI input over USB and and outputs directly to PORT 1.  It assumes that we
 are doing MPE with a ZONE LOW, where Channel 1 is the MPE Master channel, and the individual
 channels are again channels 2...FILTER_MAX_CHANNEL.  This would be useful to connect to the MB/1
@@ -122,7 +123,7 @@ to create an MPE-controlled polysynth.  Additionally:
 - The Pots *can* be set to output CCs of your choice.
 
 
-### USB DISTRIBUTOR BREAKOUT MODE
+### USB Distributor Breakout Mode
 This mode is just like USB DISTRIBUTOR MODE except that it outputs channel 2 to PORT1,
 channel 3 to PORT2, and channel 4 to PORT3.  This would be useful if you DIDN'T have
 a Wonkystuff MB/1, and still wanted to have at least a 3-voice single-channel polysynth.
@@ -131,7 +132,7 @@ a Wonkystuff MB/1, and still wanted to have at least a 3-voice single-channel po
 - If there aren't any available channels for voices, voice stealing just steals channel 2
 
 
-### USB MPE BREAKOUT MODE
+### USB MPE Mreakout Mode
 This mode is just like USB MPE MODE except that it outputs channel 2 to PORT1,
 channel 3 to PORT2, and channel 4 to PORT3.  This would be useful if you DIDN'T have
 a Wonkystuff MB/1, and still wanted to have at least a 3-voice MPE-based polysynth.
@@ -139,7 +140,7 @@ a Wonkystuff MB/1, and still wanted to have at least a 3-voice MPE-based polysyn
 - The Pots *can* be set to output CCs of your choice.
 
 
-### INTERNAL DISTRIBUTOR BREAKOUT MODE
+### Internal Distributor Breakout Mode
 This mode is just like USB DISTRIBUTOR BREAKOUT MODE except that it takes INPUT from PORT1,
 notionally from the Wonkystuff MB/1 or another Wonkystuff module, and distributes channel 1 to
 channels 2 and 3, then outputs them as PORT2 and PORT3.  This not a common case, but would be 
@@ -149,7 +150,7 @@ useful to build a 2-voice polysynth.
 - If there aren't any available channels for voices, voice stealing just steals channel 2
 
 
-### INTERNAL CLOCK MODE
+### Internal Clock Mode
 This mode is just like USB CLOCK MODE except that it takes INPUT from PORT1,
 and outputs reset and gate on PORT2 and PORT3. 
 - AUDIO OUT outputs gated clock as usual
@@ -158,11 +159,11 @@ and outputs reset and gate on PORT2 and PORT3.
 - The Pots should NOT be set to output anything
 
 
-### NO MODE 	(NONE)
-You will need to customize everything yourself.
+### No Mode (Full Customiation)
+You can customize everything yourself.
 
 
-## CUSTOMIZING THE POT CC OUTPUTS
+## Specifying the Pot CC Outputs
 
 Remember, you can't set the Pot CCs if you're doing USB_CLOCK or INTERNAL_CLOCK modes.
 
@@ -172,14 +173,14 @@ You can also customize which ports (PORT1, PORT2, PORT3) will receive CCs from t
 modifying the source code as shown.
 
 
-## DE-LEGATO
+## De-Legato
 
 This sends a NOTE OFF before any NOTE ON, to guarantee that we do a gate prior to changing the pitch.
 This is specified on a per-channel basis.  By default, it's ON (1) for ALL OUTGOING CHANNELS.  But you
 can change it in the source code as well.
 
 
-## FULL CUSTOMIZING
+## Full Customization
 
 If you set MODE to NONE, you have the option of completely customizing everything.  Options are in the source code.
 
