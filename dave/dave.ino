@@ -20,6 +20,12 @@
 ///
 /// Let's start with the basics:
 ///
+/// 0. In order to connect DAVE to send MIDI to a Wonkystuff MB/1 or to a MASTER I/O, 
+/// you'll need to connect the GRAINS MIDI output to the TRS sockets of the MB/1 or 
+/// MASTER I/O.  To do this you need a Screw Terminal Block.  They're easy and cheap 
+/// to buy.  I have instructions for wiring them in docs/TRS.md.  Hopefully future 
+/// versions of the MB/1 and MASTER I/O will have MIDI IN sockets so this is not necessary.
+///
 /// 1. DAVE has FOUR MIDI ports, called USB, PORT1, PORT2, and PORT3
 ///
 ///    USB
@@ -106,7 +112,7 @@
 /// redistribute channel 1 to channels 2, 3, 4, and 5.  To set this highest channel number, you
 /// change the following define.  By default it's 0.  0 or 1 mean "off":
 
-#define FILTER_MAX_CHANNEL 0			// Can be 0 or 1 [Both Off], or any value 2-16 
+#define FILTER_MAX_CHANNEL 2			// Can be 0 or 1 [Both Off], or any value 2-16 
 
 /// USB MPE MODE
 /// This mode takes MIDI input over USB and and outputs directly to PORT 1.  It assumes that we
@@ -869,7 +875,7 @@ void preprocess(uint8_t c)
 	parseMessage(c);
 	if (MESSAGE_COMPLETE() && (!VOICE_MESSAGE(message) || CHANNEL_1_MESSAGE(message)))
 		{
-		if (systemRealtime) postprocess(systemRealTime);
+		if (systemRealTime) postprocess(systemRealTime);
 		else distribute();
 		}
 #else
