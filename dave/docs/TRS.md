@@ -22,6 +22,6 @@ You can attach bare wires, Dupont 0.1" cables, or your nice TangibleWaves cables
 
 The screw terminal block breaks out the TRS tip, ring, and sleeve to three wire screws so we can easily attach our two wires.  Here's the configuration I am using.  Note that my block says "L" (for "Left" -- the TIP), "R" (for "Right" -- the RING) and the Ground symbol for the Sleeve.  I have connected the GRAINS output to "R" and +5V to "L".  You can get +5V from current Master I/O units, or from modules 4ATT/MIX, or even directly from the bus cable itself if you're careful.  I'd make the +5V wire red to make it clear what's what.
 
-Once you've hooked up the wires, you just plug the terminal block into the TRS socket.  It's working so for the MB/1.  Haven't tried the MASTER I/O yet.  Once again, I'm providing this information to early adopters, but I WILL NOT BE HELD RESPONSIBLE if this information is wrong and/or somehow you damage something.  Caveat Emptor.
+Once you've hooked up the wires, you just plug the terminal block into the TRS socket.  It's working so far for the MB/1.  I haven't tried the MASTER I/O yet.  Once again, I'm providing this information to early adopters, but I WILL NOT BE HELD RESPONSIBLE if this information is wrong and/or somehow you damage something.  Caveat Emptor.
 
 ![Configuration of the screw terminal block attached to an MB/1.](TRS.png)
