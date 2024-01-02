@@ -111,7 +111,7 @@ Pitch In
 #### AUDIO IN (A)
 [UNUSED]
 #### AUDIO OUT
-Out
+Quantized Pitch Out
 #### DIGITAL OUT (D) 
 [UNUSED]
 #### POT 1

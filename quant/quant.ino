@@ -97,7 +97,7 @@
 /// IN 2            [UNUSED]
 /// IN 3            [UNUSED]
 /// AUDIO IN (A)    [UNUSED]
-/// AUDIO OUT       [UNUSED]
+/// AUDIO OUT       Quantized Pitch Out
 /// DIGITAL OUT (D) [UNUSED]
 ///
 /// POT 1           Pitch In CV Tracking Adjust
@@ -214,14 +214,17 @@ const uint8_t scales[NUM_SCALES][NUM_NOTES] =
 	{ 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1 },		// Minor-Major 7
 	};
 
-// This table is not uniform.  It was generated piecewise
-// for each octave and then hand-tuned a bit.  I do not know
-// if this table is consistent from GRAINS to GRAINS.  :-(
+// GRAINS's PWM output is not quite uniform.  This table is tweaked
+// specifically for my unit.  I do not know if it is consistent for
+// other units, but I hope it is!  The range is just under 3.5 octaves,
+// and starts at slightly above 0V.
 uint16_t positions[42] = 
-{   0,  13,   23,  32,  41,  50,  59,  68,  78,  87,  96, 106, 	// by 9, except first, with one jump of 10
+{  
+   0,   13,  23,  32,  41,  50,  59,  68,  78,  87,  96,  106, 	// by 9.3, except first which jumps by 13
    116, 125, 135, 144, 154, 163, 173, 182, 192, 202, 212, 222,	// by 9.666
    232, 242, 251, 261, 271, 281, 291, 300, 310, 320, 330, 339, 	// by 9.75
-   349, 358, 368, 377, 386, 397 };		// one more pitch is available but highly nonlinear	
+   349, 358, 368, 377, 386, 397		// by 9.25, except last which jumps by 11.  One more pitch is exists but is highly nonlinear	
+};
 
 uint8_t quantizeToScale(uint8_t pitch, uint8_t scale)
 	{
