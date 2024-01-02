@@ -10,7 +10,7 @@ I have so far only connected to the MB/1 and it seems to work okay.  I have NOT 
 
 Standard 5-pin DIN MIDI cabling only uses three wires, which MIDI calls the SOURCE, the SINK, and the GROUND.  The GROUND is just the shielding on the cable.  When synthesizer A is connected to send MIDI to synthesizer B, synthesizer A provides 5V on its SOURCE and provides the MIDI data on its SINK.  I know, it's not intuitive.  The idea is that as the MIDI data goes up and down, power is drawn from the SOURCE to drive an LED in synthesizer B's optoisolator, and goes out the SINK.
 
-TRS MIDI is exactly the same as 5-PIN DIN MIDI: three wires.  However there are two versions, TRS A and TRS B.  They differ as to which wire is the source and which is the sink.  Both the MASTER I/O and the MB/1 use TRS B. in which the SOURCE is the TIP (or "LEFT") and the sink is the RING (or "RIGHT").  The ground is the SLEEVE.
+TRS MIDI is exactly the same as 5-PIN DIN MIDI: three wires.  However there are two versions, TRS A and TRS B.  They differ as to which wire is the source and which is the sink.  Both the MASTER I/O and the MB/1 use TRS B, in which the SOURCE is the TIP (or "LEFT") and the sink is the RING (or "RIGHT").  The ground is the SLEEVE.
 
 ## How To
 
