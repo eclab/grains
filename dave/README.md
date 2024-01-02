@@ -59,6 +59,9 @@ These are in fact the ONLY ports that GRAINS can send or receive MIDI on!
 
 8. DAVE can send Debug messages back to its Java program via USB
 
+9. At present DAVE can in many cases receive and forward Sysex messages no larger 
+   than 32 bytes in length, not including the trailing F7.  You can increase this
+   in the code.
 
 
 ## Modes
@@ -178,8 +181,14 @@ modifying the source code as shown.
 ## De-Legato
 
 This sends a NOTE OFF before any NOTE ON, to guarantee that we do a gate prior to changing the pitch.
-This is specified on a per-channel basis.  By default, it's ON (1) for ALL OUTGOING CHANNELS.  But you
-can change it in the source code as well.
+
+IMPORTANT NOTE: the purpose of De-Legato is to work around the fact that WonkyStuff's MCO/1 module is
+legato-only.  HOWEVER De-Legato will trigger a MIDI bug in the MASTER I/O: if it receives two note-offs
+in a row for the same note, its gate will hang permanently at HIGH.  So if you're sending signals to
+the MASTER I/O via its MIDI IN jack, you need to turn off De-Legato.
+
+De-Legato is specified on a per-channel basis.  By default, it's ON (1) for ALL OUTGOING CHANNELS.
+You can turn it on/off globally or per-channel in the code. 
 
 
 ## Full Customization

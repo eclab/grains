@@ -7,7 +7,7 @@ This is a collection of code which runs on the Tangible Waves GRAINS module, tho
 
 A USB Router, Note Distributor, MPE breakout, and MIDI filter.  At present requires Mozzi mode (but not Mozzi), but we might be able to tweak it to use Grains.
 
-Status: This is an **ALPHA** release.  The code compiles and the USB ROUTER mode works, as well as the DELEGATO mode.  Also the pots emit CCs properly.  No other modes have even been tested, and likely nothing else works right now.  The Java program works reasonably well.  I'm providing it here early in case anyone wanted to bang on it.
+Status: This is an **ALPHA** release.  The code compiles and the USB ROUTER mode works, as well as the DELEGATO mode.  The pots emit CCs properly.  No other modes have even been tested, and likely nothing else works right now.  The Java program works reasonably well.  I'm providing it here early in case anyone wanted to bang on it.
 
 ## Quant
 
