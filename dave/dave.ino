@@ -30,19 +30,20 @@
 /// These are in fact the ONLY ports that GRAINS can send or receive MIDI on!  
 ///
 /// 2. DAVE receives MIDI either over USB or via PORT1.  It's impossible to receive
-///    MIDI over PORT2 or PORT3.
+///    MIDI over PORT2 or PORT3 (only send).
 ///
 /// 3. DAVE sends MIDI on any combination of PORT1, PORT2, and PORT3.  You can set
-///    the channel that each of these ports listens in on.
+///    the channel that each of these ports listens in on.  Obviously PORT1 can't
+///    both send and receive at the same time.
 ///
-/// 4. DAVE always sends CLOCK signals on AUDIO OUT.  It only sends them between
+/// 4. DAVE always sends CLOCK signals on AUDIO OUT.  It only sends them when between
 ///    a MIDI START / CONTINUE and a MIDI STOP.
 ///
 /// 5. Depending on how it's set up, DAVE can also send RESET (START), STOP,
 ///    or START/STOP GATE signals on PORT1, PORT2, and/or PORT3.
 ///
-/// 6. You can set each of the three pots to output a CC.  You can choose the CC
-///    parameter and the CC channel, and when you change a pot, it will inject a CC
+/// 6. You can set each of the three pots to output a MIDI CC.  You can choose the CC
+///    parameter and the CC channel, and when you change a pot, it will INJECT a CC
 ///    into the stream for PORT1, PORT2, and/or PORT3.  This allows you to change
 ///    the MIDI parameters of the WonkyStuff MCO/1 for example.
 ///
@@ -196,9 +197,9 @@
 #define POT_3_CC	7		// Wonkystuff MCO/1 Square.  Can be any value 1...128 OR NONE
 
 /// You can customize which ports (PORT1, PORT2, PORT3) will receive CCs from the pots by
-/// modifying the "true" values below to "false" (or 0):
+/// modifying the "1" values below to "0":
 
-const boolean INJECT_POTS_TO_OUTPUT[3] = { true, true, true };
+const boolean INJECT_POTS_TO_OUTPUT[3] = { 1, 1, 1 };
 
 
 /// DE-LEGATO
@@ -223,7 +224,6 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define PORT1 2
 #define PORT2 3 
 #define PORT3 4
-#define NO_CV 255
 #define ALL 17
 #define MPE 1
 #define DISTRIBUTE 2
@@ -252,9 +252,12 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define STOP NONE			// can be PORT1, PORT2 or PORT3
 
 // Are we debugging to the USB port?
-#define DEBUG	0
+#define DEBUG	1
 
-
+// How many times a second do we update the pots?  If this is too fast, it will overwhelm MIDI
+// and create a lot of lag, but we'd like it to be fast enough to sound realistic. Higher values
+// are SLOWER
+#define TIMER_SPEED 256
 
 
 
@@ -389,7 +392,7 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 // Error checking
 #define ERROR(val) static_assert(false, val);
 #if (INPUT == NONE && OUTPUT1 == NONE && OUTPUT2 == NONE && OUTPUT3 == NONE)
-ERROR("All Inputs and Outputs are set to NONE, won't be very interesting.")
+ERROR("All Inputs and Outputs are set to NONE, which won't be very interesting.")
 #endif
 #if (OUTPUT1 == OUTPUT2 && OUTPUT1 != NONE)
 ERROR("OUTPUT 1 and OUTPUT 2 are set to the same value, which is not permitted.")
@@ -545,8 +548,11 @@ NeoSWSerial softSerial3(SERIAL_3_RX, CV_IN3);
 NeoSWSerial softSerial3(SERIAL_3_RX, CV_AUDIO_IN);
 #endif
 
+// We're using AltSoftSerial here because it is notionally more efficient than NeoSWSerial.
+// But it may be worthless to do so on **RX**, so to save memory and perhaps computational
+// power we could switch to something else if we needed to.
 #if (INPUT == PORT1)
-AltSoftSerial altsoftserial;		// RX on CV_GATE_OUT (pin 8) (TX on pin 9, can't use)
+AltSoftSerial altSoftSerial;		// RX on CV_GATE_OUT (pin 8) (TX on pin 9, can't use)
 #endif
 
 
@@ -613,7 +619,7 @@ outputs[2] = &softSerial3;
 	NeoSerial.begin(MIDI_RATE);
 #endif
 #if (INPUT == PORT1)
-	altsoftserial.begin(MIDI_RATE);
+	altSoftSerial.begin(MIDI_RATE);
 #endif
 
 // Start Output Serial Ports
@@ -630,7 +636,7 @@ outputs[2] = &softSerial3;
 	if (INJECT_POTS_TO_OUTPUT[0] == 1 || INJECT_POTS_TO_OUTPUT[1] == 1 || INJECT_POTS_TO_OUTPUT[2] == 1)
 		{
 		// set up timer
-			FlexiTimer2::set(1, 1.0 / 256, setInject);
+			FlexiTimer2::set(1, 1.0 / TIMER_SPEED, setInject);
 			FlexiTimer2::start();
 		}
     }
@@ -850,8 +856,8 @@ void addToChannel(uint8_t* message, uint8_t len, uint8_t channel)
 
 void preprocess(uint8_t c)
 	{
+	parseMessage(c);		// also needed by inject CC
 #if (FILTER_CHANNEL_1 == MPE)
-	parseMessage(c);
 	if (MESSAGE_COMPLETE() && !systemRealTime && CHANNEL_1_MESSAGE(message))
 		{
 		// add to other channels
@@ -880,7 +886,9 @@ void preprocess(uint8_t c)
 
 // DeLegato injects a NOTE OFF in front of every NOTE ON to make sure we do a gate
 
-uint8_t noteOnPitch[16];				// per-channel, what was the last note played?
+#define NO_PITCH 255
+uint8_t noteOnPitch[16] = 				// per-channel, what was the last note played?
+	{ NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, NO_PITCH, };
 #define NO_CHANNEL 255
 uint8_t lastNoteOnChannel = NO_CHANNEL;	// what was the last channel played?
 inline void deLegato(uint8_t c)
@@ -889,7 +897,7 @@ inline void deLegato(uint8_t c)
 		{
 		// Do we need to send a NOTE OFF?
 		uint8_t channel = c - MIDI_NOTE_ON;
-		if (DELEGATO_CHANNELS[channel])
+		if (DELEGATO_CHANNELS[channel] & noteOnPitch[channel] != NO_PITCH)
 			{
 			for(uint8_t i = 0; i < 3; i++)
 				{
@@ -900,13 +908,13 @@ inline void deLegato(uint8_t c)
 					write(outputs[i], 0x00);					// Note off
 					}
 				}
+			noteOnPitch[channel] = NO_PITCH;
 			}
 
 		// What's the new note?  Prepare the channel for the next byte
 		lastNoteOnChannel =  channel;
 		}
-	else if (lastNoteOnChannel < 16 &&
-			 c < MIDI_NOTE_ON)				// It's not a status byte (remember, clock etc. can happen right now) 
+	else if (lastNoteOnChannel < 16 && c < MIDI_NOTE_ON)				// It's not a status byte (remember, clock etc. can happen right now) 
 		{
 		// It's the next byte of NOTE ON, which holds the pitch so we can store it.
 		noteOnPitch[lastNoteOnChannel] = c;
@@ -996,7 +1004,9 @@ inline uint8_t postprocess(uint8_t c)
 			}
 		}
 
+#if (GATE != NONE && RESET != NONE && STOP != NONE)
 	emitClock(c);
+#endif
 	}
 	
 
@@ -1060,7 +1070,7 @@ inline void debugVal(uint8_t c)
 	
 inline void write(NeoSWSerial* softSerial, uint8_t c)
 	{
-	debug(softSerial, c);
+//	debug(softSerial, c);
 	softSerial->write(c);
 	}
 
@@ -1069,17 +1079,20 @@ uint8_t injectWaiting = false;
 uint8_t oldCC1Val = 255;
 uint8_t oldCC2Val = 255;
 uint8_t oldCC3Val = 255;
-uint8_t cc1Val = 0;
-uint8_t cc2Val = 0;
-uint8_t cc3Val = 0;
+uint8_t cc1Val = 255;
+uint8_t cc2Val = 255;
+uint8_t cc3Val = 255;
 
 // Called by the timer to set up injection every once in a while.  We read the pots, then set the CC values and try to inject.
 // If we fail (because a message is incomplete), we'll try to inject repeatedly after the message is done until we are successful.
 void setInject() 
 	{ 
-	 cc1Val = analogRead(CV_POT_IN1) >> 3;
-	 cc2Val = analogRead(CV_POT_IN2) >> 3;
-	 cc3Val = analogRead(CV_POT3) >> 3;
+	 uint8_t c1 = analogRead(CV_POT_IN1) >> 3;
+	 cc1Val = (cc1Val == 255 ? c1 : (c1 + cc1Val * 3) >> 2);
+	 uint8_t c2 = analogRead(CV_POT_IN2) >> 3;
+	 cc2Val = (cc2Val == 255 ? c2 : (c2 + cc2Val * 3) >> 2);
+	 uint8_t c3 = analogRead(CV_POT3) >> 3;
+	 cc3Val = (cc3Val == 255 ? c3 : (c3 + cc3Val * 3) >> 2);
 	 injectWaiting = true;
 	 // try now
 	 inject();
@@ -1092,7 +1105,10 @@ void injectCC(uint8_t param, uint8_t value)
 		{
 		if (INJECT_POTS_TO_OUTPUT[i] && outputs[i] != NULL)
 			{
-			write(outputs[i], MIDI_CC + OUTPUT_CHANNELS[i]); 
+			uint8_t ch = OUTPUT_CHANNELS[i];
+			if (ch == NONE) continue;
+			if (ch == ALL) ch = 1;
+			write(outputs[i], MIDI_CC + (ch - 1)); 
 			write(outputs[i], param); 
 			write(outputs[i], value);
 			}
@@ -1101,17 +1117,14 @@ void injectCC(uint8_t param, uint8_t value)
 
 // Injects CC messages into the stream, only when a message is completely written.
 void inject()
-	{
+	{	
 	if (injectWaiting && MESSAGE_COMPLETE())
 		{
-		injectCC(POT_1_CC - 1, cc1Val);
-		injectCC(POT_2_CC - 1, cc2Val);
-		injectCC(POT_3_CC - 1, cc3Val);
+		if (oldCC1Val != cc1Val) injectCC(POT_1_CC, oldCC1Val = cc1Val);
+		if (oldCC2Val != cc2Val) injectCC(POT_2_CC, oldCC2Val = cc2Val); 
+		if (oldCC3Val != cc3Val) injectCC(POT_3_CC, oldCC3Val = cc3Val);
 		injectWaiting = false;
 		}
-	oldCC1Val = cc1Val;
-	oldCC2Val = cc2Val;
-	oldCC3Val = cc3Val;
 	}
 
 
@@ -1170,10 +1183,10 @@ void loop()
     while(true)
     	{
     #if (INPUT == PORT1)
-    	uint8_t val = altsoftserial.available();
+    	uint8_t val = altSoftSerial.available();
 		for(uint8_t i = 0; i < val; i++)
 			{
-			handleRead(altsoftserial.read());
+			handleRead(altSoftSerial.read());
 			}
 	#elif (INPUT == USB)	
     	uint8_t val = NeoSerial.available();

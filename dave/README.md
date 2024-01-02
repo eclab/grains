@@ -2,7 +2,7 @@
 
 ## Note about the ALPHA Release
 
-This code compiles, but I have so far only tested USB_ROUTER MODE with and without DELEGATO.  I have tested absolutely nothing else and likely nothing else works yet.  But I thought you'd like to see it so far.
+This code compiles, but I have so far only tested USB_ROUTER MODE with and without DELEGATO.  Also the pots emit CCs properly.  I have tested absolutely nothing else and likely nothing else works yet.  But I thought you'd like to see it so far.
 
 ## About Dave (once we get the rest of the stuff working)
 
@@ -37,7 +37,7 @@ These are in fact the ONLY ports that GRAINS can send or receive MIDI on!
    or START/STOP GATE signals on PORT1, PORT2, and/or PORT3 as CV (not MIDI).
 
 6. You can set each of the three pots to output a CC.  You can choose the CC
-   parameter and the CC channel, and when you change a pot, it will inject a CC
+   parameter and the CC channel, and when you change a pot, it will INJECT a CC
    into the stream for PORT1, PORT2, and/or PORT3.  This allows you to change
    the MIDI parameters of the WonkyStuff MCO/1 for example.
 
@@ -159,7 +159,7 @@ and outputs reset and gate on PORT2 and PORT3.
 - The Pots should NOT be set to output anything
 
 
-### No Mode (Full Customiation)
+### No Mode (Full Customization)
 You can customize everything yourself.
 
 

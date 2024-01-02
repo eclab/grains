@@ -88,6 +88,11 @@ static boolean pleaseDie = false;
 		synchronized(lock) { port.writeBytes(new byte[] { (byte)(0x80 + channel), (byte)note, 0x40 }, 3); }
 		}
 		
+	public void programChange(int channel, int val)
+		{
+		synchronized(lock) { port.writeBytes(new byte[] { (byte)(0xC0 + channel), (byte)val }, 2); }
+		}
+		
 	public void panic()
 		{
 		if (port != null)
@@ -279,6 +284,60 @@ static boolean pleaseDie = false;
 		frame.pack();
 		}
 	
+	static void buildPC(JPanel putHere, JFrame frame)
+		{
+		putHere.setLayout(new BorderLayout());
+		
+		JPanel pcPanel = new JPanel();
+		pcPanel.setLayout(new BorderLayout());
+		JLabel pcLabel = new JLabel("<html><font size=-2>PC (Decimal)</font></html>");
+		pcPanel.add(pcLabel, BorderLayout.NORTH);
+		JTextField pcField = new JTextField("0");
+		pcPanel.add(pcField, BorderLayout.CENTER);
+		putHere.add(pcPanel, BorderLayout.CENTER);
+
+		JPanel chPanel = new JPanel();
+		chPanel.setLayout(new BorderLayout());
+		JLabel chLabel = new JLabel("<html><font size=-2>Ch (Decimal)</font></html>");
+		chPanel.add(chLabel, BorderLayout.NORTH);
+		JTextField chField = new JTextField("1");
+		chPanel.add(chField, BorderLayout.CENTER);
+		putHere.add(chPanel, BorderLayout.EAST);
+
+		JButton button = new JButton("Send PC");
+		button.addActionListener(new ActionListener()
+			{
+			public void actionPerformed(ActionEvent e)
+				{
+				int ch;
+				int pc;
+				try
+					{
+					 ch = Integer.valueOf(chField.getText());
+					}
+				catch (NumberFormatException ex) { chField.setText("BAD1"); return; }
+				if (ch < 1 || ch > 16) { chField.setText("BAD1"); return; }
+				try
+					{
+					 pc = Integer.valueOf(pcField.getText());
+					}
+				catch (NumberFormatException ex) { pcField.setText("BAD"); return; }
+				if (pc < 0 || pc > 127) { pcField.setText("BAD"); return; }
+				dave.programChange(ch, pc);
+				}
+			});
+		
+		JPanel panel0 = new JPanel();
+		panel0.setLayout(new BorderLayout());
+		panel0.add(new JPanel(), BorderLayout.CENTER);
+		panel0.add(button, BorderLayout.SOUTH);
+		putHere.add(panel0, BorderLayout.WEST);
+
+		putHere.revalidate();
+		putHere.repaint();
+		frame.pack();
+		}
+	
 	
 	public static void main(String[] args) throws Exception
 		{
@@ -288,18 +347,28 @@ static boolean pleaseDie = false;
 		frame.getContentPane().setLayout(new BorderLayout());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		
+		Box box = new Box(BoxLayout.Y_AXIS);
+		frame.getContentPane().add(box, BorderLayout.CENTER);
+		
 		JPanel serialPanel = new JPanel();
 		serialPanel.setLayout(new BorderLayout());
 		serialPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "GRAINS USB Device"));
 		buildSerialCombo(getSerialDevices(), serialPanel, frame);
-		frame.getContentPane().add(serialPanel, BorderLayout.CENTER);
+		box.add(serialPanel);
 
 		JPanel midiPanel = new JPanel();
 		midiPanel.setLayout(new BorderLayout());
 		midiPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "MIDI Device"));
 		buildMIDICombo(getMidiDevices(), midiPanel, frame);
-		frame.getContentPane().add(midiPanel, BorderLayout.SOUTH);
+		box.add(midiPanel);
 		
+		JPanel sendPCPanel = new JPanel();
+		sendPCPanel.setLayout(new BorderLayout());
+		sendPCPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "Program Change"));
+		buildPC(sendPCPanel, frame);
+		box.add(sendPCPanel);
+		
+
 		JButton button = new JButton("Reload Devices");
 		button.addActionListener(new ActionListener()
 			{
