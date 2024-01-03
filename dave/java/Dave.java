@@ -88,6 +88,23 @@ static boolean pleaseDie = false;
 		synchronized(lock) { port.writeBytes(new byte[] { (byte)(0x80 + channel), (byte)note, 0x40 }, 3); }
 		}
 		
+	public void noteOn(int channel, int note, int vel)
+		{
+		synchronized(lock) { port.writeBytes(new byte[] { (byte)(0x90 + channel), (byte)note, (byte)vel }, 3); }
+		}
+		
+	public void cc(int channel, int param, int val)
+		{
+		synchronized(lock) { port.writeBytes(new byte[] { (byte)(0xB0 + channel), (byte)param, (byte)val }, 3); }
+		}
+		
+	public void bend(int channel, int val)
+		{
+		int msb = (val + 8192) / 128;
+		int lsb = (val + 8192) % 128;
+		synchronized(lock) { port.writeBytes(new byte[] { (byte)(0xB0 + channel), (byte)msb, (byte)lsb }, 3); }
+		}
+		
 	public void programChange(int channel, int val)
 		{
 		synchronized(lock) { port.writeBytes(new byte[] { (byte)(0xC0 + channel), (byte)val }, 2); }
@@ -284,6 +301,49 @@ static boolean pleaseDie = false;
 		frame.pack();
 		}
 	
+	static void buildMCC(JPanel putHere, JFrame frame)
+		{
+		putHere.setLayout(new BorderLayout());
+
+		JButton cc = new JButton("CC");
+		cc.addActionListener(new ActionListener()
+			{
+			public void actionPerformed(ActionEvent e)
+				{
+				for(int i = 0; i < 15; i++)
+					dave.cc(i, 120, 0);		// all sound off, why not
+				}
+			});
+		putHere.add(cc, BorderLayout.WEST);
+
+		JButton bend = new JButton("Bend");
+		bend.addActionListener(new ActionListener()
+			{
+			public void actionPerformed(ActionEvent e)
+				{
+				for(int i = 0; i < 15; i++)
+					dave.bend(i, 0);
+				}
+			});
+		putHere.add(bend, BorderLayout.CENTER);
+
+		JButton noteOn = new JButton("Note On");
+		noteOn.addActionListener(new ActionListener()
+			{
+			public void actionPerformed(ActionEvent e)
+				{
+				for(int i = 0; i < 15; i++)
+					dave.noteOn(i, 60, 1);
+				}
+			});
+		putHere.add(noteOn, BorderLayout.EAST);
+
+		putHere.revalidate();
+		putHere.repaint();
+		frame.pack();
+		}
+		
+		
 	static void buildPC(JPanel putHere, JFrame frame)
 		{
 		putHere.setLayout(new BorderLayout());
@@ -362,6 +422,12 @@ static boolean pleaseDie = false;
 		buildMIDICombo(getMidiDevices(), midiPanel, frame);
 		box.add(midiPanel);
 		
+		JPanel mccPanel = new JPanel();
+		mccPanel.setLayout(new BorderLayout());
+		mccPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "Wonkystuff MCC/4"));
+		buildMCC(mccPanel, frame);
+		box.add(mccPanel);
+
 		JPanel sendPCPanel = new JPanel();
 		sendPCPanel.setLayout(new BorderLayout());
 		sendPCPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "Program Change"));

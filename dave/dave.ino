@@ -69,6 +69,10 @@
 ///
 /// 8. DAVE can send Debug messages back to its Java program via USB
 ///
+/// 9. At present DAVE can in many cases receive and forward Sysex messages no larger 
+///    than 32 bytes in length, not including the trailing F7.  You can increase this
+///    in the code by changing the #define MAX_MESSAGE_LENGTH value.  You could probably
+///    make this as large as, oh, 1024 if you really needed to.
 ///
 ///
 /// MODES
@@ -112,7 +116,7 @@
 /// redistribute channel 1 to channels 2, 3, 4, and 5.  To set this highest channel number, you
 /// change the following define.  By default it's 0.  0 or 1 mean "off":
 
-#define FILTER_MAX_CHANNEL 2			// Can be 0 or 1 [Both Off], or any value 2-16 
+#define FILTER_MAX_CHANNEL 4			// Can be 0 or 1 [Both Off], or any value 2-16 
 
 /// USB MPE MODE
 /// This mode takes MIDI input over USB and and outputs directly to PORT 1.  It assumes that we
@@ -211,8 +215,13 @@ const boolean INJECT_POTS_TO_OUTPUT[3] = { 1, 1, 1 };
 /// DE-LEGATO
 ///
 /// This sends a NOTE OFF before any NOTE ON, to guarantee that we do a gate prior to changing the pitch.
-/// This is specified on a per-channel basis.  By default, it's ON (1) for ALL OUTGOING CHANNELS.  But you
-/// can change it here:
+/// IMPORTANT NOTE: the purpose of De-Legato is to work around the fact that WonkyStuff's MCO/1 module is
+/// legato-only.  HOWEVER De-Legato will trigger a MIDI bug in the MASTER I/O: if it receives two note-offs
+/// in a row for the same note, its gate will hang permanently at HIGH.  So if you're sending signals to
+/// the MASTER I/O via its MIDI IN jack, you need to turn off De-Legato.
+///
+/// De-Legato is specified on a per-channel basis.  By default, it's ON (1) for ALL OUTGOING CHANNELS.  
+/// But you can change it here:
 
 /// This adds a NOTE_OFF before every NOTE_ON LEAVING on the following channels, if 1, else 0
 const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
@@ -231,7 +240,7 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define PORT2 3 
 #define PORT3 4
 #define ALL 17
-#define MPE 1
+#define USE_MPE 1
 #define DISTRIBUTE 2
 
 /////// You can customize these if MODE is NONE
@@ -245,7 +254,7 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define OUTPUT3 NONE		// can be NONE, PORT1, PORT2, or PORT3
 
 // How Input is filtered to Output
-#define FILTER_CHANNEL_1 	NONE		// can be NONE, MPE, or DISTRIBUTE
+#define FILTER_CHANNEL_1 	NONE		// can be NONE, USE_MPE, or DISTRIBUTE
 
 // MIDI channels for output ports
 #define OUTPUT_1_CHANNEL	// can be NONE, 1...16, or ALL
@@ -258,7 +267,7 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define STOP NONE			// can be PORT1, PORT2 or PORT3
 
 // Are we debugging to the USB port?
-#define DEBUG	1
+#define DEBUG	0
 
 // How many times a second do we update the pots?  If this is too fast, it will overwhelm MIDI
 // and create a lot of lag, but we'd like it to be fast enough to sound realistic. Higher values
@@ -330,7 +339,7 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define STOP PORT3
 #define RESET PORT2
 #define GATE NONE
-#define FILTER_CHANNEL_1 	MPE
+#define FILTER_CHANNEL_1 	USE_MPE
 
 #elif (MODE == USB_DISTRIBUTOR_BREAKOUT)
 #define INPUT USB
@@ -356,7 +365,7 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define STOP NONE
 #define RESET NONE
 #define GATE NONE
-#define FILTER_CHANNEL_1 	MPE
+#define FILTER_CHANNEL_1 	USE_MPE
 
 #elif (MODE == INTERNAL_DISTRIBUTOR_BREAKOUT)
 #define INPUT PORT1
@@ -863,7 +872,7 @@ void addToChannel(uint8_t* message, uint8_t len, uint8_t channel)
 void preprocess(uint8_t c)
 	{
 	parseMessage(c);		// also needed by inject CC
-#if (FILTER_CHANNEL_1 == MPE)
+#if (FILTER_CHANNEL_1 == USE_MPE)
 	if (MESSAGE_COMPLETE() && !systemRealTime && CHANNEL_1_MESSAGE(message))
 		{
 		// add to other channels
@@ -872,7 +881,6 @@ void preprocess(uint8_t c)
 		}
 	postprocess(c);
 #elif (FILTER_CHANNEL_1 == DISTRIBUTE && FILTER_MAX_CHANNEL > 1)
-	parseMessage(c);
 	if (MESSAGE_COMPLETE() && (!VOICE_MESSAGE(message) || CHANNEL_1_MESSAGE(message)))
 		{
 		if (systemRealTime) postprocess(systemRealTime);
@@ -911,7 +919,7 @@ inline void deLegato(uint8_t c)
 					{
 					write(outputs[i], MIDI_NOTE_OFF + channel);
 					write(outputs[i], noteOnPitch[channel]);
-					write(outputs[i], 0x00);					// Note off
+					write(outputs[i], 0x40);					// Note off
 					}
 				}
 			noteOnPitch[channel] = NO_PITCH;
@@ -1015,6 +1023,18 @@ inline uint8_t postprocess(uint8_t c)
 #endif
 	}
 	
+	// don't touch these, they're constants
+#define NONE 0
+#define USB_CLOCK 1
+#define USB_ROUTER 2
+#define USB_DISTRIBUTOR 3
+#define USB_MPE 4
+#define USB_DISTRIBUTOR_BREAKOUT 5
+#define USB_MPE_BREAKOUT 6
+#define INTERNAL_CLOCK 7
+#define INTERNAL_DISTRIBUTOR_BREAKOUT 8
+
+
 
 
 /// DEBUGGING
@@ -1022,22 +1042,31 @@ inline uint8_t postprocess(uint8_t c)
 #ifdef DEBUG
 String serialIdentifier(NeoSWSerial* softSerial)
 	{
-#if (MODE == USB_ROUTER)
+#if (MODE == NONE)
+	return "NONE? ";
+#elif (MODE == USB_CLOCK)
+	return "USB CLOCK? ";
+#elif (MODE == USB_ROUTER)
 	if (softSerial == &softSerial1) return "1: ";
 	return ("?: ");
 #elif (MODE == USB_DISTRIBUTOR)
 	if (softSerial == &softSerial1) return "1: ";
 	return ("?: ");
-#elif (MODE == USB_MPE_BREAKOUT)
+#elif (MODE == USB_MPE)
 	if (softSerial == &softSerial1) return "1: ";
-	if (softSerial == &softSerial2) return "2: ";
-	if (softSerial == &softSerial3) return "3: ";
 	return ("?: ");
 #elif (MODE == USB_DISTRIBUTOR_BREAKOUT)
 	if (softSerial == &softSerial1) return "1: ";
 	if (softSerial == &softSerial2) return "2: ";
 	if (softSerial == &softSerial3) return "3: ";
 	return ("?: ");
+#elif (MODE == USB_MPE_BREAKOUT)
+	if (softSerial == &softSerial1) return "1: ";
+	if (softSerial == &softSerial2) return "2: ";
+	if (softSerial == &softSerial3) return "3: ";
+	return ("?: ");
+#elif (MODE == INTERNAL_CLOCK)
+	return "INTERNAL CLOCK? ";
 #elif (MODE == INTERNAL_DISTRIBUTOR_BREAKOUT)
 	if (softSerial == &softSerial1) return "1: ";
 	if (softSerial == &softSerial1) return "2: ";
@@ -1076,7 +1105,7 @@ inline void debugVal(uint8_t c)
 	
 inline void write(NeoSWSerial* softSerial, uint8_t c)
 	{
-//	debug(softSerial, c);
+	debug(softSerial, c);
 	softSerial->write(c);
 	}
 
