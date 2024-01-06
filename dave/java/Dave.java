@@ -43,7 +43,7 @@ public class Dave implements Receiver
         return String.format("%02X", val);
         }
 
-public static final boolean debug = false;
+public static final boolean debug = false;		//true;
 static Thread thread = null;
 static boolean pleaseDie = false;
 
@@ -140,9 +140,13 @@ static boolean pleaseDie = false;
 				{
 				for(int i = 0; i < data.length; i++)
 					{
-					System.out.println(toHex(data[i]));
+//if ((data[i] & 0xFF) >= 0x90 && (data[i] & 0xFF) <= 0x9F)
+	System.out.println(toHex(data[i]));
 					}
 				}
+			if ((data[0] & 0xF0) != 0xE &&		// bend
+				(data[0] & 0xF0) != 0xA0 &&		// poly AT
+				(data[0] & 0xF0) != 0xD0)		// channel AT
 			if (port != null) synchronized(lock) { port.writeBytes(data, data.length); }
 			}
 		}
