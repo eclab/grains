@@ -3,11 +3,11 @@ By Sean Luke (sean@cs.gmu.edu)
 
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code), Oration/Oration 2, which are released under GPL 3.0 (as is Talkie), and likewise Elements, released under GPL 3.0 as it used GPL code.
 
-## Dave (New Year's Alpha Release)
+## Dave (Epiphany Alpha Release)
 
 A USB Router, Note Distributor, MPE breakout, and MIDI filter.  At present requires Mozzi mode (but not Mozzi), but we might be able to tweak it to use Grains.
 
-Status: This is an **ALPHA** release.  The code compiles and the USB ROUTER mode works, as well as the DELEGATO mode.  The pots emit CCs properly.  No other modes have even been tested, and likely nothing else works right now.  The Java program works reasonably well.  I'm providing it here early in case anyone wanted to bang on it.
+Status: This is an **ALPHA** release.  The code compiles and several modes work, but two are untested and others appear to require too much power for Grains to handle.  DELEGATO works, and the pots emit CCs properly. The Java program works reasonably well.  I'm providing it here early in case anyone wanted to bang on it.
 
 ## Quant
 
