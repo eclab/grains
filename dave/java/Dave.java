@@ -463,6 +463,22 @@ static boolean pleaseDie = false;
 		buttonPanel.add(button, BorderLayout.WEST);
 		buttonPanel.add(panic, BorderLayout.EAST);
 		frame.add(buttonPanel, BorderLayout.NORTH);
+		
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+		JMenuBar menubar = new JMenuBar();
+		JMenu fileMenu = new JMenu("File");
+		JMenuItem beats = new JMenuItem("Convert .mid file to Beats .h");
+		beats.addActionListener(new ActionListener()
+			{
+			public void actionPerformed(ActionEvent e)
+				{
+				new Beats(buttonPanel).doit();
+				}
+			});
+		fileMenu.add(beats);
+		menubar.add(fileMenu);
+		frame.setJMenuBar(menubar);
+		
 		frame.pack();
 		frame.setVisible(true);
 		}

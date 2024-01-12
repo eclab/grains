@@ -28,6 +28,10 @@ with some wiring.   See the file "docs/TRS.md" in the dave directory for more in
 DAVE works in one or more MODES and has a few configuration options beyond that.
 
 
+### Other Stuff
+
+Dave also has a facility to convert .mid files to .h files that you can cut and paste into GRAINS Beats.
+
 
 ## The Modes
 
