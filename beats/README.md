@@ -18,6 +18,19 @@ In the code you will define:
 
 Then you will describe the patterns.  Each pattern has a LENGTH, a NUMBER OF ITERATIONS (including FOREVER), and then four tracks of ones and zeros representing the steps.  It's pretty easy.
 
+## Easy Way to Write Beats
+
+You can write beats in your DAW and transfer them to BEATS.  It's easy.
+
+* Write the beats in your DAW as sixteenth notes.  The four tracks are Middle C (C3 in Ableton), D, E, and F.
+* Save as a MIDI file (.mid extension)
+* Download and install the DAVE java program from my GRAINS collection.
+* Run the DAVE program on your laptop.
+* Select File -> Convert .mid file to Beats .h
+* Select your .mid file
+* Select your output file (must end in ".h")
+* Open it up in a text editor and behold!
+
 ##  Configuration
 
 #### IN 1
