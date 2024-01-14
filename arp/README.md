@@ -24,6 +24,18 @@ but beware that it's not volt/octave at present, and GRAINS has a very limited r
 3.5 octaves, so it's easy to go out of bounds by transposing.  By default a CV input value of 0
 (detatched) is dead-center tranposed.
 
+
+## CLOCK OUT Option
+
+Mozzi isn't very fast in responding to new notes.  For example, if you connect an LFO to ARP's clock,
+and also connect to an envelope with a fast attack to change the filter, you'll find that the filter
+starts to open before Mozzi has changed the note.  If the attack is a bit slower it'll sound fine.
+But if you want a fast envelope, you need a way for ARP to tell the envelope that it has changed the
+pitch.  To do this, you can uncomment a #define in the code.
+
+This will change IN3 from TRANSPOSE to CLOCK OUT.  You can then hook IN3 up to your envelope and things
+should sound better.  But you've lost transposition.
+
 ## Range and Resolution
 
 It looks like GRAINS's range is about 42 notes (3.5 octaves or so), starting at a bit above 0V.  It's not capable of higher or lower values.

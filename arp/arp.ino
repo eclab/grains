@@ -38,6 +38,19 @@
 /// 3.5 octaves, so it's easy to go out of bounds by transposing.  By default a CV input value of 0
 /// (detatched) is dead-center tranposed.
 ///
+/// CLOCK OUT OPTION
+///
+/// Mozzi isn't very fast in responding to new notes.  For example, if you connect an LFO to ARP's clock,
+/// and also connect to an envelope with a fast attack to change the filter, you'll find that the filter
+/// starts to open before Mozzi has changed the note.  If the attack is a bit slower it'll sound fine.
+/// But if you want a fast envelope, you need a way for ARP to tell the envelope that it has changed the
+/// pitch.  To do this, you can uncomment (remove the // in front of) the following #define:
+
+// #define CLOCK_OUT
+
+/// This will change IN3 from TRANSPOSE to CLOCK OUT.  You can then hook IN3 up to your envelope and things
+/// should sound better.  But you've lost transposition.
+
 /// RANGE AND RESOLUTION
 /// 
 /// It looks like GRAINS's range is about 42 notes (3.5 octaves or so), starting at a bit
@@ -50,7 +63,7 @@
 /// Also note that GRAINS's resolution is only about 100 ticks per octave.  This means I
 /// can maybe get within 7 cents of a note but not nail it exactly.
 
-#define CLOCK_OUT
+
 
 /// CONFIGURATION
 ///
@@ -329,7 +342,7 @@ const PROGMEM uint8_t NOISE[8192]  =
 0xCC, 0xB2, 0x5A, 0xAA, 0xC1, 0xA0, 0xE7, 0x70, 0x93, 0xB1, 0xA7, 0xCD, 0x4D, 0x46, 0x3E, 0xEE, 0x85, 0xCE, 0x77, 0xE6, 0x7A, 0x3B, 0x1D, 0xF3, 0x11, 0x17, 0x82, 0x94, 0x6C, 0x8E, 0x63, 0x7E,
 	};
 
-#define CONTROL_RATE 8192
+#define CONTROL_RATE 256
 
 #include <MozziGuts.h>
 #include "EEPROM.h"
@@ -440,10 +453,11 @@ const int8_t minor[25] = { 0,   2,   3,   5,   7,   8,  10,
 
 void updateControl() 
     {
+
 		// smooth
-		var = (var * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3;
-		pat = (pat * 7 + mozziAnalogRead(CV_POT3)) >> 3;
-		ran = (ran * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3;
+		var = (var * 3 + mozziAnalogRead(CV_POT_IN1)) >> 2;
+		pat = (pat * 3 + mozziAnalogRead(CV_POT3)) >> 2;
+		ran = (ran * 3 + mozziAnalogRead(CV_POT_IN2)) >> 2;
 
     	// reset?
 		uint16_t r = mozziAnalogRead(CV_AUDIO_IN);
@@ -467,7 +481,7 @@ void updateControl()
 			{
 			clock = true;
 #ifdef CLOCK_OUT
-			clockOut = true;
+			clockOut = 200;
 #endif			
 			// okay, we clocked.  Figure the note
 
@@ -551,11 +565,15 @@ uint8_t clockCountDown;
 
 int updateAudio()    
     {
-    if (clockOut == true)
+#ifdef CLOCK_OUT
+    if (clockOut > 0)
     	{
-    	clockOut = false;
-    	clockCountDown = 255;
-    	digitalWrite(CV_IN3, 1);
+    	clockOut--;
+    	if (clockOut == 0)
+	    	{
+	    	clockCountDown = 255;
+	    	digitalWrite(CV_IN3, 1);
+	    	}
     	}
     else if (clockCountDown >= 1)
     	{
@@ -563,15 +581,16 @@ int updateAudio()
     		digitalWrite(CV_IN3, 0);
     	clockCountDown--;
     	}
-    	
+#endif    	
     return positions[out] - 244;
     }
 
 void setup() 
     {
 #ifdef CLOCK_OUT
-pinMode(CV_IN3, OUTPUT);
+	pinMode(CV_IN3, OUTPUT);
 #else
+	pinMode(CV_IN3, INPUT);
 	initializePitch(CV_IN3);
 #endif
     pinMode(CV_GATE_OUT, INPUT);
