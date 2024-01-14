@@ -3,6 +3,11 @@ By Sean Luke (sean@cs.gmu.edu)
 
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code), Oration/Oration 2, which are released under GPL 3.0 (as is Talkie), and likewise Elements, released under GPL 3.0 as it used GPL code.
 
+## Arp
+A 16-note random melody generator.  Think of it as Topograf / Lattice for notes rather than drums.  Requires Mozzi.
+
+Status: Working, but GRAINS's severe limits on note output range can hamper things.
+
 ## Dave (Epiphany Alpha Release)
 
 A USB Router, Note Distributor, MPE breakout, and MIDI filter.  At present requires Mozzi mode (but not Mozzi), but we might be able to tweak it to use Grains.
@@ -35,8 +40,7 @@ Status: Working.
 
 ## Scope
 
-An oscilloscope with four switchable analog/digital inputs, an extra digital input, and a little digital function generator.  Uses the Serial Plotter on your laptop's Arduino IDE. 
-
+An oscilloscope with four switchable analog/digital inputs, an extra digital input, and a little digital function generator.  Uses the Serial Plotter on your laptop's Arduino IDE.
 Status: Working
 
 ## Multilevel
