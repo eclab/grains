@@ -12,16 +12,25 @@ import java.io.*;
 import javax.sound.midi.*;
 import javax.sound.midi.spi.*;
 
+
+/** This class is just a utility to convert .mid files to .h header files sufficient to 
+	cut and paste for BEATS.  The .mid files must be MIDI type 1 I believe, and they should
+	consist solely of the keys for Middle C, D, E, and F.  Notes should be sixteenth notes (or rests)
+	starting at timestep 0.  You cannot have more than 256 sixteenth notes per key.
+*/
+
 public class Beats
 	{
-	JComponent component;
+	JComponent parent;
 	int max;
 	public static final int MAX_LENGTH = 256;
 	public static final int NUM_TRACKS = 4;
 	int[][] beats = new int[NUM_TRACKS][MAX_LENGTH];
 
 	
-	public Beats(JComponent c) { component = c; }
+	public Beats(JComponent parent) { parent = this.parent; }	
+	
+	//// HANDLING ERROR MESSAGES
 	
     ArrayList<JMenuItem> disabledMenus = null;
     int disableCount;
@@ -37,7 +46,7 @@ public class Beats
             {
             disabledMenus = new ArrayList<JMenuItem>();
             disableCount = 0;
-            JFrame ancestor = ((JFrame)(SwingUtilities.getWindowAncestor(component)));
+            JFrame ancestor = ((JFrame)(SwingUtilities.getWindowAncestor(parent)));
             if (ancestor == null) return;
             JMenuBar bar = ancestor.getJMenuBar();
             for(int i = 0; i < bar.getMenuCount(); i++)
@@ -97,7 +106,7 @@ public class Beats
         if (inSimpleError) return;
         inSimpleError = true;
         disableMenuBar();
-        JOptionPane.showMessageDialog(component, message, title, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(parent, message, title, JOptionPane.ERROR_MESSAGE);
         enableMenuBar();
         inSimpleError = false;
         }
@@ -112,10 +121,14 @@ public class Beats
         if (inSimpleError) return;
         inSimpleError = true;
         disableMenuBar();
-        JOptionPane.showMessageDialog(component, message, title, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE);
         enableMenuBar();
         inSimpleError = false;
         }
+        
+        
+        
+    //// IDENTIFYING NOTES FROM MIDI MESSAGES
 
     /** Returns true if the given message is a non-null ShortMessage of the type NOTE_ON with a non-zero velocity. */
     public boolean isNoteOn(MidiMessage message)
@@ -138,6 +151,10 @@ public class Beats
             (shortMessage.getCommand() == ShortMessage.NOTE_OFF));
         }
 
+
+
+
+	/// READING THE MIDI FILE AND LOADING THE ARRAY
 
 	public boolean read(Sequence sequence)
 		{
@@ -219,6 +236,10 @@ public class Beats
         return true;
 		}
 		
+		
+		
+	//// WRITING THE C HEADER FILE
+		
 	public boolean write(File file)
 		{
 		// convert to length as used by Beats
@@ -253,6 +274,11 @@ public class Beats
 			}
 		}
 		
+		
+	//// TOP LEVEL
+	//// doit() is called by a menu option.  It presents an OPEN FILE dialog box, then loads the MIDI file,
+	//// then presents a SAVE FILE dialog box, then saves the .h file.
+		
 	
     /** Returns a string which guarantees that the given filename ends with the given ending. */   
     public static String ensureFileEndsWith(String filename, String ending)
@@ -263,12 +289,12 @@ public class Beats
         else return filename + ending;
         }
 
-    public JFrame getFrame(JComponent component) { return (JFrame) SwingUtilities.getWindowAncestor(component); }
+    public JFrame getFrame(JComponent parent) { return (JFrame) SwingUtilities.getWindowAncestor(parent); }
 
 	public void doit()
 		{
 		// Load File
-		FileDialog fd = new FileDialog(getFrame(component), "Load MIDI File...", FileDialog.LOAD);
+		FileDialog fd = new FileDialog(getFrame(parent), "Load MIDI File...", FileDialog.LOAD);
 		fd.setFilenameFilter(new FilenameFilter()
 			{
 			public boolean accept(File dir, String name)
@@ -303,7 +329,7 @@ public class Beats
     		if (!read(sequence)) return;
     		}
     	
-        FileDialog fd2 = new FileDialog(getFrame(component), "Save Beats Data...", FileDialog.SAVE);
+        FileDialog fd2 = new FileDialog(getFrame(parent), "Save Beats Data...", FileDialog.SAVE);
                 
         disableMenuBar();
         fd2.setVisible(true);

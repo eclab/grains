@@ -4,7 +4,8 @@ While the WonkyStuff MB/1 has a great many MIDI OUT sockets, the WonkyStuff MB/1
 
 ## FIRST A DISCLAIMER
 
-I have so connected to the MB/1 and the MASTER I/O (R4) and both seem to work okay.  Both TangibleWaves and WonkyStuff have implied that this will work just fine but **I WILL NOT BE HELD RESPONSIBLE** for any damage you incur trying this. For example, I don't have verification from them that nothing will happen if you connect the wires in the wrong way, though that's probably the case.
+I have so connected to the MB/1 and the MASTER I/O (R4) and both seem to work okay.  From discussion with both Tangible Waves and WonkyStuff, it seems that it's likely you won't hurt anything in these modes by
+connecting to them, but **I WILL NOT BE HELD RESPONSIBLE** for any damage you incur trying this.
 
 ## Basic Information
 
@@ -22,6 +23,16 @@ You can attach bare wires, Dupont 0.1" cables, or your nice TangibleWaves cables
 
 The screw terminal block breaks out the TRS tip, ring, and sleeve to three wire screws so we can easily attach our two wires.  Here's the configuration I am using.  Note that my block says "L" (for "Left" -- the TIP), "R" (for "Right" -- the RING) and the Ground symbol for the Sleeve.  I have connected the GRAINS output to "R" and +5V to "L".  You can get +5V from current Master I/O units, or from modules 4ATT/MIX, or even directly from the bus cable itself if you're careful.  I'd make the +5V wire red to make it clear what's what.
 
-Once you've hooked up the wires, you just plug the terminal block into the TRS socket.  Once again, I'm providing this information to early adopters, but I WILL NOT BE HELD RESPONSIBLE if this information is wrong and/or somehow you damage something.  Caveat Emptor.
+Once you've hooked up the wires, you just plug the terminal block into the TRS socket.  Once again, I'm providing this information to early adopters, but **I WILL NOT BE HELD RESPONSIBLE** if this information is wrong and/or somehow you damage something.  Caveat Emptor.
 
 ![Configuration of the screw terminal block attached to an MB/1.](TRS.png)
+
+## Why This Works
+
+MIDI requires that there be certain resistors in place to prevent the LED in the optoisolator from frying from too much current.  Specifically, you a 220 ohm or larger resistor in series with the SOURCE (Resistor Ra on the schematic below), a second 220 ohm built-in into the internal TRS jack (Rb on the schematic) and a third 220 ohm or larger resister in series with the SINK (Rc on the schematic).  All told this is 660 ohms or more.
+
+The 220 ohm Rb resistor is built into the jacks.  The 5V SOURCE from the MASTER I/O, and the same from the BRAEBOARD, have a 100 ohm resistor in series.  This isn't enough, the SINK (the Digital OUT port) has a 1K ohm resistor in series.  All told this is 1320 ohms.
+
+Finally, the 5V SOURCE from the 4ATT/MIX has a 1K ohm resistor rather than a 100 ohm resistor, and the MIDI schematic has a diode for reverse polarity if you mix things up (but don't do that).
+
+![MIDI Electrical Diagram](MIDI.jpg)
