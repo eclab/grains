@@ -2,7 +2,7 @@
 
 ## Note about the ALPHA Release
 
-Dave runs in several modes.  It works pretty well in USB\_ROUTER\_MODE, USB\_MPE\_MODE, and USB\_DISTRIBUTOR\_MODE.  DELEGATO also works as a feature, and so do the POT CCs.  I have not tested the CLOCK modes yet.
+Dave runs in several modes.  It works pretty well in USB\_CLOCK\_MODE, USB\_ROUTER\_MODE, USB\_MPE\_MODE, and USB\_DISTRIBUTOR\_MODE.  DELEGATO also works as a feature, and so do the POT CCs.  
 
 What does NOT work are the various BREAKOUT modes, because DAVE simply isn't fast enough to pump out more than one serial port when getting serious MIDI as input, resulting in stuck or hung notes.  This is unfortunate because it means you can't use Dave to do polyphony without the MB/1.   Also the POT CCs can put stress on MIDI as discussed below.
 
@@ -10,6 +10,8 @@ What does NOT work are the various BREAKOUT modes, because DAVE simply isn't fas
 
 Dave is a MIDI router and utility which can do a variety of things.  Dave is meant to run 
 on the AE Modular GRAINS, but it could be adapted to any Arduino.
+
+Set your GRAINS to GRAINS Mode.  Dave does not work in Mozzi mode.
 
 DAVE REQUIRES that you install the NeoHWSerial library from the Arduino library manager.  It has
 its own customized (and bug-fixed) copy of the NeoSWSerial library, so do not install
