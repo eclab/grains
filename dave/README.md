@@ -91,6 +91,34 @@ with careful wiring to create an MPE-controlled polysynth.
 - The Pots *can* be set to output CCs of your choice.
 
 
+### USB TRIGGERS MODE
+This takes four different MIDI notes from USB and generates drum triggers, similar to a WonkyStuff
+ MTR/8.  The notes are Middle C (60), D (62), E (64), and F (65), but you can change
+them if you needed to for some reason by modifying the "triggerNotes" variable below: it
+holds the MIDI pitch values for each of the four notes.
+
+- AUDIO OUT outputs trigger 1 (Middle C)
+- IN 3 outputs trigger 2 (D)
+- AUDIO IN outputs trigger 3 (E)
+- DIGITAL OUT outputs trigger 4 (F)
+- The Pots do not do anything (if you can think of something useful they could do, let me know).
+
+
+### NOTE GENERATOR MODE.  This only produces MIDI: you could use it to trigger a WonkyStuff MCO/4
+from a regular setup without USB.  It takes a pitch CV and a gate in and generates a note 
+for the MCO/4, and it can also still produce the THREE output CCs, but one of them is now 
+from a CV in.
+
+- DIGITAL OUT outputs MIDI from USB, with the note data being generated
+- IN 1 receives the pitch.  Set POT 1 to MAN, or else adjust POT 1 to scale things 
+  (probably around 2'oclock) to 1V/oct
+- AUDIO IN receives the gate
+- Pots 2 and 3 can be set to output CCs of your choice.  
+- IN 3 can be set to output the CC normally reserved for POT 1.  It will not output any CC value
+  less than 8, as this likely indicates that IN 3 is disconnected.
+
+
+
 ### What Doesn't Work Yet (or At All)
 There are a few other modes which have not been tested yet or are not working properly due
 to speed problems with GRAINS's serial ports:
@@ -105,8 +133,8 @@ to speed problems with GRAINS's serial ports:
   Unfortunately IN 3 is not reliable as a MIDI transmitter, and two output serial ports
   (DIGITAL OUT, AUDIO IN) are too slow, sometimes resulting in stuck notes.
 
-- INTERNAL CLOCK MODE.  This is similar to USB Clock Mode but takes MIDI Input from DIGITAL IN
-  rather than USB.  It's not been tested yet.
+- INTERNAL TRIGGER MODE.  This takes three different MIDI notes, notionally from a WonkyStuff MB/1,
+  and generates drum triggers, similar to a WonkyStuff MTR/8.  It's not been tested yet.
 
 
 ## About the Pot CCs

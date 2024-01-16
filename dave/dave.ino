@@ -84,6 +84,33 @@
 /// - The Pots *can* be set to output CCs of your choice.
 ///
 ///
+/// USB TRIGGERS MODE
+/// This takes four different MIDI notes from USB and generates drum triggers, similar to a WonkyStuff
+///  MTR/8.  The notes are Middle C (60), D (62), E (64), and F (65), but you can change
+/// them if you needed to for some reason by modifying the "triggerNotes" variable below: it
+/// holds the MIDI pitch values for each of the four notes.
+/// 
+/// - AUDIO OUT outputs trigger 1 (Middle C)
+/// - IN 3 outputs trigger 2 (D)
+/// - AUDIO IN outputs trigger 3 (E)
+/// - DIGITAL OUT outputs trigger 4 (F)
+/// - The Pots do not do anything (if you can think of something useful they could do, let me know).
+/// 
+///
+/// NOTE GENERATOR MODE.  This only produces MIDI: you could use it to trigger a WonkyStuff MCO/4
+/// from a regular setup without USB.  It takes a pitch CV and a gate in and generates a note 
+/// for the MCO/4, and it can also still produce the THREE output CCs, but one of them is now 
+/// from a CV in.
+/// 
+/// - DIGITAL OUT outputs MIDI from USB, with the note data being generated
+/// - IN 1 receives the pitch.  Set POT 1 to MAN, or else adjust POT 1 to scale things 
+///   (probably around 2'oclock) to 1V/oct
+/// - AUDIO IN receives the gate
+/// - Pots 2 and 3 can be set to output CCs of your choice.  
+/// - IN 3 can be set to output the CC normally reserved for POT 1.  It will not output any CC value
+///   less than 8, as this likely indicates that IN 3 is disconnected.
+///
+///
 /// There are a few other modes which have not been tested yet or are not working properly due
 /// to speed problems with GRAINS's serial ports:
 ///
@@ -99,17 +126,6 @@
 ///   (DIGITAL OUT, AUDIO IN) are too slow, sometimes resulting in stuck notes.  So it's probably
 ///   gonna get removed.
 ///
-/// - INTERNAL CLOCK MODE.  This is similar to USB Clock Mode but takes MIDI Input from DIGITAL IN
-///   rather than USB.  It's not been tested yet.
-///
-/// - GENERATOR MODE.  This only produces MIDI: you could use it to drive a WonkyStuff MCO/4
-///   from a regular setup.  It takes a pitch CV and a gate in and generates a note for the MCO/4,
-///   and it can also still produce the three output CCs, but one of them is now from a CV in.
-///   Delegato and clock division are of course ignored.  It's not been tested yet.
-///
-/// - USB TRIGGER MODE.  This takes four different MIDI notes from USB and generates drum triggers,
-///   similar to a WonkyStuff MTR/8.  It's not been tested yet.
-///
 /// - INTERNAL TRIGGER MODE.  This takes three different MIDI notes, notionally from a WonkyStuff MB/1,
 ///   and generates drum triggers, similar to a WonkyStuff MTR/8.  It's not been tested yet.
 ///
@@ -117,25 +133,24 @@
 /// To set the MODE, you change the #define MODE below
 
 // don't touch these, they're constants
-#define USB_CLOCK 1								// Inadequately tested
+#define USB_CLOCK 1
 #define USB_ROUTER 2
 #define USB_DISTRIBUTOR 3
 #define USB_MPE 4
-#define USB_DISTRIBUTOR_BREAKOUT 5			 	// I'd not do this
-#define USB_MPE_BREAKOUT 6						// I'd not do this
-#define INTERNAL_CLOCK 7						// Untested
-#define GENERATOR 8
-#define USB_TRIGGERS 9
-#define INTERNAL_TRIGGERS 10
+#define USB_TRIGGERS 5
+#define INTERNAL_TRIGGERS 6
+#define NOTE_GENERATOR 7
+//#define USB_DISTRIBUTOR_BREAKOUT 8			 	// Not working, serial isn't fast enough
+//#define USB_MPE_BREAKOUT 9						// Not working, serial isn't fast enough
 
 /// SET THE MODE HERE
-#define MODE	 USB_CLOCK				// Change this to one of the MODES above
+#define MODE	 NOTE_GENERATOR				// Change this to one of the MODES above
 
-/// SET THE NUMBER OF VOICES (for MPE and DISTRIBUTOR MODES) HERE
+/// SET THE NUMBER OF VOICES (for USB_MPE and USB_DISTRIBUTOR MODES) HERE
 #define NUM_VOICES 3			// Can be 0 or 1 [Both Off], or any value 2-16 
 
-/// SET THE CHANNEL THAT GENERATOR MODE PRODUCES HERE
-#define GENERATOR_CHANNEL 2	
+/// SET THE CHANNEL THAT NOTE_GENERATOR MODE PRODUCES HERE
+#define NOTE_GENERATOR_CHANNEL 2	
 
 /// SET THE NOTES THAT THE TRIGGER MODES RESPOND TO (INTERNAL USES THE FIRST THREE)) 
 uint8_t triggerNotes[4] = { 60, 62, 64, 65 };		// MIDDLE C, D, E, and F
@@ -145,7 +160,7 @@ uint8_t triggerNotes[4] = { 60, 62, 64, 65 };		// MIDDLE C, D, E, and F
 /// CUSTOMIZING THE POT CC OUTPUTS
 ///
 /// In modes other than the CLOCK modes, you can change up to three CC parameters with the pots.
-/// This is not available in the USB_CLOCK or INTERNAL_CLOCK modes.
+/// This is not available in the USB_CLOCK mode.
 ///
 /// WARNING: if you play or release notes immediately after or during changing the pots, DAVE
 /// may not see these notes, possibly resulting in stuck or oddly behaving note states.  This is
@@ -286,6 +301,7 @@ NeoSWSerial softSerial(BLANK_RX, CV_GATE_OUT, PIN_UNUSED);
 #define FILTER_CHANNEL_1 	USE_MPE
 NeoSWSerial softSerial(BLANK_RX, CV_GATE_OUT, PIN_UNUSED);
 
+/*
 #elif (MODE == USB_DISTRIBUTOR_BREAKOUT)
 #define CONFIGURATION USB_TO_BOTH
 #define OUTPUT_1_CHANNEL 2
@@ -301,18 +317,11 @@ NeoSWSerial softSerial(BLANK_RX, CV_GATE_OUT, CV_AUDIO_IN);
 #define FILTER_CHANNEL_1 	USE_MPE
 #define NUM_VOICES 2
 NeoSWSerial softSerial(BLANK_RX, CV_GATE_OUT, CV_AUDIO_IN);
+*/
 
-#elif (MODE == INTERNAL_CLOCK)
-#define CONFIGURATION PORT_1_TO_NONE
-#define POT_1_CC NONE
-#define POT_2_CC NONE
-#define POT_3_CC NONE
-#define FILTER_CHANNEL_1 	NONE
-NeoSWSerial softSerial(CV_GATE_OUT, CV_AUDIO_IN, PIN_UNUSED);
-
-#elif (MODE == GENERATOR)
+#elif (MODE == NOTE_GENERATOR)
 #define CONFIGURATION NONE_TO_PORT_1
-#define OUTPUT_1_CHANNEL GENERATOR_CHANNEL
+#define OUTPUT_1_CHANNEL NOTE_GENERATOR_CHANNEL
 #define FILTER_CHANNEL_1 	NONE
 NeoSWSerial softSerial(BLANK_RX, CV_GATE_OUT, PIN_UNUSED);
 
@@ -434,18 +443,17 @@ void setup()
 	pinMode(CV_GATE_OUT, INPUT);
 	pinMode(CV_AUDIO_OUT, OUTPUT);
 	softSerial.begin(MIDI_RATE);
-#elif (MODE == GENERATOR)
+#elif (MODE == NOTE_GENERATOR)
 	pinMode(CV_AUDIO_IN, INPUT);
 	pinMode(CV_IN3, INPUT);
 	pinMode(CV_GATE_OUT, OUTPUT);
 	softSerial.begin(MIDI_RATE);
+	NeoSerial.begin(MIDI_RATE);
 	initializePitch(CV_POT_IN1);
 #else
 	pinMode(CV_AUDIO_IN, OUTPUT);
 	pinMode(CV_IN3, OUTPUT);
 	pinMode(CV_AUDIO_OUT, OUTPUT);
-
-
 #if (CONFIGURATION == USB_TO_NONE || CONFIGURATION == USB_TO_PORT_1 || CONFIGURATION == USB_TO_BOTH)
 	NeoSerial.begin(MIDI_RATE);
 	pinMode(CV_GATE_OUT, OUTPUT);
@@ -885,8 +893,9 @@ inline void write(uint8_t c)
 	}
 
 
+#define MAX_TRIGGER_COUNTDOWN 512
 uint8_t triggerPins[4] = { CV_AUDIO_OUT, CV_IN3, CV_AUDIO_IN, CV_GATE_OUT };
-uint8_t triggerCountdowns[4] = { 0, 0, 0, 0 };
+uint16_t triggerCountdowns[4] = { 0, 0, 0, 0 };
 void doTriggers()
 	{
 #if (MODE == USB_TRIGGERS)
@@ -895,10 +904,10 @@ for(uint8_t i = 0; i < 4; i++)
 for(uint8_t i = 0; i < 3; i++)
 #endif
 		{
-		if (message[1] == triggerNotes[i])
+		if (NOTE_ON(message) && message[1] == triggerNotes[i])
 			{
 			digitalWrite(triggerPins[i], 1);
-			triggerCountdowns[i] = MAX_COUNTDOWN;
+			triggerCountdowns[i] = MAX_TRIGGER_COUNTDOWN;
 			break;
 			}
 		}
@@ -940,27 +949,29 @@ uint8_t cc3Val = 255;
 // If we fail (because a message is incomplete), we'll try to inject repeatedly after the message is done until we are successful.
 void setInject() 
 	{ 
-#if (MODE == GENERATOR)
+#if (MODE == NOTE_GENERATOR)
 	 uint8_t c1 = analogRead(CV_IN3) >> 3;
 	 cc1Val = (cc1Val == 255 ? c1 : (c1 + cc1Val * 3) >> 2);
 	 uint8_t c2 = analogRead(CV_POT_IN2) >> 3;
 	 cc2Val = (cc2Val == 255 ? c2 : (c2 + cc2Val * 3) >> 2);
 	 uint8_t c3 = analogRead(CV_POT3) >> 3;
 	 cc3Val = (cc3Val == 255 ? c3 : (c3 + cc3Val * 3) >> 2);
-	 uint8_t g = digitalRead(CV_AUDIO_IN);
+	 uint8_t g = digitalRead(CV_AUDIO_IN);		// Gate In
 	 if (g && !gateIn) // Note on
 	 	{
 	 	pitchIn = getPitch(CV_POT_IN1);
 		write(MIDI_NOTE_ON + OUTPUT_1_CHANNEL);
-		write(pitchIn);
+		write(pitchIn + 24);
 		write(0x40);
+		gateIn = true;
 	 	}
 	 else if (!g && gateIn)	// Note off
 	 	{
 	 	// use the previous pitchIn
 		write(MIDI_NOTE_OFF + OUTPUT_1_CHANNEL);
-		write(pitchIn);
+		write(pitchIn + 24);
 		write(0x40);
+		gateIn = false;
 	 	}
 #else
 	 uint8_t c1 = analogRead(CV_POT_IN1) >> 3;
@@ -995,7 +1006,11 @@ void inject()
 	{	
 	if (injectWaiting && MESSAGE_COMPLETE())
 		{
-		if (oldCC1Val != cc1Val) injectCC(POT_1_CC, oldCC1Val = cc1Val);
+#if (MODE == NOTE_GENERATOR)
+ 		if (cc1Val >= 8 && oldCC1Val != cc1Val) injectCC(POT_1_CC, oldCC1Val = cc1Val);		// don't inject a low value, probably disconnected
+#else
+ 		if (oldCC1Val != cc1Val) injectCC(POT_1_CC, oldCC1Val = cc1Val);
+#endif
 		if (oldCC2Val != cc2Val) injectCC(POT_2_CC, oldCC2Val = cc2Val); 
 		if (oldCC3Val != cc3Val) injectCC(POT_3_CC, oldCC3Val = cc3Val);
 		injectWaiting = false;
@@ -1018,7 +1033,7 @@ void handleRead(uint8_t c)
 
 void loop()
     {
-#if (MODE == GENERATOR)
+#if (MODE == NOTE_GENERATOR)
 	setInject();
 	// do nothing
 #elif (MODE == USB_TRIGGERS)
@@ -1081,7 +1096,7 @@ void loop()
 
 #endif
     
-    #if (CONFIGURATION == INTERNAL_CLOCK || MODE == INTERNAL_TRIGGERS)
+    #if (MODE == INTERNAL_TRIGGERS)
     	uint8_t val = softSerial.available();
 		for(uint8_t i = 0; i < val; i++)
 			{

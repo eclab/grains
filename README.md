@@ -10,9 +10,9 @@ Status: Working, but GRAINS's severe limits on note output range can hamper thin
 
 ## Dave (Epiphany Alpha Release)
 
-A USB Router, Note Distributor, MPE breakout, and MIDI filter.  At present requires Mozzi mode (but not Mozzi), but we might be able to tweak it to use Grains.
+A USB Router, Note Distributor, MPE breakout, and MIDI filter.  At present requires Grains mode.
 
-Status: This is an **ALPHA** release.  The code compiles and several modes work, but two are untested and others appear to require too much power for Grains to handle.  DELEGATO works, and the pots emit CCs properly. The Java program works reasonably well.  I'm providing it here early in case anyone wanted to bang on it.
+Status: This is an **ALPHA** release.  The code compiles and most modes work, but one is still untested and two others appear to require too much power for Grains to handle.  DELEGATO works, and the pots emit CCs properly. The Java program works reasonably well.  I'm providing it here early in case anyone wanted to bang on it.
 
 ## Quant
 
