@@ -61,8 +61,4 @@ In short, this is the likely situation for SINKS and 5V SOURCES:
 
 The MIDI schematic has a diode for reverse polarity if you mix things up (but don't do that).  I have swapped the two wires several times with no ill effects, fingers crossed.
 
-### Connection from WonkyStuff THRU on MCO/1, MCC/4, or the MB/1 OUT is NOT Safe with a MASTER I/
-The MB/1 has a 100 Ohm resister at the SINK.  
-The MCO/1 has a MIDI Thru which provides 220 ohms per the spec.  This is the SINK.   If you use the MASTER I/O or BRAEDBOARD 5V as the SOURCE, that will only total to 540 ohms, not 660.  It probably would be just fine, but I'd not risk it without adding another resistor in-line.  Similarly, the various MIDI out sockets on the MB/1 are probably 220 ohms, with the same issue.
-
 ![MIDI Electrical Diagram](MIDI.jpg)
