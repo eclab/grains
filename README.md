@@ -8,11 +8,11 @@ A 16-note random melody generator.  Think of it as Topograf / Lattice for notes 
 
 Status: Working, but GRAINS's severe limits on note output range can hamper things.
 
-## Dave (Epiphany Alpha Release)
+## Dave 
 
-A USB Router, Note Distributor, MPE breakout, and MIDI filter.  At present requires Grains mode.
+A USB Router, Note Distributor, MPE breakout, and MIDI filter.  Requires Grains mode.
 
-Status: This is an **ALPHA** release.  The code compiles and most modes work, but one is still untested and two others appear to require too much power for Grains to handle.  DELEGATO works, and the pots emit CCs properly. The Java program works reasonably well.  I'm providing it here early in case anyone wanted to bang on it.
+Status: All current modes are working.  Lots of stuff, like USB MIDI clock, drum triggers, MIDI routing, MPE, note distribution, removing legato from Wonkystuff modules, CC injection from pots, creation of MIDI notes from gate/cv, etc.  There's also instructions for routing MIDI directly from GRAINS into your MB/1 or MASTER I/O via their TRS inputs, if you're daring and willing to accidently fry your MASTER I/O or MB/1.  :-)
 
 ## Quant
 
