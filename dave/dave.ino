@@ -8,17 +8,23 @@
 /// Dave is a MIDI router and utility which can do a variety of things.  Dave is meant to run 
 /// on the AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
-/// SET GRAINS TO GRAINS MODE.
+/// Set your GRAINS to GRAINS Mode.  Dave does not work in Mozzi mode.
 ///
 /// DAVE REQUIRES that you install the NeoHWSerial library from the Arduino library manager.  It has
 /// its own customized (and bug-fixed) copy of the NeoSWSerial library, so do not install
 /// that one (and in fact you may need to uninstall it).
 ///
 /// Dave runs in a variety of modes.  Many of these modes are meant to receive MIDI
-/// over USB and route it to WonkyStuff modules or to the MASTER I/O.  The GRAINS USB 
-/// port cannot present itself as a MIDI Device, so Dave works with a Java program, 
-/// also called Dave, which receives MIDI from your DAW or controller and sends it over 
-/// the USB port to the GRAINS.  This program is located in the "java" subdirectory.
+/// over USB, or in one case from the WonkyStuff MB/1, and route it to WonkyStuff 
+/// modules or to the MASTER I/O.  The GRAINS USB port cannot present itself as a 
+/// MIDI Device, so Dave works with a Java program, also called Dave, which receives 
+/// MIDI from your DAW or controller and sends it over the USB port to the GRAINS.  
+/// This program is located in the "java" subdirectory.
+///
+/// The general hookup to a controller as follows: DAVE <---> Dave Java Program <----> Controller Device
+/// The hookup to a typical DAW is:  DAVE <---> Dave Java Program <---> MIDI Loopback Device <---> DAW
+///     (Though Logic on the Mac doesn't need a Loopback.  Ableton does)
+/// See the Dave java program README for more information.
 ///
 /// You may have noticed that neither the MB/1 nor MASTER I/O have a WonkyStuff-style MIDI In port.
 /// They just have MIDI TRS-B jacks.  However it is possible to send MIDI to them from the GRAINS
@@ -30,7 +36,7 @@
 ///
 /// THE MODES
 ///
-/// Here are the basic modes:
+/// Here are the modes:
 ///
 /// USB CLOCK MODE
 /// This mode takes MIDI input over USB and outputs clock signals.
@@ -97,10 +103,25 @@
 /// - The Pots do not do anything (if you can think of something useful they could do, let me know).
 /// 
 ///
+/// - INTERNAL TRIGGERS MODE
+/// This is basically the same thing as USB TRIGGERS MODE except that the MIDI input is not
+/// via USB but via a local MIDI socket, such as from a Wonkystuff MB/1.  There are only three
+/// trigger notes: Middle C (60), D (62), and E (64), but you can change
+/// them if you needed to for some reason by modifying the *first three* values in the 
+/// "triggerNotes" variable below: it holds the MIDI pitch values for each of the three/four
+/// notes used by the INTERNAL TRIGGERS and by USB TRIGGERS modes.
+///
+/// - AUDIO OUT outputs trigger 1 (Middle C)
+/// - IN 3 outputs trigger 2 (D)
+/// - AUDIO IN outputs trigger 3 (E)
+/// - DIGITAL OUT takes MIDI IN
+/// - The Pots do not do anything (if you can think of something useful they could do, let me know).
+///
+///
 /// NOTE GENERATOR MODE.  This only produces MIDI: you could use it to trigger a WonkyStuff MCO/4
 /// from a regular setup without USB.  It takes a pitch CV and a gate in and generates a note 
-/// for the MCO/4, and it can also still produce the THREE output CCs, but one of them is now 
-/// from a CV in.
+/// on CHANNEL 1 for the MCO/4, and it can also still produce the THREE output CCs, but one of 
+/// them is now from a CV in.
 /// 
 /// - DIGITAL OUT outputs MIDI from USB, with the note data being generated
 /// - IN 1 receives the pitch.  Set POT 1 to MAN, or else adjust POT 1 to scale things 
@@ -109,25 +130,6 @@
 /// - Pots 2 and 3 can be set to output CCs of your choice.  
 /// - IN 3 can be set to output the CC normally reserved for POT 1.  It will not output any CC value
 ///   less than 8, as this likely indicates that IN 3 is disconnected.
-///
-///
-/// There are a few other modes which have not been tested yet or are not working properly due
-/// to speed problems with GRAINS's serial ports:
-///
-/// - USB DISTRIBUTOR BREAKOUT MODE.  This is like USB Distributor Mode but routes Channel 2
-///   out DIGITAL OUT, routes Channel 3 out AUDIO IN, and Routes Channel 4 out IN 3.
-///   Unfortunately IN 3 is not reliable as a MIDI transmitter, and two output serial ports
-///   (DIGITAL OUT, AUDIO IN) are too slow, sometimes resulting in stuck notes.  So it's probably
-///   gonna get removed.
-///
-/// - USB MPE BREAKOUT MODE.  This is like USB MPE Mode but routes Channel 2
-///   out DIGITAL OUT, routes Channel 3 out AUDIO IN, and Routes Channel 4 out IN 3.
-///   Unfortunately IN 3 is not reliable as a MIDI transmitter, and two output serial ports
-///   (DIGITAL OUT, AUDIO IN) are too slow, sometimes resulting in stuck notes.  So it's probably
-///   gonna get removed.
-///
-/// - INTERNAL TRIGGER MODE.  This takes three different MIDI notes, notionally from a WonkyStuff MB/1,
-///   and generates drum triggers, similar to a WonkyStuff MTR/8.  It's not been tested yet.
 ///
 ///
 /// To set the MODE, you change the #define MODE below
@@ -140,20 +142,19 @@
 #define USB_TRIGGERS 5
 #define INTERNAL_TRIGGERS 6
 #define NOTE_GENERATOR 7
-//#define USB_DISTRIBUTOR_BREAKOUT 8			 	// Not working, serial isn't fast enough
-//#define USB_MPE_BREAKOUT 9						// Not working, serial isn't fast enough
 
 /// SET THE MODE HERE
-#define MODE	 NOTE_GENERATOR				// Change this to one of the MODES above
+#define MODE	 USB_MPE				// Change this to one of the MODES above
 
 /// SET THE NUMBER OF VOICES (for USB_MPE and USB_DISTRIBUTOR MODES) HERE
 #define NUM_VOICES 3			// Can be 0 or 1 [Both Off], or any value 2-16 
 
-/// SET THE CHANNEL THAT NOTE_GENERATOR MODE PRODUCES HERE
-#define NOTE_GENERATOR_CHANNEL 2	
+/// SET THE CHANNEL THAT NOTE_GENERATOR PRODUCES HERE
+#define NOTE_GENERATOR_CHANNEL 1	
 
-/// SET THE NOTES THAT THE TRIGGER MODES RESPOND TO (INTERNAL USES THE FIRST THREE)) 
+/// SET THE NOTES THAT THE USB_TRIGGERS AND INTERNAL_TRIGGERS MODES MODES RESPOND TO (INTERNAL_TRIGGERS USES JUST THE FIRST THREE)
 uint8_t triggerNotes[4] = { 60, 62, 64, 65 };		// MIDDLE C, D, E, and F
+
 
 
 
@@ -170,7 +171,7 @@ uint8_t triggerNotes[4] = { 60, 62, 64, 65 };		// MIDDLE C, D, E, and F
 ///
 /// The CC PARAMETER for each Pot is defined with the following #defines:
 
-#define POT_1_CC	5		// Wonkystuff MCO/1 Sub.  Can be any value 1...128 OR NONE
+#define POT_1_CC	5		// Wonkystuff MCO/1 Sub.  Can be any value 1...128 OR NONE.  ALSO PROVIDED ON IN 3 IN NOTE GENERATOR MODE
 #define POT_2_CC	6		// Wonkystuff MCO/1 Ramp.  Can be any value 1...128 OR NONE
 #define POT_3_CC	7		// Wonkystuff MCO/1 Square.  Can be any value 1...128 OR NONE
  
@@ -178,6 +179,8 @@ uint8_t triggerNotes[4] = { 60, 62, 64, 65 };		// MIDDLE C, D, E, and F
 /// modifying the "1" values below to "0":
 
 const boolean INJECT_POTS_TO_CHANNEL[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+
+
 
 
 /// DE-LEGATO
@@ -196,6 +199,8 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define DELEGATO 	1			// If you set this to 0, DE-LEGATO is turned off entirely
 
 
+
+
 /// CLOCK DIVISION
 ///
 /// You can change the MIDI clock divisor.  By default the divisor is 1, meaning 24 PPQ.
@@ -203,12 +208,17 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 /// If you changed this to 24, you'd get one pulse every quarter note.  The FIRST pulse is at the
 /// very first clock pulse after a START or a CONTINUE.  Change the value below.
 
-#define CLOCK_DIVISOR 24					// This must be >= 1.  6 will pulse 16th notes.  24 will pulse quarter notes.
+#define CLOCK_DIVISOR 1					// This must be >= 1.  6 will pulse 16th notes.  24 will pulse quarter notes.
 
 
 
 
 
+
+
+
+
+//// And we're done!
 
 
 
@@ -219,6 +229,7 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define USE_MPE 1
 #define DISTRIBUTE 2
 
+// Configurations
 #define USB_TO_NONE 0
 #define USB_TO_PORT_1 1
 #define USB_TO_BOTH 2
@@ -227,16 +238,16 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define NONE_TO_PORT_1 5
 #define CONFIGURATION	USB_TO_PORT_1
 
-#define OUTPUT_1_CHANNEL NONE	// can be NONE, 1...16, or ALL
-#define OUTPUT_2_CHANNEL NONE	// can be NONE, 1...16, or ALL
-// How Input is filterChanneled to Output
-#define FILTER_CHANNEL_1 	NONE		// can be NONE, USE_MPE, or DISTRIBUTE
+// What channel is sent to output 1?
+#define OUTPUT_CHANNEL NONE	// can be NONE, 1...16, or ALL
+// How is Input is filtered to Output
+#define FILTER_STYLE 	NONE		// can be NONE, USE_MPE, or DISTRIBUTE
 // Are we debugging to the USB port?
 #define DEBUG 1
-// How many times a second do we update the pots?  If this is too fast, it will overwhelm MIDI
-// and create a lot of lag, but we'd like it to be fast enough to sound realistic. Higher values
-// are SLOWER.  You can't go much faster than 256.
-#define TIMER_SPEED 128
+// How many milliseconds do we wait to update the pots?  If this is too fast, it will overwhelm MIDI
+// and create a lot of lag, but we'd like it to be fast enough to sound realistic.  Higher values
+// are SLOWER. 
+#define TIMER_SPEED 25
 
 
 
@@ -247,7 +258,6 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 
 #include "NeoSWSerial.h"   // you have to install this via the library manager
 #include <NeoHWSerial.h>    // you have to install this via the library manager
-//#include <AltSoftSerial.h>  // you have to install this via the library manager
 #include <FlexiTimer2.h>    // you have to install this via the library manager, but I include a zip just in case
 
 ////////// PINOUTS
@@ -259,7 +269,7 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define CV_AUDIO_IN   A4    // PORT 2
 #define CV_AUDIO_OUT  11    // MIDI Clock (only when between start/continue and stop)
 #define CV_GATE_OUT   8     // PORT 1
-#define BLANK_RX	  5		// Blank Serial Pin
+#define BLANK_SERIAL	  5		// Blank Serial Pin
 
 
 
@@ -269,12 +279,11 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 
 #if (MODE == USB_CLOCK)
 #define CONFIGURATION USB_TO_NONE
-#define OUTPUT_1_CHANNEL NONE
-#define OUTPUT_2_CHANNEL NONE
+#define OUTPUT_CHANNEL NONE
 #define POT_1_CC NONE
 #define POT_2_CC NONE
 #define POT_3_CC NONE
-#define FILTER_CHANNEL_1 	NONE
+#define FILTER_STYLE 	NONE
 #define GATE PORT1
 #define STOP PORT2
 #define CLOCK
@@ -282,66 +291,53 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 
 #elif (MODE == USB_ROUTER)
 #define CONFIGURATION USB_TO_PORT_1
-#define OUTPUT_1_CHANNEL ALL
-#define OUTPUT_2_CHANNEL NONE
-#define FILTER_CHANNEL_1 	NONE
-NeoSWSerial softSerial(BLANK_RX, CV_GATE_OUT, PIN_UNUSED);
+#define OUTPUT_CHANNEL ALL
+#define FILTER_STYLE 	NONE
+#define STOP PORT2
+#define CLOCK
+#define RESET
+NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 
 #elif (MODE == USB_DISTRIBUTOR)
 #define CONFIGURATION USB_TO_PORT_1
-#define OUTPUT_1_CHANNEL ALL
-#define OUTPUT_2_CHANNEL NONE
-#define FILTER_CHANNEL_1 	DISTRIBUTE
-NeoSWSerial softSerial(BLANK_RX, CV_GATE_OUT, PIN_UNUSED);
+#define OUTPUT_CHANNEL ALL
+#define FILTER_STYLE 	DISTRIBUTE
+#define STOP PORT2
+#define CLOCK
+#define RESET
+NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 
 #elif (MODE == USB_MPE)
 #define CONFIGURATION USB_TO_PORT_1
-#define OUTPUT_1_CHANNEL ALL
-#define OUTPUT_2_CHANNEL NONE
-#define FILTER_CHANNEL_1 	USE_MPE
-NeoSWSerial softSerial(BLANK_RX, CV_GATE_OUT, PIN_UNUSED);
-
-/*
-#elif (MODE == USB_DISTRIBUTOR_BREAKOUT)
-#define CONFIGURATION USB_TO_BOTH
-#define OUTPUT_1_CHANNEL 2
-#define OUTPUT_2_CHANNEL 3
-#define FILTER_CHANNEL_1 	DISTRIBUTE
-#define NUM_VOICES 2
-NeoSWSerial softSerial(BLANK_RX, CV_GATE_OUT, CV_AUDIO_IN);
-
-#elif (MODE == USB_MPE_BREAKOUT)
-#define CONFIGURATION USB_TO_BOTH
-#define OUTPUT_1_CHANNEL 2
-#define OUTPUT_2_CHANNEL 3
-#define FILTER_CHANNEL_1 	USE_MPE
-#define NUM_VOICES 2
-NeoSWSerial softSerial(BLANK_RX, CV_GATE_OUT, CV_AUDIO_IN);
-*/
+#define OUTPUT_CHANNEL ALL
+#define FILTER_STYLE 	USE_MPE
+#define STOP PORT2
+#define CLOCK
+#define RESET
+NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 
 #elif (MODE == NOTE_GENERATOR)
 #define CONFIGURATION NONE_TO_PORT_1
-#define OUTPUT_1_CHANNEL NOTE_GENERATOR_CHANNEL
-#define FILTER_CHANNEL_1 	NONE
-NeoSWSerial softSerial(BLANK_RX, CV_GATE_OUT, PIN_UNUSED);
+#define OUTPUT_CHANNEL NOTE_GENERATOR_CHANNEL
+#define FILTER_STYLE 	NONE
+NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 
 #elif (MODE == USB_TRIGGERS)
 #define CONFIGURATION USB_TO_NONE
-#define OUTPUT_1_CHANNEL NONE
-#define OUTPUT_2_CHANNEL NONE
+#define OUTPUT_CHANNEL NONE
 #define POT_1_CC NONE
 #define POT_2_CC NONE
 #define POT_3_CC NONE
-#define FILTER_CHANNEL_1 	NONE
+#define FILTER_STYLE 	NONE
 
 #elif (MODE == INTERNAL_TRIGGERS)
 #define CONFIGURATION PORT_1_TO_NONE
-#define OUTPUT_1_CHANNEL NONE
-#define OUTPUT_2_CHANNEL NONE
+#define OUTPUT_CHANNEL NONE
 #define POT_1_CC NONE
 #define POT_2_CC NONE
 #define POT_3_CC NONE
-#define FILTER_CHANNEL_1 	NONE
+#define FILTER_STYLE 	NONE
+NeoSWSerial softSerial(CV_GATE_OUT, BLANK_SERIAL, PIN_UNUSED);
 #endif
 
 
@@ -391,12 +387,8 @@ ERROR("POT_4_CC should not be the same as POT_4_CC")
 /////// SERIAL PORT DEFINITIONS
 /////// Serial ports are then setup in setup()
 
-const uint8_t outputPins[2] = { CV_GATE_OUT, CV_AUDIO_IN };
-const uint8_t OUTPUT_CHANNELS[2] = { OUTPUT_1_CHANNEL, OUTPUT_2_CHANNEL };	// For each of the 2 outputs, either NONE, 1...16, or ALL
-
 ////// MIDI DEFINES
 #define MIDI_RATE 31250
-
 #define MIDI_NOTE_OFF 0x80
 #define MIDI_STATUS_BYTE MIDI_NOTE_OFF		// everything below this is a data byte
 #define MIDI_NOTE_ON 0x90
@@ -437,12 +429,13 @@ void setup()
 	pinMode(CV_GATE_OUT, OUTPUT);
 	pinMode(CV_AUDIO_OUT, OUTPUT);
 	NeoSerial.begin(MIDI_RATE);
-#elif (MODE == USB_TRIGGERS)
+#elif (MODE == INTERNAL_TRIGGERS)
 	pinMode(CV_AUDIO_IN, OUTPUT);
 	pinMode(CV_IN3, OUTPUT);
 	pinMode(CV_GATE_OUT, INPUT);
 	pinMode(CV_AUDIO_OUT, OUTPUT);
 	softSerial.begin(MIDI_RATE);
+	NeoSerial.begin(MIDI_RATE);		// for debugging
 #elif (MODE == NOTE_GENERATOR)
 	pinMode(CV_AUDIO_IN, INPUT);
 	pinMode(CV_IN3, INPUT);
@@ -467,7 +460,7 @@ void setup()
 
 #if (CONFIGURATION == USB_TO_PORT_1 || CONFIGURATION == USB_TO_BOTH || CONFIGURATION == PORT_1_TO_PORT_2 )
 		// set up timer
-			FlexiTimer2::set(1, 1.0 / TIMER_SPEED, setInject);
+			FlexiTimer2::set(TIMER_SPEED, 1.0 / 1000, setInject);
 			FlexiTimer2::start();
 #endif
 #endif
@@ -528,39 +521,42 @@ inline uint8_t parseMessage(uint8_t c)
 		}
 	else if (c >= MIDI_STATUS_BYTE)
 		{
-		messageLength = 1;
-		message[0] = c;
-		if (c < MIDI_PROGRAM_CHANGE)	// note off, note on, poly at, cc
-			{
-			messageExpectedLength = 3;
-			}
-		else if (c < MIDI_PITCH_BEND)		// PC, AT
-			{
-			messageExpectedLength = 1;
-			}
-		else if (c < MIDI_SYSTEM_EXCLUSIVE)		// Bend
-			{
-			messageExpectedLength = 3;
-			}
-		else if (c == MIDI_SYSTEM_EXCLUSIVE)		// Sysex
-			{
-			messageExpectedLength = MAX_MESSAGE_LENGTH + 2;		// Max for us
-			}
-		else if (c == MIDI_SONG_POSITION_POINTER)		// Song Position Pointer
-			{
-			messageExpectedLength = 3;
-			}
-		else if (c == MIDI_SONG_SELECT)		// Song Select
-			{
-			messageExpectedLength = 2;
-			}
-		else if (c < MIDI_SYSTEM_REALTIME)		// 0xF1 Midi Time Code Quarter Frame (ignored), tune request, undefined
-			{
-			messageExpectedLength = 1;
-			}
-		else			// all system real-time
+		if ( c >= MIDI_SYSTEM_REALTIME)
 			{
 			systemRealTime = c;
+			}
+		else
+			{
+			messageLength = 1;
+			message[0] = c;
+			if (c < MIDI_PROGRAM_CHANGE)	// note off, note on, poly at, cc
+				{
+				messageExpectedLength = 3;
+				}
+			else if (c < MIDI_PITCH_BEND)		// PC, AT
+				{
+				messageExpectedLength = 1;
+				}
+			else if (c < MIDI_SYSTEM_EXCLUSIVE)		// Bend
+				{
+				messageExpectedLength = 3;
+				}
+			else if (c == MIDI_SYSTEM_EXCLUSIVE)		// Sysex
+				{
+				messageExpectedLength = MAX_MESSAGE_LENGTH + 2;		// Max for us
+				}
+			else if (c == MIDI_SONG_POSITION_POINTER)		// Song Position Pointer
+				{
+				messageExpectedLength = 3;
+				}
+			else if (c == MIDI_SONG_SELECT)		// Song Select
+				{
+				messageExpectedLength = 2;
+				}
+			else if (c < MIDI_SYSTEM_REALTIME)		// 0xF1 Midi Time Code Quarter Frame (ignored), tune request, undefined
+				{
+				messageExpectedLength = 1;
+				}
 			}
 		}
 	else if (messageLength < messageExpectedLength &&
@@ -578,6 +574,8 @@ inline uint8_t parseMessage(uint8_t c)
 	
 	
 
+/// emitWithDifferentChannel.  This changes the channel of a voice message and re-emits it.
+
 void emitWithDifferentChannel(uint8_t* message, uint8_t len, uint8_t channel)
 	{
 	uint8_t c = message[0];
@@ -593,15 +591,20 @@ void emitWithDifferentChannel(uint8_t* message, uint8_t len, uint8_t channel)
 	}
 
 
-uint8_t noteChannels[128];						// NONE means not used, 1..16 means channel, we don't allow 1
-uint8_t channelAvailable[17];					// For channels 1...16, 0 ignored. NONE means available, 1...128 means already allocated to 0..127 note pitch
 
-uint8_t lowest()
+/// distribute.  This distributes notes to NUM_VOICES different channels if they are available
+
+// For each note currently being played, what channel was it sent to?
+uint8_t noteChannels[128];						// NONE means not used, 1..16 means channel, we don't allow 1
+// For each channel, what note has been allocated to it?
+uint8_t channelNotes[17];					// For channels 1...16, 0 ignored. NONE means available, 1...128 means already allocated to 0..127 note pitch
+
+uint8_t lowestChannelAvailable()				// returns the lowest channel available
 	{
 	uint8_t min = 2;
 	for(uint8_t i = 3; i <= NUM_VOICES + 1; i++)
 		{
-		if (channelAvailable[i] < channelAvailable[min]) 
+		if (channelNotes[i] < channelNotes[min]) 
 			{
 			min = i;
 			}
@@ -620,7 +623,7 @@ inline void distribute()
 			uint8_t channel = noteChannels[pitch];
 			if (channel != NONE && channel != 1)
 				{
-				channelAvailable[channel] = NONE;	// make available
+				channelNotes[channel] = NONE;	// make available
 				}
 			noteChannels[pitch] = NONE;		// make available
 			emitWithDifferentChannel(message, messageLength, channel - 1);
@@ -632,9 +635,9 @@ inline void distribute()
 			uint8_t channel = NONE;
 			for(uint8_t i = 2; i <= NUM_VOICES + 1; i++)			// Note <=.  we skip channel 1
 				{
-				if (channelAvailable[i] == NONE)	// available
+				if (channelNotes[i] == NONE)	// available
 					{
-					channelAvailable[i] = pitch + 1;
+					channelNotes[i] = pitch + 1;
 					noteChannels[pitch] = i;
 					channel = i;
 					break;
@@ -643,19 +646,19 @@ inline void distribute()
 				
 			if (channel == NONE)	// everything allocated, identify who to remove via the ring buffer
 				{
-				uint8_t die = lowest();
+				uint8_t die = lowestChannelAvailable();
 				
 				// send a NOTE OFF to oldest
 				emit(MIDI_NOTE_OFF + die);
-				emit(channelAvailable[die] - 1);
+				emit(channelNotes[die] - 1);
 				emit(0x40);
 
 				// reallocate					
-				channelAvailable[die] = pitch;
+				channelNotes[die] = pitch;
 				noteChannels[pitch] = die;
 				channel = die;
 				}
-			
+						
 			// now we have voice allocated 
 			emitWithDifferentChannel(message, messageLength, channel - 1);
 			}
@@ -686,6 +689,8 @@ inline void distribute()
 
 
 
+// Routes messages to a different channel (if they are voice messages of course)
+
 void addToChannel(uint8_t* message, uint8_t len, uint8_t channel)
 	{
 	if (len > 0)
@@ -704,6 +709,13 @@ void addToChannel(uint8_t* message, uint8_t len, uint8_t channel)
 		}
 	}
 	
+	
+	
+	
+	
+/// filterChannel.  Takes an incoming byte and processes it.  First, the byte is parsed.
+/// Then depending on the task, either triggers are issued, or the byte is rerouted to
+/// a new channel, or we distribute the message per-note.  Or just re-emit it.
 
 void filterChannel(uint8_t c)
 	{
@@ -713,7 +725,7 @@ void filterChannel(uint8_t c)
 		{
 		doTriggers();
 		}
-#elif (FILTER_CHANNEL_1 == USE_MPE)
+#elif (FILTER_STYLE == USE_MPE)
 	if (MESSAGE_COMPLETE() && !systemRealTime && CHANNEL_1_MESSAGE(message))
 		{
 		// add to other channels
@@ -721,7 +733,7 @@ void filterChannel(uint8_t c)
 			addToChannel(message, messageLength, i + 1);
 		}
 	emit(c);
-#elif (FILTER_CHANNEL_1 == DISTRIBUTE)
+#elif (FILTER_STYLE == DISTRIBUTE)
 	if (MESSAGE_COMPLETE() && (!VOICE_MESSAGE(message) || CHANNEL_1_MESSAGE(message)))
 		{
 		if (systemRealTime) emit(systemRealTime);
@@ -736,7 +748,17 @@ void filterChannel(uint8_t c)
 
 
 
-/// emiting
+/// writing to serial port.  This is broken out so we can insert a debug() in it when appropriate
+
+inline void write(uint8_t c)
+	{
+//	debug(c);
+#if (CONFIGURATION != USB_TO_NONE)
+ 	softSerial.write(c);
+#endif
+	}
+
+
 
 
 // DeLegato injects a NOTE OFF in front of every NOTE ON to make sure we do a gate
@@ -754,15 +776,11 @@ inline void deLegato(uint8_t c)
 		uint8_t channel = c - MIDI_NOTE_ON;
 		if (DELEGATO_CHANNELS[channel] & noteOnPitch[channel] != NO_PITCH)
 			{
-			for(uint8_t i = 0; i < 2; i++)
+			if (OUTPUT_CHANNEL == channel || OUTPUT_CHANNEL == ALL)
 				{
-				if (OUTPUT_CHANNELS[i] == channel || OUTPUT_CHANNELS[i] == ALL)
-					{
-//  					softSerial.changeTxPin(outputPins[i]);
-					write(MIDI_NOTE_OFF + channel);
-					write(noteOnPitch[channel]);
-					write(0x40);					// Note off
-					}
+				write(MIDI_NOTE_OFF + channel);
+				write(noteOnPitch[channel]);
+				write(0x40);					// Note off
 				}
 			noteOnPitch[channel] = NO_PITCH;
 			}
@@ -851,6 +869,11 @@ inline uint8_t emitClock(uint8_t c)
 	}
 
 
+
+/// emitting.  This first does delegato when appropriate.  It then writes the byte if it's the right
+/// channel.  This used to write to different serial ports, but that's too costly right now, so we've
+/// eliminated that.  As a result this method is now a bit vestigial.
+
 uint8_t emitChannel = ALL;
 inline uint8_t emit(uint8_t c)
 	{
@@ -870,13 +893,9 @@ inline uint8_t emit(uint8_t c)
 			}
 		}
 
-	for(uint8_t i = 0; i < 2; i++)
+	if (OUTPUT_CHANNEL == emitChannel || OUTPUT_CHANNEL== ALL || (emitChannel == ALL && OUTPUT_CHANNEL != NONE))
 		{
-		if (OUTPUT_CHANNELS[i] == emitChannel || OUTPUT_CHANNELS[i] == ALL || (emitChannel == ALL && OUTPUT_CHANNELS != NONE))
-			{
-//  			softSerial.changeTxPin(outputPins[i]);
-			write(c);
-			}
+		write(c);
 		}
 
 #ifdef CLOCK
@@ -885,12 +904,8 @@ inline uint8_t emit(uint8_t c)
 	}
 	
 
-inline void write(uint8_t c)
-	{
-#if (CONFIGURATION != USB_TO_NONE)
- 	softSerial.write(c);
-#endif
-	}
+/// handling trigger outputs.  There are 3 or 4 trigger output notes depending on how many outputs we have
+/// available.
 
 
 #define MAX_TRIGGER_COUNTDOWN 512
@@ -933,6 +948,12 @@ inline void debug(uint8_t c)
 #endif
 	}
 	
+	
+	
+	
+/// INJECTION.  The setInject() method grabs the latest pot values and tries to inject their CCS, but if the current MIDI 
+/// message is not complete, it holds the injection until after the message is done and injects immediately afterwards.
+
 uint8_t injectWaiting = false;
 #define HIGH 500
 #define LOW 100
@@ -944,6 +965,11 @@ uint8_t oldCC3Val = 255;
 uint8_t cc1Val = 255;
 uint8_t cc2Val = 255;
 uint8_t cc3Val = 255;
+
+uint8_t pitchIn2 = 60;
+uint8_t gateIn2 = false;
+uint8_t oldCC3Val2 = 255;
+uint8_t cc3Va2 = 255;
 
 // Called by the timer to set up injection every once in a while.  We read the pots, then set the CC values and try to inject.
 // If we fail (because a message is incomplete), we'll try to inject repeatedly after the message is done until we are successful.
@@ -960,7 +986,7 @@ void setInject()
 	 if (g && !gateIn) // Note on
 	 	{
 	 	pitchIn = getPitch(CV_POT_IN1);
-		write(MIDI_NOTE_ON + OUTPUT_1_CHANNEL);
+		write(MIDI_NOTE_ON + OUTPUT_CHANNEL);
 		write(pitchIn + 24);
 		write(0x40);
 		gateIn = true;
@@ -968,7 +994,7 @@ void setInject()
 	 else if (!g && gateIn)	// Note off
 	 	{
 	 	// use the previous pitchIn
-		write(MIDI_NOTE_OFF + OUTPUT_1_CHANNEL);
+		write(MIDI_NOTE_OFF + OUTPUT_CHANNEL);
 		write(pitchIn + 24);
 		write(0x40);
 		gateIn = false;
@@ -986,14 +1012,14 @@ void setInject()
 	 inject();
 	}
 
-// Injects CC messages into the stream, only when a message is completely written.
+
+// Injects a single CC message into the stream.
 void injectCC(uint8_t param, uint8_t value)
 	{
 	for(uint8_t i = 0; i <= NUM_VOICES; i++)
 		{
 		if (INJECT_POTS_TO_CHANNEL[i])
 			{
-// 			softSerial.changeTxPin(outputPins[i]);
 			write(MIDI_CC + i); 
 			write(param); 
 			write(value);
@@ -1001,9 +1027,9 @@ void injectCC(uint8_t param, uint8_t value)
 		}
 	}
 
-// Injects CC messages into the stream, only when a message is completely written.
+// Injects up to three CC messages into the stream, only when a message is completely written.
 void inject()
-	{	
+	{
 	if (injectWaiting && MESSAGE_COMPLETE())
 		{
 #if (MODE == NOTE_GENERATOR)
@@ -1131,7 +1157,7 @@ void initializePitch(uint8_t pitch)
     {
     pitchCV = analogRead(pitch);
     }
-        
+
 #define LARGE_JUMP 32
 #define SEMITONE 17
 #define FREQ_COUNTER_MAX 4
@@ -1163,4 +1189,45 @@ inline uint8_t getPitch(uint8_t pitch)
         pitchCV = (pitchCV * 7 + p1) >> 3;
         }
     return (uint8_t) ((pitchCV * 60) >> 10);		// now should range 0...60 or maybe 0...59
+    }
+
+
+uint16_t pitchCV2;
+uint16_t pA2;
+uint16_t pB2;
+
+// This is a modified version of my standard initializeFrequency(...) function
+void initializePitch2(uint8_t pitch)
+    {
+    pitchCV2 = analogRead(pitch);
+    }
+        
+uint8_t freqCounter2 = 0;
+// This is a modified version of my standard getFrequency(...) function
+// which returns a PITCH from 0...59 or so.
+inline uint8_t getPitch2(uint8_t pitch)
+    {
+    uint16_t p = analogRead(pitch);
+
+    uint16_t diff = (p > pitchCV2 ? p - pitchCV2 : pitchCV2 - p);
+    if (diff >= LARGE_JUMP)
+        {
+        pitchCV2 = p;            // jump right there
+        freqCounter2 = FREQ_COUNTER_MAX;
+        }
+    else if (freqCounter2 > 0)
+        {
+        freqCounter2--;
+        pitchCV2 = (pitchCV2 + p) >> 1;
+        pB2 = pA2;
+        pA2 = pitchCV2;
+        }
+    else
+        {
+        uint16_t p1 = MEDIAN_OF_THREE(p, pA2, pB2);
+        pB2 = pA2;
+        pA2 = p;
+        pitchCV2 = (pitchCV2 * 7 + p1) >> 3;
+        }
+    return (uint8_t) ((pitchCV2 * 60) >> 10);		// now should range 0...60 or maybe 0...59
     }

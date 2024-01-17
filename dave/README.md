@@ -1,12 +1,4 @@
-# Dave (Epiphany ALPHA Release)
-
-## Note about the ALPHA Release
-
-Dave runs in several modes.  It works pretty well in USB\_CLOCK\_MODE, USB\_ROUTER\_MODE, USB\_MPE\_MODE, and USB\_DISTRIBUTOR\_MODE.  DELEGATO also works as a feature, and so do the POT CCs.  
-
-What does NOT work are the various BREAKOUT modes, because DAVE simply isn't fast enough to pump out more than one serial port when getting serious MIDI as input, resulting in stuck or hung notes.  This is unfortunate because it means you can't use Dave to do polyphony without the MB/1.   Also the POT CCs can put stress on MIDI as discussed below.
-
-## About Dave
+# Dave
 
 Dave is a MIDI router and utility which can do a variety of things.  Dave is meant to run 
 on the AE Modular GRAINS, but it could be adapted to any Arduino.
@@ -17,25 +9,37 @@ DAVE REQUIRES that you install the NeoHWSerial library from the Arduino library 
 its own customized (and bug-fixed) copy of the NeoSWSerial library, so do not install
 that one (and in fact you may need to uninstall it).
 
+## Dave's Java Program
 Dave runs in a variety of modes.  Many of these modes are meant to receive MIDI
 over USB and route it to WonkyStuff modules or to the MASTER I/O.  The GRAINS USB 
-port cannot present itself as a MIDI Device, so Dave works with a Java program, 
-also called Dave, which receives MIDI from your DAW or controller and sends it over 
+port cannot present itself as a MIDI Device, so [Dave works with a Java program, 
+also called Dave,](https://github.com/eclab/grains/dave/java/) which receives MIDI from your DAW or controller and sends it over 
 the USB port to the GRAINS.  This program is located in the "java" subdirectory.
+
+The general hookup to a controller as follows: 
+
+- DAVE on GRAINS <-USB-> Dave Java Program <----> Controller Device
+
+The hookup to a typical DAW is:  
+
+- DAVE <-USB-> Dave Java Program <---> MIDI Loopback Device <---> DAW
+  (Though Logic on the Mac doesn't need a Loopback.  Ableton does)
+
+See the Dave java program [README file](https://github.com/eclab/grains/dave/java/README.md) for more information.
+
+## Hacking the TRS Jacks 
 
 You may have noticed that neither the MB/1 nor MASTER I/O have a WonkyStuff-style MIDI In port.
 They just have MIDI TRS-B jacks.  However it is possible to send MIDI to them from the GRAINS
 with some wiring.   See the file "docs/TRS.md" in the dave directory for more information.
+You should absolutely know what you're doing here: this is not standard use of AE modular, 
+and I will not be held responsible if you fry a your MB/1 or MASTER I/O MIDI optoisolator.
+
+
+
+## Dave's Modes
 
 DAVE works in one or more MODES and has a few configuration options beyond that.
-
-
-### Other Stuff
-
-Dave also has a facility to convert .mid files to .h files that you can cut and paste into GRAINS Beats.
-
-
-## The Modes
 
 Here are the basic modes:
 
@@ -104,6 +108,20 @@ holds the MIDI pitch values for each of the four notes.
 - The Pots do not do anything (if you can think of something useful they could do, let me know).
 
 
+### INTERNAL TRIGGERS MODE
+This is basically the same thing as USB TRIGGERS MODE except that the MIDI input is not
+via USB but via a local MIDI socket, such as from a Wonkystuff MB/1.  There are only three
+trigger notes: Middle C (60), D (62), and E (64), but you can change
+them if you needed to for some reason by modifying the *first three* values in the 
+"triggerNotes" variable below: it holds the MIDI pitch values for each of the three/four
+notes used by the INTERNAL TRIGGERS and by USB TRIGGERS modes.
+
+- AUDIO OUT outputs trigger 1 (Middle C)
+- IN 3 outputs trigger 2 (D)
+- AUDIO IN outputs trigger 3 (E)
+- DIGITAL OUT takes MIDI IN
+- The Pots do not do anything (if you can think of something useful they could do, let me know).
+
 ### NOTE GENERATOR MODE.  This only produces MIDI: you could use it to trigger a WonkyStuff MCO/4
 from a regular setup without USB.  It takes a pitch CV and a gate in and generates a note 
 for the MCO/4, and it can also still produce the THREE output CCs, but one of them is now 
@@ -117,24 +135,6 @@ from a CV in.
 - IN 3 can be set to output the CC normally reserved for POT 1.  It will not output any CC value
   less than 8, as this likely indicates that IN 3 is disconnected.
 
-
-
-### What Doesn't Work Yet (or At All)
-There are a few other modes which have not been tested yet or are not working properly due
-to speed problems with GRAINS's serial ports:
-
-- USB DISTRIBUTOR BREAKOUT MODE.  This is like USB Distributor Mode but routes Channel 2
-  out DIGITAL OUT, routes Channel 3 out AUDIO IN, and Routes Channel 4 out IN 3.
-  Unfortunately IN 3 is not reliable as a MIDI transmitter, and two output serial ports
-  (DIGITAL OUT, AUDIO IN) are too slow, sometimes resulting in stuck notes.
-
-- USB MPE BREAKOUT MODE.  This is like USB MPE Mode but routes Channel 2
-  out DIGITAL OUT, routes Channel 3 out AUDIO IN, and Routes Channel 4 out IN 3.
-  Unfortunately IN 3 is not reliable as a MIDI transmitter, and two output serial ports
-  (DIGITAL OUT, AUDIO IN) are too slow, sometimes resulting in stuck notes.
-
-- INTERNAL TRIGGER MODE.  This takes three different MIDI notes, notionally from a WonkyStuff MB/1,
-  and generates drum triggers, similar to a WonkyStuff MTR/8.  It's not been tested yet.
 
 
 ## About the Pot CCs
@@ -168,3 +168,9 @@ You can change the MIDI clock divisor.  By default the divisor is 1, meaning 24 
 If you made this 6, for example, you'd get 4PPQ, otherwise known as one pulse every 16th note.
 If you changed this to 24, you'd get one pulse every quarter note.  The FIRST pulse is at the
 very first clock pulse after a START or a CONTINUE. 
+
+## Other Stuff
+
+Dave also has a facility to convert .mid files to .h files that you can cut and paste into GRAINS Beats.
+
+
