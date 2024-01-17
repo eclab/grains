@@ -41,13 +41,25 @@ All told this provides 660 ohms or more of resistance, more than enough to keep 
 
 Resistor Rb is built into the jacks already on the Master I/O and MB/1.  
 
-### Connection from GRAINS DIGITAL Out
+### Connection from GRAINS DIGITAL Out is Safe
 The 5V socket on the MASTER I/O, and the same from the BRAEDBOARD, have a 100 ohm resistor in series.  This isn't enough for Resistor Ra, but the SINK (the Digital OUT port on GRAINS) has a 1K ohm resistor in series.  All told this is 1320 ohms.  So we're fine there.
 
 Alternatively, the 5V SOURCE from the 4ATT/MIX has a 1K ohm resistor, so that's 2220 ohms total, which should be plenty. 
+However using the THRU on the MCO/1, MCC/4, etc., or any output from the MB/1 is **probably unsafe**.  The MB/1 has no resistor, and the MCO/1 etc. have a 100 ohm resistor only.
+
+In short, this is the likely situatio
+
+|                  | GRAINS Digital Out | MCO/1, MCC/4, etc. | Any MB/1 Output  |
+| ---------------- | ------------------ | ------------------ | ---------------- |
+| *MASTER I/O 5V*  | 1320 Ohms: Safe    | 420 Ohms: Unsafe   | 320 Ohms: Unsafe |
+| *BRAEDBOARD 5V*  | 1320 Ohms: Safe    | 420 Ohms: Unsafe   | 320 Ohms: Unsafe |
+| *4ATT/CV 5V*     | 2220 Ohms: Safe    | 1200 Ohms: Safe?   | 1100 Ohms: Safe? |
+
+
 The MIDI schematic has a diode for reverse polarity if you mix things up (but don't do that).  I have swapped the two wires several times with no ill effects, fingers crossed.
 
-### Connection from WonkyStuff THRU on MCO/1, MCC/4, etc.
+### Connection from WonkyStuff THRU on MCO/1, MCC/4, or the MB/1 OUT is NOT Safe with a MASTER I/
+The MB/1 has a 100 Ohm resister at the SINK.  
 The MCO/1 has a MIDI Thru which provides 220 ohms per the spec.  This is the SINK.   If you use the MASTER I/O or BRAEDBOARD 5V as the SOURCE, that will only total to 540 ohms, not 660.  It probably would be just fine, but I'd not risk it without adding another resistor in-line.  Similarly, the various MIDI out sockets on the MB/1 are probably 220 ohms, with the same issue.
 
 ![MIDI Electrical Diagram](MIDI.jpg)
