@@ -41,9 +41,13 @@ All told this provides 660 ohms or more of resistance, more than enough to keep 
 
 Resistor Rb is built into the jacks already on the Master I/O and MB/1.  
 
-The 5V socket on the MASTER I/O, and the same from the BRAEBOARD, have a 100 ohm resistor in series.  This isn't enough for Resistor Ra, but the SINK (the Digital OUT port on GRAINS) has a 1K ohm resistor in series.  All told this is 1320 ohms.  So we're fine there.
+### Connection from GRAINS DIGITAL Out
+The 5V socket on the MASTER I/O, and the same from the BRAEDBOARD, have a 100 ohm resistor in series.  This isn't enough for Resistor Ra, but the SINK (the Digital OUT port on GRAINS) has a 1K ohm resistor in series.  All told this is 1320 ohms.  So we're fine there.
 
 Alternatively, the 5V SOURCE from the 4ATT/MIX has a 1K ohm resistor, so that's 2220 ohms total, which should be plenty. 
 The MIDI schematic has a diode for reverse polarity if you mix things up (but don't do that).  I have swapped the two wires several times with no ill effects, fingers crossed.
+
+### Connection from WonkyStuff THRU on MCO/1, MCC/4, etc.
+The MCO/1 has a MIDI Thru which provides 220 ohms per the spec.  This is the SINK.   If you use the MASTER I/O or BRAEDBOARD 5V as the SOURCE, that will only total to 540 ohms, not 660.  It probably would be just fine, but I'd not risk it without adding another resistor in-line.  Similarly, the varous MIDI out sockets on the MB/1 are probably 220 ohms, with the same issue.
 
 ![MIDI Electrical Diagram](MIDI.jpg)
