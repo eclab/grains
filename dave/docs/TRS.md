@@ -45,15 +45,18 @@ Resistor Rb is built into the jacks already on the Master I/O and MB/1.
 The 5V socket on the MASTER I/O, and the same from the BRAEDBOARD, have a 100 ohm resistor in series.  This isn't enough for Resistor Ra, but the SINK (the Digital OUT port on GRAINS) has a 1K ohm resistor in series.  All told this is 1320 ohms.  So we're fine there.
 
 Alternatively, the 5V SOURCE from the 4ATT/MIX has a 1K ohm resistor, so that's 2220 ohms total, which should be plenty. 
+
+### Connection from an MCO/1 or MB/1 Etc. is UNSAFE
+
 However using the THRU on the MCO/1, MCC/4, etc., or any output from the MB/1 is **probably unsafe**.  The MB/1 has no resistor, and the MCO/1 etc. have a 100 ohm resistor only.
 
-In short, this is the likely situatio
+In short, this is the likely situation for SINKS and 5V SOURCES:
 
-|                  | GRAINS Digital Out | MCO/1, MCC/4, etc. | Any MB/1 Output  |
-| ---------------- | ------------------ | ------------------ | ---------------- |
-| *MASTER I/O 5V*  | 1320 Ohms: Safe    | 420 Ohms: Unsafe   | 320 Ohms: Unsafe |
-| *BRAEDBOARD 5V*  | 1320 Ohms: Safe    | 420 Ohms: Unsafe   | 320 Ohms: Unsafe |
-| *4ATT/CV 5V*     | 2220 Ohms: Safe    | 1200 Ohms: Safe?   | 1100 Ohms: Safe? |
+|                   | GRAINS Digital Out | MCO/1, MCC/4, etc. | Any MB/1 Output  |
+| ----------------- | ------------------ | ------------------ | ---------------- |
+| **MASTER I/O 5V** | 1320 Ohms: Safe    | 420 Ohms: Unsafe   | 320 Ohms: Unsafe |
+| **BRAEDBOARD 5V** | 1320 Ohms: Safe    | 420 Ohms: Unsafe   | 320 Ohms: Unsafe |
+| **4ATT/CV 5V**    | 2220 Ohms: Safe    | 1200 Ohms: Safe?   | 1100 Ohms: Safe? |
 
 
 The MIDI schematic has a diode for reverse polarity if you mix things up (but don't do that).  I have swapped the two wires several times with no ill effects, fingers crossed.
