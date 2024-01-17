@@ -32,6 +32,7 @@
 ///
 /// DAVE works in one or more MODES and has a few configuration options beyond that.
 ///
+/// Dave also has a facility to convert .mid files to .h files that you can cut and paste into GRAINS Beats.
 ///
 ///
 /// THE MODES
