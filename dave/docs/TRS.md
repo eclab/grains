@@ -19,7 +19,7 @@ All we need to do is connect 5V to the SOURCE (TIP) and connect the GRAINS's MID
 
 To do this, you first need to buy a **3.5 mm Male TRS Screw Terminal Block**.  That's the magic term.  [Google for it](https://www.google.com/search?q=3.5+mm+male+TRS+Screw+Terminal+Block).  They're very cheap, like $5.
 
-You can attach bare wires, Dupont 0.1" cables, or your nice TangibleWaves cables to the block: they all work fine.
+You can attach Dupont 0.1" cables or your nice TangibleWaves cables to the block.
 
 The screw terminal block breaks out the TRS tip, ring, and sleeve to three wire screws so we can easily attach our two wires.  Here's the configuration I am using.  Note that my block says "L" (for "Left" -- the TIP), "R" (for "Right" -- the RING) and the Ground symbol for the Sleeve.  I have connected the GRAINS output to "R" and +5V to "L".  You can get +5V from current Master I/O units, or from modules 4ATT/MIX, or even directly from the bus cable itself if you're careful.  I'd make the +5V wire red to make it clear what's what.
 
@@ -29,10 +29,21 @@ Once you've hooked up the wires, you just plug the terminal block into the TRS s
 
 ## Why This Works
 
-MIDI requires that there be certain resistors in place to prevent the LED in the optoisolator from frying from too much current.  Specifically, you a 220 ohm or larger resistor in series with the SOURCE (Resistor Ra on the schematic below), a second 220 ohm built-in into the internal TRS jack (Rb on the schematic) and a third 220 ohm or larger resister in series with the SINK (Rc on the schematic).  All told this is 660 ohms or more.
+MIDI requires that there be certain resistors in place to prevent the LED in the optoisolator from frying from too much current:
 
-The 220 ohm Rb resistor is built into the jacks.  The 5V SOURCE from the MASTER I/O, and the same from the BRAEBOARD, have a 100 ohm resistor in series.  This isn't enough, the SINK (the Digital OUT port) has a 1K ohm resistor in series.  All told this is 1320 ohms.
+- A 220 ohm or larger resistor in series with the SOURCE (Resistor Ra on the schematic below)
 
-Finally, the 5V SOURCE from the 4ATT/MIX has a 1K ohm resistor rather than a 100 ohm resistor, and the MIDI schematic has a diode for reverse polarity if you mix things up (but don't do that).
+- A 220 ohm or larger resistor in series between the internal TRS jack and the optoisolator (Resistor Rb on the schematic)
+
+- A 220 ohm or larger resistor in series with the SINK (Rc on the schematic)
+
+All told this provides 660 ohms or more of resistance, more than enough to keep the optoisolator from being overrun.
+
+Resistor Rb is built into the jacks already on the Master I/O and MB/1.  
+
+The 5V socket on the MASTER I/O, and the same from the BRAEBOARD, have a 100 ohm resistor in series.  This isn't enough for Resistor Ra, but the SINK (the Digital OUT port on GRAINS) has a 1K ohm resistor in series.  All told this is 1320 ohms.  So we're fine there.
+
+Alternatively, the 5V SOURCE from the 4ATT/MIX has a 1K ohm resistor, so that's 2220 ohms total, which should be plenty. 
+The MIDI schematic has a diode for reverse polarity if you mix things up (but don't do that).  I have swapped the two wires several times with no ill effects, fingers crossed.
 
 ![MIDI Electrical Diagram](MIDI.jpg)
