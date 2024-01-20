@@ -31,7 +31,7 @@ See the Dave java program [README file](https://github.com/eclab/grains/dave/jav
 
 You may have noticed that neither the MB/1 nor MASTER I/O have a WonkyStuff-style MIDI In port.
 They just have MIDI TRS-B jacks.  However it is possible to send MIDI to them from the GRAINS
-with some wiring.   See [TRS.md](TRS.md) for more information.
+with some wiring.   See [docs/TRS.md](TRS.md) for more information.
 You should absolutely know what you're doing here: this is not standard use of AE modular, 
 and I will not be held responsible if you fry a your MB/1 or MASTER I/O MIDI optoisolator.
 
