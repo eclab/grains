@@ -15,7 +15,7 @@ TRS MIDI is exactly the same as 5-PIN DIN MIDI: three wires.  However there are 
 
 ## How To
 
-All we need to do is connect 5V to the SOURCE (TIP) and connect the GRAINS's MIDI out to the SINK (RING).  We leave the ground (sleeve) DISCONNECTED.
+All we need to do is connect 5V (only from certain sources, see below) to the SOURCE (TIP) and connect the GRAINS's MIDI out to the SINK (RING).  We leave the ground (sleeve) DISCONNECTED.
 
 To do this, you first need to buy a **3.5 mm Male TRS Screw Terminal Block**.  That's the magic term.  [Google for it](https://www.google.com/search?q=3.5+mm+male+TRS+Screw+Terminal+Block).  They're very cheap, like $5.
 
