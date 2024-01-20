@@ -46,6 +46,8 @@ The 5V socket on the MASTER I/O, and the same from the BRAEDBOARD, have a 100 oh
 
 Alternatively, the 5V SOURCE from the 4ATT/MIX has a 1K ohm resistor, so that's 2220 ohms total, which should be plenty. 
 
+I would not connect directly to 5V on the bus: there's no resistor.
+
 ### Connection from an MCO/1 or MB/1 Etc. is UNSAFE
 
 However using the THRU on the MCO/1, MCC/4, etc., or any output from the MB/1 is **probably unsafe**.  The MB/1 has no resistor, and the MCO/1 etc. have a 100 ohm resistor only.
