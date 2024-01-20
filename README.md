@@ -4,8 +4,7 @@ By Sean Luke (sean@cs.gmu.edu)
 This is a collection of code which runs on the Tangible Waves GRAINS module, though it can be adapted to run on any Arduino with little difficulty.  All these projects are released under Apache 2.0 except for Lattice, which is released under GPL 2.0 (as it contains Mutable Instruments code), Oration/Oration 2, which are released under GPL 3.0 (as is Talkie), and likewise Elements, released under GPL 3.0 as it used GPL code.
 
 Other GRAINS firmware repositories:
-- AE Modular's [GRAINS repository](https://github.com/aemodular/GRAINS)
-- AE Modular's [GRAINS Mozzi repository](https://github.com/aemodular/MOZZI-GRAINS)
+- AE Modular's [GRAINS repository](https://github.com/aemodular/GRAINS) and [GRAINS Mozzi repository](https://github.com/aemodular/MOZZI-GRAINS)
 - NurdSpace's [collection of GRAINS firmware](https://nurdspace.nl/Grains#Collection_of_firmwares)
 - Duddex's [GRAINS adaptations](https://github.com/duddex/)
 - Keurslager Kurt's [GRAINS LFO](https://github.com/ZVanMoerkerke/GrainsAE_VC_LFO_Sine)
