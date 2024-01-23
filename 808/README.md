@@ -64,9 +64,9 @@ Seven samples and four triggers: the last four samples share a trigger
 - **FORMAT_7A** \
 An alternative to FORMAT_7, with three triggers.  The last three samples share a trigger, and the three before that share another
 - **FORMAT_8** \
-Eight samples and three triggers.  The last four samples share a trigger, and the next three share another
+Eight samples and three triggers.  The last four samples share a trigger, and the three before that share another
 - **FORMAT_9** \
-Eight samples and three triggers.  The last four samples share a trigger, and the next four share another
+Eight samples and three triggers.  The last four samples share a trigger, and the four before that share another
 
 ## Configurations
 
