@@ -54,7 +54,7 @@ Three samples, the first two with pitch control, plus total volume control
 - **FORMAT_4** \
 Four samples, the first one with pitch control, plus total volume control
 - **FORMAT_5** \
-Has 5 triggers: thus not for TRIQ164 or GRAINS BEATS
+Five samples.  Has 5 triggers: thus not for TRIQ164 or GRAINS BEATS
 - **FORMAT_5A** \
 An alternative to FORMAT_5 for people with 4-trigger step sequencers like TRIQ164 or GRAINS BEATS 
 - **FORMAT_6** \
