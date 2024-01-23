@@ -54,19 +54,19 @@ Three samples, the first two with pitch control, plus total volume control
 - **FORMAT_4** \
 Four samples, the first one with pitch control, plus total volume control
 - **FORMAT_5** \
-Five samples.  Has 5 triggers: thus not for TRIQ164 or GRAINS BEATS
+Five samples, plus total volume control.  Has 5 triggers: thus not for TRIQ164 or GRAINS BEATS
 - **FORMAT_5A** \
-Five samples, two of which share a trigger.  An alternative to FORMAT_5 for people with 4-trigger step sequencers like TRIQ164 or GRAINS BEATS 
+Five samples, two of which share a trigger, plus total volume control.  An alternative to FORMAT_5 for people with 4-trigger step sequencers like TRIQ164 or GRAINS BEATS 
 - **FORMAT_6** \
-Six samples and four triggers: the last three samples share a trigger
+Six samples and four triggers, plus total volume control: the last three samples share a trigger
 - **FORMAT_7** \
-Seven samples and four triggers: the last four samples share a trigger
+Seven samples and four triggers, plus total volume control: the last four samples share a trigger
 - **FORMAT_7A** \
-An alternative to FORMAT_7, with three triggers.  The last three samples share a trigger, and the three before that share another
+An alternative to FORMAT_7, with three triggers, plus total volume control.  The last three samples share a trigger, and the three before that share another
 - **FORMAT_8** \
-Eight samples and three triggers.  The last four samples share a trigger, and the three before that share another
+Eight samples and three triggers, plus total volume control.  The last four samples share a trigger, and the three before that share another
 - **FORMAT_9** \
-Eight samples and three triggers.  The last four samples share a trigger, and the four before that share another
+Eight samples and three triggers, plus total volume control.  The last four samples share a trigger, and the four before that share another
 
 ## Configurations
 
