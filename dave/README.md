@@ -13,7 +13,7 @@ that one (and in fact you may need to uninstall it).
 Dave runs in a variety of modes.  Many of these modes are meant to receive MIDI
 over USB and route it to WonkyStuff modules or to the MASTER I/O.  The GRAINS USB 
 port cannot present itself as a MIDI Device, so [Dave works with a Java program, 
-also called Dave,](https://github.com/eclab/grains/dave/java/) which receives MIDI from your DAW or controller and sends it over 
+also called Dave,](https://github.com/eclab/grains/tree/main/dave/java/) which receives MIDI from your DAW or controller and sends it over 
 the USB port to the GRAINS.  This program is located in the "java" subdirectory.
 
 The general hookup to a controller as follows: 
