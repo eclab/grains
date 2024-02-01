@@ -20,7 +20,7 @@ ADSR comes in four MODES, settable with #defines in the code:
 
 - ASR (Attack/Sustain/Release) mode.  Here there is no Decay at all.  Instead, Pot 2 is release.  This is similar to the ASR envelope in 2ENV, except that Sustain can still be adjusted via Pot 3 + In 3.
 
-- AHR (Attack/Hold/Release) mode.  This is a one-shot envelope with no sustain and no decay. Instead, after attacking to MAXIMUM (5V), the envelope HOLDS at that value for a certain amount of time and then automatically releases to 0V.  Hold occupies Pot 3 instead of Sustain.  AHR mode sports an ENVELOPE COMPLETION TRIGGER on In 3, which you can attach to RESET to cause the whole envelope to loop over and over again as long as gate is ON. If you set Hold to 0, then this degenerates to an AR envelope similar to that found in 2ENV
+- AHR (Attack/Hold/Release) mode.  This is a one-shot envelope with no sustain and no decay. Instead, after attacking to MAXIMUM (not quite 5V), the envelope HOLDS at that value for a certain amount of time and then automatically releases to 0V.  Hold occupies Pot 3 instead of Sustain.  AHR mode sports an ENVELOPE COMPLETION TRIGGER on In 3, which you can attach to RESET to cause the whole envelope to loop over and over again as long as gate is ON. If you set Hold to 0, then this degenerates to an AR envelope similar to that found in 2ENV
 
 You can only set one mode.  AHR takes precedence over ASR, which takes precedence over Separate Release, which takes precedence over Standard.
 
