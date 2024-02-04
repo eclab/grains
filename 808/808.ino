@@ -1117,9 +1117,16 @@ int16_t C(int8_t value, uint8_t volume) { return ((__ULAW2[value + 128]) * volum
 #else
 int16_t C(int8_t value, uint8_t volume) { return ((value * volume) * 32) >> 3; }
 #endif
-#define CC(sample, volume) (sample.isPlaying() * C(sample.next(), volume))
+#define CC(sample, volume) (C(sample.next(), volume) * sample.isPlaying())
 
 uint16_t sum;
+
+// Scale from -32768...+32767 to -240 ... +240
+inline int16_t scaleAudio(int16_t val)
+  {
+  //if (val == 0) return 0;
+  return ((val >> 4) * 15) >> 7;
+  }
 
 int updateAudio1()
     {
@@ -1137,7 +1144,7 @@ int updateAudio1()
     sum += CC(sample1, GAIN_1);             // sum is to outwit the compiler
     sum += CC(sample2, GAIN_2);
     sum += CC(sample3, GAIN_3);
-    return MonoOutput::from16Bit(CC(sample0, GAIN_0) * 8);
+    return scaleAudio(CC(sample0, GAIN_0) * 8);
     }
         
 int updateAudio2()
@@ -1154,7 +1161,7 @@ int updateAudio2()
 // believe it or not, the background hum is lower when more samples are computing.
 // so we add some dummy samples here.
     sum += CC(sample2, GAIN_2);             // sum is to outwit the compiler
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1)) * (uint32_t) pot[2]) >> 6); 
+    return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1)) * (uint32_t) pot[2]) >> 6); 
     }
 
 int updateAudio3()
@@ -1168,7 +1175,7 @@ int updateAudio3()
     // IN 2             PITCH CV 2
     // IN 1             PITCH CV 1 
 
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2)) * (uint32_t) pot[2]) >> 6);
+    return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2)) * (uint32_t) pot[2]) >> 6);
     }
 
 int updateAudio4()
@@ -1182,7 +1189,7 @@ int updateAudio4()
     // IN 2             TRIGGER 4
     // IN 1             PITCH CV 1 
 
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + CC(sample3, GAIN_3)) * (uint32_t) pot[2]) >> 6);
+    return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + CC(sample3, GAIN_3)) * (uint32_t) pot[2]) >> 6);
     }
 
 int updateAudio5()
@@ -1196,7 +1203,7 @@ int updateAudio5()
     // IN 2             TRIGGER 4
     // IN 1             TRIGGER 5 
 
-    return MonoOutput::from16Bit((((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + CC(sample3, GAIN_3) + CC(sample4, GAIN_4))) * (uint32_t) pot[2]) >> 6);
+    return scaleAudio((((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + CC(sample3, GAIN_3) + CC(sample4, GAIN_4))) * (uint32_t) pot[2]) >> 6);
     }
 
 int updateAudio5A()
@@ -1210,7 +1217,7 @@ int updateAudio5A()
     // IN 2             TRIGGER 4
     // IN 1             UNUSED 
 
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + (pot[0] < 512 ? CC(sample3, GAIN_3) : CC(sample4, GAIN_4))) * (uint32_t) pot[2]) >> 6);
+    return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + (pot[0] < 512 ? CC(sample3, GAIN_3) : CC(sample4, GAIN_4))) * (uint32_t) pot[2]) >> 6);
     }
 
 int updateAudio6()
@@ -1224,7 +1231,7 @@ int updateAudio6()
     // IN 2             TRIGGER 4
     // IN 1             UNUSED 
 
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + (pot[0] < 341 ? CC(sample3, GAIN_3) : (pot[0] < 682 ? CC(sample4, GAIN_4) : CC(sample5, GAIN_5)))) * (uint32_t) pot[2]) >> 6);
+    return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + (pot[0] < 341 ? CC(sample3, GAIN_3) : (pot[0] < 682 ? CC(sample4, GAIN_4) : CC(sample5, GAIN_5)))) * (uint32_t) pot[2]) >> 6);
     }
 
 int updateAudio7()
@@ -1238,7 +1245,7 @@ int updateAudio7()
     // IN 2             TRIGGER 4
     // IN 1             UNUSED 
 
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + 
+    return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + 
                             (pot[0] < 512 ? 
                             (pot[0] < 256 ? CC(sample3, GAIN_3) : CC(sample4, GAIN_4)) :
                             (pot[0] < 768 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6)))) * (uint32_t) pot[2]) >> 6);
@@ -1255,7 +1262,7 @@ int updateAudio7A()
     // IN 2             UNUSED
     // IN 1             UNUSED 
 
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + (pot[1] < 341 ? CC(sample1, GAIN_1) : (pot[1] < 682 ? CC(sample2, GAIN_2) : CC(sample3, GAIN_3))) + (pot[0] < 341 ? CC(sample4, GAIN_4) : (pot[0] < 682 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6)))) * (uint32_t) pot[2]) >> 6);
+    return scaleAudio(((CC(sample0, GAIN_0) + (pot[1] < 341 ? CC(sample1, GAIN_1) : (pot[1] < 682 ? CC(sample2, GAIN_2) : CC(sample3, GAIN_3))) + (pot[0] < 341 ? CC(sample4, GAIN_4) : (pot[0] < 682 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6)))) * (uint32_t) pot[2]) >> 6);
     }
 
 int updateAudio8()
@@ -1269,7 +1276,7 @@ int updateAudio8()
     // IN 2             UNUSED
     // IN 1             UNUSED 
         
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + 
+    return scaleAudio(((CC(sample0, GAIN_0) + 
                 (pot[1] < 341 ? CC(sample1, GAIN_1) : (pot[1] < 682 ? CC(sample2, GAIN_2) : CC(sample3, GAIN_3))) + 
                             (pot[0] < 512 ?
                             (pot[0] < 256 ? CC(sample4, GAIN_4) : CC(sample5, GAIN_5)) :
@@ -1287,7 +1294,7 @@ int updateAudio9()
     // IN 2             UNUSED
     // IN 1             UNUSED 
         
-    return MonoOutput::from16Bit(((CC(sample0, GAIN_0) + 
+    return scaleAudio(((CC(sample0, GAIN_0) + 
                             (pot[1] < 512 ?
                             (pot[1] < 256 ? CC(sample1, GAIN_1) : CC(sample2, GAIN_2)) :
                             (pot[1] < 768 ? CC(sample3, GAIN_3) : CC(sample4, GAIN_4))) + 
@@ -1326,6 +1333,7 @@ void updateControl()
     updateControl9();
 #endif
     }
+
 
 int updateAudio()
     {
