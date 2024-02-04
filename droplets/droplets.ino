@@ -18,7 +18,7 @@
 /// Droplets is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
 /// The tinkling is done by choosing a chord from POT 3.  You can then specify the degree of tinkle
-/// (release), together with the tinkle volume, from POT 2.  Then every time you trigger Droplets it will issue one tinkle.  
+/// from POT 2.  Then every time you trigger Droplets it will issue one tinkle.  
 ///
 /// SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 ///
@@ -34,13 +34,12 @@
 
 ///
 ///
-/// RELEASE AND VOLUME
+/// RELEASE AND RANGE
 ///
-/// One potentiometer controls both the length of release of the individual tinkles and their volume.
-/// Left to right, you have three broad regions: low volume, medium volume, and high volume.
-/// Within a region, you have five levels of release from fast release to long release.  Why would
-/// you want lower volume?  Because longer release tinkles, depending on the chord, will cause the
-/// sine waves to overlap and add up to the point that they cause clipping.
+/// One potentiometer controls both the length of release of the individual tinkles and their range.
+/// The left half of the potentiometer is the region where the droplet chords include up to 4 octaves.
+/// The right half of the potentiometer cuts this roughly in half.  Within a left or right half region,
+/// you have five levels of release from fast release to long release.
 ///
 ///
 /// NOISE
@@ -71,7 +70,7 @@
 /// CONFIGURATION
 ///
 /// IN 1            Pitch CV
-/// IN 2            Release and Volume CV
+/// IN 2            Release and Range CV
 /// IN 3            Trigger
 /// AUDIO IN (A)    Pitch Tune
 /// AUDIO OUT       Out
@@ -79,9 +78,9 @@
 ///
 /// POT 1           Pitch Scaling       [Set the switch to In1]
 ///
-/// POT 2           Release and Volume
+/// POT 2           Release and Range
 ///
-/// POT 3           Choice of Droplets
+/// POT 3           Choice of Droplet Chord
 
 
 
@@ -429,22 +428,37 @@ PROGMEM const float semitoneFrequencyRatios[] =
 
 uint8_t chord = 0;                      // which droplet chord have we chosen?
 uint8_t lastPitch = 255;                // What was the last index into the droplet chord that we did?  Used to avoid repeats kinda.
-#define NUM_CHORDS 12
+#define NUM_CHORDS 24
 #define NUM_NOTES 15
 PROGMEM const uint8_t chords[NUM_CHORDS][NUM_NOTES] = 
     {
     {_C, _C, _C, _E, _G, _C1, _E1, _G1, _C2, _E2, _G2, _C3, _E3, _G3, _C4},                 // Maj
     {_C, _C, _C, _Eb, _G, _C1, _Eb1, _G1, _C2, _Eb2, _G2, _C3, _Eb3, _G3, _C4},             // min
     {_C, _C, _C, _E, _G, _B, _C1, _E1, _G1, _B1, _C2, _E2, _G2, _B2, _C3 },                 // Maj7
-    {_C, _C, _C, _Eb, _G, _Bb, _C1, _Eb1, _G1, _Bb1, _C2, _Eb2, _G2, _Bb2, _C3 },   // min7
+    {_C, _C, _C, _Eb, _G, _Bb, _C1, _Eb1, _G1, _Bb1, _C2, _Eb2, _G2, _Bb2, _C3 },           // min7
     {_C, _C, _C, _E, _G, _Bb, _C1, _Eb, _G1, _Bb1, _C2, _Eb, _G2, _Bb2, _C3 },              // 7
     {_C, _C, _C, _Eb, _Gb, _A, _C1, _Eb, _Gb1, _A1, _C2, _Eb, _Gb2, _A, _C3 },              // dim7
     {_C, _C, _C, _E, _Ab, _C1, _E, _Ab1, _C2, _E, _Ab2, _C3, _E, _Ab2, _C4 },               // Aug7
-    {_C, _D, _G, _A, _C1, _D2, _E2, _G2, _A2, _C3, _D3, _E3, _G3, _A3, _C4 },               // Pentatonic
-    {_C, _C, _C, _D, _E, _Gb, _Ab, _Bb, _C1, _D1, _E1, _Gb1, _Ab1, _Bb1, _C2},              // Whole Tone
+    {_C, _D, _E, _G, _A, _C1, _D1, _E1, _G1, _A1, _C2, _D2, _E2, _G2, _A2  },               // Pentatonic
+    {_C, _C, _C, _D, _E, _Gb, _Ab, _Bb, _C1, _D1, _E1, _Gb1, _Ab1, _Bb1, _C2 },              // Whole Tone
     {_C, _C, _C, _Db, _D, _Eb, _E, _F, _Gb, _G, _Ab, _A, _Bb, _B, _C2 },                    // Chromatic
-    {_C, _C, _G, _C1, _G2, _C2, _G2, _C3, _G3, _C4, _C1, _G2, _C2, _G3, _C3 },              // 5 + Oct
+    {_C, _C, _G, _C1, _G1, _C2, _G2, _C3, _G3, _C4, _C1, _G1, _C2, _G2, _C3 },              // 5 + Oct
     {_C, _C, _C, _C1, _C2, _C3, _C4, _C1, _C2, _C3, _C4, _C1, _C2, _C3, _C4 },              // Oct
+
+    // Shortened
+    {_C, _C, _C, _E, _G, _C1, _E1, _G1, _C2, _E, _G, _C1, _E1, _G1, _C2 },                 // Maj
+    {_C, _C, _C, _Eb, _G, _C1, _Eb1, _G1, _C2, _Eb, _G, _C1, _Eb1, _G1, _C2,},             // min
+    {_C, _C, _C, _E, _G, _B, _C1, _E, _G, _B, _C1, _E1, _G1, _B1, _C2,  },                 // Maj7
+    {_C, _C, _C, _Eb, _G, _Bb, _C1, _Eb, _G, _Bb, _C1, _Eb1, _G1, _Bb1, _C2,  },           // min7
+    {_C, _C, _C, _E, _G, _Bb, _C1, _E, _G, _Bb, _C1, _Eb, _G1, _Bb1, _C2 },                 // 7
+    {_C, _C, _C, _Eb, _Gb, _A, _C1, _Eb, _Gb, _A, _C1, _Eb, _Gb1, _A1, _C2 },              // dim7
+    {_C, _C, _C, _E, _Ab, _C1, _E, _Ab1, _C2, _E, _Ab, _C1, _E, _Ab1, _C2,},               // Aug7
+    {_C, _D, _E, _G, _A, _C, _D, _E, _G, _A, _C1, _D1, _E1, _G1, _A1, },                    // Pentatonic
+    {_C, _C, _C, _D, _E, _Gb, _Ab, _Bb, _C1, _D, _E, _Gb, _Ab, _Bb, _C1, },                 // Whole Tone
+    {_C, _C, _C, _Db, _D, _Eb, _E, _F, _Gb, _G, _Ab, _A, _Bb, _B, _C2 },                    // Chromatic
+    {_C, _C, _C, _G, _C1, _G1, _C2, _G2, _C3, _G, _C1, _G1, _C2, _G2, _C3 },              // 5 + Oct
+    {_C, _C, _C, _C1, _C2, _C1, _C2, _C1, _C2, _C1, _C2, _C1, _C2, _C1, _C2 },             // Oct
+
     };
         
 #define NYQUIST 16384
@@ -453,7 +467,6 @@ PROGMEM const uint8_t chords[NUM_CHORDS][NUM_NOTES] =
 
 
 float baseFrequency;                    // what note is being played?
-uint8_t overallGain;                    // how much gain do we increase by?  Reasonable values run 1...4
 uint8_t release;                        // the index into _releases that we will use for our counter
 uint8_t triggered = false;              // did we already trigger and haven't un-triggered yet?
 uint8_t odd = 0;                        // Some items we only do every other updateControl() step to be a bit faster (not the triggers)
@@ -465,24 +478,15 @@ void updateControl()
         baseFrequency = getFrequency(CV_POT_IN1, CV_AUDIO_IN);
 
         // Not sure we should bother filtering these, probably not
-        chord = (mozziAnalogRead(CV_POT3) * NUM_CHORDS) >> 10;
+        chord = (mozziAnalogRead(CV_POT3) * (NUM_CHORDS / 2)) >> 10;
         
-        uint8_t releaseAndCut = (mozziAnalogRead(CV_POT_IN2) * 15) >> 10;
-        if (releaseAndCut < 5)
-            {
-            release = releaseAndCut;
-            overallGain = 1;
-            }
-        else if (releaseAndCut < 10)
-            {
-            release = releaseAndCut - 5;
-            overallGain = 2;
-            }
-        else
-            {
-            release = releaseAndCut - 10;
-            overallGain = 4;
-            }
+        release = (mozziAnalogRead(CV_POT_IN2) * 10) >> 10;
+        if (release > 4)
+          {
+            release -= 5;
+            chord += 12;
+          }
+         //Serial.println(chord);
         }
         
     // Check for a trigger
@@ -500,7 +504,7 @@ void updateControl()
     }
 
 int16_t nextSine = 0;                           // what's the next oscillator to use?
-uint16_t countIn[NUM_SINES];                    // this is a count-up which does a fade-IN on the sound to prevent clicks.
+uint8_t countIn[NUM_SINES];                    // this is a count-up which does a fade-IN on the sound to prevent clicks.
 int16_t gains[4];                               // this is the fade-OUT on the sound for the release
 uint8_t max[4];                                 // this is the amount to reset gains to each time
 uint8_t counters[4];                            // this is how long we wait before decreasing gains by 12
@@ -538,7 +542,7 @@ void trigger()
     }
 
 // This is our fade-out release mechanism.  It also does fade-in via countIn
-inline int32_t attenuate(uint8_t i, int8_t in)
+inline int16_t attenuate(uint8_t i, int8_t in)
     {
     if (countIn[i] < 256 - 8) countIn[i]+=8;
     else if (counters[i] == 0)
@@ -550,19 +554,31 @@ inline int32_t attenuate(uint8_t i, int8_t in)
         {
         counters[i]--;
         }
-    return (in * gains[i] * (int32_t)countIn[i]) >> 8;
+
+    int16_t a = (in * ((gains[i] * (int16_t)countIn[i]) >> 8)) >> 1;
+    return a;
     }
         
 
+// Scale from -32768...+32767 to -192 ... +191.  That's about as good as we can do.
+// If we scale to -208...+207 (* 13), -224...+223 (* 14), or -240...+239 (* 15),
+// we get some distortion, which is as I predicted because it appears
+// that the maximum arange is only about 0...400, not 0...488.  Still pretty good,
+// it gives us a half bit more, which puts us at 1.5x louder.
+inline int16_t scaleAudio(int16_t val)
+  {
+  return ((val >> 4) * 12) >> 7;
+  }
+
 int updateAudio()    
     {
-    int16_t a = (
-        + attenuate(0, sines[0].next())
+    int16_t a = ((
+        attenuate(0, sines[0].next())
         + attenuate(1, sines[1].next())
         + attenuate(2, sines[2].next())
-        + attenuate(3, sines[3].next()) * overallGain) >> 1;
+        + attenuate(3, sines[3].next())));
 
-    return MonoOutput::from16Bit(a);
+    return scaleAudio(a);
     }
 
 

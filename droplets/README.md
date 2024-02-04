@@ -29,9 +29,12 @@ You current choices are (in order left to right):
 Except for Whole Tone and Chromatic, most droplet chords range 3 or 4 octaves, with an emphasis on the fundamental.
 
 
-## Release and Volume
+## Release and Range
 
-One potentiometer controls both the length of release of the individual tinkles and their volume. Left to right, you have three broad regions: low volume, medium volume, and high volume. Within a region, you have five levels of release from fast release to long release.  Why would you want lower volume?  Because longer release tinkles, depending on the chord, will cause the sine waves to overlap and add up to the point that they cause clipping.
+One potentiometer controls both the length of release of the individual tinkles and their range.
+The left half of the potentiometer is the region where the droplet chords include up to 4 octaves.
+The right half of the potentiometer cuts this roughly in half.  Within a left or right half region,
+you have five levels of release from fast release to long release.
 
 
 ## Noise
@@ -56,7 +59,7 @@ There is a bug in GRAINS that affects Pots (Dials) 1 and 2.  If you set the swit
 #### IN 1
 Pitch CV
 #### IN 2
-Release and Volume CV
+Release and Range CV
 #### IN 3
 Trigger
 #### AUDIO IN (A)
@@ -68,8 +71,8 @@ Out
 #### POT 1
 Pitch CV Scaling
 #### POT 2
-Release and Volume
+Release and Range
 
-[If you're not using Release and Volume CV, set the switch to MAN]
+[If you're not using Release and Range CV, set the switch to MAN]
 #### POT 3
-Choice of Droplets
+Choice of Droplet Chord
