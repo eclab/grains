@@ -10,6 +10,11 @@ Other GRAINS firmware repositories:
 - Keurslager Kurt's [GRAINS LFO](https://github.com/ZVanMoerkerke/GrainsAE_VC_LFO_Sine)
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 
+## Pluck
+A 4-voice Karplus-Strong string plucking simulator.
+
+Status: Working, but because it has to commit to a pitch immediately (to build the Karplus-Strong sample table) sometimes it can get off pitch on some notes thanks to GRAINS/Mozzi's inaccuracy in Analog Input reads.  Could use some work there.
+
 ## Arp
 A 16-note random melody generator.  Think of it as Topograf / Lattice for notes rather than drums.  Requires Mozzi.
 
