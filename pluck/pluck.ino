@@ -569,7 +569,6 @@ uint8_t waveLength[NUM_WAVES];
 
 void setup() 
     {
-    Serial.begin(115200);
     // some reasonable initial defaults
     pinMode(CV_GATE_OUT, INPUT_PULLUP);
     initializeFrequency(CV_POT_IN1, CV_AUDIO_IN);
@@ -660,8 +659,6 @@ inline uint16_t getPitchPos(uint8_t pitch, uint8_t tune)
 void load(uint16_t pitchPos)
 	{
 	waveLength[currentWave] = WAVETABLE_SIZE(pitchPos > 1535 ? 1535 : pitchPos);		// Max WAVETABLE SIZE is 251
-	Serial.println(waveLength[currentWave]);
-	Serial.println(pitchPos);
 	uint8_t start = rand(7936);		// 8192 - 256, so we have enough space without wrapping
 	for(uint8_t i = 0; i < waveLength[currentWave]; i++)
 		{
