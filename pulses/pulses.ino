@@ -483,7 +483,7 @@ void setup()
     FlexiTimer2::set(1, 1.0 / 1024, pulse);
     FlexiTimer2::start();
 
-    Serial.begin(115200);
+//    Serial.begin(115200);
     }
 
 

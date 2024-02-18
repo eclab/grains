@@ -354,7 +354,9 @@ PROGMEM const uint8_t NOISE[8192]  =
 // and thus to a wave length.  These values correspond with 0V being 32.7Hz.  We only allow
 // freqeuncies of 64 or greater, which corresponds to wave lengths of 16384 / 64 = 256 or
 // smaller. We then continue another 512 for some headroom when pitch-shifting.
-PROGMEM const uint8_t wavetableSizes[1024 + 512] = {
+PROGMEM const uint8_t wavetableSizes[1024 + 512] = 
+/*
+{
 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256,
 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256,
 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256,
@@ -447,10 +449,97 @@ PROGMEM const uint8_t wavetableSizes[1024 + 512] = {
 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
 };
+*/
+{251, 250, 249, 248, 247, 246, 245, 245, 244, 243, 242, 241, 241,
+240, 239, 238, 237, 236, 236, 235, 234, 233, 233, 232, 231, 230, 229,
+229, 228, 227, 226, 226, 225, 224, 223, 223, 222, 221, 220, 220, 219,
+218, 217, 217, 216, 215, 214, 214, 213, 212, 211, 211, 210, 209, 209,
+208, 207, 207, 206, 205, 204, 204, 203, 202, 202, 201, 200, 200, 199,
+198, 198, 197, 196, 196, 195, 194, 194, 193, 192, 192, 191, 190, 190,
+189, 188, 188, 187, 187, 186, 185, 185, 184, 183, 183, 182, 182, 181,
+180, 180, 179, 179, 178, 177, 177, 176, 176, 175, 174, 174, 173, 173,
+172, 171, 171, 170, 170, 169, 169, 168, 167, 167, 166, 166, 165, 165,
+164, 163, 163, 162, 162, 161, 161, 160, 160, 159, 159, 158, 157, 157,
+156, 156, 155, 155, 154, 154, 153, 153, 152, 152, 151, 151, 150, 150,
+149, 149, 148, 148, 147, 147, 146, 146, 145, 145, 144, 144, 143, 143,
+142, 142, 141, 141, 140, 140, 139, 139, 138, 138, 138, 137, 137, 136,
+136, 135, 135, 134, 134, 133, 133, 133, 132, 132, 131, 131, 130, 130,
+129, 129, 129, 128, 128, 127, 127, 126, 126, 126, 125, 125, 124, 124,
+123, 123, 123, 122, 122, 121, 121, 121, 120, 120, 119, 119, 118, 118,
+118, 117, 117, 117, 116, 116, 115, 115, 115, 114, 114, 113, 113, 113,
+112, 112, 111, 111, 111, 110, 110, 110, 109, 109, 108, 108, 108, 107,
+107, 107, 106, 106, 106, 105, 105, 105, 104, 104, 103, 103, 103, 102,
+102, 102, 101, 101, 101, 100, 100, 100, 99, 99, 99, 98, 98, 98, 97,
+97, 97, 96, 96, 96, 95, 95, 95, 94, 94, 94, 93, 93, 93, 93, 92, 92,
+92, 91, 91, 91, 90, 90, 90, 89, 89, 89, 89, 88, 88, 88, 87, 87, 87,
+86, 86, 86, 86, 85, 85, 85, 84, 84, 84, 84, 83, 83, 83, 82, 82, 82,
+82, 81, 81, 81, 81, 80, 80, 80, 79, 79, 79, 79, 78, 78, 78, 78, 77,
+77, 77, 77, 76, 76, 76, 76, 75, 75, 75, 74, 74, 74, 74, 73, 73, 73,
+73, 73, 72, 72, 72, 72, 71, 71, 71, 71, 70, 70, 70, 70, 69, 69, 69,
+69, 68, 68, 68, 68, 68, 67, 67, 67, 67, 66, 66, 66, 66, 65, 65, 65,
+65, 65, 64, 64, 64, 64, 64, 63, 63, 63, 63, 62, 62, 62, 62, 62, 61,
+61, 61, 61, 61, 60, 60, 60, 60, 60, 59, 59, 59, 59, 59, 58, 58, 58,
+58, 58, 57, 57, 57, 57, 57, 56, 56, 56, 56, 56, 55, 55, 55, 55, 55,
+55, 54, 54, 54, 54, 54, 53, 53, 53, 53, 53, 53, 52, 52, 52, 52, 52,
+51, 51, 51, 51, 51, 51, 50, 50, 50, 50, 50, 50, 49, 49, 49, 49, 49,
+49, 48, 48, 48, 48, 48, 48, 47, 47, 47, 47, 47, 47, 47, 46, 46, 46,
+46, 46, 46, 45, 45, 45, 45, 45, 45, 45, 44, 44, 44, 44, 44, 44, 43,
+43, 43, 43, 43, 43, 43, 42, 42, 42, 42, 42, 42, 42, 41, 41, 41, 41,
+41, 41, 41, 40, 40, 40, 40, 40, 40, 40, 40, 39, 39, 39, 39, 39, 39,
+39, 38, 38, 38, 38, 38, 38, 38, 38, 37, 37, 37, 37, 37, 37, 37, 37,
+36, 36, 36, 36, 36, 36, 36, 36, 35, 35, 35, 35, 35, 35, 35, 35, 35,
+34, 34, 34, 34, 34, 34, 34, 34, 33, 33, 33, 33, 33, 33, 33, 33, 33,
+32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 31, 31, 31, 31, 31, 31, 31,
+31, 31, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 29, 29, 29, 29, 29,
+29, 29, 29, 29, 29, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 27,
+27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 26, 26, 26, 26, 26, 26, 26,
+26, 26, 26, 26, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 24,
+24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 23, 23, 23, 23, 23, 23,
+23, 23, 23, 23, 23, 23, 23, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+22, 22, 22, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
+20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 19, 19,
+19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 18, 18, 18,
+18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 17, 17, 17, 17,
+17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 16, 16, 16, 16,
+16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15, 15,
+15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+15, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+14, 14, 14, 14, 14, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
+13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 12, 12, 12, 12, 12, 12, 12,
+12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
+12, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11,
+11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 10, 10, 10, 10, 10, 10,
+10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+10, 10, 10, 10, 10, 10, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8,
+8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
+6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4,
+4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+1, 1, 1};
 
 
 #define WAVETABLE_SIZE(pitch) pgm_read_byte_near(&wavetableSizes[pitch])
-#define CONTROL_RATE 64
+#define CONTROL_RATE 256
 
 #include <MozziGuts.h>
 #include <mozzi_rand.h>
@@ -459,7 +548,7 @@ PROGMEM const uint8_t wavetableSizes[1024 + 512] = {
 // If our lowest frequency is 32, then we have to have tables of size 512.
 // But we have about 2K of space maximum.  Let's say that our minimum frequency is 64 (about a very low C)
 // Then we have tables of size 256 each, and 6 of them would be 1.5K, which is probably enough?
-#define MAX_WAVELENGTH 256
+#define MAX_WAVELENGTH 251
 #define NUM_WAVES 4
 int8_t wave[NUM_WAVES][MAX_WAVELENGTH];		// probably doesn't need to be signed?
 uint8_t currentWave = 0;
@@ -486,6 +575,8 @@ void setup()
     initializeFrequency(CV_POT_IN1, CV_AUDIO_IN);
     randomSeed(RANDOM_PIN);
     startMozzi();
+
+	readPots();
     }
 
 #define MEDIAN_OF_THREE(a,b,c) (((a) <= (b)) ? (((b) <= (c)) ? (b) : (((a) < (c)) ? (c) : (a))) : (((a) <= (c)) ? (a) : (((b) < (c)) ? (c) : (b))))
@@ -552,40 +643,13 @@ inline uint16_t getPitchPos(uint8_t pitch, uint8_t tune)
     tuneCV = (tuneCV * 15 + mozziAnalogRead(tune)) >> 4;
     uint16_t p = mozziAnalogRead(pitch);
 	uint16_t p1 = MEDIAN_OF_THREE(p, pA, pB);  //medianOfFive(p, pA, pB, pC, pD);
-	pD = pC;
-	pC = pB;
+	//pD = pC;
+//	pC = pB;
 	pB = pA;
 	pA = p;
 	pitchCV = p1;
-    pitchCV = (pitchCV + p1 * 7) >> 3;
+    //pitchCV = (pitchCV + p1) >> 1;
 
-/*
-    uint16_t diff = (p > pitchCV ? p - pitchCV : pitchCV - p);
-    if (diff >= LARGE_JUMP)
-        {
-        pitchCV = p;            // jump right there
-        freqCounter = FREQ_COUNTER_MAX;
-        }
-    else if (freqCounter > 0)
-        {
-        freqCounter--;
-        pitchCV = (pitchCV + p) >> 1;
-        pB = pA;
-        pA = pitchCV;
-        }
-    else
-    	{
-    	pitchCV = p;
-    	}
-    else
-        {
-        uint16_t p1 = MEDIAN_OF_THREE(p, pA, pB);
-        pB = pA;
-        pA = p;
-        pitchCV = (pitchCV * 7 + p1) >> 3;
-        }
-*/
-        
     uint16_t finalPitch = pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205;
     return finalPitch;
     }
@@ -595,31 +659,47 @@ inline uint16_t getPitchPos(uint8_t pitch, uint8_t tune)
     
 void load(uint16_t pitchPos)
 	{
-	waveLength[currentWave] = WAVETABLE_SIZE(pitchPos > 1535 ? 1535 : pitchPos) - 1;			// 256 wraps to 0 so we make it so that 256 = 255 and 1 = 0
+	waveLength[currentWave] = WAVETABLE_SIZE(pitchPos > 1535 ? 1535 : pitchPos);		// Max WAVETABLE SIZE is 251
+	Serial.println(waveLength[currentWave]);
+	Serial.println(pitchPos);
 	uint8_t start = rand(7936);		// 8192 - 256, so we have enough space without wrapping
-	for(uint8_t i = 0; ; i++)		// see below
+	for(uint8_t i = 0; i < waveLength[currentWave]; i++)
 		{
 		// We are using the noise array rather than just the random number generator on
 		// the assumption that it's faster.  Fingers crossed.
 		wave[currentWave][i] = (int8_t)GET_NOISE(start + i);
-		if (i == waveLength[currentWave]) break;		// can't use standard for-loop because waveLength is bigger than a uint8_t!
 		}
 	currentWave++;
 	if (currentWave >= NUM_WAVES) currentWave = 0;
 	}
 
-const uint8_t scales[8] = { 1, 3, 7, 15, 31, 63, 127, 255 };
-const uint8_t shifts[8] = { 1, 2, 3, 4,  5,  6,  7,   8  };
+const uint8_t scales[8] = { 1, 3, 7, 15, 31, 63, 127, 255 };  // 511, 1023, 2047, 4095, 8191, 16383, 32767, 65535 };
+const uint8_t shifts[8]  = { 1, 2, 3, 4, 5, 6, 7, 8, }; // 9, 10, 11, 12, 13, 14, 15, 16 };
 
 uint8_t atonality = 0;		// 0...15
-uint8_t scale;
+uint16_t scale;
 uint8_t shift;
 uint8_t gain = 16;
 uint8_t triggered = false;
 uint8_t waitCount = 0;
 
+inline void readPots()
+	{
+#ifdef ATONALITY_ON_POT_2        
+    atonality = mozziAnalogRead(CV_POT_IN2) >> 6;
+	uint8_t s = mozziAnalogRead(CV_IN3) >> 7;
+#else
+    atonality = mozziAnalogRead(CV_IN3) >> 6;
+	uint8_t s = mozziAnalogRead(CV_POT_IN2) >> 7;
+#endif
+	scale = scales[s];
+	shift = shifts[s];
+    gain = mozziAnalogRead(CV_POT3) >> 6;
+	}
+	
+	
 void updateControl() 
-    {
+    {    		
 	uint16_t pitchPos = getPitchPos(CV_POT_IN1, CV_AUDIO_IN);		// we have to call this each time
     // Check for a trigger
     uint8_t tr = digitalRead(CV_GATE_OUT);
@@ -635,19 +715,12 @@ void updateControl()
     if (waitCount)
     	{
     	if (waitCount == 1)
+    		{
+    		readPots();
         	load(pitchPos);
+        	}
         waitCount--;
     	}
-    gain = mozziAnalogRead(CV_POT3) >> 6;
-#ifdef ATONALITY_ON_POT_2        
-    atonality = mozziAnalogRead(CV_POT_IN2) >> 6;
-	uint8_t s = mozziAnalogRead(CV_IN3) >> 7;
-#else
-    atonality = mozziAnalogRead(CV_IN3) >> 6;
-	uint8_t s = mozziAnalogRead(CV_POT_IN2) >> 7;
-#endif
-	scale = scales[s];
-	shift = shifts[s];
     }
 
 
@@ -661,10 +734,10 @@ int updateAudio()
     	{
     	int8_t a = wave[i][wavePos[i]];
     	wavePos[i]++;
-    	if (wavePos[i] >= waveLength[i]) wavePos[i] = 0;		// remember, wavelength is 1 less than real value
+    	if (wavePos[i] >= waveLength[i]) wavePos[i] = 0;
     	
-    	int16_t b = wave[i][wavePos[i]];
-    	int8_t c = (multiply * (a + b * scale)) >> shift;
+    	int8_t b = wave[i][wavePos[i]];
+    	int8_t c = (int8_t)((multiply * (a + b * scale)) >> shift);
     	wave[i][wavePos[i]] = c;
     	total += c;
     	}
