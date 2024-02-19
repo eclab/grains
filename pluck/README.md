@@ -8,8 +8,8 @@ in your Arduino IDE.
 There are three options for plucking.  First, you can set the DECAY of the pluck.  Note that higher
 note plucks will decay much faster regardless, but you can stretch them out this way.  Second, you
 can set the GAIN (the volume).  Third, you can set the ATONALITY of the pluck: how much
-it will sound like a string versus an atonal drum or crash sound.  Second, you can set the
-DECAY of the pluck.  
+it will sound like a string versus an atonal drum or crash sound.  
+ Basically more atonality rapidly adds more and more noise to the sound.  Second, you can set the DECAY of the pluck.  Longer decays will sound increasingly metallic and when they pile up you'll need to reduce the GAIN
 
 You can't have both ATONALITY and DECAY on the IN 2 knob and input: one is relegated to CV via IN 3.  
 By default ATONALITY is on IN 3 and DECAY gets the IN2 knob/input.  But if you'd like to swap that,
@@ -18,7 +18,7 @@ just uncomment a #define in the code.
 
 ## Tuning
 
-Unlike other GRAINS, Pluck has to compute the wave array size immediately in order to play it.  This means 
+Unlike other Mozzi projects, Pluck has to compute the wave array size immediately in order to play it.  This means 
 it that has to make a snap judgment about the current pitch, and sometimes it's wrong because GRAINS / Mozzi
 are very sloppy and noisy in providing proper pitch information.  So occasionally it'll be off when you play it.
 I will try to work on it, but expect Pluck to not be exactly on pitch every time you do a pluck.  I can make it

@@ -298,10 +298,6 @@ PROGMEM const float frequencies[1024+512] = {
     };
 
 
-#define TRANSPOSE_BITS  0                       // a BIT is 1/17 of a semitone
-#define TRANSPOSE_SEMITONES 0           
-#define TRANSPOSE_OCTAVES 0                     // Do you bulk tranpose in octaves, and finish the rest in semitones
-
 #define FREQUENCY(pitch) pgm_read_float_near(&frequencies[pitch])
 #define CONTROL_RATE 100                        // More than this and we're gonna get clicks probably
 
@@ -471,6 +467,13 @@ void updateControl()
     }                                             
 
 
+// Scale from -32768...+32767 to -240 ... +240
+inline int16_t scaleAudio(int16_t val)
+  {
+  if (val == 0) return 0;
+  return ((val >> 4) * 15) >> 7;
+  }
+
 int updateAudio()                             
     { 
     int16_t* d = drawbars[organ];
@@ -479,5 +482,5 @@ int updateAudio()
         {
         val += (oscils[i].next() * d[i]);
         }
-    return MonoOutput::from16Bit((val >> 8) * gain);
+    return scaleAudio((val >> 8) * gain);
     }

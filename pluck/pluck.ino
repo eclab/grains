@@ -26,8 +26,9 @@
 /// There are three options for plucking.  First, you can set the DECAY of the pluck.  Note that higher
 /// note plucks will decay much faster regardless, but you can stretch them out this way.  Second, you
 /// can set the GAIN (the volume).  Third, you can set the ATONALITY of the pluck: how much
-/// it will sound like a string versus an atonal drum or crash sound.  Second, you can set the
-/// DECAY of the pluck.  
+/// it will sound like a string versus an atonal drum or crash sound.  Basically more atonality rapidly
+/// adds more and more noise to the sound.  Second, you can set the DECAY of the pluck.  Longer decays
+/// will sound increasingly metallic and when they pile up you'll need to reduce the GAIN.
 ///
 /// You can't have both ATONALITY and DECAY on the IN 2 knob and input: one is relegated to CV via IN 3.  
 /// By default ATONALITY is on IN 3 and DECAY gets the IN2 knob/input.  But if you'd like to swap that,
@@ -38,7 +39,7 @@
 
 /// TUNING
 ///
-/// Unlike other GRAINS, Pluck has to compute the wave array size immediately in order to play it.  This means 
+/// Unlike other Mozzi projects, Pluck has to compute the wave array size immediately in order to play it.  This means 
 /// it that has to make a snap judgment about the current pitch, and sometimes it's wrong because GRAINS / Mozzi
 /// are very sloppy and noisy in providing proper pitch information.  So occasionally it'll be off when you play it.
 /// I will try to work on it, but expect Pluck to not be exactly on pitch every time you do a pluck.  I can make it
@@ -575,7 +576,7 @@ void setup()
     randomSeed(RANDOM_PIN);
     startMozzi();
 
-	readPots();
+	readPots();		// read them at least once 
     }
 
 #define MEDIAN_OF_THREE(a,b,c) (((a) <= (b)) ? (((b) <= (c)) ? (b) : (((a) < (c)) ? (c) : (a))) : (((a) <= (c)) ? (a) : (((b) < (c)) ? (c) : (b))))
@@ -583,8 +584,8 @@ uint16_t pitchCV;
 uint16_t tuneCV;
 uint16_t pA;
 uint16_t pB;
-uint16_t pC;
-uint16_t pD;
+//uint16_t pC;
+/uint16_t pD;
 
 void initializeFrequency(uint8_t pitch, uint8_t tune)
     {
@@ -670,13 +671,28 @@ void load(uint16_t pitchPos)
 	if (currentWave >= NUM_WAVES) currentWave = 0;
 	}
 
+
+// SCALE AND SHIFT
+// This is just a way of increasing the decay.  Instead of doing (a + b) / 2
+// we do (a + b * (x - 1)) / x  for values of x from 2 to 256, x is a power of 2.
+// To do this we do (a + b * scale) >> shift 
+// We have 8 options for x: 2, 4, ... 256, as described below.
 const uint8_t scales[8] = { 1, 3, 7, 15, 31, 63, 127, 255 };  // 511, 1023, 2047, 4095, 8191, 16383, 32767, 65535 };
 const uint8_t shifts[8]  = { 1, 2, 3, 4, 5, 6, 7, 8, }; // 9, 10, 11, 12, 13, 14, 15, 16 };
+uint16_t scale;				// one of scales[]. uint16_t to make multiplication easier later.
+uint8_t shift;				// one of shifts[]
 
+// ATONALITY
+// This is the probability that after doing (a + b) / 2 we multiply the whole thing by -1.
+// It was suggested by Karplus and Strong as a way to increase the "atonality" of the sound,
+// which really just makes it noisier.
 uint8_t atonality = 0;		// 0...15
-uint16_t scale;
-uint8_t shift;
-uint8_t gain = 16;
+
+// GAIN
+// This is just the volume knob at the end.
+uint8_t gain;				// 0...15
+
+
 uint8_t triggered = false;
 uint8_t waitCount = 0;
 
