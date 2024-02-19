@@ -46,9 +46,6 @@ in two ways.  First, you can add pitch to the tuning with a CV value to Audio In
 can transpose the pitch up by changing the TRANSPOSE\_OCTAVES and/or TRANSPOSE\_SEMITONES #defines 
 in the code to positive integers.
 
-I recognize that Droplets will be hard to tune because of the tinkles.  By far the easiest to tune 
-with is OCTAVES, which is the very last droplet option (turn the droplet knob fully to the right).
-
 
 ## Grains Bug
 
