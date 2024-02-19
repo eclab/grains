@@ -43,7 +43,7 @@
 /// it that has to make a snap judgment about the current pitch, and sometimes it's wrong because GRAINS / Mozzi
 /// are very sloppy and noisy in providing proper pitch information.  So occasionally it'll be off when you play it.
 /// I will try to work on it, but expect Pluck to not be exactly on pitch every time you do a pluck.  I can make it
-/// more accurate, but at the expense of much more latench (and Pluck has plenty of latency already).
+/// more accurate, but at the expense of much more latency (and Pluck has plenty of latency already).
 ///
 /// Also, you can adjust tuning, but note that Karplus-Strong is limited in its ability precisely match
 /// a given pitch.  High plucks will be far, far less pitch accurate than low plucks.  The lowest 
@@ -585,7 +585,7 @@ uint16_t tuneCV;
 uint16_t pA;
 uint16_t pB;
 //uint16_t pC;
-/uint16_t pD;
+//uint16_t pD;
 
 void initializeFrequency(uint8_t pitch, uint8_t tune)
     {
@@ -672,6 +672,67 @@ void load(uint16_t pitchPos)
 	}
 
 
+/*
+// Rises as a Square
+const PROGMEM uint8_t ATONALITY[] = 
+{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7,
+8, 8, 9, 9, 9, 10, 10, 11, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15,
+16, 16, 17, 17, 18, 18, 19, 19, 20, 20, 21, 22, 22, 23, 23, 24, 25,
+25, 26, 27, 27, 28, 29, 29, 30, 31, 31, 32, 33, 33, 34, 35, 36, 36,
+37, 38, 39, 40, 40, 41, 42, 43, 44, 44, 45, 46, 47, 48, 49, 50, 50,
+51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67,
+68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 79, 80, 81, 82, 83, 84, 85,
+87, 88, 89, 90, 91, 93, 94, 95, 96, 97, 99, 100, 101, 102, 104, 105,
+106, 108, 109, 110, 112, 113, 114, 116, 117, 118, 120, 121, 122, 124,
+125, 127, 128, 129, 131, 132, 134, 135, 137, 138, 140, 141, 143, 144,
+146, 147, 149, 150, 152, 153, 155, 156, 158, 160, 161, 163, 164, 166,
+168, 169, 171, 172, 174, 176, 177, 179, 181, 182, 184, 186, 188, 189,
+191, 193, 195, 196, 198, 200, 202, 203, 205, 207, 209, 211, 212, 214,
+216, 218, 220, 222, 224, 225, 227, 229, 231, 233, 235, 237, 239, 241,
+243, 245, 247, 249, 251, 253, 255};
+*/
+
+// Rises as a Cube
+const PROGMEM uint8_t ATONALITY[] = 
+{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4,
+5, 5, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 11,
+11, 11, 12, 12, 13, 13, 14, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18,
+19, 19, 20, 21, 21, 22, 22, 23, 24, 24, 25, 25, 26, 27, 27, 28, 29,
+30, 30, 31, 32, 33, 33, 34, 35, 36, 37, 37, 38, 39, 40, 41, 42, 43,
+44, 44, 45, 46, 47, 48, 49, 50, 51, 52, 54, 55, 56, 57, 58, 59, 60,
+61, 62, 64, 65, 66, 67, 69, 70, 71, 72, 74, 75, 76, 78, 79, 81, 82,
+83, 85, 86, 88, 89, 91, 92, 94, 95, 97, 98, 100, 102, 103, 105, 107,
+108, 110, 112, 114, 115, 117, 119, 121, 123, 124, 126, 128, 130, 132,
+134, 136, 138, 140, 142, 144, 146, 148, 150, 152, 154, 157, 159, 161,
+163, 165, 168, 170, 172, 175, 177, 179, 182, 184, 187, 189, 192, 194,
+197, 199, 202, 204, 207, 209, 212, 215, 217, 220, 223, 226, 228, 231,
+234, 237, 240, 243, 246, 249, 252, 255};
+
+/*
+// Rises as x^4
+const PROGMEM uint8_t ATONALITY[] = 
+{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4,
+4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10,
+10, 10, 11, 11, 12, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17,
+18, 18, 19, 20, 20, 21, 21, 22, 23, 23, 24, 25, 25, 26, 27, 28, 28,
+29, 30, 31, 32, 33, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44,
+45, 46, 48, 49, 50, 51, 52, 54, 55, 56, 57, 59, 60, 61, 63, 64, 66,
+67, 69, 70, 72, 73, 75, 76, 78, 80, 81, 83, 85, 87, 89, 90, 92, 94,
+96, 98, 100, 102, 104, 106, 108, 110, 112, 115, 117, 119, 121, 124,
+126, 128, 131, 133, 136, 138, 141, 143, 146, 149, 151, 154, 157, 160,
+162, 165, 168, 171, 174, 177, 180, 183, 187, 190, 193, 196, 200, 203,
+206, 210, 213, 217, 220, 224, 228, 231, 235, 239, 243, 247, 251, 255};
+*/
+
+#define ATONALITY_VAL(i) pgm_read_byte_near(&ATONALITY[i])
+
+
 // SCALE AND SHIFT
 // This is just a way of increasing the decay.  Instead of doing (a + b) / 2
 // we do (a + b * (x - 1)) / x  for values of x from 2 to 256, x is a power of 2.
@@ -686,7 +747,7 @@ uint8_t shift;				// one of shifts[]
 // This is the probability that after doing (a + b) / 2 we multiply the whole thing by -1.
 // It was suggested by Karplus and Strong as a way to increase the "atonality" of the sound,
 // which really just makes it noisier.
-uint8_t atonality = 0;		// 0...15
+uint8_t atonality = 0;		// 0...255
 
 // GAIN
 // This is just the volume knob at the end.
@@ -699,10 +760,10 @@ uint8_t waitCount = 0;
 inline void readPots()
 	{
 #ifdef ATONALITY_ON_POT_2        
-    atonality = mozziAnalogRead(CV_POT_IN2) >> 6;
+    atonality = ATONALITY[mozziAnalogRead(CV_POT_IN2) >> 2];
 	uint8_t s = mozziAnalogRead(CV_IN3) >> 7;
 #else
-    atonality = mozziAnalogRead(CV_IN3) >> 6;
+    atonality = ATONALITY[mozziAnalogRead(CV_IN3) >> 2];
 	uint8_t s = mozziAnalogRead(CV_POT_IN2) >> 7;
 #endif
 	scale = scales[s];
@@ -736,12 +797,9 @@ void updateControl()
     	}
     }
 
-
-
-
 int updateAudio()
     {
-    int16_t multiply = atonality > 0 ? ((rand(32) < atonality) ? -1 : 1) : 1;
+    int16_t multiply = atonality > 0 ? ((rand(256) < atonality) ? -1 : 1) : 1;
     int16_t total = 0;
     for(uint8_t i = 0; i < NUM_WAVES; i++)
     	{

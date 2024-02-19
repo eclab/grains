@@ -22,7 +22,7 @@ Unlike other Mozzi projects, Pluck has to compute the wave array size immediatel
 it that has to make a snap judgment about the current pitch, and sometimes it's wrong because GRAINS / Mozzi
 are very sloppy and noisy in providing proper pitch information.  So occasionally it'll be off when you play it.
 I will try to work on it, but expect Pluck to not be exactly on pitch every time you do a pluck.  I can make it
-more accurate, but at the expense of much more latench (and Pluck has plenty of latency already).
+more accurate, but at the expense of much more latency (and Pluck has plenty of latency already).
 
 Also, you can adjust tuning, but note that Karplus-Strong is limited in its ability precisely match
 a given pitch.  High plucks will be far, far less pitch accurate than low plucks.  The lowest 
