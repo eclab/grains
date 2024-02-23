@@ -25,9 +25,9 @@
 ///
 /// There are three options for plucking.  First, you can set the DECAY of the pluck.  Note that higher
 /// note plucks will decay much faster regardless, but you can stretch them out this way.  Second, you
-/// can set the GAIN (the volume).  Third, you can set the ATONALITY of the pluck: how much
+/// can set the GAIN (the volume).  Second, you can set the ATONALITY of the pluck: how much
 /// it will sound like a string versus an atonal drum or crash sound.  Basically more atonality rapidly
-/// adds more and more noise to the sound.  Second, you can set the DECAY of the pluck.  Longer decays
+/// adds more and more noise to the sound.  Third, you can set the DECAY of the pluck.  Longer decays
 /// will sound increasingly metallic and when they pile up you'll need to reduce the GAIN.
 ///
 /// You can't have both ATONALITY and DECAY on the IN 2 knob and input: one is relegated to CV via IN 3.  
@@ -36,6 +36,11 @@
 
 
 // #define ATONALITY_ON_POT_2
+
+/// Note that if you change the atonality, pitch, gain, or decay, it will not affect the currently plucked
+/// notes: it only affects later notes.  This trick helps the computational efficiency of the program and
+/// thus the quality of the note sound: but in fact changing any of these four elements in real time adds
+/// weird and undesirable artifacts in Mozzi, so you wouldn't want it anyway.
 
 /// TUNING
 ///
@@ -590,7 +595,7 @@ void initializeFrequency(uint8_t pitch, uint8_t tune)
     tuneCV = mozziAnalogRead(tune);
     }
         
-
+// NOTE: Presently not using this, using MEDIAN_OF_THREE instead
 // From https://stackoverflow.com/questions/480960/how-do-i-calculate-the-median-of-five-in-c
 static uint16_t medianOfFive(uint16_t a, uint16_t b, uint16_t c, uint16_t d, uint16_t e)
     {
@@ -757,6 +762,8 @@ const PROGMEM uint8_t ATONALITY[] =
 // we do (a + b * (x - 1)) / x  for values of x from 2 to 256, x is a power of 2.
 // To do this we do (a + b * scale) >> shift 
 // We have 8 options for x: 2, 4, ... 256, as described below.
+// NOTE: if this is too extreme maybe we could change it to
+// (a * (max - x) + b * x) / MAX  
 const uint8_t scales[8] = { 1, 3, 7, 15, 31, 63, 127, 255 };  // 511, 1023, 2047, 4095, 8191, 16383, 32767, 65535 };
 const uint8_t shifts[8]  = { 1, 2, 3, 4, 5, 6, 7, 8, }; // 9, 10, 11, 12, 13, 14, 15, 16 };
 uint16_t scale;				// one of scales[]. uint16_t to make multiplication easier later.
@@ -794,6 +801,7 @@ inline void readPots()
 void updateControl() 
     {    		
 	uint16_t pitchPos = getPitchPos(CV_POT_IN1, CV_AUDIO_IN);		// we have to call this each time
+    //readPots();
     // Check for a trigger
     uint8_t tr = digitalRead(CV_GATE_OUT);
     if (!triggered && tr)
@@ -827,13 +835,18 @@ int updateAudio()
     	if (wavePos[i] >= waveLength[i]) wavePos[i] = 0;
     	
     	int8_t b = wave[i][wavePos[i]];
-    	int8_t c = (int8_t)((multiply * (a + b * scale)) >> shift);
-    	wave[i][wavePos[i]] = c;
-    	total += c;
+    	if (a != b)
+    		{
+	    	int8_t c = (int8_t)((multiply * (a + b * scale)) >> shift);
+	    	wave[i][wavePos[i]] = c;
+	    	total += c;
+	    	}
+	    else total += a;
     	}
     
     // We only have 4 voices, which can sum to +/- 512.  We can automatically scale to -192 ... +192
-    // by multiplying by 3 and dividing by 8.  A single voide we'd divide by 2.
+    // by multiplying by 3 and dividing by 8.  A single voice we'd divide by 2.
+    // FIXME: for one voice, this would effectively divide by 2, we don't want that, right?  Maybe >> 4 or >> 3?
     return (total * gain) >> 5;		// or >> 1 ?
     }
 

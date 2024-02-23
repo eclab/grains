@@ -7,13 +7,18 @@ in your Arduino IDE.
 
 There are three options for plucking.  First, you can set the DECAY of the pluck.  Note that higher
 note plucks will decay much faster regardless, but you can stretch them out this way.  Second, you
-can set the GAIN (the volume).  Third, you can set the ATONALITY of the pluck: how much
+can set the GAIN (the volume).  Second, you can set the ATONALITY of the pluck: how much
 it will sound like a string versus an atonal drum or crash sound.  
- Basically more atonality rapidly adds more and more noise to the sound.  Second, you can set the DECAY of the pluck.  Longer decays will sound increasingly metallic and when they pile up you'll need to reduce the GAIN
+ Basically more atonality rapidly adds more and more noise to the sound.  Third, you can set the DECAY of the pluck.  Longer decays will sound increasingly metallic and when they pile up you'll need to reduce the GAIN
 
 You can't have both ATONALITY and DECAY on the IN 2 knob and input: one is relegated to CV via IN 3.  
 By default ATONALITY is on IN 3 and DECAY gets the IN2 knob/input.  But if you'd like to swap that,
 just uncomment a #define in the code.
+
+Note that if you change the atonality, pitch, gain, or decay, it will not affect the currently plucked
+notes: it only affects later notes.  This trick helps the computational efficiency of the program and
+thus the quality of the note sound: but in fact changing any of these four elements in real time adds
+weird and undesirable artifacts in Mozzi, so you wouldn't want it anyway.
 
 
 ## Tuning
