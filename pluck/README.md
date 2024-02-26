@@ -1,5 +1,9 @@
 # Pluck
 
+Pluck is a Karplus-Strong string plucking thing.  You pluck a string by providing a PITCH
+and then triggering the TRIGGER.  Pluck maintains up to 4 voices of strings being plucked at 
+one time.  No two plucks will sound exactly alike, nor will they have the same decay nor volume.
+
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
 You will need to install the Mozzi Library.  You can do this from the Library Manager
