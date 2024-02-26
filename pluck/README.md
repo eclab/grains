@@ -11,9 +11,10 @@ in your Arduino IDE.
 
 There are three options for plucking.  First, you can set the DECAY of the pluck.  Note that higher
 note plucks will decay much faster regardless, but you can stretch them out this way.  Second, you
-can set the GAIN (the volume).  Second, you can set the ATONALITY of the pluck: how much
+can set the GAIN (the volume).  Longer decays will sound increasingly metallic and when they pile 
+up you'll need to reduce the gain.  Third, you can set the ATONALITY of the pluck: how much
 it will sound like a string versus an atonal drum or crash sound.  
- Basically more atonality rapidly adds more and more noise to the sound.  Third, you can set the DECAY of the pluck.  Longer decays will sound increasingly metallic and when they pile up you'll need to reduce the GAIN
+ Basically more atonality rapidly adds more and more noise to the sound.  
 
 You can't have both ATONALITY and DECAY on the IN 2 knob and input: one is relegated to CV via IN 3.  
 By default ATONALITY is on IN 3 and DECAY gets the IN2 knob/input.  But if you'd like to swap that,
