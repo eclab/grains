@@ -122,15 +122,18 @@ void loop()
     uint16_t aud;
     uint16_t dig;
         
+    analogRead(CV_POT_IN1);
     if (digitalIn1) { in1 = digitalRead(CV_POT_IN1) * 1023; lastIn1 = 1024; }
-    else in1 = lastIn1 = (lastIn1 == 1024 ? digitalRead(CV_POT_IN1) : (lastIn1 * 3 + digitalRead(CV_POT_IN1)) >> 2);
+    else in1 = lastIn1 = (lastIn1 == 1024 ? analogRead(CV_POT_IN1) : (lastIn1 * 3 + analogRead(CV_POT_IN1)) >> 2);
+    analogRead(CV_POT_IN2);
     if (digitalIn2) { in2 = digitalRead(CV_POT_IN2) * 1023; lastIn2 = 1024; }
-    else in2 = lastIn2 = (lastIn2 == 1024 ? digitalRead(CV_POT_IN2) : (lastIn2 * 3 + digitalRead(CV_POT_IN2)) >> 2);
+    else in2 = lastIn2 = (lastIn2 == 1024 ? analogRead(CV_POT_IN2) : (lastIn2 * 3 + analogRead(CV_POT_IN2)) >> 2);
+    analogRead(CV_IN3);
     if (digitalIn3) { in3 = digitalRead(CV_IN3) * 1023; lastIn3 = 1024; }
-    else in3 = lastIn3 = (lastIn3 == 1024 ? digitalRead(CV_POT3) : (lastIn3 * 3 + digitalRead(CV_POT3)) >> 2);
+    else in3 = lastIn3 = (lastIn3 == 1024 ? analogRead(CV_POT3) : (lastIn3 * 3 + analogRead(CV_POT3)) >> 2);
     analogRead(CV_AUDIO_IN);                // high impedance throwaway
     if (digitalAud) { aud = digitalRead(CV_AUDIO_IN) * 1023; lastAud = 1024; }
-    else aud = lastAud = (lastAud == 1024 ? digitalRead(CV_AUDIO_IN) : (lastAud * 3 + digitalRead(CV_AUDIO_IN)) >> 2);
+    else aud = lastAud = (lastAud == 1024 ? analogRead(CV_AUDIO_IN) : (lastAud * 3 + analogRead(CV_AUDIO_IN)) >> 2);
     dig = digitalRead(CV_GATE_OUT) * 1023;
                 
     uint16_t rate = (analogRead(CV_POT3) * 13) >> 10; // 0...12   (delay: 0...4096)
