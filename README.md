@@ -10,6 +10,11 @@ Other GRAINS firmware repositories:
 - Keurslager Kurt's [GRAINS LFO](https://github.com/ZVanMoerkerke/GrainsAE_VC_LFO_Sine)
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 
+## Byte
+A ByteBeat emitter in the style of AlgoDrone or ByteBeat-Xfade.  You can choose from 16 Bytebeats, *sort of* change their pitch and speed, change their volume, and reset them.  You can of course define your own ByteBeats.
+
+Status: Working.  Maybe at some point I'll figure out how to hack Mozzi to allow real pitch control.
+
 ## Pluck
 A 4-voice Karplus-Strong string plucking simulator.
 
