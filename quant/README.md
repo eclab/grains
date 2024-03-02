@@ -23,7 +23,7 @@ Also note that GRAINS's resolution is only about 100 ticks per octave.  This mea
 
 ## Scales
 
-Scales come in three categories.  You provide the category via POT 1, and then the scale in the category via POT 2.  There are three categories and 10 scales per category.
+Scales come in three categories.  You provide the category via POT 2, and then the scale in the category via POT 3.  There are three categories and 10 scales per category.
 
 ### Category 1: Chromatic and 7-Tone Scales
 Major
