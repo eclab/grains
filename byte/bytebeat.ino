@@ -73,7 +73,11 @@
 #include <math.h>
 
 
-// FOR MORE BYTEBEAT EXAMPLES SEE 	http://viznut.fi/demos/unix/bytebeat_formulas.txt
+// FOR MORE BYTEBEAT EXAMPLES SEE 	
+// http://viznut.fi/demos/unix/bytebeat_formulas.txt
+//
+// Test your bytebeats out first in HTML!  
+// https://greggman.com/downloads/examples/html5bytebeat/html5bytebeat.html
 
 #define BYTEBEAT_1 \
 	t*(42&t>>10)

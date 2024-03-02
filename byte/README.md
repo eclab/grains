@@ -19,6 +19,14 @@ to control them in real-time via CV.
 Byte is fragile: if in your expression you modify Byte's own variables (like triggered or pitchCV
 or even t!) you can seriously break Byte.  So don't do that.
 
+There are many bytebeat expressions available online.  For a small collection, see
+[Viznut's archive](http://viznut.fi/demos/unix/bytebeat_formulas.txt).  Note that some of these
+are designed for JavaScript or have Sine or Pow in them: they are unlikely to work.
+
+You can test bytebeats [on the following webpage](https://greggman.com/downloads/examples/html5bytebeat/html5bytebeat.html)
+before adding them to GRAINS.  You can change the Hz values on that page as well.  GRAINS's
+default HZ is 16384, though you can turn it down to half of that or less.
+
 ## Tuning
 
 You can't really tune BYTE: to do so would require changing the sampling rate, and Mozzi doesn't
