@@ -138,7 +138,8 @@ from a CV in.
   less than 8, as this likely indicates that IN 3 is disconnected.
 
 
-### HEX MODE.  This mode takes hexadecimal input over USB from your Arduino IDE Serial Monitor and outputs 
+### HEX MODE.  
+This mode takes hexadecimal input over USB from your Arduino IDE Serial Monitor and outputs 
 MIDI bytes over DIGITAL OUT.  It's only meant for debugging.  Don't bother with it otherwise.
 
 - DIGITAL OUT outputs MIDI from USB originally as hexadecimal input
