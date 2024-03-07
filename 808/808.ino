@@ -3,14 +3,6 @@
 //
 // Released under the Apache 2.0 License
 //
-// WARNING: Mozzi itself is released under a broken non-open-source license, namely the 
-// Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-// This license is not compatible with the LGPL (used by the Arduino itself!) and is
-// also viral, AND is non-commercial only.  What a mess.  I am pushing them to change 
-// their license to something reasonable like Apache or GPL but in the meantime I don't 
-// have much choice but to turn my head and ignore the broken license.  So I'm releasing
-// under Apache for the time being.
-//
 // Each of the Drum ".h" files is under Mozzi's license.
 
 
@@ -88,9 +80,9 @@
 // That takes up 89% of memory.  If you want more samples, they have to be SHORT.
 
 
-#define SAMPLE_1        "tr808/BD7500.h" // "tr808/BD7525.h"                
-#define SAMPLE_2        "tr808/SD0050.h"
-#define SAMPLE_3        "tr808/CP.h"            
+#define SAMPLE_1        "tr808/SD0050.h" // "tr808/BD7525.h"                
+#define SAMPLE_2        "tr808/CP.h"
+#define SAMPLE_3        "tr808/BD7500.h"            
 #define SAMPLE_4        "tr808/CH.h"
 #define SAMPLE_5        "tr808/OH00.h"
 #define SAMPLE_6        "tr808/CB.h"
@@ -154,22 +146,23 @@
 /// grouped, and how the interface is presented.   Here are the format names, don't
 /// play with this:
 
-#define FORMAT_1        0               // A single sample, plus editable start/end points and pitch control
-#define FORMAT_2        1               // Two samples, each with pitch control, plus total volume control
-#define FORMAT_3        2               // Three samples, the first two with pitch control, plus total volume control
-#define FORMAT_4        3               // Four samples, the first one with pitch control, plus total volume control
-#define FORMAT_5        4               // Has 5 triggers: thus not for TRIQ164 or GRAINS BEATS
-#define FORMAT_5A       5               // An alternative to FORMAT_5 for people with 4-trigger step sequencers like TRIQ164 or GRAINS BEATS 
-#define FORMAT_6        6               // Six samples and four triggers: the last three samples share a trigger
-#define FORMAT_7        7               // Seven samples and four triggers: the last four samples share a trigger
-#define FORMAT_7A       8               // An alternative to FORMAT_7, with three triggers.  The last three samples share a trigger, and the next three share another
-#define FORMAT_8        9               // Eight samples and three triggers.  The last four samples share a trigger, and the next three share another
-#define FORMAT_9        10              // Eight samples and three triggers.  The last four samples share a trigger, and the next four share another
+#define FORMAT_0        0               // A single sample, with no options, aiming for minimal noise and accurate triggering
+#define FORMAT_1        1               // A single sample, plus editable start/end points and pitch control
+#define FORMAT_2        2               // Two samples, each with pitch control, plus total volume control
+#define FORMAT_3        3               // Three samples, the first two with pitch control, plus total volume control
+#define FORMAT_4        4               // Four samples, the first one with pitch control, plus total volume control
+#define FORMAT_5        5               // Has 5 triggers: thus not for TRIQ164 or GRAINS BEATS
+#define FORMAT_5A       6               // An alternative to FORMAT_5 for people with 4-trigger step sequencers like TRIQ164 or GRAINS BEATS 
+#define FORMAT_6        7               // Six samples and four triggers: the last three samples share a trigger
+#define FORMAT_7        8               // Seven samples and four triggers: the last four samples share a trigger
+#define FORMAT_7A       9               // An alternative to FORMAT_7, with three triggers.  The last three samples share a trigger, and the next three share another
+#define FORMAT_8        10               // Eight samples and three triggers.  The last four samples share a trigger, and the next three share another
+#define FORMAT_9        11              // Eight samples and three triggers.  The last four samples share a trigger, and the next four share another
 
 /// You set the format by changing the following value.  For example, to set to FORMAT_7,
 /// you would change below to   #define FORMAT FORMAT_7
 
-#define FORMAT FORMAT_4
+#define FORMAT FORMAT_0
 
 
 /// The CONTROL_RATE value below indicates how often per second Mozzi checks for incoming
@@ -198,28 +191,44 @@
 
 /// THE FORMATS, and their associated CONFIGURATIONS, are described in detail below:
 
+/// FORMAT_0
+/// In this format there is a single sample, SAMPLE_1.  There are no options: the goal is
+/// to reduce noise as much as possible.  Additionally, when Drum 1 is played, TRIGGER OUT
+/// is output.  This allows you to line up other drums (like KICK) precisely, since Mozzi
+/// has some degree of latency.
+// POT 3                UNUSED
+// POT 2                UNUSED
+// POT 1                UNUSED
+// GATE OUT             TRIGGER 1
+// AUDIO IN             TRIGGER OUT
+// IN 3                 UNUSED
+// IN 2                 UNUSED
+// IN 1                 UNUSED
+
 /// FORMAT_1
 /// In this format there is a single sample, SAMPLE_1.  You can change its pitch and
 /// start and end points with the pots.
 // POT 3                END 1           [If START > END, they are swapped]      [Set to MAN]
 // POT 2                START 1         [If START > END, they are swapped]      [Set to MAN]
 // POT 1                PITCH 1         [CENTER: Original Pitch]
-// GATE OUT             UNUSED
+// GATE OUT             TRIGGER 1
 // AUDIO IN             UNUSED
-// IN 3                 TRIGGER 1
+// IN 3                 UNUSED
 // IN 2                 UNUSED
 // IN 1                 PITCH CV 1
 
 /// FORMAT_2
 /// There are two samples, SAMPLE_1 and SAMPLE_2.  You can change the pitch of each
 /// one and the total volume with the pots  Set the volume such that when the two 
-/// samples play simultaneously you don't have pops or clipping.
+/// samples play simultaneously you don't have pops or clipping.  Additionally, when Drum 1 is 
+/// played, TRIGGER OUT is output.  This allows you to line up other drums (like KICK) 
+/// precisely, since 808 has some degree of latency.
 // POT 3                VOLUME
 // POT 2                PITCH 2         [CENTER: Original Pitch]        [Note GRAINS BUG ABOVE]
 // POT 1                PITCH 1         [CENTER: Original Pitch]        [Note GRAINS BUG ABOVE]
-// GATE OUT             UNUSED
+// GATE OUT             TRIGGER 1
 // AUDIO IN             TRIGGER 2
-// IN 3                 TRIGGER 1
+// IN 3                 UNUSED
 // IN 2                 PITCH CV 2
 // IN 1                 PITCH CV 1 
 
@@ -520,6 +529,45 @@ uint16_t lengths8 = DATA_LENGTH;
 #define COUNTDOWN 4
 uint8_t counter = 1;
 
+/*
+#define TRIGGER_OUT_COUNTDOWN 2
+uint8_t triggerOutCountdown = 0;
+*/
+
+
+ void updateControl0()
+    {
+      /*
+      if (triggerOutCountdown > 0)
+        {
+        if (triggerOutCountdown == 1)
+          {
+            digitalWrite(CV_AUDIO_IN, 0);
+          }
+        triggerOutCountdown--;
+        }
+       */
+       
+    // POT 3            UNUSED
+    // POT 2            UNUSED
+    // POT 1            UNUSED
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         TRIGGER OUT
+    // IN 3             UNUSED
+    // IN 2             UNUSED
+    // IN 1             UNUSED
+       
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        { 
+        // don't bother with the countdown in this situation, only one drum
+        sample0.start(); 
+        //digitalWrite(CV_AUDIO_IN, 1);
+        //triggerOutCountdown = TRIGGER_OUT_COUNTDOWN;
+        }
+    triggered[0] = val;
+    }
+    
 void updateControl1()
     {
     // POT 3            END 1
@@ -558,9 +606,10 @@ void updateControl1()
         }
     triggered[0] = val;
     }
-        
+ 
+
 void updateControl2()
-    {
+    {       
     // POT 3            VOLUME
     // POT 2            PITCH 2
     // POT 1            PITCH 1
@@ -589,7 +638,7 @@ void updateControl2()
         // set pitch only when we start
         sample0.setFreq(computeFrequency(pot[0], inverseLengths0));
         sample0.start(); 
-        }
+       }
     if (counter > 0) counter--;
         
     uint16_t val1 = mozziAnalogRead(CV_AUDIO_IN);
@@ -599,7 +648,7 @@ void updateControl2()
         sample1.setFreq(computeFrequency(pot[1], inverseLengths1));
         triggered[1] = 1; 
         sample1.start(); 
-        }
+       }
     else if (triggered[1] && val1 < LOW_TRIGGER_BOUNDARY) { triggered[1] = 0; }
     }
 
@@ -1110,23 +1159,48 @@ const int16_t __ULAW2[] = {
 // Gain is maximal at 8
 // ranges (-4K .. 4K)...
 #if (FORMAT == FORMAT_5)
-int16_t C(int8_t value, uint8_t volume) { return (__ULAW2[value + 128]); }                      // too expensive
+inline int16_t C(int8_t value, uint8_t volume) { return (__ULAW2[value + 128]); }                      // too expensive
 #else
-int16_t C(int8_t value, uint8_t volume) { return ((__ULAW2[value + 128]) * volume) >> 3; } 
+inline int16_t C(int8_t value, uint8_t volume) { return ((__ULAW2[value + 128]) * volume) >> 3; } 
 #endif
 #else
-int16_t C(int8_t value, uint8_t volume) { return ((value * volume) * 32) >> 3; }
+inline int16_t C(int8_t value, uint8_t volume) { return ((value * volume) * 32) >> 3; }
 #endif
-#define CC(sample, volume) (C(sample.next(), volume) * sample.isPlaying())
+#define CC(sample, volume) (sample.isPlaying() * C(sample.next(), volume) )
 
 uint16_t sum;
 
 // Scale from -32768...+32767 to -240 ... +240
 inline int16_t scaleAudio(int16_t val)
   {
-  //if (val == 0) return 0;
   return ((val >> 4) * 15) >> 7;
   }
+
+// Scale from -4096...+4095 to -240 ... +240
+inline int16_t scaleAudioSmall(int16_t val)
+  {
+  return ((val >> 1) * 15) >> 7;
+  }
+  
+int updateAudio0()
+    {
+    // POT 3            END 1
+    // POT 2            START 1
+    // POT 1            PITCH 1
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         UNUSED
+    // IN 3             UNUSED
+    // IN 2             UNUSED
+    // IN 1             PITCH CV 1
+
+// believe it or not, the background hum is lower when more samples are computing.
+// so we add some dummy samples here.
+   sum += CC(sample1, GAIN_1);             // sum is to outwit the compiler
+   sum += CC(sample2, GAIN_2);
+   sum += CC(sample3, GAIN_3);
+   
+    return scaleAudio(CC(sample0, GAIN_0) * 8);
+    }
 
 int updateAudio1()
     {
@@ -1141,9 +1215,10 @@ int updateAudio1()
 
 // believe it or not, the background hum is lower when more samples are computing.
 // so we add some dummy samples here.
-    sum += CC(sample1, GAIN_1);             // sum is to outwit the compiler
-    sum += CC(sample2, GAIN_2);
-    sum += CC(sample3, GAIN_3);
+   sum += CC(sample1, GAIN_1);             // sum is to outwit the compiler
+   sum += CC(sample2, GAIN_2);
+   sum += CC(sample3, GAIN_3);
+   
     return scaleAudio(CC(sample0, GAIN_0) * 8);
     }
         
@@ -1309,7 +1384,9 @@ int updateAudio9()
 
 void updateControl()
     {
-#if (FORMAT == FORMAT_1)
+#if (FORMAT == FORMAT_0)
+    updateControl0();
+#elif (FORMAT == FORMAT_1)
     updateControl1();
 #elif (FORMAT == FORMAT_2)
     updateControl2();
@@ -1337,7 +1414,9 @@ void updateControl()
 
 int updateAudio()
     {
-#if (FORMAT == FORMAT_1)
+#if (FORMAT == FORMAT_0)
+    return updateAudio0();
+#elif (FORMAT == FORMAT_1)
     return updateAudio1();
 #elif (FORMAT == FORMAT_2)
     return updateAudio2();
@@ -1365,6 +1444,8 @@ int updateAudio()
 void setup()
     {
     pinMode(CV_GATE_OUT, INPUT);
+    if (FORMAT == FORMAT_0)
+      pinMode(CV_AUDIO_IN, OUTPUT);
 
     inverseLengths0 = 1.0 / lengths0;
     inverseLengths1 = 1.0 / lengths1;

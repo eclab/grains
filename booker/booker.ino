@@ -2,14 +2,6 @@
 // (sean@cs.gmu.edu)
 //
 // Released under the Apache 2.0 License
-//
-// WARNING: Mozzi itself is released under a broken non-open-source license, namely the 
-// Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-// This license is not compatible with the LGPL (used by the Arduino itself!) and is
-// also viral, AND is non-commercial only.  What a mess.  I am pushing them to change 
-// their license to something reasonable like Apache or GPL but in the meantime I don't 
-// have much choice but to turn my head and ignore the broken license.  So I'm releasing
-// under Apache for the time being.
 
 
 /// BOOKER
@@ -33,7 +25,7 @@
 // Leslie changes both the amplitude and pitch at a certain rate.
 // You can adjust them here
 
-#define LESLIE_FREQUENCY 5.66                                   // This is the 450 speed.  The classic slower speed is 0.66, but it's too slow
+#define LESLIE_FREQUENCY 5.66                           // This is the 450 speed.  The classic slower speed is 0.66, but it's too slow
 #define LESLIE_VOLUME 6                                 // Values are 0 (min but not gone), 1, 2, 3, 4, 5, 6 (max).
 #define LESLIE_PITCH 60                                 // Values are 1.0 (lots) ... 128.0 or more (little).  Can be floating point.
 

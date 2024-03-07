@@ -2,14 +2,6 @@
 // (sean@cs.gmu.edu)
 //
 // Released under the Apache 2.0 License
-//
-// WARNING: Mozzi itself is released under a broken non-open-source license, namely the 
-// Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-// This license is not compatible with the LGPL (used by the Arduino itself!) and is
-// also viral, AND is non-commercial only.  What a mess.  I am pushing them to change 
-// their license to something reasonable like Apache or GPL but in the meantime I don't 
-// have much choice but to turn my head and ignore the broken license.  So I'm releasing
-// under Apache for the time being.
 
 
 /// VOICE
@@ -606,9 +598,23 @@ void updateControl()
     filter.setCutoffFreqAndResonance(filterCutoff, resonance); 
     }
 
+int16_t toQuasi9Bit(int16_t val)
+	{
+	return ((val >> 6) * 61) >> 7;
+	}
+
+// Scale from -32768...+32767 to -240 ... +240
+inline int16_t scaleAudio(int16_t val)
+  {
+  if (val == 0) return 0;
+  return ((val >> 4) * 15) >> 7;
+  }
+
 int updateAudio()    
     {
-    return MonoOutput::from16Bit(((filter.next(meta.next())) * amplitude) >> 2);
+    int16_t v = ((filter.next(meta.next())) * amplitude) >> 2;
+    int16_t val = scaleAudio(v);
+    return val;
     }
 
 

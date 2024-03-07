@@ -43,8 +43,10 @@ Is a sample too loud compared to the others?  You can adjust the relative gain o
 
 ## Setting the Format
 
-There are 11 formats, and they dictate the number of samples used, how they're grouped, and how the interface is presented.   You set the format with a #define in the code.  Here is a summary of the formats:
+There are 12 formats, and they dictate the number of samples used, how they're grouped, and how the interface is presented.   You set the format with a #define in the code.  Here is a summary of the formats:
 
+- **FORMAT_0** \
+A single sample, with no features, intended to reduce noise as much as possible
 - **FORMAT_1** \
 A single sample, plus editable start/end points and pitch control
 - **FORMAT_2** \
@@ -72,27 +74,51 @@ Eight samples and three triggers, plus total volume control.  The last four samp
 
 Each format has a different configuration.  Yes, I know the pins in many of the configurations seem arbitrarily ordered.  Believe me, there's a logic to it internally: it's got to be this way to work at all in some cases.
 
+### FORMAT_0
+In this format there is a single sample, SAMPLE_1.  There are no options: the goal is to reduce noise as much as possible.  Additionally, when Drum 1 is played, TRIGGER OUT is output.  This allows you to line up other drums (like KICK) precisely, since Mozzi has some degree of latency.
+
+    POT 3                UNUSED
+    POT 2                UNUSED
+    POT 1                UNUSED
+    GATE OUT             TRIGGER 1
+    AUDIO IN             TRIGGER OUT
+    IN 3                 UNUSED
+    IN 2                 UNUSED
+    IN 1                 UNUSED
+
 ### FORMAT_1
-In this format there is a single sample, SAMPLE_1.  You can change its pitch and start and end points with the pots.
+In this format there is a single sample, SAMPLE_1.  You can change its pitch and start and end points with the pots.  Additionally, when Drum 1 is played, TRIGGER OUT is output.  This allows you to line up other drums (like KICK) precisely, since Mozzi has some degree of latency.
 
     POT 3       END 1      [If START > END, they are swapped]    [Set to MAN]
     POT 2       START 1    [If START > END, they are swapped]    [Set to MAN]
     POT 1       PITCH 1    [CENTER: Original Pitch]
     GATE OUT    UNUSED
-    AUDIO IN    UNUSED
+    AUDIO IN    TRIGGER OUT
+    IN 3        TRIGGER 1
+    IN 2        UNUSED
+    IN 1        PITCH CV 1
+
+### FORMAT_1
+In this format there is a single sample, SAMPLE_1.  You can change its pitch and start and end points with the pots.  Additionally, when Drum 1 is played, TRIGGER OUT is output.  This allows you to line up other drums (like KICK) precisely, since Mozzi has some degree of latency.
+
+    POT 3       END 1      [If START > END, they are swapped]    [Set to MAN]
+    POT 2       START 1    [If START > END, they are swapped]    [Set to MAN]
+    POT 1       PITCH 1    [CENTER: Original Pitch]
+    GATE OUT    UNUSED
+    AUDIO IN    TRIGGER OUT
     IN 3        TRIGGER 1
     IN 2        UNUSED
     IN 1        PITCH CV 1
 
 ### FORMAT_2
-There are two samples, SAMPLE_1 and SAMPLE_2.  You can change the pitch of each one and the total volume with the pots  Set the volume such that when the two  samples play simultaneously you don't have pops or clipping.
+There are two samples, SAMPLE_1 and SAMPLE_2.  You can change the pitch of each one and the total volume with the pots  Set the volume such that when the two  samples play simultaneously you don't have pops or clipping.  Additionally, when Drum 1 is played, TRIGGER OUT is output.  This allows you to line up other drums (like KICK) precisely, since Mozzi has some degree of latency.
 
     POT 3       VOLUME
     POT 2       PITCH 2    [CENTER: Original Pitch]    [Note GRAINS BUG ABOVE]
     POT 1       PITCH 1    [CENTER: Original Pitch]    [Note GRAINS BUG ABOVE]
-    GATE OUT    UNUSED
-    AUDIO IN    TRIGGER 2
-    IN 3        TRIGGER 1
+    GATE OUT    TRIGGER 1
+    AUDIO IN    TRIGGER OUT
+    IN 3        TRIGGER 2
     IN 2        PITCH CV 2
     IN 1        PITCH CV 1 
 

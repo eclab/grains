@@ -2,14 +2,6 @@
 // (sean@cs.gmu.edu)
 //
 // Released under the Apache 2.0 License
-//
-// WARNING: Mozzi itself is released under a broken non-open-source license, namely the 
-// Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-// This license is not compatible with the LGPL (used by the Arduino itself!) and is
-// also viral, AND is non-commercial only.  What a mess.  I am pushing them to change 
-// their license to something reasonable like Apache or GPL but in the meantime I don't 
-// have much choice but to turn my head and ignore the broken license.  So I'm releasing
-// under Apache for the time being.
 
 
 /// EVOLUTION
@@ -393,6 +385,12 @@ void updateControl()
         }
     }                                             
 
+// Scale from -32768...+32767 to -240 ... +240
+inline int16_t scaleAudio(int16_t val)
+  {
+  if (val == 0) return 0;
+  return ((val >> 4) * 15) >> 7;
+  }
 
 int updateAudio()                             
     {
@@ -401,5 +399,5 @@ int updateAudio()
         {
         val += (oscils[i].next() * finalAmplitudes[i]);
         }
-    return MonoOutput::from16Bit(val >> gainDivide);              // seems to get low enough?
+    return scaleAudio(val >> gainDivide);              // seems to get low enough?
     }

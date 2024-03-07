@@ -13,10 +13,10 @@ A bytebeat is any C expression using the 32-bit variable 't'.  It's called 16384
 and the result, mod 255, is output as an audio sample.
 
 Byte has a special feature: a special variable called x which ranges from 0 to 255.  It's
-controlled by CV coming in to IN 3, and is by default 0.  You could stick x in your expressions
+set by CV coming in to IN 3, and is by default 0.  You could stick x in your expressions
 to control them in real-time via CV.
 
-Byte is fragile: if in your expression you modify Byte's own variables (like triggered or pitchCV
+Byte is fragile: if in your expression you modify Byte's internal variables (like triggered or pitchCV
 or even t!) you can seriously break Byte.  So don't do that.
 
 There are many bytebeat expressions available online.  For a small collection, see

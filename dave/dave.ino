@@ -133,6 +133,13 @@
 ///   less than 8, as this likely indicates that IN 3 is disconnected.
 ///
 ///
+/// USB HEX MODE.  This mode takes hexadecimal input over USB from your Arduino IDE Serial Monitor and outputs 
+/// MIDI bytes over DIGITAL OUT.  It's only meant for debugging.  Don't bother with it otherwise.
+///
+/// - DIGITAL OUT outputs MIDI from USB originally as hexadecimal input
+/// - Nothing else does anything
+///
+///
 /// To set the MODE, you change the #define MODE below
 
 // don't touch these, they're constants
@@ -143,6 +150,7 @@
 #define USB_TRIGGERS 5
 #define INTERNAL_TRIGGERS 6
 #define NOTE_GENERATOR 7
+#define USB_HEX 8
 
 /// SET THE MODE HERE
 #define MODE	 USB_MPE				// Change this to one of the MODES above
@@ -200,6 +208,14 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define DELEGATO 	1			// If you set this to 0, DE-LEGATO is turned off entirely
 
 
+
+/** NOT COMPLETED
+
+/// SUSTAIN
+/// If a SUSTAIN is received (CC 64) ignores a NOTE OFF until the next NOTE ON or until the next SUSTAIN 
+/// is released.  
+#define SUSTAIN 	1
+*/
 
 
 /// CLOCK DIVISION
@@ -339,8 +355,17 @@ NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 #define POT_3_CC NONE
 #define FILTER_STYLE 	NONE
 NeoSWSerial softSerial(CV_GATE_OUT, BLANK_SERIAL, PIN_UNUSED);
-#endif
 
+#elif (MODE == USB_HEX)
+#define CONFIGURATION USB_TO_PORT_1
+#define OUTPUT_CHANNEL ALL
+#define POT_1_CC NONE
+#define POT_2_CC NONE
+#define POT_3_CC NONE
+#define FILTER_STYLE 	NONE
+NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
+
+#endif
 
 // Error checking
 #if (POT_1_CC > 128)
@@ -477,6 +502,9 @@ void setup()
 
 
 /// parseMessage.  This facility parses the latest message and holds onto it.
+
+uint8_t sustain;
+uint8_t lastNoteOff = 0;
 
 #define MAX_MESSAGE_LENGTH 32
 #define INVALID_MESSAGE_LENGTH (MAX_MESSAGE_LENGTH + 1)
@@ -1045,14 +1073,41 @@ void inject()
 	}
 
 
+// Hex digit parsing
+uint8_t hexFirstDigit = 128;		// 128 means "no first digit yet"
+void processHex(uint8_t val)		// val is a number 0...15, or if > 15, resets
+	{
+	if (val >= 16) 					// reset value
+		{
+		hexFirstDigit = 128;
+		}
+	else if (hexFirstDigit == 128)	// first digit
+		{
+		hexFirstDigit = val;
+		}
+	else							// process with second digit and reset
+		{
+		write(hexFirstDigit * 16 + val);
+		hexFirstDigit = 128;
+		}
+	}
+
 
 // Handle all manner of inputs and do the right thing with them.  This is called by either
 // loop() or by the interrupt
 void handleRead(uint8_t c)
 {
+#if (MODE == USB_HEX)
+	if (c >= 'a' && c <= 'f') c = c - 'a' + 10;
+	else if (c >= 'A' && c <= 'F') c = c - 'A' + 10;
+	else if (c >= '0' && c <= '9') c = c - '0';
+	else c = 16;
+	processHex(c);
+#else	
 	filterChannel(c);
-#if (MODE != USB_TRIGGERS && MODE != INTERNAL_TRIGGERS)
+#if (MODE != USB_TRIGGERS && MODE != INTERNAL_TRIGGERS && MODE != USB_HEX)
 	inject();
+#endif
 #endif
 }
 

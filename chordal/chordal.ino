@@ -2,14 +2,6 @@
 // (sean@cs.gmu.edu)
 //
 // Released under the Apache 2.0 License
-//
-// WARNING: Mozzi itself is released under a broken non-open-source license, namely the 
-// Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-// This license is not compatible with the LGPL (used by the Arduino itself!) and is
-// also viral, AND is non-commercial only.  What a mess.  I am pushing them to change 
-// their license to something reasonable like Apache or GPL but in the meantime I don't 
-// have much choice but to turn my head and ignore the broken license.  So I'm releasing
-// under Apache for the time being.
 
 
 /// CHORDAL
@@ -710,6 +702,13 @@ void updateControl()
 
     }
 
+// Scale from -32768...+32767 to -240 ... +240
+inline int16_t scaleAudio(int16_t val)
+  {
+  if (val == 0) return 0;
+  return ((val >> 4) * 15) >> 7;
+  }
+
 int updateAudio()    
     {
     int16_t sq1 = meta1.next();
@@ -724,17 +723,17 @@ int updateAudio()
     switch (chords[chord][0])
         {
         case 0:
-            return MonoOutput::from16Bit(sq1 * alpha + (255 - alpha) * s1); //  >> 9;
+            return scaleAudio(sq1 * alpha + (255 - alpha) * s1); //  >> 9;
             break;
         case 1:
-            return MonoOutput::from16Bit(((sq1 + sq2) * (alpha >> 1) + ((255 - alpha) >> 1)*(s1 + s2)));
+            return scaleAudio(((sq1 + sq2) * (alpha >> 1) + ((255 - alpha) >> 1)*(s1 + s2)));
             break;
         case 2:
             sq4 = sq3 >> 1;
             sq3 = sq4;
             // FALL THRU
         case 3:
-            return MonoOutput::from16Bit(((sq1 + sq2 + sq3 + sq4) * (alpha >> 2) + ((255 - alpha) >> 2) * (s1 + s2 + s3 + s4)));
+            return scaleAudio(((sq1 + sq2 + sq3 + sq4) * (alpha >> 2) + ((255 - alpha) >> 2) * (s1 + s2 + s3 + s4)));
             break;
         }
     }

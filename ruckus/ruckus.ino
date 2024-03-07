@@ -2,14 +2,6 @@
 // (sean@cs.gmu.edu)
 //
 // Released under the Apache 2.0 License
-//
-// WARNING: Mozzi itself is released under a broken non-open-source license, namely the 
-// Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-// This license is not compatible with the LGPL (used by the Arduino itself!) and is
-// also viral, AND is non-commercial only.  What a mess.  I am pushing them to change 
-// their license to something reasonable like Apache or GPL but in the meantime I don't 
-// have much choice but to turn my head and ignore the broken license.  So I'm releasing
-// under Apache for the time being.
 
 
 /// RUCKUS
@@ -123,6 +115,12 @@ int16_t toQuasi9Bit(int16_t val)
 	return ((val >> 6) * 61) >> 7;
 	}
 
+// Scale from -32768...+32767 to -240 ... +240
+inline int16_t scaleAudio(int16_t val)
+  {
+  if (val == 0) return 0;
+  return ((val >> 4) * 15) >> 7;
+  }
 
 // ugh, cast unsigned to signed...	
 union _cast { uint16_t unsign; int16_t sign; } cast;
@@ -137,18 +135,18 @@ int updateAudio()
     switch(choice)
     	{
     	case CHOICE_WHITE:
-    	return MonoOutput::from16Bit(r); // MonoOutput::from16Bit(r);
+    	return scaleAudio(r);
     	case CHOICE_PULSE:
     	return (r >= 0 ? 243 : -244);
     	break;
     	case CHOICE_12DB_LOWPASS:
-    	return MonoOutput::from16Bit(filterlp.next(r >> 1) * 2);
+    	return scaleAudio(filterlp.next(r >> 1) * 2);
     	break;
     	case CHOICE_12DB_HIGHPASS:
-    	return MonoOutput::from16Bit(filterhp.next(r >> 1) * 2);
+    	return scaleAudio(filterhp.next(r >> 1) * 2);
     	break;
     	case CHOICE_12DB_BANDPASS:
-    	return MonoOutput::from16Bit(filterbp.next(r >> 1) * 2);
+    	return scaleAudio(filterbp.next(r >> 1) * 2);
     	break;
     	}
     return 0;		// uh....

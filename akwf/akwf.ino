@@ -2,14 +2,6 @@
 // (sean@cs.gmu.edu)
 //
 // Released under the Apache 2.0 License
-//
-// WARNING: Mozzi itself is released under a broken non-open-source license, namely the 
-// Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-// This license is not compatible with the LGPL (used by the Arduino itself!) and is
-// also viral, AND is non-commercial only.  What a mess.  I am pushing them to change 
-// their license to something reasonable like Apache or GPL but in the meantime I don't 
-// have much choice but to turn my head and ignore the broken license.  So I'm releasing
-// under Apache for the time being.
 
 
 /// AKWF
@@ -340,6 +332,13 @@ void updateControl()
     filter.setCutoffFreqAndResonance(filt >> 2, 0);
     }
     
+// Scale from -32768...+32767 to -240 ... +240
+inline int16_t scaleAudio(int16_t val)
+  {
+  if (val == 0) return 0;
+  return ((val >> 4) * 15) >> 7;
+  }
+
 int updateAudio()    
     {
     samples[0] = osc0.next();
@@ -355,13 +354,13 @@ int updateAudio()
 #endif
 
 #if (NUM_WAVES == 1)
-    return MonoOutput::from16Bit(filter.next(samples[0] >> 1) << 9);
+    return scaleAudio(filter.next(samples[0] >> 1) << 9);
 #elif (NUM_WAVES == 2)
-    return  MonoOutput::from16Bit(filter.next((samples[0] * (255 - alpha) + samples[1] * alpha) >> 9) << 9);
+    return  scaleAudio(filter.next((samples[0] * (255 - alpha) + samples[1] * alpha) >> 9) << 9);
 #elif (NUM_WAVES == 3)
-    return  MonoOutput::from16Bit(filter.next((samples[sampleNum] * (255 - alpha) + samples[sampleNum + 1] * alpha) >> 9) << 9);
+    return  scaleAudio(filter.next((samples[sampleNum] * (255 - alpha) + samples[sampleNum + 1] * alpha) >> 9) << 9);
 #else
-    return MonoOutput::from16Bit(filter.next((samples[sampleNum] * (int16_t)(255 - alpha) + samples[sampleNum + 1] * (int16_t)alpha) >> 9) << 9);
+    return scaleAudio(filter.next((samples[sampleNum] * (int16_t)(255 - alpha) + samples[sampleNum + 1] * (int16_t)alpha) >> 9) << 9);
 #endif
     }
 
