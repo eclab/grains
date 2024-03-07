@@ -123,7 +123,7 @@ notes used by the INTERNAL TRIGGERS and by USB TRIGGERS modes.
 - The Pots do not do anything (if you can think of something useful they could do, let me know).
 
 
-### NOTE GENERATOR MODE.  
+### NOTE GENERATOR MODE. 
 This only produces MIDI: you could use it to trigger a WonkyStuff MCO/4
 from a regular setup without USB.  It takes a pitch CV and a gate in and generates a note 
 for the MCO/4, and it can also still produce the THREE output CCs, but one of them is now 
@@ -138,7 +138,7 @@ from a CV in.
   less than 8, as this likely indicates that IN 3 is disconnected.
 
 
-### HEX MODE.  
+### HEX MODE  
 This mode takes hexadecimal input over USB from your Arduino IDE Serial Monitor and outputs 
 MIDI bytes over DIGITAL OUT.  It's only meant for debugging.  Don't bother with it otherwise.
 
