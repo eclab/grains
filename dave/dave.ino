@@ -60,6 +60,8 @@
 /// - IN 3 outputs a trigger (RESET) when it receives START or CONTINUE
 /// - AUDIO IN outputs a trigger when it receives a STOP
 /// - The Pots *can* be set to output CCs of your choice.
+/// - Optionally AUDIO IN receives CV for a CC if EXTRA_CC_4 is set
+/// - Optionally IN 3 receives CV for a CC if EXTRA_CC_5 is set
 ///
 ///
 /// USB DISTRIBUTOR MODE
@@ -75,6 +77,8 @@
 /// - IN 3 outputs a trigger (RESET) when it receives START or CONTINUE
 /// - AUDIO IN outputs a trigger when it receives a STOP
 /// - The Pots *can* be set to output CCs of your choice.
+/// - Optionally AUDIO IN receives CV for a CC if EXTRA_CC_4 is set
+/// - Optionally IN 3 receives CV for a CC if EXTRA_CC_5 is set
 /// 
 ///
 /// USB MPE MODE
@@ -89,6 +93,8 @@
 /// - IN 3 outputs a trigger (RESET) when it receives START or CONTINUE
 /// - AUDIO IN outputs a trigger when it receives a STOP
 /// - The Pots *can* be set to output CCs of your choice.
+/// - Optionally AUDIO IN receives CV for a CC if EXTRA_CC_4 is set
+/// - Optionally IN 3 receives CV for a CC if EXTRA_CC_5 is set
 ///
 ///
 /// USB TRIGGERS MODE
@@ -119,7 +125,7 @@
 /// - The Pots do not do anything (if you can think of something useful they could do, let me know).
 ///
 ///
-/// INTERNAL ROUTER MODE
+/// INTERNAL ROUTER MODE  --- DOES NOT PRESENTLY WORK, SOFTWARE SERIAL PORTS TOO SLOW --- 
 /// This is the same as USB ROUTER MODE except that that the input doesn't come from USB but rather
 /// from PORT 1, and the output is PORT 2.  What's the point?  CC injection is the point.  This
 /// allows you, for example, to modify the CC values of a Wonkystuff MCO/1 while sending it notes.
@@ -129,6 +135,7 @@
 /// - AUDIO OUT outputs CLOCK in-between a MIDI START/CONTINUE and STOP.
 /// - IN 3 outputs a trigger (RESET) when it receives START or CONTINUE
 /// - The Pots *can* be set to output CCs of your choice.
+/// - Optionally IN 3 receives CV for a CC if EXTRA_CC_5 is set
 ///
 ///
 /// NOTE GENERATOR MODE.  This only produces MIDI: you could use it to trigger a WonkyStuff MCO/4
@@ -161,7 +168,7 @@
 #define USB_MPE 4
 #define USB_TRIGGERS 5
 #define INTERNAL_TRIGGERS 6
-#define INTERNAL_ROUTER 7
+//#define INTERNAL_ROUTER 7
 #define NOTE_GENERATOR 8
 #define USB_HEX 9
 
@@ -196,9 +203,18 @@ uint8_t triggerNotes[4] = { 60, 62, 64, 65 };		// MIDDLE C, D, E, and F
 #define POT_1_CC	5		// Wonkystuff MCO/1 Sub.  Can be any value 1...128 OR NONE.  ALSO PROVIDED ON IN 3 IN NOTE GENERATOR MODE
 #define POT_2_CC	6		// Wonkystuff MCO/1 Ramp.  Can be any value 1...128 OR NONE
 #define POT_3_CC	7		// Wonkystuff MCO/1 Square.  Can be any value 1...128 OR NONE
- 
+#define POT_4_CC	2		// Wonkystuff MCO/1 Noise.  Can be any value 1...128 OR NONE.    Only if EXTRA_CC_4 is defined.
+#define POT_5_CC 	8		// Wonkystuff MCO/1 Square PW.  Can be any value 1...128 OR NONE.   Only if EXTRA_CC_5 is defined.
+
+// Some modes allow additional CCs (POT 4 and POT 5) instead of clock signals.  Uncomment these to turn them on:
+
+#define EXTRA_CC_4
+#define EXTRA_CC_5
+
 /// You can customize which channels will receive CCs from the pots by
-/// modifying the "1" values below to "0":
+/// modifying the "1" values below to "0".  Regardless of the settings here,
+/// the only ones which will receive injection will be those channels from 0...NUM_VOICES-1
+/// which have INJECT_POTS_TO_CHANNEL[...] set to 1.
 
 const boolean INJECT_POTS_TO_CHANNEL[16] = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -313,6 +329,8 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define POT_1_CC NONE
 #define POT_2_CC NONE
 #define POT_3_CC NONE
+#define POT_4_CC NONE
+#define POT_5_CC NONE
 #define FILTER_STYLE 	NONE
 #define GATE PORT1
 #define STOP PORT2
@@ -323,41 +341,66 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define CONFIGURATION USB_TO_PORT_1
 #define OUTPUT_CHANNEL ALL
 #define FILTER_STYLE 	NONE
-#define STOP PORT2
 #define CLOCK
+#ifndef EXTRA_CC_4
+#define POT_4_CC NONE
+#define STOP PORT2
+#endif
+#ifndef EXTRA_CC_5
+#define POT_5_CC NONE
 #define RESET
+#endif
 NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 
+/*
 #elif (MODE == INTERNAL_ROUTER)
 #define CONFIGURATION PORT_1_TO_PORT_2
 #define OUTPUT_CHANNEL ALL
 #define FILTER_STYLE 	NONE
 #define CLOCK
+#define STOP NONE
+#define POT_4_CC NONE
+#ifndef EXTRA_CC_5
+#define POT_5_CC NONE
 #define RESET
+#endif
 NeoSWSerial softSerial(CV_GATE_OUT, CV_AUDIO_IN, PIN_UNUSED);
+*/
 
 #elif (MODE == USB_DISTRIBUTOR)
 #define CONFIGURATION USB_TO_PORT_1
 #define OUTPUT_CHANNEL ALL
 #define FILTER_STYLE 	DISTRIBUTE
+#ifndef EXTRA_CC_4
+#define POT_4_CC NONE
 #define STOP PORT2
-#define CLOCK
+#endif
+#ifndef EXTRA_CC_5
+#define POT_5_CC NONE
 #define RESET
+#endif
 NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 
 #elif (MODE == USB_MPE)
 #define CONFIGURATION USB_TO_PORT_1
 #define OUTPUT_CHANNEL ALL
 #define FILTER_STYLE 	USE_MPE
+#ifndef EXTRA_CC_4
+#define POT_4_CC NONE
 #define STOP PORT2
-#define CLOCK
+#endif
+#ifndef EXTRA_CC_5
+#define POT_5_CC NONE
 #define RESET
+#endif
 NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 
 #elif (MODE == NOTE_GENERATOR)
 #define CONFIGURATION NONE_TO_PORT_1
 #define OUTPUT_CHANNEL NOTE_GENERATOR_CHANNEL
 #define FILTER_STYLE 	NONE
+#define POT_4_CC NONE
+#define POT_5_CC NONE
 NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 
 #elif (MODE == USB_TRIGGERS)
@@ -366,6 +409,8 @@ NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 #define POT_1_CC NONE
 #define POT_2_CC NONE
 #define POT_3_CC NONE
+#define POT_4_CC NONE
+#define POT_5_CC NONE
 #define FILTER_STYLE 	NONE
 
 #elif (MODE == INTERNAL_TRIGGERS)
@@ -374,6 +419,8 @@ NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 #define POT_1_CC NONE
 #define POT_2_CC NONE
 #define POT_3_CC NONE
+#define POT_4_CC NONE
+#define POT_5_CC NONE
 #define FILTER_STYLE 	NONE
 NeoSWSerial softSerial(CV_GATE_OUT, BLANK_SERIAL, PIN_UNUSED);
 
@@ -383,6 +430,8 @@ NeoSWSerial softSerial(CV_GATE_OUT, BLANK_SERIAL, PIN_UNUSED);
 #define POT_1_CC NONE
 #define POT_2_CC NONE
 #define POT_3_CC NONE
+#define POT_4_CC NONE
+#define POT_5_CC NONE
 #define FILTER_STYLE 	NONE
 NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 
@@ -397,6 +446,12 @@ ERROR("POT_2_CC must be in the range 1...128 or NONE")
 #endif
 #if (POT_3_CC > 128)
 ERROR("POT_3_CC must be in the range 1...128 or NONE")
+#endif
+#if (POT_4_CC > 128)
+ERROR("POT_4_CC must be in the range 1...128 or NONE")
+#endif
+#if (POT_5_CC > 128)
+ERROR("POT_5_CC must be in the range 1...128 or NONE")
 #endif
 #if (POT_1_CC != NONE && POT_1_CC == POT_2_CC)
 ERROR("POT_1_CC should not be the same as POT_2_CC")
@@ -416,8 +471,17 @@ ERROR("POT_4_CC should not be the same as POT_2_CC")
 #if (POT_4_CC != NONE && POT_4_CC == POT_3_CC)
 ERROR("POT_4_CC should not be the same as POT_3_CC")
 #endif
-#if (POT_4_CC != NONE && POT_4_CC == POT_4_CC)
-ERROR("POT_4_CC should not be the same as POT_4_CC")
+#if (POT_5_CC != NONE && POT_5_CC == POT_1_CC)
+ERROR("POT_5_CC should not be the same as POT_1_CC")
+#endif
+#if (POT_5_CC != NONE && POT_5_CC == POT_2_CC)
+ERROR("POT_5_CC should not be the same as POT_2_CC")
+#endif
+#if (POT_5_CC != NONE && POT_5_CC == POT_3_CC)
+ERROR("POT_5_CC should not be the same as POT_3_CC")
+#endif
+#if (POT_5_CC != NONE && POT_5_CC == POT_4_CC)
+ERROR("POT_5_CC should not be the same as POT_4_CC")
 #endif
 
 
@@ -1018,14 +1082,13 @@ uint8_t gateIn = false;
 uint8_t oldCC1Val = 255;
 uint8_t oldCC2Val = 255;
 uint8_t oldCC3Val = 255;
+uint8_t oldCC4Val = 255;
+uint8_t oldCC5Val = 255;
 uint8_t cc1Val = 255;
 uint8_t cc2Val = 255;
 uint8_t cc3Val = 255;
-
-uint8_t pitchIn2 = 60;
-uint8_t gateIn2 = false;
-uint8_t oldCC3Val2 = 255;
-uint8_t cc3Va2 = 255;
+uint8_t cc4Val = 255;
+uint8_t cc5Val = 255;
 
 // Called by the timer to set up injection every once in a while.  We read the pots, then set the CC values and try to inject.
 // If we fail (because a message is incomplete), we'll try to inject repeatedly after the message is done until we are successful.
@@ -1062,6 +1125,15 @@ void setInject()
 	 cc2Val = (cc2Val == 255 ? c2 : (c2 + cc2Val * 3) >> 2);
 	 uint8_t c3 = analogRead(CV_POT3) >> 3;
 	 cc3Val = (cc3Val == 255 ? c3 : (c3 + cc3Val * 3) >> 2);
+#if POT_4_CC != NONE
+	 uint8_t c4 = analogRead(CV_AUDIO_IN) >> 3;
+	 cc4Val = (cc4Val == 255 ? c4 : (c4 + cc4Val * 3) >> 2);
+#endif
+#if POT_5_CC != NONE
+	 uint8_t c5 = analogRead(CV_IN3) >> 3;
+	 cc5Val = (cc5Val == 255 ? c5 : (c5 + cc5Val * 3) >> 2);
+#endif
+
 #endif
 	 injectWaiting = true;
 	 // try now
@@ -1095,6 +1167,12 @@ void inject()
 #endif
 		if (oldCC2Val != cc2Val) injectCC(POT_2_CC, oldCC2Val = cc2Val); 
 		if (oldCC3Val != cc3Val) injectCC(POT_3_CC, oldCC3Val = cc3Val);
+#if POT_4_CC != NONE
+		if (oldCC4Val != cc4Val) injectCC(POT_4_CC, oldCC4Val = cc4Val); 
+#endif
+#if POT_5_CC != NONE
+		if (oldCC5Val != cc5Val) injectCC(POT_5_CC, oldCC5Val = cc5Val); 
+#endif
 		injectWaiting = false;
 		}
 	}
@@ -1205,7 +1283,7 @@ void loop()
 
 #endif
     
-    #if (MODE == INTERNAL_TRIGGERS || MODE == INTERNAL_ROUTER)
+    #if (MODE == INTERNAL_TRIGGERS) 	//  || MODE == INTERNAL_ROUTER)
     	uint8_t val = softSerial.available();
 		for(uint8_t i = 0; i < val; i++)
 			{

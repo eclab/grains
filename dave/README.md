@@ -108,6 +108,7 @@ holds the MIDI pitch values for each of the four notes.
 - The Pots do not do anything (if you can think of something useful they could do, let me know).
 
 
+<!--
 ### INTERNAL ROUTER MODE
 This is the same as USB ROUTER MODE except that that the input doesn't come from USB but rather
 from PORT 1, and the output is PORT 2.  What's the point?  CC injection is the point.  This
@@ -118,7 +119,7 @@ allows you, for example, to modify the CC values of a Wonkystuff MCO/1 while sen
 - AUDIO OUT outputs CLOCK in-between a MIDI START/CONTINUE and STOP.
 - IN 3 outputs a trigger (RESET) when it receives START or CONTINUE
 - The Pots *can* be set to output CCs of your choice.
-
+-->
 
 ### INTERNAL TRIGGERS MODE
 This is basically the same thing as USB TRIGGERS MODE except that the MIDI input is not
