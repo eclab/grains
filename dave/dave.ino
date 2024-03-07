@@ -198,7 +198,9 @@ uint8_t triggerNotes[4] = { 60, 62, 64, 65 };		// MIDDLE C, D, E, and F
 #define POT_3_CC	7		// Wonkystuff MCO/1 Square.  Can be any value 1...128 OR NONE
  
 /// You can customize which channels will receive CCs from the pots by
-/// modifying the "1" values below to "0":
+/// modifying the "1" values below to "0".  Regardless of the settings here,
+/// the only ones which will receive injection will be those channels from 0...NUM_VOICES-1
+/// which have INJECT_POTS_TO_CHANNEL[...] set to 1.
 
 const boolean INJECT_POTS_TO_CHANNEL[16] = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
