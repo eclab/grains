@@ -104,7 +104,7 @@
 /// - The Pots do not do anything (if you can think of something useful they could do, let me know).
 /// 
 ///
-/// - INTERNAL TRIGGERS MODE
+/// INTERNAL TRIGGERS MODE
 /// This is basically the same thing as USB TRIGGERS MODE except that the MIDI input is not
 /// via USB but via a local MIDI socket, such as from a Wonkystuff MB/1.  There are only three
 /// trigger notes: Middle C (60), D (62), and E (64), but you can change
@@ -117,6 +117,18 @@
 /// - AUDIO IN outputs trigger 3 (E)
 /// - DIGITAL OUT takes MIDI IN
 /// - The Pots do not do anything (if you can think of something useful they could do, let me know).
+///
+///
+/// INTERNAL ROUTER MODE
+/// This is the same as USB ROUTER MODE except that that the input doesn't come from USB but rather
+/// from PORT 1, and the output is PORT 2.  What's the point?  CC injection is the point.  This
+/// allows you, for example, to modify the CC values of a Wonkystuff MCO/1 while sending it notes.
+///
+/// - DIGITAL OUT receives MIDI
+/// - AUDIO IN outputs MIDI from DIGITAL OUT
+/// - AUDIO OUT outputs CLOCK in-between a MIDI START/CONTINUE and STOP.
+/// - IN 3 outputs a trigger (RESET) when it receives START or CONTINUE
+/// - The Pots *can* be set to output CCs of your choice.
 ///
 ///
 /// NOTE GENERATOR MODE.  This only produces MIDI: you could use it to trigger a WonkyStuff MCO/4
@@ -149,11 +161,12 @@
 #define USB_MPE 4
 #define USB_TRIGGERS 5
 #define INTERNAL_TRIGGERS 6
-#define NOTE_GENERATOR 7
-#define USB_HEX 8
+#define INTERNAL_ROUTER 7
+#define NOTE_GENERATOR 8
+#define USB_HEX 9
 
 /// SET THE MODE HERE
-#define MODE	 USB_MPE				// Change this to one of the MODES above
+#define MODE	 USB_ROUTER				// Change this to one of the MODES above
 
 /// SET THE NUMBER OF VOICES (for USB_MPE and USB_DISTRIBUTOR MODES) HERE
 #define NUM_VOICES 3			// Can be 0 or 1 [Both Off], or any value 2-16 
@@ -187,7 +200,7 @@ uint8_t triggerNotes[4] = { 60, 62, 64, 65 };		// MIDDLE C, D, E, and F
 /// You can customize which channels will receive CCs from the pots by
 /// modifying the "1" values below to "0":
 
-const boolean INJECT_POTS_TO_CHANNEL[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+const boolean INJECT_POTS_TO_CHANNEL[16] = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 
 
@@ -314,6 +327,14 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define CLOCK
 #define RESET
 NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
+
+#elif (MODE == INTERNAL_ROUTER)
+#define CONFIGURATION PORT_1_TO_PORT_2
+#define OUTPUT_CHANNEL ALL
+#define FILTER_STYLE 	NONE
+#define CLOCK
+#define RESET
+NeoSWSerial softSerial(CV_GATE_OUT, CV_AUDIO_IN, PIN_UNUSED);
 
 #elif (MODE == USB_DISTRIBUTOR)
 #define CONFIGURATION USB_TO_PORT_1
@@ -473,7 +494,13 @@ void setup()
 	pinMode(CV_AUDIO_IN, OUTPUT);
 	pinMode(CV_IN3, OUTPUT);
 	pinMode(CV_AUDIO_OUT, OUTPUT);
-#if (CONFIGURATION == USB_TO_NONE || CONFIGURATION == USB_TO_PORT_1 || CONFIGURATION == USB_TO_BOTH)
+	
+	
+#if (CONFIGURATION == PORT_1_TO_PORT_2)
+	pinMode(CV_GATE_OUT, INPUT);
+	pinMode(CV_AUDIO_IN, OUTPUT);
+	softSerial.begin(MIDI_RATE);
+#elif (CONFIGURATION == USB_TO_NONE || CONFIGURATION == USB_TO_PORT_1 || CONFIGURATION == USB_TO_BOTH)
 	NeoSerial.begin(MIDI_RATE);
 	pinMode(CV_GATE_OUT, OUTPUT);
 #elif (DEBUG == 1)
@@ -781,7 +808,7 @@ void filterChannel(uint8_t c)
 
 inline void write(uint8_t c)
 	{
-//	debug(c);
+//debug(c);
 #if (CONFIGURATION != USB_TO_NONE)
  	softSerial.write(c);
 #endif
@@ -1178,7 +1205,7 @@ void loop()
 
 #endif
     
-    #if (MODE == INTERNAL_TRIGGERS)
+    #if (MODE == INTERNAL_TRIGGERS || MODE == INTERNAL_ROUTER)
     	uint8_t val = softSerial.available();
 		for(uint8_t i = 0; i < val; i++)
 			{
