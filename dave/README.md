@@ -122,7 +122,9 @@ notes used by the INTERNAL TRIGGERS and by USB TRIGGERS modes.
 - DIGITAL OUT takes MIDI IN
 - The Pots do not do anything (if you can think of something useful they could do, let me know).
 
-### NOTE GENERATOR MODE.  This only produces MIDI: you could use it to trigger a WonkyStuff MCO/4
+
+### NOTE GENERATOR MODE.  
+This only produces MIDI: you could use it to trigger a WonkyStuff MCO/4
 from a regular setup without USB.  It takes a pitch CV and a gate in and generates a note 
 for the MCO/4, and it can also still produce the THREE output CCs, but one of them is now 
 from a CV in.
@@ -136,10 +138,18 @@ from a CV in.
   less than 8, as this likely indicates that IN 3 is disconnected.
 
 
+### HEX MODE.  This mode takes hexadecimal input over USB from your Arduino IDE Serial Monitor and outputs 
+MIDI bytes over DIGITAL OUT.  It's only meant for debugging.  Don't bother with it otherwise.
+
+- DIGITAL OUT outputs MIDI from USB originally as hexadecimal input
+- Nothing else does anything
+- You can't De-Legato or do Clock Division
+
+
 
 ## About the Pot CCs
 
-In modes other than the CLOCK modes, you can change up to three CC parameters with the pots.
+In modes other than the CLOCK modes or Hex mode, you can change up to three CC parameters with the pots.
 This is not available in the USB\_CLOCK or INTERNAL\_CLOCK modes.
 
 WARNING: if you play or release notes immediately after or during changing the pots, DAVE

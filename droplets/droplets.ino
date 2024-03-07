@@ -71,16 +71,16 @@
 ///
 /// IN 1            Pitch CV
 /// IN 2            Release and Range CV
-/// IN 3            Trigger
+/// IN 3            UNUSED
 /// AUDIO IN (A)    Pitch Tune
 /// AUDIO OUT       Out
-/// DIGITAL OUT (D) [Unused]
+/// DIGITAL OUT (D) Trigger
 ///
 /// POT 1           Pitch Scaling       [Set the switch to In1]
 ///
 /// POT 2           Release and Range
 ///
-/// POT 3           Choice of Droplet Chord
+/// POT 3           Choice of Droplets
 
 
 
@@ -441,7 +441,8 @@ PROGMEM const uint8_t chords[NUM_CHORDS][NUM_NOTES] =
     {_C, _C, _C, _E, _Ab, _C1, _E, _Ab1, _C2, _E, _Ab2, _C3, _E, _Ab2, _C4 },               // Aug7
     {_C, _D, _E, _G, _A, _C1, _D1, _E1, _G1, _A1, _C2, _D2, _E2, _G2, _A2  },               // Pentatonic
     {_C, _C, _C, _D, _E, _Gb, _Ab, _Bb, _C1, _D1, _E1, _Gb1, _Ab1, _Bb1, _C2 },              // Whole Tone
-    {_C, _C, _C, _Db, _D, _Eb, _E, _F, _Gb, _G, _Ab, _A, _Bb, _B, _C2 },                    // Chromatic
+    {_C, _C, _C, _Eb, _F, _Gb, _G, _Bb, _C1, _Eb1, _F1, _Gb1, _G1, _Bb1, _C2 },                    // Blues
+//    {_C, _C, _C, _Db, _D, _Eb, _E, _F, _Gb, _G, _Ab, _A, _Bb, _B, _C1 },                    // Chromatic
     {_C, _C, _G, _C1, _G1, _C2, _G2, _C3, _G3, _C4, _C1, _G1, _C2, _G2, _C3 },              // 5 + Oct
     {_C, _C, _C, _C1, _C2, _C3, _C4, _C1, _C2, _C3, _C4, _C1, _C2, _C3, _C4 },              // Oct
 
@@ -455,7 +456,7 @@ PROGMEM const uint8_t chords[NUM_CHORDS][NUM_NOTES] =
     {_C, _C, _C, _E, _Ab, _C1, _E, _Ab1, _C2, _E, _Ab, _C1, _E, _Ab1, _C2,},               // Aug7
     {_C, _D, _E, _G, _A, _C, _D, _E, _G, _A, _C1, _D1, _E1, _G1, _A1, },                    // Pentatonic
     {_C, _C, _C, _D, _E, _Gb, _Ab, _Bb, _C1, _D, _E, _Gb, _Ab, _Bb, _C1, },                 // Whole Tone
-    {_C, _C, _C, _Db, _D, _Eb, _E, _F, _Gb, _G, _Ab, _A, _Bb, _B, _C2 },                    // Chromatic
+    {_C, _C, _C, _Eb, _F, _Gb, _G, _Bb, _C1, _Eb, _F, _Gb, _G, _Bb, _C1 },                    // Blues
     {_C, _C, _C, _G, _C1, _G1, _C2, _G2, _C3, _G, _C1, _G1, _C2, _G2, _C3 },              // 5 + Oct
     {_C, _C, _C, _C1, _C2, _C1, _C2, _C1, _C2, _C1, _C2, _C1, _C2, _C1, _C2 },             // Oct
 

@@ -105,8 +105,8 @@ void setup()
 
 uint8_t digitalIn1 = 0;
 uint8_t digitalIn2 = 0;
-uint8_t digitalIn3 = 1;
-uint8_t digitalAud = 1;
+uint8_t digitalIn3 = 0;
+uint8_t digitalAud = 0;
 
 uint16_t lastIn1 = 1024;
 uint16_t lastIn2 = 1024;
@@ -144,7 +144,7 @@ void loop()
     Serial.print(",3:"); Serial.print(in3); 
     Serial.print(",A:"); Serial.print(aud); 
     Serial.print(",D:"); Serial.print(dig); 
-    Serial.print(",Max:1023,Min:0,");
+    Serial.print(",Max:1023,Min:0");
     Serial.println();
 
     // Read
