@@ -9,6 +9,7 @@ Other GRAINS firmware repositories:
 - Duddex's [GRAINS adaptations](https://github.com/duddex/)
 - Keurslager Kurt's [GRAINS LFO](https://github.com/ZVanMoerkerke/GrainsAE_VC_LFO_Sine)
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
+- Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
 ## Byte
 A ByteBeat emitter in the style of AlgoDrone or ByteBeat-Xfade.  You can choose from 16 Bytebeats, *sort of* change their pitch and speed, change their volume, and reset them.  You can of course define your own ByteBeats.
