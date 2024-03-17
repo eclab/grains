@@ -11,6 +11,12 @@ Other GRAINS firmware repositories:
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
+## LFO
+
+An warpable LFO with pulse (with pulse width), warpable saw/tri/ramp, and warpable sine waves, with a wide range of rates.  Can be reset, and outputs a sync trigger.
+
+Status: Working.  However GRAINS can only reach about 4V, so it goes about 0-4V or so.
+
 ## Bit
 
 A nasty bitcrusher.

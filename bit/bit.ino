@@ -7,7 +7,7 @@
 /// BIT
 ///
 /// BIT is a bitcrusher.  It takes an audio input at AUDIO IN, and reduces its bits
-/// via POT 1 and its sampling rate via POT 2.  Then it changes the volume, likely clipping,
+/// via POT 1 and its sampling rate via POT 2.  Then it changes the gain, likely clipping,
 /// by POT 3.  The output is sent to AUDIO OUT.  That's it!
 ///
 /// BIT is pretty filthy, aliased, and anharmonic.  If you need to mess something up, it's a good choice.
