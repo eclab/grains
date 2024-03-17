@@ -8,6 +8,9 @@ BIT is pretty filthy, aliased, and anharmonic.  If you need to mess something up
 Note that Grains inputs at a resolution of 1024, but outputs at most at a resolution of 488.
 Thus we're already bitcrushing in the output to begin with!
 
+Because it takes Audio input, BIT requires turning on that ability in the Mozzi code, so you'll have
+to muck about a bit with the Mozzi library itself.  I give some instructions how to do that.
+
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
 You will need to install the Mozzi Library.  You can do this from the Library Manager in your Arduino IDE.

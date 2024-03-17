@@ -14,6 +14,27 @@
 /// Note that Grains inputs at a resolution of 1024, but outputs at most at a resolution of 488.
 /// Thus we're already bitcrushing in the output to begin with!
 ///
+///
+/// MODIFYING MOZZI
+///
+/// To compile BIT you will need to modify your MOZZI library.  First you have to locate it.  On the
+/// Mac, it's located in Documents/Arduino/libraries/Mozzi-master.  I can't help with Windows or Linux, 
+/// you'll have to google where to find it.
+///
+/// Next you need to edit the file "mozzi_config.h".  In there, you'll need to add the lines:
+///
+///            #define USE_AUDIO_INPUT true
+///            #define AUDIO_INPUT_PIN A4
+///
+/// This turns on Mozzi's ability to do audio reads on the Audio In socket.  It causes difficulties in other
+/// contexts, so you'll want to revert this before you load some other GRAINS program.
+/// 
+/// I have included two files to show you how to do it:
+///
+/// "mozzi_config.h.orig"      The original unmodified file in the library
+/// "mozzi_config.h.modified"  The file modified to get bit working
+///
+///
 /// SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 ///
 /// You will need to install the Mozzi Library.  You can do this from the Library Manager
@@ -47,9 +68,6 @@
 
 
 #define CONTROL_RATE 32
-
-#define USE_AUDIO_INPUT true
-#define AUDIO_INPUT_PIN A4
 
 #include <MozziGuts.h>
 
