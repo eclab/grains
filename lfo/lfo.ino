@@ -10,6 +10,8 @@
 /// and adjustable SHAPE. When the LFO completes its period, a TRIGGER is emitted on
 /// digital out -- you could use this to sync things to the LFO for example.
 ///
+/// SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
+///
 /// You can adjust the SHAPE of the wave.  The shape of a Pulse wave is its Pulse Width,
 /// hence PWM.  The shape of the Triangle wave goes from Sawtooth to Triangle to Ramp.
 /// The shape of the Sine wave goes from being squished almost into a Sawtooth, to Cosine,
