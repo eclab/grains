@@ -6,35 +6,55 @@
 
 /// RUCKUS
 ///
-/// Ruckus is a noise generator.  
+/// Ruckus is a noise and sample and hold generator.  
 /// Ruckus is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
+///
+/// MAKING NOISE 
 ///
 /// Ruckus can make pure white noise, pulse noise,
 //  or white noise pushed through a 12DB lowpass, high pass, or bandpass filter where you can specify the cutoff
 /// frequency and resonance.  Not a lot of resonance, mind you, or the filter is overwhelmed.
 ///
-///
 /// PULSE NOISE
 ///
 /// This is just noise which consists entirely of maximum (5V) or minimum (0V) values.  It sounds
 /// something like white noise but I can make it much louder.
+///
+/// SAMPLE AND HOLD
+/// 
+/// Ruckus can do three kinds of sample and hold:
+///
+/// - Random Sample and Hold: when the TRIGGER/GATE is raised, it will sample and hold a RANDOM value
+/// - Sample and Hold: when the TRIGGER/GATE is raised, it will sample and hold a value from IN 3
+/// - Track and Hold: as long as the TRIGGER/GATE is raised, it will sample and use the value from IN3.
+///   as soon as the TRIGGER/GATE is lowered, it will use the last sampled value.
+///
+/// In these cases, IN1 serves to SCALE the sample and hold signal, and IN2 serves to SHIFT it.
+/// A shift of 0 is dead center.
+///
+/// Note that Sample and Hold only goes up to under 4V or so, due to limitations of Mozzi.  If IN3
+/// is inputting a value larger than this, it will be clipped.
+
 
 /// CONFIGURATION
 ///
-/// IN 1            12DB Filter Cutoff Frequency
-/// IN 2            12DB Resonance
-/// IN 3            [UNUSED]
+/// IN 1            12DB Filter Cutoff Frequency CV, or Scale
+/// IN 2            12DB Resonance CV, or Shift
+/// IN 3            Sample and Hold Input
 /// AUDIO IN (A)    [UNUSED]
 /// AUDIO OUT       Out
-/// DIGITAL OUT (D) [UNUSED]
+/// DIGITAL OUT (D) Trigger / Gate
 ///
-/// POT 1           12DB Filter Cutoff Frequency CV
+/// POT 1           12DB Filter Cutoff Frequency, or Shift
 ///					[If unused, set the switch to MAN]
 ///
-/// POT 2           12DB Resonance CV
+/// POT 2           12DB Resonance, or Scale
 ///					[If unused, set the switch to MAN]
 ///
-/// POT 3           Filter Choice: White, Pulse, Low Pass, High Pass, Band Pass
+/// POT 3           Noise Type: 
+///                 White, Pulse, Low Pass, High Pass, Band Pass, 
+///                 Random Sample and Hold, Input Sample and Hold, Input Track and Hold
+
 
 
 #define CV_POT_IN1    A2    // Filter Cutoff
@@ -46,7 +66,7 @@
 #define CV_GATE_OUT   8     // [Unused]
 #define RANDOM_PIN    A5
 
-#define CONTROL_RATE 64
+#define CONTROL_RATE 256		// Or higher, for T&H?
 
 #include <MozziGuts.h>
 #include <mozzi_rand.h>
@@ -61,36 +81,129 @@ ResonantFilter<HIGHPASS,uint16_t> filterhp;
 #define CHOICE_12DB_LOWPASS 2
 #define CHOICE_12DB_HIGHPASS 3
 #define CHOICE_12DB_BANDPASS 4
+#define CHOICE_RANDOM_SAMPLE_AND_HOLD 5
+#define CHOICE_SAMPLE_AND_HOLD 6
+#define CHOICE_TRACK_AND_HOLD 7
 
 uint8_t choice = CHOICE_WHITE;
 uint16_t cutoff = 65535;
 uint16_t resonance = 0;
 
+
 void setup() 
     {
     // some reasonable initial defaults
     randSeed(RANDOM_PIN);
-    pinMode(CV_IN3, OUTPUT);
+    pinMode(CV_IN3, INPUT);
     pinMode(CV_AUDIO_IN, OUTPUT);
-    pinMode(CV_GATE_OUT, OUTPUT);
+    pinMode(CV_GATE_OUT, INPUT);
     startMozzi();
     filterlp.setCutoffFreqAndResonance(cutoff, resonance);
     filterbp.setCutoffFreqAndResonance(cutoff, resonance);
     filterhp.setCutoffFreqAndResonance(cutoff, resonance);
     }
 
+int16_t toQuasi9Bit(int16_t val)
+	{
+	return ((val >> 6) * 61) >> 7;
+	}
+
+// Scale from -32768...+32767 to -240 ... +240
+inline int16_t scaleAudio(int16_t val)
+  {
+  if (val == 0) return 0;
+  return ((val >> 4) * 15) >> 7;
+  }
+
+// Scale from -32768...+32767 to -240 ... +240
+inline int16_t scaleAudioSmall(int16_t val)		// val ranges 0...1023
+  {
+  return (val * 15) >> 6;
+  }
+
+// Scale from 0...+1023 to -244 ... +156, probably close enough?
+inline int16_t scaleAudioSmallCV(int16_t val)		// val ranges 0...1023
+  {
+  return ((val * 25) >> 6) - 244;
+  }
+
+// ugh, cast unsigned to signed...	
+union _cast { uint16_t unsign; int16_t sign; } cast;
+int16_t hold;
+uint8_t trigger; 
+
 void updateControl() 
     {
     // Not sure we should bother filtering these, probably not
-    choice = (mozziAnalogRead(CV_POT3) * 5) >> 10;
-    if (choice >= CHOICE_12DB_LOWPASS)
+    choice = mozziAnalogRead(CV_POT3) >> 7;		// 0...7
+    switch (choice)
     	{
-	    cutoff = mozziAnalogRead(CV_POT_IN1) << 6;
-    	resonance = mozziAnalogRead(CV_POT_IN2)  << 4;		// high resonance overwhelms the filter
-		filterlp.setCutoffFreqAndResonance(cutoff, resonance);
-		filterbp.setCutoffFreqAndResonance(cutoff, resonance);
-		filterhp.setCutoffFreqAndResonance(cutoff, resonance);
-		}
+    	case CHOICE_WHITE:
+    	case CHOICE_PULSE:
+    		{
+    		// Do NOTHING
+    		}
+    	break;
+    	case CHOICE_12DB_LOWPASS:
+    	case CHOICE_12DB_HIGHPASS:
+    	case CHOICE_12DB_BANDPASS:
+			{
+			cutoff = mozziAnalogRead(CV_POT_IN1) << 6;
+			resonance = mozziAnalogRead(CV_POT_IN2)  << 4;		// high resonance overwhelms the filter
+			filterlp.setCutoffFreqAndResonance(cutoff, resonance);
+			filterbp.setCutoffFreqAndResonance(cutoff, resonance);
+			filterhp.setCutoffFreqAndResonance(cutoff, resonance);
+			}
+		break;
+		case CHOICE_RANDOM_SAMPLE_AND_HOLD:
+			{
+			uint8_t high = digitalRead(CV_GATE_OUT);
+			if (high && !trigger)
+				{
+        uint8_t scale = mozziAnalogRead(CV_POT_IN1) >> 5;
+        int16_t shift = mozziAnalogRead(CV_POT_IN2);
+        int16_t val = ((((xorshift96() & 1023) - 512) * scale) >> 4) + shift;
+        //Serial.println(val);
+        if (val < 0) val = 0; 
+        if (val > 1023) val = 1023;
+				hold = scaleAudioSmallCV(val);
+        trigger = 1;
+				}
+			else if (!high) trigger = 0;
+			}
+		break;
+		case CHOICE_SAMPLE_AND_HOLD:
+			{
+			uint8_t high = digitalRead(CV_GATE_OUT);
+			if (high && !trigger)
+				{
+        uint8_t scale = mozziAnalogRead(CV_POT_IN1) >> 5;
+        int16_t shift = mozziAnalogRead(CV_POT_IN2);
+        int16_t val = (((mozziAnalogRead(CV_IN3) - 512) * scale) >> 4) + shift;
+        if (val < 0) val = 0; 
+        if (val > 1023) val = 1023;
+        hold = scaleAudioSmallCV(val);
+        trigger = 1;
+				}
+			else if (!high) trigger = 0;
+			}
+		break;
+		case CHOICE_TRACK_AND_HOLD:
+			{
+			uint8_t high = digitalRead(CV_GATE_OUT);
+			if (high)
+				{
+        uint8_t scale = mozziAnalogRead(CV_POT_IN1) >> 5;
+        int16_t shift = mozziAnalogRead(CV_POT_IN2);
+        int16_t val = (((mozziAnalogRead(CV_IN3) - 512) * scale) >> 4) + shift;
+        if (val < 0) val = 0; 
+        if (val > 1023) val = 1023;
+        hold = scaleAudioSmallCV(val);
+				}
+			}
+		break;
+		
+    }
     }
     
 /**
@@ -109,21 +222,6 @@ float filter3DB(float val)
 	return (b0 + b1 + b2 + 0.1848 * val);
 	}
 */
-
-int16_t toQuasi9Bit(int16_t val)
-	{
-	return ((val >> 6) * 61) >> 7;
-	}
-
-// Scale from -32768...+32767 to -240 ... +240
-inline int16_t scaleAudio(int16_t val)
-  {
-  if (val == 0) return 0;
-  return ((val >> 4) * 15) >> 7;
-  }
-
-// ugh, cast unsigned to signed...	
-union _cast { uint16_t unsign; int16_t sign; } cast;
 
 int updateAudio()    
     {
@@ -147,6 +245,11 @@ int updateAudio()
     	break;
     	case CHOICE_12DB_BANDPASS:
     	return scaleAudio(filterbp.next(r >> 1) * 2);
+    	break;
+    	case CHOICE_RANDOM_SAMPLE_AND_HOLD:
+    	case CHOICE_SAMPLE_AND_HOLD:
+    	case CHOICE_TRACK_AND_HOLD:
+    	return hold;
     	break;
     	}
     return 0;		// uh....

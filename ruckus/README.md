@@ -1,19 +1,45 @@
 # Ruckus
 
-Ruckus is a noise generator.  Ruckus is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
+Ruckus is a noise and sample and hold generator.  Ruckus is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 
-Ruckus can make pure white noise, pulse noise, or white noise pushed through a 12DB lowpass, high pass, or bandpass filter where you can specify the cutoff frequency and resonance.  Not a lot of resonance, mind you, or the filter is overwhelmed.
+## Making Noise 
 
-## Pulse noise 
+Ruckus can make:
 
-This is just noise which consists entirely of maximum (5V) or minimum (0V) values.  It sounds something like white noise but I can make it much louder.
+- Pure white noise
+- Pure pulse noise
+- Pulse noise pushed through a resonant 12db lowpass filter with adjustable cutoff
+- Pulse noise pushed through a resonant 12db high pass filter with adjustable cutoff
+- Pulse noise pushed through a resonant 12db bandpass filter with adjustable cutoff
+- Sample and Hold of input CV
+- Sample and Hold of random values
+- Trigger and Hold of input CV
+	
+## About Pulse Noise
+
+This is just noise which consists entirely of maximum (5V) or minimum (0V) values.  It sounds
+something like white noise but I can make it much louder.
+
+## About Sample and Hold
+
+Ruckus can do three kinds of sample and hold:
+
+- Random Sample and Hold: when the TRIGGER/GATE is raised, it will sample and hold a RANDOM value
+- Sample and Hold: when the TRIGGER/GATE is raised, it will sample and hold a value from IN 3
+- Track and Hold: as long as the TRIGGER/GATE is raised, it will sample and use the value from IN3.
+  as soon as the TRIGGER/GATE is lowered, it will use the last sampled value.
+
+In these cases, IN1 serves to SCALE the sample and hold signal, and IN2 serves to SHIFT it. A shift of 0 is dead center.
+
+Note that Sample and Hold only goes up to under 4V or so, due to limitations of Mozzi.  If IN3
+is inputting a value larger than this, it will be clipped.
 
 ## Configuration
 
 #### IN 1
-12DB Filter Cutoff Frequency CV
+12DB Filter Cutoff Frequency CV, or Scale CV
 #### IN 2
-12DB Resonance CV
+12DB Resonance CV, or Shift CV
 #### IN 3
 [UNUSED]
 #### AUDIO IN (A)
@@ -23,12 +49,12 @@ Out
 #### DIGITAL OUT (D) 
 [UNUSED]
 #### POT 1
-12DB Filter Cutoff Frequency
+12DB Filter Cutoff Frequency, or Scale
 
 [If CV is unused, set the switch to MAN]
 #### POT 2
-12DB Resonance
+12DB Resonance, or Shifrt
 
 [If CV is unused, set the switch to MAN]
 #### POT 3
-Filter Choice: White, Pulse, Low Pass, High Pass, Band Pass
+Noise Type: White, Pulse, Low Pass, High Pass, Band Pass, Random Sample and Hold, Input Sample and Hold, Input Track and Hold
