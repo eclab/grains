@@ -52,7 +52,7 @@ Status: Working, but requires a lookup table to deal with some nonlinearity in t
 
 ## Ruckus
 
-A filtered and unfiltered white noise generator.  Requires Mozzi.
+A filtered and unfiltered white noise generator, plus various forms of Sample and Hold.  Requires Mozzi.
 
 Status: Working, but I was hoping to do pink noise as well, but am having some hiccups.  Ran into a lot of Mozzi bugs, reported.
 
