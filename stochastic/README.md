@@ -20,6 +20,9 @@ You can reset Stochastic to pick a new target by sending it a RESET trigger.
 
 GRAINS's output is naturally discretized to 488 steps.  That's the finest-grain it can do. So do not expect this tool to be particularly clean in its output.  Also, GRAINS's output circuitry is tuned for audio, not for CV.  As a result you should expect some small degree of waver.  There is nothing that can be done about this.
 
+Looking for a more traditional sample and hold, random sample and hold, and track and hold?  Try RUCKUS.
+
+
 
 ## Grains Bug
 

@@ -34,6 +34,8 @@
 ///
 /// Note that Sample and Hold only goes up to under 4V or so, due to limitations of Mozzi.  If IN3
 /// is inputting a value larger than this, it will be clipped.
+///
+/// Looking for a random wanderer rather than a traditional sample and hold?  Try STOCHASTIC.  
 
 
 /// CONFIGURATION

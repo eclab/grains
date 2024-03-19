@@ -39,6 +39,10 @@
 /// degree of waver.  There is nothing that can be done about this.
 ///
 ///
+/// Looking for a more traditional sample and hold, random sample and hold, and track and hold?
+/// Try RUCKUS.
+///
+///
 /// GRAINS BUG
 /// 
 /// There is a bug in GRAINS that affects Pots (Dials) 1 and 2.  If you set the 
