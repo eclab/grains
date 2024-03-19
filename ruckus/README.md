@@ -41,13 +41,13 @@ is inputting a value larger than this, it will be clipped.
 #### IN 2
 12DB Resonance CV, or Shift CV
 #### IN 3
-[UNUSED]
+Sample and Hold Input
 #### AUDIO IN (A)
 [UNUSED]
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 
-[UNUSED]
+Trigger / Gate
 #### POT 1
 12DB Filter Cutoff Frequency, or Scale
 
