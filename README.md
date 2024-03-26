@@ -11,6 +11,14 @@ Other GRAINS firmware repositories:
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
+## Para-M
+
+A MIDI-Controlled 3-voice paraphonic oscillator, meant to play chords from your keyboard or DAW or groovebox.  You can choose between Sine and either Saw, Triangle, or Square.
+
+I'll soon come out with Mono-M as well, a monphonic oscillator but one with more waves in memory for somewhat less aliasing.  Also we should see Pluck-M coming out as well, with far improved pitch control over Pluck.
+
+Status: Working.  But every once in a while I'll get a MIDI error due to the use of software serial.  This likely isn't fixable until we move to a hardware UART if/when TW decides to come out with Grains V2 (no, I have no information on that).
+
 ## LFO
 
 An warpable LFO with pulse (with pulse width), warpable saw/tri/ramp, and warpable sine waves, with a wide range of rates.  Can be reset, and outputs a sync trigger.
