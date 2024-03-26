@@ -13,7 +13,7 @@ Other GRAINS firmware repositories:
 
 ## Para-M
 
-A MIDI-Controlled 3-voice paraphonic oscillator, meant to play chords from your keyboard or DAW or groovebox.  You can choose between Sine and either Saw, Triangle, or Square.
+A MIDI-Controlled 3-voice paraphonic oscillator, meant to play chords from your keyboard or DAW or groovebox.  You can choose between Sine and either Saw, Triangle, or Square.  Requires Mozzi.
 
 I'll soon come out with Mono-M as well, a monphonic oscillator but one with more waves in memory for somewhat less aliasing.  Also we should see Pluck-M coming out as well, with far improved pitch control over Pluck.
 
@@ -21,23 +21,23 @@ Status: Working.  But every once in a while I'll get a MIDI error due to the use
 
 ## LFO
 
-An warpable LFO with pulse (with pulse width), warpable saw/tri/ramp, and warpable sine waves, with a wide range of rates.  Can be reset, and outputs a sync trigger.
+An warpable LFO with pulse (with pulse width), warpable saw/tri/ramp, and warpable sine waves, with a wide range of rates.  Can be reset, and outputs a sync trigger.  Requires Mozzi.
 
 Status: Working.  However GRAINS can only reach about 4V, so it goes about 0-4V or so.
 
 ## Bit
 
-A nasty bitcrusher.
+A nasty bitcrusher.  Requires Mozzi.
 
-Status: Working.  It helps that the arduino is already pretty aliased!
+Status: Working.  It helps that the arduino is already pretty aliased!  Mozzi must be *modified* to use Bit, which may not be worthwhile.
 
 ## Byte
-A ByteBeat emitter in the style of AlgoDrone or ByteBeat-Xfade.  You can choose from 16 Bytebeats, *sort of* change their pitch and speed, change their volume, and reset them.  You can of course define your own ByteBeats.
+A ByteBeat emitter in the style of AlgoDrone or ByteBeat-Xfade.  You can choose from 16 Bytebeats, *sort of* change their pitch and speed, change their volume, and reset them.  You can of course define your own ByteBeats.  Requires Mozzi.
 
 Status: Working.  Maybe at some point I'll figure out how to hack Mozzi to allow real pitch control.
 
 ## Pluck
-A 4-voice Karplus-Strong string plucking simulator.
+A 4-voice Karplus-Strong string plucking simulator.  Requires Mozzi.
 
 Status: Working, but because it has to commit to a pitch immediately (to build the Karplus-Strong sample table) sometimes it can get off pitch on some notes thanks to GRAINS/Mozzi's inaccuracy in Analog Input reads.  Could use some work there.
 
@@ -48,7 +48,7 @@ Status: Working, but GRAINS's severe limits on note output range can hamper thin
 
 ## Dave 
 
-A USB Router, Note Distributor, MPE breakout, and MIDI filter.  Requires Grains mode.
+A USB Router, Note Distributor, MPE breakout, and MIDI filter.
 
 Status: All current modes are working.  Lots of stuff, like USB MIDI clock, drum triggers, MIDI routing, MPE, note distribution, removing legato from Wonkystuff modules, CC injection from pots, creation of MIDI notes from gate/cv, etc.  There's also instructions for routing MIDI directly from GRAINS into your MB/1 or MASTER I/O via their TRS inputs, if you're daring and willing to accidently fry your MASTER I/O or MB/1.  :-)
 
@@ -72,7 +72,7 @@ Status: Working.  A bit hissy, but what can you do, it's Mozzi.
 
 ## ADSR
 
-An ADSR envelope generator with optional ASR and AHR configurations.  Requires Mozzi, though it could theoretically be adapted to Grains.
+An ADSR envelope generator with optional ASR and AHR configurations.  Requires Mozzi.
 
 Status: Working.
 
@@ -83,7 +83,7 @@ Status: Working
 
 ## Multilevel
 
-A multi-stage envelope with exponential transitions and many options, including sustain loops, whole-envelope loops, resetting, optional flat (sample-and-hold style) stages, and per-stage triggering.  You can set the minimum and maximum envelope values. Supports up to 145 stages.  Requires Mozzi, though it could theoretically be adapted to Grains.
+A multi-stage envelope with exponential transitions and many options, including sustain loops, whole-envelope loops, resetting, optional flat (sample-and-hold style) stages, and per-stage triggering.  You can set the minimum and maximum envelope values. Supports up to 145 stages.  Requires Mozzi.
 
 Status: Working.  The rate calculation is obnoxious and I should come up with a better mechanism.  One or two minor bugs but it's quite usable.
 
