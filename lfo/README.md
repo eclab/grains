@@ -15,6 +15,23 @@ The LFO has adjustable RATE of course.  There are three ranges in which you can 
 the rate: Short, Medium, and Long.  Within a range you can adjust the rate with the RATE
 knob or CV.
 
+## Centering
+
+Mozzi has a limited top range of 4.1V for its CV.  If your LFO is centered at 2.5V, this 
+means that Mozzi can go as low as 2.5V below that position but only 1.6V above it.  LFO
+give you two options here.  You can either recenter the LFO (not about 2.5V) so it goes 
+0V to 4.1V, or you can keep it centered and symmetric but reduce its range to 0.9V to 4.1V.
+
+The first option is the default.  If you'd like it centered, there's an option in the code.
+
+## Gain
+
+Gain is provided on Audio IN.  By default, of course, that is 0.  So by default we disable
+gain entirely.  If you'd like to control the LFO gain via CV on Audio In, there is an
+option for that in the code.
+
+
+
 Pot 3 controls both the TYPE of the LFO wave (Tri, Sine, Pulse) and the RANGE (Short, Medium, Long).  Thus there are 9 options in total.
 
 The LFO can also be RESET with a trigger.  
