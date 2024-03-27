@@ -11,11 +11,15 @@ Other GRAINS firmware repositories:
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
+## Mono-M
+
+A MIDI-Controlled monophonic oscillator.  You can choose between Sine and either Saw, Triangle, or Square.  Requires Mozzi.
+
+Status: Working.  But every once in a while I'll get a MIDI error due to the use of software serial.  This likely isn't fixable until we move to a hardware UART if/when TW decides to come out with Grains V2 (no, I have no information on that).
+
 ## Para-M
 
 A MIDI-Controlled 3-voice paraphonic oscillator, meant to play chords from your keyboard or DAW or groovebox.  You can choose between Sine and either Saw, Triangle, or Square.  Requires Mozzi.
-
-I'll soon come out with Mono-M as well, a monphonic oscillator but one with more waves in memory for somewhat less aliasing.  Also we should see Pluck-M coming out as well, with far improved pitch control over Pluck.
 
 Status: Working.  But every once in a while I'll get a MIDI error due to the use of software serial.  This likely isn't fixable until we move to a hardware UART if/when TW decides to come out with Grains V2 (no, I have no information on that).
 
@@ -56,7 +60,7 @@ Status: All current modes are working.  Lots of stuff, like USB MIDI clock, drum
 
 A Note Quantizer.  Requires Mozzi.
 
-Status: Working, but requires a lookup table to deal with some nonlinearity in the pitch output of GRAINS.  The table is tuned for my GRAINS: I do not know if it matches other people's GRAINS.  I need feedback from prople regarding this.
+Status: Working, but requires a lookup table to deal with some nonlinearity in the pitch output of GRAINS. The table is tuned for my GRAINS: let me know if it's working for yours as well.
 
 ## Ruckus
 
