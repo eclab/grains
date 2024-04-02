@@ -6,7 +6,7 @@
 
 /// ARP
 ///
-/// Arp is a random arpeggio generator.  Aria is meant to run on the 
+/// Arp is a random arpeggio generator.  Arp is meant to run on the 
 /// AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
 /// Think of Arp as TOPOGRAF for notes.  You are selecting a random arpeggio from a three-
