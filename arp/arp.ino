@@ -10,7 +10,7 @@
 /// AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
 /// Think of Arp as TOPOGRAF for notes.  You are selecting a random arpeggio from a three-
-/// dimensional space.  The three parameters in question are the PATTERN, the VARIANCE,
+/// dimensional space.  The three parameters in question are the base PATTERN, the pattern VARIANCE,
 /// and DETERMINISTIC RANDOM NOISE.  
 ///
 /// The PATTERN is determined by the POT 3.  It is one of 32 values.  The first 16 values are different
