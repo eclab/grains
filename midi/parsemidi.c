@@ -2,12 +2,10 @@
 /// Open Source 
 /// Licensed under the Apache 2.0 License
 
-/// parsemidi.c is the implementation of the MIDI parser -- see parsemidi.h for instructions for use
-
+/// Version 0.3:        "Passes Tests, Modular Stuff Added"
 
 
 #include "parsemidi.h"
-#include <stdio.h>
 
 // MIDI Status Byte Types
 #define NOTE_OFF 0x80
