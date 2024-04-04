@@ -11,6 +11,13 @@ Other GRAINS firmware repositories:
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
+## MIDI
+
+Not a GRAINS project per se.  This is a lightweight MIDI library designed for small controllers.  I have developed it for the
+various MIDI-controlled projects on this page.
+
+Status: Under Development.
+
 ## Mono-M
 
 A MIDI-Controlled monophonic oscillator.  You can choose between Sine and either Saw, Triangle, or Square.  Requires Mozzi.
