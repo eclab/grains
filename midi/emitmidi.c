@@ -2,8 +2,7 @@
 /// Open Source 
 /// Licensed under the Apache 2.0 License
 
-/// emitmidi.c is the implementation of the MIDI emitter -- see emitmidi.h for instructions for use
-
+/// Version 0.3:        "Passes Tests, Modular Stuff Added"
 
 
 #include "emitmidi.h"

@@ -1,3 +1,10 @@
+/// Copyright 2024 by Sean Luke
+/// Open Source 
+/// Licensed under the Apache 2.0 License
+
+/// Version 0.3:        "Passes Tests, Modular Stuff Added"
+
+
 #ifndef __PARSE_MODULAR_H
 #define __PARSE_MODULAR_H
 #include "parsemidi.h"
@@ -133,7 +140,7 @@
 
 /// NRPN Type and Param Constants
 
-#define NRPN_TYPE_RESERVED (-128)
+#define NRPN_TYPE_RESERVED (-32768)
 #define NRPN_PARAM_NONE 65535
 
 
@@ -153,19 +160,19 @@
 // Any of the CC_TYPE values above.
 // Note that the negative CC_TYPE values are likely errors and should be discarded,
 // Assuming you've got your MIDI set up right.
-signed char getCCType(unsigned char cc);
+extern signed char getCCType(unsigned char cc);
 
 // Returns the CC PARAM of the given CC parameter. This is one of:
 // A parameter 0...8 representing parameters "a" through "i" for a given ID
 // A parameter 0...7 representing the 8 modulation parameters
 // CC_PARAM_NONE for various other kinds of CC Types, which have no PARAMs
 // You should call getCCType(...) first to determine the type.
-unsigned char getCCParam(unsigned char cc);
+extern unsigned char getCCParam(unsigned char cc);
 
 // Returns the NRPN TYPE of the given NRPN parameter. This is one of:
 // An ID.  This will be a value 0...14 for IDs 1...15
 // NRPN_TYPE_RESERVED otherwise
-extern signed char getNRPNType(UNSIGNED_16_BIT_INT nrpnParam);
+extern SIGNED_16_BIT_INT getNRPNType(UNSIGNED_16_BIT_INT nrpnParam);
 
 // Returns the NRPN PARAM of the given NRPN parameter.  This is one of:
 // 0...255 for Parameters "a", "b", etc. for a given ID

@@ -2,7 +2,7 @@
 /// Open Source 
 /// Licensed under the Apache 2.0 License
 
-/// Version 0.1:        "It Compiles, that's all"
+/// Version 0.3:        "Passes Tests, Modular Stuff Added"
 
 
 #ifndef __MIDI_TYPES_H

@@ -2,8 +2,7 @@
 /// Open Source 
 /// Licensed under the Apache 2.0 License
 
-/// Tests for emitmidi.h and parsemidi.h
-
+/// Version 0.3:        "Passes Tests, Modular Stuff Added"
 
 
 #include "emitmidi.h"
@@ -492,7 +491,7 @@ int main(int argc, char* argv[])
 
     // INVALID CHANNELS
         
-    printf("INVALID CHANNELS START\nTo PASS, expect to see nothing here except data bytes ( -> )\n");
+    printf("INVALID CHANNELS START\nTo PASS, expect to see nothing here except data bytes\n");
     // Test Note On
     expectedNote = 23;
     expectedVelocity = 4;
@@ -562,7 +561,7 @@ int main(int argc, char* argv[])
         
     printf("OMNI CHANNELS END\n\n\n");
 
-    printf("INVALID DATA START\nTo PASS, expect to see nothing here except data bytes and CLOCK PULSE ( -> )\n");
+    printf("INVALID DATA START\nTo PASS, expect to see nothing here except data bytes and CLOCK PULSE\n");
 
     for(int i = 0; i < 16; i++)
         {

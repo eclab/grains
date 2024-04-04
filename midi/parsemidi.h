@@ -2,7 +2,8 @@
 /// Open Source 
 /// Licensed under the Apache 2.0 License
 
-/// Version 0.2:        "Compiles and Passes Basic Tests"
+/// Version 0.3:        "Passes Tests, Modular Stuff Added"
+
 
 #ifndef PARSEMIDI_H
 #define PARSEMIDI_H
@@ -108,6 +109,15 @@
 #define STATUS_SYSEX_START 6
 #define STATUS_SYSEX_END 7
 #define STATUS_SYSEX_INCOMPLETE 8
+#define ERROR_UNRECOGNIZED_CHANNEL (-1)
+#define ERROR_IGNORE_UNVOICED (-2)
+#define ERROR_DISALLOWED (-3)
+#define ERROR_NO_NRPN_PARAMETER (-4)
+#define ERROR_NO_NRPN_VALUE_MSB (-5)
+#define ERROR_NO_HIGH_RES_MSB (-6)
+#define ERROR_INVALID_DATA_BYTE (-7)
+#define NOTE_INVALID_ATOMIC_MODULATION_CC (-8)
+
 
 // FEATURES TO PERMIT
 // Comment these out to turn them off.  
@@ -260,8 +270,8 @@ extern void highResCC(midiParser* parser, unsigned char parameter, UNSIGNED_16_B
 // The status will be one of the following values:
 // STATUS_SYSEX_COMPLETE        The buffer contains a complete sysex message from start to end (not including F0 nor F7)
 // STATUS_SYSEX_START           The buffer contains just the start of a possibly incomplete sysex message (not including F0)
-// STATUS_SYSEX_END                     The buffer contains just the very end of a sysex message (not including F7)
-// STATUS_SYSEX_INCOMPLETE      The buffer contains part of a sysex message in the middle, with neither the start or end
+// STATUS_SYSEX_END             The buffer contains just the end of a sysex message (not including F7)
+// STATUS_SYSEX_INCOMPLETE      The buffer contains part of a sysex message in the middle, with neither the start nor end
 extern void sysex(midiParser* parser, unsigned char* buffer, unsigned char len, unsigned char status);
 #endif
 
@@ -320,22 +330,20 @@ void initializeParser(midiParser* parser, unsigned char channel, unsigned char t
 // call it if you need to reset the stream for some reason (very rare).
 void resetParser(midiParser* parser);
 
-#define ERROR_UNRECOGNIZED_CHANNEL (-1)
-#define ERROR_IGNORE_UNVOICED (-2)
-#define ERROR_DISALLOWED (-3)
-#define ERROR_INVALID_DATA_BYTE (-4)
-#define ERROR_NO_NRPN_PARAMETER (-5)
-
 // Updates the MIDI parser to reflect a new incoming byte.
 // Returns one of:
 // > 0          Completed parse of a MIDI message
 // 0            Incomplete parse
-// ERROR_UNRECOGNIZED_CHANNEL   Voice message detected, but channel unused
-// ERROR_IGNORE_UNVOICED                Unvoiced message constructed but not sent because instructed to ignore unvoiced messages
-// ERROR_DISALLOWED                             Message not sent because feature not allowed
+// ERROR_UNRECOGNIZED_CHANNEL           Voice message constructed, but its channel is not responded to by this parser
+// ERROR_IGNORE_UNVOICED                Unvoiced message constructed but the parser has been insturected to ignore unvoiced messages
+// ERROR_DISALLOWED                     Message constructed but ignored because a feature was not allowed (turned on)
+// ERROR_NO_NRPN_PARAMETER              An NRPN/RPN value message was constructed, but ignored because no NRPN/RPN parameter message had been found yet
+// ERROR_NO_NRPN_VALUE_MSB              An NRPN/RPN *LSB* value message was constructed, but ignored because no NRPN/RPN *MSB* value message had been found yet
+// ERROR_NO_HIGH_RES_MSB                A 14-bit *LSB* CC message was constructed, but ignored because no equivalent 14-bit *MSB* CC message had been found yet
 // ERROR_INVALID_DATA_BYTE              Bad or out of sync data byte, or data byte following a status byte with ERROR_UNRECOGNIZED_CHANNEL
-// ERROR_NO_NRPN_PARAMETER              An NRPN/RPN value was constructed, but no NRPN/RPN parameter had been defined yet
-// 
+// NOTE_INVALID_ATOMIC_MODULATION_CC    A CC 26 or 27 was constructed but ignored (for the moment) because the previous CC was not the same or invalid.
+//                                      This isn't an error per se, but a declaration that the CC was not processed yet to guarantee atomicity.
+//                                      This feature is only turned on if we ALLOW_ATOMIC_MODULATION_CC.
 signed char parseMidi(midiParser* parser, unsigned char c);
 
 // Returns the parser's assigned MIDI channel

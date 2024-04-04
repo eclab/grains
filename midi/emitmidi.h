@@ -2,7 +2,7 @@
 /// Open Source 
 /// Licensed under the Apache 2.0 License
 
-/// Version 0.2:        "Compiles and Passes Basic Tests"
+/// Version 0.3:        "Passes Tests, Modular Stuff Added"
 
 
 #ifndef __EMIT_MIDI_H

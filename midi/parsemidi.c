@@ -287,11 +287,18 @@ signed char processCC(midiParser* parser, unsigned char param, unsigned char val
 #ifdef ALLOW_ATOMIC_MODULATION_CC
         parser -> lastCC = param;
 #endif 		// ALLOW_ATOMIC_MODULATION_CC
-        if (isNRPNParamMSBSet(parser) && isNRPNParamLSBSet(parser) && isNRPNValueMSBSet(parser))
+        if (isNRPNParamMSBSet(parser) && isNRPNParamLSBSet(parser))
             {
-            unsigned char msb = getNRPNValueMSB(parser);
-            nrpn(parser, getNRPNParamMSB(parser) * 128 + getNRPNParamLSB(parser), msb * 128 + val, parser->rpn, STATUS_NORMAL);
-            return 1;
+            if (isNRPNValueMSBSet(parser))
+            	{
+	            unsigned char msb = getNRPNValueMSB(parser);
+	            nrpn(parser, getNRPNParamMSB(parser) * 128 + getNRPNParamLSB(parser), msb * 128 + val, parser->rpn, STATUS_NORMAL);
+	            return 1;
+	        	}
+	        else
+	        	{
+	        	return ERROR_NO_NRPN_VALUE_MSB;
+	        	}
             }
         else
             {
@@ -316,7 +323,7 @@ signed char processCC(midiParser* parser, unsigned char param, unsigned char val
                 }
             else
                 {
-                return ERROR_INVALID_ATOMIC_MODULATION_CC;
+                return WARNING_INVALID_ATOMIC_MODULATION_CC;
                 }
             }
         else                    // we allow all other high-resolution CC MSBs
@@ -335,9 +342,16 @@ signed char processCC(midiParser* parser, unsigned char param, unsigned char val
 #ifdef ALLOW_ATOMIC_MODULATION_CC
         parser -> lastCC = param;
 #endif 		// ALLOW_ATOMIC_MODULATION_CC
-        unsigned char msb = getHighResMSB(parser, param - 32);
-        highResCC(parser, param, msb * 128 + val, STATUS_NORMAL);
-        return 1;
+		if (isHighResMSBSet(parser, param - 32))
+			{
+	        unsigned char msb = getHighResMSB(parser, param - 32);
+	        highResCC(parser, param, msb * 128 + val, STATUS_NORMAL);
+   	     	return 1;
+   	     	}
+   	     else
+   	     	{
+	        return ERROR_NO_HIGH_RES_MSB;
+   	     	}
         }
 #endif 		// ALLOW_HIGH_RES_CC
 
@@ -411,6 +425,10 @@ void resetParser(midiParser* parser)
 #endif 		// ALLOW_PC
     }
 
+
+
+
+
 // channel can be 0...15 or OMNI
 void initializeParser(midiParser* parser, unsigned char channel, unsigned char tag, unsigned char unvoicedMessages)
     {
@@ -431,6 +449,9 @@ void initializeParser(midiParser* parser, unsigned char channel, unsigned char t
 
     resetParser(parser);
     }
+
+
+
 
 
 #ifdef ALLOW_MPE

@@ -1,3 +1,10 @@
+/// Copyright 2024 by Sean Luke
+/// Open Source 
+/// Licensed under the Apache 2.0 License
+
+/// Version 0.3:        "Passes Tests, Modular Stuff Added"
+
+
 #include "parsemodular.h"
 
 #define CC_TYPE_ID_1 0
@@ -178,7 +185,7 @@ unsigned char getCCParam(unsigned char cc)
 	return CC_PARAM(data);
 	}
 	
-signed char getNRPNType(UNSIGNED_16_BIT_INT nrpnParam)
+SIGNED_16_BIT_INT getNRPNType(UNSIGNED_16_BIT_INT nrpnParam)
 	{
 	if (nrpnParam < 256 || nrpnParam >= 4098)
 		{
