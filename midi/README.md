@@ -13,7 +13,7 @@ Code for allocating, setting up, and using MIDI parsers for incoming MIDI
 ### miditypes.h
 Minor code shared in common by parsemidi.h and emitmidi.h
 
-### test.c
+### testmidi.c
 Test code for emitmidi.c and parsemidi.c
 
 ### parsemodular.c and parsemodular.h
