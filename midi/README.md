@@ -16,5 +16,10 @@ Minor code shared in common by parsemidi.h and emitmidi.h
 ### test.c
 Test code for emitmidi.c and parsemidi.c
 
-### parsemodularc and parsemodular.h
+### parsemodular.c and parsemodular.h
 Utility code to make it easier to determine which parameter is which for modular synth modules
+
+### emitmodular.c and emitmodular.h
+Utility code to make it easy to emit MIDI to other modules
+
+
