@@ -22,4 +22,4 @@ Utility code to make it easier to determine which parameter is which for modular
 ### emitmodular.c and emitmodular.h
 Utility code to make it easy to emit MIDI to other modules
 
-
+At present there is no test code for parse/emitmodular.c/h, which could be full of bugs for all I knew.
