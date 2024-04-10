@@ -41,11 +41,11 @@
 typedef struct midiEmitter
     {
     UNSIGNED_16_BIT_INT lastNRPN;                   // Last NRPN/RPN Parameter sent.  RPN parameters are + 16384
-    unsigned char lastNRPNMSB;                              // Last NRPN/RPN MSB value sent.
-    unsigned char lastStatus;                               // The last status byte the emitter emitted
+    unsigned char lastNRPNMSB;                      // Last NRPN/RPN MSB value sent.
+    unsigned char lastStatus;                       // The last status byte the emitter emitted
     unsigned char lastHighResParameter;             // Last High-Res (14-bit) CC Parameter sent.  Though we could maintain ALL parameters, we'll only maintain the last one for sanity
     unsigned char lastHighResMSB;                   // Last High-Res (14-bit) CC MSB value sent.  Though we could maintain ALL parameters, we'll only maintain the last one for sanity
-    unsigned char tag;                                              // The emitter's tag.  Use this however you like.
+    unsigned char tag;                              // The emitter's tag.  Use this however you like.
     } midiEmitter;
 
 
@@ -73,7 +73,7 @@ static inline unsigned char getEmitterTag(midiEmitter* emitter);
 //// EMITTING MIDI DATA
 
 // pitch goes 0 ... 127, velocity goes 0 ... 127
-// IMPORTANT: note off of 0 velocity will be sent as a note on.
+// IMPORTANT: note off of velocity 64, or with no velocity, will be sent as a note on of 0 velocity.
 void emitNoteOn(midiEmitter* emitter, unsigned char pitch, unsigned char velocity, unsigned char channel);
 void emitNoteOffVel(midiEmitter* emitter, unsigned char pitch, unsigned char velocity, unsigned char channel);
 void emitNoteOff(midiEmitter* emitter, unsigned char pitch, unsigned char channel);     // velocity is assumed to be 64 (0x40)

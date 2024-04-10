@@ -81,7 +81,7 @@ void emitNoteOn(midiEmitter* emitter, unsigned char pitch, unsigned char velocit
         
 void emitNoteOffVel(midiEmitter* emitter, unsigned char pitch, unsigned char velocity, unsigned char channel)
     {
-    if (velocity == 0) emitNoteOn(emitter, pitch, 0x40, channel);
+    if (velocity == 0x40) emitNoteOn(emitter, pitch, 0, channel);
     else
         {
         doEmit(emitter, NOTE_OFF | (channel & 15));
@@ -92,9 +92,7 @@ void emitNoteOffVel(midiEmitter* emitter, unsigned char pitch, unsigned char vel
 
 void emitNoteOff(midiEmitter* emitter, unsigned char pitch, unsigned char channel)     
     {
-    doEmit(emitter, NOTE_ON | (channel & 15));
-    doEmit(emitter, pitch & 127);
-    doEmit(emitter, 0);
+    emitNoteOn(emitter, pitch, 0, channel);
     }
 
 void emitClockStop(midiEmitter* emitter)
