@@ -186,6 +186,13 @@ void highResCC(midiParser* parser, unsigned char parameter, UNSIGNED_16_BIT_INT 
             value , expectedValue,
             status , expectedStatus, "BARE MSB");
         }
+    else if (status == STATUS_BARE_LSB)
+    	{
+        printf("14-BIT %d/%d %d/%d %d/%d %s\n", 
+            parameter , expectedParameter,
+            value , expectedValue,
+            status , expectedStatus, "BARE LSB");
+    	}
     else
         {
         printf("14-BIT %d/%d %d/%d %d/%d %s\n", 
@@ -423,18 +430,14 @@ int main(int argc, char* argv[])
 
     // HIGH-RES CC (14-BIT)
         
-    setHighResUsed(&parse, 0, 1);
-    setHighResUsed(&parse, 1, 1);
+  	setHighResUsed(&parse, 1, 1);
+    setHighResUsed(&parse, 2, 1);
+	setHighResUsed(&parse, 3, 1);
         
-    expectedParameter = 0;
-    expectedValue = 5678;
-    expectedStatus = STATUS_NORMAL;
-    emitHighResCC(&emit, 0, 5678, 1);
-
-    expectedParameter = 0;
-    expectedValue = 5679;
-    expectedStatus = STATUS_NORMAL;
-    emitHighResCC(&emit, 0, 5679, 1);
+    expectedParameter = 1;
+    expectedValue = 1;
+    expectedStatus = STATUS_BARE_LSB;
+ 	emitCC(&emit, 33, 1, 1);
 
     expectedParameter = 1;
     expectedValue = 5678;
@@ -455,6 +458,16 @@ int main(int argc, char* argv[])
     expectedValue = 5679;
     expectedStatus = STATUS_NORMAL;
     emitHighResCC(&emit, 2, 5679, 1);
+
+    expectedParameter = 3;
+    expectedValue = 5678;
+    expectedStatus = STATUS_NORMAL;
+    emitHighResCC(&emit, 3, 5678, 1);
+
+    expectedParameter = 3;
+    expectedValue = 5679;
+    expectedStatus = STATUS_NORMAL;
+    emitHighResCC(&emit, 3, 5679, 1);
 
     printf("VALID MIDI TESTS END\n\n\n");
 

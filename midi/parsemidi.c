@@ -6,6 +6,7 @@
 
 
 #include "parsemidi.h"
+//#include <stdio.h>
 
 // MIDI Status Byte Types
 #define NOTE_OFF 0x80
@@ -57,8 +58,8 @@
 static inline unsigned char isHighResUsed(midiParser* parser, unsigned char parameter)
     {
     unsigned char pos = parameter >> 3;             // which byte
-    unsigned char slot = parameter & 8;             // where in the byte
-    return parser->highResUsed[pos] >> slot;
+    unsigned char slot = parameter & 7;             // where in the byte
+    return (parser->highResUsed[pos] >> slot) & 1;
     }
 
 
@@ -67,7 +68,7 @@ static inline unsigned char isHighResUsed(midiParser* parser, unsigned char para
 void setHighResUsed(midiParser* parser, unsigned char parameter, unsigned char on)
     {
     unsigned char pos = parameter >> 3;             // which byte
-    unsigned char slot = parameter & 8;             // where in the byte
+    unsigned char slot = parameter & 7;             // where in the byte
     if (on)
         {
         parser->highResUsed[pos] = parser->highResUsed[pos] | (1 << slot);
@@ -297,7 +298,12 @@ signed char processCC(midiParser* parser, unsigned char param, unsigned char val
 	        	}
 	        else
 	        	{
-	        	return ERROR_NO_NRPN_VALUE_MSB;
+#ifdef ALLOW_BARE_LSB
+	            nrpn(parser, getNRPNParamMSB(parser) * 128 + getNRPNParamLSB(parser), 0 * 128 + val, parser->rpn, STATUS_BARE_LSB);
+	            return 1;
+#else 		// ALLOW_BARE_LSB
+	        	return ERROR_BARE_NRPN_VALUE_MSB;
+#endif 		// ALLOW_BARE_LSB
 	        	}
             }
         else
@@ -337,7 +343,7 @@ signed char processCC(midiParser* parser, unsigned char param, unsigned char val
 #endif 		// ALLOW_ATOMIC_MODULATION_CC
         return retval;
         }
-    else if (param < 64 && isHighResUsed(parser, param - 32) && isHighResMSBSet(parser, param - 32))        // High Res CC LSB
+    else if (param < 64 && isHighResUsed(parser, param - 32))        // High Res CC LSB
         {
 #ifdef ALLOW_ATOMIC_MODULATION_CC
         parser -> lastCC = param;
@@ -350,7 +356,12 @@ signed char processCC(midiParser* parser, unsigned char param, unsigned char val
    	     	}
    	     else
    	     	{
-	        return ERROR_NO_HIGH_RES_MSB;
+#ifdef ALLOW_BARE_LSB
+			highResCC(parser, param, 0 * 128 + val, STATUS_BARE_LSB);
+			return 1;
+#else 		// ALLOW_BARE_LSB
+	        return ERROR_BARE_HIGH_RES_MSB;
+#endif 		// ALLOW_BARE_LSB
    	     	}
         }
 #endif 		// ALLOW_HIGH_RES_CC
@@ -915,7 +926,7 @@ signed char parseMidi(midiParser* parser, unsigned char c)
             // Do Nothing
             parser->status = INVALID;
             parser->data1 = INVALID;
-            return ERROR_INVALID_DATA_BYTE;
+            return ERROR_RESERVED_STATUS_BYTE;
             break;
         case TUNE_REQUEST:
             parser->status = INVALID;
@@ -957,7 +968,7 @@ signed char parseMidi(midiParser* parser, unsigned char c)
             break;
         case UNDEFINED_F9:
             // Do Nothing
-            return ERROR_INVALID_DATA_BYTE;
+            return ERROR_RESERVED_STATUS_BYTE;
             break;
         case CLOCK_START:
 #ifdef ALLOW_CLOCK
@@ -1007,7 +1018,7 @@ signed char parseMidi(midiParser* parser, unsigned char c)
             break;
         case UNDEFINED_FD:
             // Do Nothing
-            return ERROR_INVALID_DATA_BYTE;
+            return ERROR_RESERVED_STATUS_BYTE;
             break;
         case ACTIVE_SENSING:
 #ifdef ALLOW_ACTIVE_SENSING

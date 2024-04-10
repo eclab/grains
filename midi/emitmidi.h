@@ -92,7 +92,7 @@ void emitPC(midiEmitter* emitter, unsigned char program, unsigned char channel);
 // program goes 0 ... 127, bankMSB and bankLSB both go 0 ... 127
 void emitPCAndBank(midiEmitter* emitter, unsigned char program, unsigned bankMSB, unsigned bankLSB, unsigned char channel);       
 
-// If you support High-Res (14-bit) CC, you should not use this functinon to send to the MSB or LSB of
+// If you support High-Res (14-bit) CC, you should not use this function to send to the MSB or LSB of
 // high-res CCs.  Instead, use emitHighResCC(...).
 // If you support NRPN or RPN, you should not use this function to send to parameters 6, 38, 96, 97, 98, 99, 100, or 101
 // Instead you should use emitNRPN, emitNRPNIncrement, or emitNRPNDecrement
