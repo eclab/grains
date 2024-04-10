@@ -86,7 +86,7 @@
 /// or only one of them.
 ///
 ///
-/// DISADVANTAGES OF THIS CODE
+/// WEAKNESSES OF THIS CODE
 ///
 /// 1. If you turn on ALLOW_SYSTEM_EXCLUSIVE, every single parser will have its own separate system exclusive
 /// buffer.  This is because the buffer is part of the parser structure: it's not separately allocated
@@ -97,30 +97,37 @@
 /// channel.  For example, if you get an NRPN MSB 5 on channel 2, then an NRPN LSB 2 on channel 4, the parser will
 /// assume they're supposed to be together even though they're on separate channels.  For this reason, it is
 /// recommended that you use OMNI only if you know that all the data coming in will be on the same channel.
+///
+/// 3. If you have multiple parsers, one per channel, when you receive a byte, you have to hand it to ALL the parsers
+/// to parse individually.  It'd be nice to have a meta-parser which determines if the byte is part of a channel voice
+/// message and hands it to only one parser as a result: and this would kinda work except for MPE, where some parsers
+/// respond to more than one channel (such as the master channel).  For future work perhaps.  For now you have O(n)
+/// parses per incoming byte.
+
 
 
 
 // Don't mess with these constants
-#define NO_CHANNEL 16                                                // Used when we do NOT have an associated channel
-#define OMNI 16                                                      // Used when we listen to all channels
-#define STATUS_NORMAL   0                                            // Plain value for NRPN/RPN/High-Res CC
-#define STATUS_BARE_MSB 1                                            // Value only contains the MSB (so far), LSB assumed to be 0
-#define STATUS_BARE_LSB 2                                            // Value only contains the LSB (so far), MSB assumed to be 0
-#define STATUS_NRPN_INCREMENT 3                                      // Value is amount to increment by [only for NRPN/RPN]
-#define STATUS_NRPN_DECREMENT 4                                      // Value is amount to decrement by [only for NRPN/RPN]
-#define STATUS_SYSEX_COMPLETE 5                                      // Sysex buffer contains a complete message
-#define STATUS_SYSEX_START 6                                         // Sysex buffer contains the start but not the end of a message
-#define STATUS_SYSEX_END 7                                           // Sysex buffer contains the end but not the start of a message
-#define STATUS_SYSEX_INCOMPLETE 8                                    // Sysex buffer contains a fragment of, but neither the start nor end of a message
-#define ERROR_UNRECOGNIZED_CHANNEL (-1)                              // Parser ignored a voiced message because it was the wrong channel
-#define ERROR_IGNORE_UNVOICED (-2)                                   // Parser ignored an unvoiced message because it was set up to do so 
-#define ERROR_DISALLOWED (-3)                                        // Parser ignored a message because you didn't allow (turn on) a feature
-#define ERROR_NO_NRPN_PARAMETER (-4)                                 // Parser ignored an RPN/NRPN value message because no RPN/NRPN parameter had been set yet
-#define ERROR_BARE_NRPN_VALUE_MSB (-5)                               // Parser ignored an RPN/NRPN value LSB CC because no RPN/NRPN value MSB had been set yet
-#define ERROR_BARE_HIGH_RES_MSB (-6)                                 // Parser ignored a 14-bit value LSB CC because no equivalent 14-bit value MSB had been set yet
-#define ERROR_INVALID_DATA_BYTE (-7)                                 // Parser ignored a bad data byte
-#define ERROR_RESERVED_STATUS_BYTE (-8)                              // Parser ignored a reserved status byte (F4, F5, F9, or FD).
-#define NOTE_INVALID_ATOMIC_MODULATION_CC (-9)                       // Parser temporarily ignored a 14-bit value MSB CC on 26 or 27 because the prior CC was not the same thing, or an INVALID
+#define NO_CHANNEL 16                               // Used when we do NOT have an associated channel
+#define OMNI 16                                     // Used when we listen to all channels
+#define STATUS_NORMAL   0                           // Plain value for NRPN/RPN/High-Res CC
+#define STATUS_BARE_MSB 1                           // Value only contains the MSB (so far), LSB assumed to be 0
+#define STATUS_BARE_LSB 2                           // Value only contains the LSB (so far), MSB assumed to be 0
+#define STATUS_NRPN_INCREMENT 3                     // Value is amount to increment by [only for NRPN/RPN]
+#define STATUS_NRPN_DECREMENT 4                     // Value is amount to decrement by [only for NRPN/RPN]
+#define STATUS_SYSEX_COMPLETE 5                     // Sysex buffer contains a complete message
+#define STATUS_SYSEX_START 6                        // Sysex buffer contains the start but not the end of a message
+#define STATUS_SYSEX_END 7                          // Sysex buffer contains the end but not the start of a message
+#define STATUS_SYSEX_INCOMPLETE 8                   // Sysex buffer contains a fragment of, but neither the start nor end of a message
+#define ERROR_UNRECOGNIZED_CHANNEL (-1)             // Parser ignored a voiced message because it was the wrong channel
+#define ERROR_IGNORE_UNVOICED (-2)                  // Parser ignored an unvoiced message because it was set up to do so 
+#define ERROR_DISALLOWED (-3)                       // Parser ignored a message because you didn't allow (turn on) a feature
+#define ERROR_NO_NRPN_PARAMETER (-4)                // Parser ignored an RPN/NRPN value message because no RPN/NRPN parameter had been set yet
+#define ERROR_BARE_NRPN_VALUE_MSB (-5)              // Parser ignored an RPN/NRPN value LSB CC because no RPN/NRPN value MSB had been set yet
+#define ERROR_BARE_HIGH_RES_MSB (-6)                // Parser ignored a 14-bit value LSB CC because no equivalent 14-bit value MSB had been set yet
+#define ERROR_INVALID_DATA_BYTE (-7)                // Parser ignored a bad data byte
+#define ERROR_RESERVED_STATUS_BYTE (-8)             // Parser ignored a reserved status byte (F4, F5, F9, or FD).
+#define NOTE_INVALID_ATOMIC_MODULATION_CC (-9)      // Parser temporarily ignored a 14-bit value MSB CC on 26 or 27 because the prior CC was not the same thing, or an INVALID
 
 
 // FEATURES TO PERMIT
@@ -133,7 +140,7 @@
 #define ALLOW_NOTES
 #define ALLOW_POLY_AT
 #define ALLOW_CC
-#define ALLOW_HIGH_RES_CC                               // You must ALSO call setHighResUsed(...) to state which CCs are high-res
+#define ALLOW_HIGH_RES_CC                           // You must ALSO call setHighResUsed(...) to state which CCs are high-res
 #define ALLOW_RPN_NRPN
 #define ALLOW_PC
 #define ALLOW_AT
@@ -146,13 +153,13 @@
 #define ALLOW_CLOCK
 #define ALLOW_ACTIVE_SENSING
 #define ALLOW_SYSTEM_RESET
-#define ALLOW_MPE                                      // If ON, then you can call setMPEMasterChannel(...)  
+#define ALLOW_MPE                                   // If ON, then you can call setMPEMasterChannel(...)  
 #define ALLOW_BARE_LSB								   
 
 // EXTRA-MIDI FEATURES
 
 // Used for Modular MIDI Spec
-// #define ALLOW_ATOMIC_MODULATION_CC           		// Only allow High-Res CC MSBs 26 and 27 to emit a cc(...) if the previous CC was the same (26 or 27) or INVALID
+// #define ALLOW_ATOMIC_MODULATION_CC               // Only allow High-Res CC MSBs 26 and 27 to emit a cc(...) if the previous CC was the same (26 or 27) or INVALID
 
 
 
@@ -162,7 +169,7 @@
 // You will not receive a callback until the message is complete -- that is, we do not do the Casio CZ broken sysex thing.
 // If a system exclusive message exceeds SYSTEM_EXCLUSIVE_BUFFER_SIZE in length, then it is ignored.
 
-#define SYSTEM_EXCLUSIVE_BUFFER_SIZE 64         // can be no larger than MAX_SYSTEM_EXCLUSIVE_BUFFER_SIZE (254, defined in miditypes.h)
+#define SYSTEM_EXCLUSIVE_BUFFER_SIZE 64             // can be no larger than MAX_SYSTEM_EXCLUSIVE_BUFFER_SIZE (254, defined in miditypes.h)
 
 
 
@@ -173,43 +180,43 @@
 // by calling getParserMIDIChannel(), getParserCurrentMIDIChannel, and getParserTag() -- see below
 typedef struct midiParser
     {
-    unsigned char tag;                                                              // The parser's tag.  This is a byte for you to use however you like.
-    unsigned char channel;                                                  // The channel to which we are meant to listen, or OMNI 
-    unsigned char currentChannel;                  // The current channel, which may vary if we are OMNI
+    unsigned char tag;                              // The parser's tag.  This is a byte for you to use however you like.
+    unsigned char channel;                          // The channel to which we are meant to listen, or OMNI 
+    unsigned char currentChannel;                   // The current channel, which may vary if we are OMNI
     unsigned char status;                           // The status byte, stripped of channel
     unsigned char data1;                            // The first data byte, if any
-    unsigned char unvoicedMessages;                         // Does this parser respond to unvoiced messages?
+    unsigned char unvoicedMessages;                 // Does this parser respond to unvoiced messages?
 
 #ifdef ALLOW_PC
     unsigned char bankMSB;
     unsigned char bankLSB;
-#endif // ALLOW_PC
+#endif   // ALLOW_PC
 
 #ifdef ALLOW_HIGH_RES_CC
-    unsigned char highResUsed[4];           // 32-bit bitfield, bit indicates whether high-res is being used for that CC
-    unsigned char highResMSB[32];           // Low 7 bits is current value MSB.  High bit is whether the MSB has been set yet.
-#endif
+    unsigned char highResUsed[4];                   // 32-bit bitfield, bit indicates whether high-res is being used for that CC
+    unsigned char highResMSB[32];                   // Low 7 bits is current value MSB.  High bit is whether the MSB has been set yet.
+#endif   // ALLOW_HIGH_RES_CC
 
 #ifdef ALLOW_RPN_NRPN
     unsigned char nrpnParamMSB;                     // Low 7 bits is current param MSB.  High bit is whether the MSB has been set yet.
     unsigned char nrpnParamLSB;                     // Low 7 bits is current param LSB.  High bit is whether the LSB has been set yet.
     unsigned char nrpnValueMSB;                     // Low 7 bits is current value MSB.  High bit is whether the MSB has been set yet.
     unsigned char rpn;                              // Is this RPN instead?
-#endif
+#endif   // ALLOW_RPN_NRPN
 
 #ifdef ALLOW_SYSTEM_EXCLUSIVE
     unsigned char systemExclusiveBufferStarted;
-    unsigned char systemExclusiveBufferLen;                 // The length of our system exclusive buffer
+    unsigned char systemExclusiveBufferLen;                                 // The length of our system exclusive buffer
     unsigned char systemExclusiveBuffer[SYSTEM_EXCLUSIVE_BUFFER_SIZE];      // System exclusive buffer, not including F0 or F7
-#endif
+#endif   // ALLOW_SYSTEM_EXCLUSIVE
 
 #ifdef ALLOW_ATOMIC_MODULATION_CC
     unsigned char lastCC;                           // What was the previous CC parameter?
-#endif
+#endif   // ALLOW_ATOMIC_MODULATION_CC
 
 #ifdef ALLOW_MPE
     unsigned char mpeMasterChannel;                 // Is this parser part of an MPE group, and if so, what is the mpeMasterChannel?
-#endif
+#endif   // ALLOW_MPE
     } midiParser;
 
 
@@ -227,31 +234,31 @@ typedef struct midiParser
 // IMPORTANT: noteOn will never have a velocity of 0
 extern void noteOn(midiParser* parser, unsigned char note, unsigned char velocity);
 extern void noteOff(midiParser* parser, unsigned char note, unsigned char velocity);
-#endif
+#endif   // ALLOW_NOTES
 
 #ifdef ALLOW_CLOCK
 extern void clockStop(midiParser* parser);
 extern void clockStart(midiParser* parser);
 extern void clockContinue(midiParser* parser);
 extern void clockPulse(midiParser* parser);
-#endif
+#endif   // ALLOW_CLOCK
 
 #ifdef ALLOW_BEND
 // value goes -8192 ... +8191
 extern void bend(midiParser* parser, SIGNED_16_BIT_INT value);
-#endif
+#endif   // ALLOW_BEND
 
 #ifdef ALLOW_PC
 // program goes 0 ... 127, bankMSB goes 0 ... 127 (0 by default), and bankLSB goes 0 ... 127 (0 by default)
 extern void pc(midiParser* parser, unsigned char program, unsigned char bankMSB, unsigned char bankLSB);
-#endif
+#endif   // ALLOW_PC
 
 #ifdef ALLOW_CC
 // This will only be called for non-high-res, non-NRPN, non-RPN CCs
 // This will NOT be called for any CCs you have previously registered as high resolution via setHighResUsed(...)
 // parameter goes 0 ... 127, value goes 0 ... 127
 extern void cc(midiParser* parser, unsigned char parameter, unsigned char value);
-#endif
+#endif   // ALLOW_CC
 
 #ifdef ALLOW_RPN_NRPN
 // parameter goes 0...16383, value goes 0...16383, rpn is true or false, channel goes 0...15
@@ -273,7 +280,7 @@ extern void nrpn(midiParser* parser, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_
 // STATUS_BARE_MSB: 'value' is determined only by the MSB.  No LSB has arrived yet.  Thus 'value' = MSB * 128 + 0.
 // STATUS_BARE_LSB: 'value' is determined only by the LSB.  No MSB has arrived yet.  Thus 'value' = LSB.  This is normally an error.  Only returned if ALLOW_BARE_LSB.
 extern void highResCC(midiParser* parser, unsigned char parameter, UNSIGNED_16_BIT_INT value, unsigned char status);
-#endif
+#endif   // ALLOW_HIGH_RES_CC
 
 #ifdef ALLOW_SYSTEM_EXCLUSIVE
 // buffer does not include 0xF0 at start nor 0xF7 at end.  len will not exceed SYSTEM_EXCLUSIVE_BUFFER_SIZE (254)
@@ -283,44 +290,44 @@ extern void highResCC(midiParser* parser, unsigned char parameter, UNSIGNED_16_B
 // STATUS_SYSEX_END             The buffer contains just the end of a sysex message (not including F7)
 // STATUS_SYSEX_INCOMPLETE      The buffer contains part of a sysex message in the middle, with neither the start nor end
 extern void sysex(midiParser* parser, unsigned char* buffer, unsigned char len, unsigned char status);
-#endif
+#endif   // ALLOW_SYSTEM_EXCLUSIVE
 
 #ifdef ALLOW_AT
 // value goes 0 ... 127
 extern void aftertouch(midiParser* parser, unsigned char value);
-#endif
+#endif   // ALLOW_AT
 
 #ifdef ALLOW_POLY_AT
 // note goes 0 ... 127, value goes 0 ... 127
 extern void polyAftertouch(midiParser* parser, unsigned char note, unsigned char value);
-#endif
+#endif   // ALLOW_POLY_AT
 
 #ifdef ALLOW_SONG_POSITION_POINTER
 // value goes 0 ... 16383
 extern void songPositionPointer(midiParser* parser, UNSIGNED_16_BIT_INT value);
-#endif
+#endif   // ALLOW_SONG_POSITION_POINTER
 
 #ifdef ALLOW_SONG_SELECT
 // song goes 0 ... 127
 extern void songSelect(midiParser* parser, unsigned char song);
-#endif
+#endif   // ALLOW_SONG_SELECT
 
 #ifdef ALLOW_MIDI_TIME_CODE_QUARTER_FRAME
 // data goes 0...127
 extern void midiTimeCodeQuarterFrame(midiParser* parser, unsigned char data);
-#endif
+#endif   // ALLOW_MIDI_TIME_CODE_QUARTER_FRAME
 
 #ifdef ALLOW_ACTIVE_SENSING
 extern void activeSensing(midiParser* parser);
-#endif
+#endif   // ALLOW_ACTIVE_SENSING
 
 #ifdef ALLOW_SYSTEM_RESET
 extern void systemReset(midiParser* parser);
-#endif
+#endif   // ALLOW_SYSTEM_RESET
 
 #ifdef ALLOW_TUNE_REQUEST
 extern void tuneRequest(midiParser* parser);
-#endif
+#endif   // ALLOW_TUNE_REQUEST
 
 
 
@@ -342,16 +349,16 @@ void resetParser(midiParser* parser);
 
 // Updates the MIDI parser to reflect a new incoming byte.
 // Returns one of:
-// > 0          Completed parse of a MIDI message
-// = 0          Incomplete parse
+// > 0                                  Completed parse of a MIDI message
+// = 0                                  Incomplete parse
 // ERROR_UNRECOGNIZED_CHANNEL           Voice message constructed, but its channel is not responded to by this parser
-// ERROR_IGNORE_UNVOICED                Unvoiced message constructed but the parser has been insturected to ignore unvoiced messages
+// ERROR_IGNORE_UNVOICED                Unvoiced message constructed but the parser has been instructed to ignore unvoiced messages
 // ERROR_DISALLOWED                     Message constructed but ignored because a feature was not allowed (turned on)
 // ERROR_NO_NRPN_PARAMETER              An NRPN/RPN value message was constructed, but ignored because no complete NRPN/RPN parameter message had been found yet
 // ERROR_BARE_NRPN_VALUE_MSB            An NRPN/RPN *LSB* value message was constructed, but ignored because no NRPN/RPN *MSB* value message had been found yet. Not generated when ALLOW_BARE_LSB.
 // ERROR_BARE_HIGH_RES_MSB              A 14-bit *LSB* CC message was constructed, but ignored because no equivalent 14-bit *MSB* CC message had been found yet. Not generated when ALLOW_BARE_LSB.
 // ERROR_INVALID_DATA_BYTE              Bad or out of sync data byte, or data byte following a status byte with ERROR_UNRECOGNIZED_CHANNEL
-// ERROR_RESERVED_STATUS_BYTE           Reserved status byte found (F4, F5, F9, or FD).
+// ERROR_RESERVED_STATUS_BYTE           Illegal reserved status byte found (F4, F5, F9, or FD).
 // NOTE_INVALID_ATOMIC_MODULATION_CC    A CC 26 or 27 was constructed but ignored (for the moment) because the previous CC was not the same or invalid.
 //                                      This isn't an error per se, but a declaration that the CC was not processed yet to guarantee atomicity.
 //                                      This feature is only turned on if we ALLOW_ATOMIC_MODULATION_CC.
@@ -378,7 +385,7 @@ void setMPEMasterChannel(midiParser* parser, unsigned char mpeChannel);
 // they will be responded to by this parser (along with voiced messages on its regular channel).  The
 // MPE Master Channel should be either 0, 15, or NO_CHANNEL.
 unsigned char getMPEMasterChannel(midiParser* parser);
-#endif
+#endif	// defined(ALLOW_MPE)
 
 #if defined(ALLOW_HIGH_RES_CC)
 // Sets whether High Resolution CC is used for the given parameter.  For example, if you call
@@ -386,6 +393,6 @@ unsigned char getMPEMasterChannel(midiParser* parser);
 // Only the first 32 parameters (0...31) may be turned on or off.
 // Note that CC 6 and 38 (Data Entry) will be ignored here if you have turned on RPN/NRPN, which use them instead.
 void setHighResUsed(midiParser* parser, unsigned char parameter, unsigned char on);
-#endif
+#endif	// defined(ALLOW_HIGH_RES_CC)
 
 #endif
