@@ -34,6 +34,27 @@
 
 
 
+/// NOTE ON MIDI INJECTION
+/// MIDI Injection is inserting MIDI directives into an existing stream.  It's a lightweight form of MIDI Merge.
+/// This has to be done in such a way as not to conflict with running status or system real-time commands.
+/// The simplest way to do injection is to take data from the incoming stream, parse it into messages,
+/// and then emit the messages.  To do injection, you'd just emit additional messages when you like.
+/// This works fine except for latency: messages like note on or poly AT must wait until the entire
+/// message is received before it is emitted.  This will incur a roughly 3-byte or 1 millisecond latency.
+/// The worst latency will be for sysex messages, but those have the least concern generally.  NRPN and 14-bit
+/// CC can cause problems latency-wise as well if you're trying to interweave them with other messages.
+
+
+/// NOTE ON MIDI MERGE
+/// MIDI Merge can be done the same way as MIDI Injection -- parse two incoming streams with two existing
+/// parsers, and as the messages come out, emit them to an outgoing stream.  It has the same latency
+/// concerns as injection does.  You may wish to only permit clock or active sensing requests to come from
+/// one of the two parsers; or just set one parser to reject all non-voiced messages.
+
+
+
+
+
 
 
 /// THE EMITTER STRUCTURE
@@ -42,9 +63,9 @@ typedef struct midiEmitter
     {
     UNSIGNED_16_BIT_INT lastNRPN;                   // Last NRPN/RPN Parameter sent.  RPN parameters are + 16384
     unsigned char lastNRPNMSB;                      // Last NRPN/RPN MSB value sent.
-    unsigned char lastStatus;                       // The last status byte the emitter emitted
     unsigned char lastHighResParameter;             // Last High-Res (14-bit) CC Parameter sent.  Though we could maintain ALL parameters, we'll only maintain the last one for sanity
     unsigned char lastHighResMSB;                   // Last High-Res (14-bit) CC MSB value sent.  Though we could maintain ALL parameters, we'll only maintain the last one for sanity
+    unsigned char lastStatus;                       // The last status byte the emitter emitted
     unsigned char tag;                              // The emitter's tag.  Use this however you like.
     } midiEmitter;
 
@@ -99,7 +120,7 @@ void emitPCAndBank(midiEmitter* emitter, unsigned char program, unsigned bankMSB
 // parameter goes 0...127, value goes 0..127
 void emitCC(midiEmitter* emitter, unsigned char parameter, unsigned char value, unsigned char channel);
 
-// If you support NRPN or NRPN, you should not use this function to send to parameter 6.
+// If you support NRPN or RPN, you should not use this function to send to parameter 6.
 // parameter goes 0...32, value goes 0...16383
 void emitHighResCC(midiEmitter* emitter, unsigned char parameter, UNSIGNED_16_BIT_INT value, unsigned char channel);
 
@@ -112,7 +133,7 @@ void emitNRPNIncrement(midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSI
 // parameter goes 0...16383, value goes 0...16383, rpn is true or false
 void emitNRPNDecrement(midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel);
 
-// buffer does not include 0xF0 at start nor 0xF7 at end.  Len may not exceed SYSTEM_EXCLUSIVE_BUFFER_SIZE (254, defined in miditypes.h)
+// buffer does not include 0xF0 at start nor 0xF7 at end
 void emitSysex(midiEmitter* emitter, unsigned char* buffer, unsigned char len);
 
 // value goes 0 ... 127

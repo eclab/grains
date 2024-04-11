@@ -258,7 +258,7 @@ void emitHighResCC(midiEmitter* emitter, unsigned char parameter, UNSIGNED_16_BI
     }
 
 
-// buffer does not include 0xF0 at start nor 0xF7 at end.  Len does not exceed SYSTEM_EXCLUSIVE_BUFFER_SIZE
+// buffer does not include 0xF0 at start nor 0xF7 at end
 void emitSysex(midiEmitter* emitter, unsigned char* buffer, unsigned char len)
     {
     doEmit(emitter, 0xF0);
