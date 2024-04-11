@@ -93,7 +93,7 @@ static inline unsigned char getEmitterTag(midiEmitter* emitter);
 
 //// EMITTING MIDI DATA
 
-// pitch goes 0 ... 127, velocity goes 0 ... 127
+// pitch goes 0 ... 127, velocity goes 0 ... 127, channel goes 0...15 for 1...16
 // IMPORTANT: note off of velocity 64, or with no velocity, will be sent as a note on of 0 velocity.
 void emitNoteOn(midiEmitter* emitter, unsigned char pitch, unsigned char velocity, unsigned char channel);
 void emitNoteOffVel(midiEmitter* emitter, unsigned char pitch, unsigned char velocity, unsigned char channel);
@@ -104,42 +104,45 @@ void emitClockStart(midiEmitter* emitter);
 void emitClockContinue(midiEmitter* emitter);
 void emitClockPulse(midiEmitter* emitter);
 
-// value goes -8192 ... +8191
+// value goes -8192 ... +8191, channel goes 0...15 for 1...16
 void emitBend(midiEmitter* emitter, SIGNED_16_BIT_INT value, unsigned char channel);
 
-// program goes 0 ... 127
+// program goes 0 ... 127, channel goes 0...15 for 1...16
 void emitPC(midiEmitter* emitter, unsigned char program, unsigned char channel);
 
-// program goes 0 ... 127, bankMSB and bankLSB both go 0 ... 127
+// program goes 0 ... 127, bankMSB and bankLSB both go 0 ... 127, channel goes 0...15 for 1...16
 void emitPCAndBank(midiEmitter* emitter, unsigned char program, unsigned bankMSB, unsigned bankLSB, unsigned char channel);       
 
 // If you support High-Res (14-bit) CC, you should not use this function to send to the MSB or LSB of
 // high-res CCs.  Instead, use emitHighResCC(...).
 // If you support NRPN or RPN, you should not use this function to send to parameters 6, 38, 96, 97, 98, 99, 100, or 101
 // Instead you should use emitNRPN, emitNRPNIncrement, or emitNRPNDecrement
-// parameter goes 0...127, value goes 0..127
+// parameter goes 0...127, value goes 0..127, channel goes 0...15 for 1...16
 void emitCC(midiEmitter* emitter, unsigned char parameter, unsigned char value, unsigned char channel);
 
 // If you support NRPN or RPN, you should not use this function to send to parameter 6.
-// parameter goes 0...32, value goes 0...16383
+// parameter goes 0...32, value goes 0...16383, channel goes 0...15 for 1...16
 void emitHighResCC(midiEmitter* emitter, unsigned char parameter, UNSIGNED_16_BIT_INT value, unsigned char channel);
 
-// parameter goes 0...16383, value goes 0...16383, rpn is true or false
+// Works for either NRPN or RPN
+// parameter goes 0...16383, value goes 0...16383, rpn is true (!0) or false (0), channel goes 0...15 for 1...16
 void emitNRPN(midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel);
 
-// parameter goes 0...16383, value goes 0...16383, rpn is true or false
+// Works for either NRPN or RPN
+// parameter goes 0...16383, value goes 0...16383, rpn is true (!0) or false (0), channel goes 0...15 for 1...16
 void emitNRPNIncrement(midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel);
 
-// parameter goes 0...16383, value goes 0...16383, rpn is true or false
+// Works for either NRPN or RPN
+// parameter goes 0...16383, value goes 0...16383, rpn is true (!0) or false (0), channel goes 0...15 for 1...16
 void emitNRPNDecrement(midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel);
 
 // buffer does not include 0xF0 at start nor 0xF7 at end
 void emitSysex(midiEmitter* emitter, unsigned char* buffer, unsigned char len);
 
-// value goes 0 ... 127
+// value goes 0 ... 127, channel goes 0...15 for 1...16
 void emitAftertouch(midiEmitter* emitter, unsigned char value, unsigned char channel);
 
-// note goes 0 ... 127, value goes 0 ... 127
+// note goes 0 ... 127, value goes 0 ... 127, channel goes 0...15 for 1...16
 void emitPolyAftertouch(midiEmitter* emitter, unsigned char note, unsigned char value, unsigned char channel);
 
 // value goes 0 ... 16383
