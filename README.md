@@ -11,6 +11,12 @@ Other GRAINS firmware repositories:
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
+## MULTIPLEX
+
+A 1- or 2-in, 4-out multiplexer with a variety of modes.  Meant to allow you to select various outputs with a simple switch or multiplexed input.
+
+Status: Working
+
 ## CHRONO
 
 A master clock with a tappable tempo.  Very simple.  Saves the tempo and reloads it when you power cycle.
