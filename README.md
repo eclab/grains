@@ -11,6 +11,12 @@ Other GRAINS firmware repositories:
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
+## SEQUENCE
+
+A step sequencer with 8 patterns, each of which can have up to 16 steps (8 is typical), including rests.  You can select the gate length, increment through patterns or select them manually, and edit all the steps entirely from the knobs on the GRAINS.  
+
+Status: Working.  It's quite fiddly because there are only three knobs, but it's doable.  16 steps is particularly fiddly, perhaps not worth the effort.  But 8 works great.
+
 ## MIDI
 
 Not a GRAINS project per se.  This is a lightweight MIDI library designed for small controllers.  I have developed it for the
