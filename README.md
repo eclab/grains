@@ -11,6 +11,12 @@ Other GRAINS firmware repositories:
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
+## TARDY
+
+A short delay for digital signals.  Takes up to 3 inputs and outputs each of them, delayed by a settable amount.  Meant primarily to sync up drum triggers to line up with other things slowed by latency.
+
+Status: Working
+
 ## MULTIPLEX
 
 A 1- or 2-in, 4-out multiplexer with a variety of modes.  Meant to allow you to select various outputs with a simple switch or multiplexed input.
