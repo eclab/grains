@@ -130,7 +130,7 @@ void loop()
     else in2 = lastIn2 = (lastIn2 == 1024 ? analogRead(CV_POT_IN2) : (lastIn2 * 3 + analogRead(CV_POT_IN2)) >> 2);
     analogRead(CV_IN3);
     if (digitalIn3) { in3 = digitalRead(CV_IN3) * 1023; lastIn3 = 1024; }
-    else in3 = lastIn3 = (lastIn3 == 1024 ? analogRead(CV_POT3) : (lastIn3 * 3 + analogRead(CV_POT3)) >> 2);
+    else in3 = lastIn3 = (lastIn3 == 1024 ? analogRead(CV_IN3) : (lastIn3 * 3 + analogRead(CV_IN3)) >> 2);
     analogRead(CV_AUDIO_IN);                // high impedance throwaway
     if (digitalAud) { aud = digitalRead(CV_AUDIO_IN) * 1023; lastAud = 1024; }
     else aud = lastAud = (lastAud == 1024 ? analogRead(CV_AUDIO_IN) : (lastAud * 3 + analogRead(CV_AUDIO_IN)) >> 2);
@@ -144,7 +144,7 @@ void loop()
     Serial.print(",3:"); Serial.print(in3); 
     Serial.print(",A:"); Serial.print(aud); 
     Serial.print(",D:"); Serial.print(dig); 
-    Serial.print(",Max:1023,Min:0");
+    Serial.print(",H:1023,L:0");
     Serial.println();
 
     // Read
