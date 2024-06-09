@@ -94,7 +94,6 @@ void loadEEPROM()
 // Saves parameters to EEPROM.  Don't do this more than 100,000 times.
 void saveEEPROM()
     {
-    Serial.println("Save");
     EEPROM.update(0, (rate >> 0) & 255);
     EEPROM.update(1, (rate >> 8) & 255);
     EEPROM.update(2, (rate >> 16) & 255);
@@ -105,7 +104,6 @@ void saveEEPROM()
 
 void setup() 
     {
-    Serial.begin(9600);
     pinMode(CV_GATE_OUT, OUTPUT);
     lastTime = lastTapTime = millis();
     loadEEPROM();
@@ -158,7 +156,7 @@ void loop()
     	}
     	
     // we do an analog read here rather than a digital read because
-    // of switch bounce when turning the knob
+    // of switch bounce when turning the knob.
     uint16_t _tap = analogRead(CV_POT_IN1);
     if (_tap > 600)
     	{
