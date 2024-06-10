@@ -6,7 +6,7 @@ SET GRAINS TO GRAINS MODE.  (If you want MOZZI mode, change CV_AUDIO_OUT to 9)
 
 If you turn the Delay knob, it'll take Tardy a few seconds to converge to the new delay value: this is a consequence of Tardy's way of dealing with noise in the delay knob.  Be patient.
 
-**NOTE.*  Output to Digital Out is likely to be EVER SO SLIGHTLY FASTER than output to Audio In or Audio Out.  If Output 1 is a bit ahead of Outputs 2 and 3, let me know and I can try to tweak things.
+**NOTE.**  Output to Digital Out is likely to be EVER SO SLIGHTLY FASTER than output to Audio In or Audio Out.  If Output 1 is a bit ahead of Outputs 2 and 3, let me know and I can try to tweak things.
 
 
 
