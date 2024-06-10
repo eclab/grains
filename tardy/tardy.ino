@@ -70,7 +70,6 @@ uint8_t buffer3[BUFFERLEN / 8];
 
 void setup()
     {
-    Serial.begin(9600);
     pinMode(CV_AUDIO_IN, OUTPUT);
     }
 
