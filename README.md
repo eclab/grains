@@ -11,25 +11,31 @@ Other GRAINS firmware repositories:
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
-## TARDY
+## Tangle
+
+A combined digital logic function and buffered multi which can do various things, including trigger merges, inversion, thresholding, gate comparison, and so on.
+
+Status: Working
+
+## Tardy
 
 A short delay for digital signals.  Takes up to 3 inputs and outputs each of them, delayed by a settable amount.  Meant primarily to sync up drum triggers to line up with other things slowed by latency.
 
 Status: Working
 
-## MULTIPLEX
+## Multiplex
 
 A 1- or 2-in, 4-out multiplexer with a variety of modes.  Meant to allow you to select various outputs with a simple switch or multiplexed input.
 
 Status: Working
 
-## CHRONO
+## Chrono
 
 A master clock with a tappable tempo.  Very simple.  Saves the tempo and reloads it when you power cycle.
 
 Status: Working.
 
-## SEQUENCE
+## Sequence
 
 A step sequencer with 8 patterns, each of which can have up to 16 steps (8 is typical), including rests.  You can select the gate length, increment through patterns or select them manually, and edit all the steps entirely from the knobs on the GRAINS.  
 
