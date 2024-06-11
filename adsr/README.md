@@ -1,6 +1,6 @@
 # ADSR
 
-ADSR is an Attack/Sustain/Decay/Release envelope, except that the Decay and Release are normally the same value (because we don't have enough pots!).  Alternatively it can be an Attack/Hold/Release (AHR) envelope.  ADSR is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
+ADSR is an Attack/Sustain/Decay/Release envelope, except that the Decay and Release are normally the same value (because we don't have enough pots!).  Alternatively it can be an Attack/Hold/Release (AHR) or an Attack/Sustain/Release (ASR) envelope.  ADSR is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode, though it could probably be adapted to it.
 
