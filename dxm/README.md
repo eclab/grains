@@ -12,7 +12,7 @@ DX-M also sends a Gate via IN 3 whenever a note has been played, and drops it wh
 
 ## Differences From DX
 
-Because DX must take Pitch as a CV, it has to use IN1/POT1 doing it.  DX-M doesn't do this: it takes data via MIDI on DIGITAL OUT.  As a result it can output Gate Out on IN3, and reserve IN1/POT1 for something more useful.  So expect the socket and pot configurations to be different from DX.
+Because DX must take Pitch as a CV, it has to use IN1/POT1 doing it.  DX-M doesn't do this: it takes data via MIDI on DIGITAL OUT.  As a result it can output Gate Out on IN3, and reserve IN1/POT1 for something more useful.  So expect the socket and pot configurations to be different from DX. DX-M is also velocity sensitive, and DX is not.
 
 ## Gate Out
 
