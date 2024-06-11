@@ -25,6 +25,17 @@ ADSR comes in four MODES, settable with #defines in the code:
 You can only set one mode.  AHR takes precedence over ASR, which takes precedence over Separate Release, which takes precedence over Standard.
 
 
+## Attack Level
+
+There is a #define in the code to set the level to which Attack rises before Decay sets in.  It also affects the
+Hold level in AHR but has no effect on ASR.
+
+
+## Inverting
+
+There is a #define in the code you can set to invert the envelope: thus high values become low and vice versa.  This is particularly useful for attaching to a VCA to do ducking.  Note that if inverting is turned on, then the Attack Level is also inverted: thus if you change the Attack Level from 1.0 to 0.8, then it will be inverted to 0.2 rather than 0.0.  This is useful to duck but not completely remove a sound.
+
+
 ## Grains Bug
 
 There is a bug in GRAINS that affects Pots (Dials) 1 and 2.  If you set the  switch to "Man", then the range of the Pot is correct.  But if you set the switch  to "In 1" (or "In 2"), then the range of the Dial is at maximum at about the 2 o'clock position on the Dial.  Beyond that it stays at maximum.
