@@ -11,6 +11,12 @@ Other GRAINS firmware repositories:
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
+## DX
+
+An FM sine-based oscillator.  Has algorithms for 2 operators with self-modulation, and for 3 operators in three different configurations.
+
+Status: Working
+
 ## Tangle
 
 A combined digital logic function and buffered multi which can do various things, including trigger merges, inversion, thresholding, gate comparison, and so on.
