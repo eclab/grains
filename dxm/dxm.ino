@@ -125,12 +125,25 @@
 /// modulator or carrier.  The index of modulation for MODULATOR 1 is set with POT2/IN2.  The index of
 /// modulation for MODULATOR 2 is set with POT1/IN1.
 
+/// VELOCITY SENSITIVITY AND NOTE OFF
+///
+/// By default, DX-M is neither velocity sensitive, nor does it respond to note off by shutting off sound.
+/// You can turn on both of these features below.  However turning on response to note off may be annoying as
+/// there is a slight background hum which is more apparent when there is no sound coming from the oscillator.
+/// To turn one or both of these two features, uncomment the appropriate #defines below:
+
+// #define VELOCITY_SENSITIVE
+
+// #define RESPONDS_TO_NOTE_OFF
+
+
 
 /// MIDI RESPONSE
 ///
 /// MIDI NOTES 		Note On/Off
 ///						Pitch: All notes C0 through G10, but realistically C0 through B8
 ///						Velocity: Velocity 0...127 for Note On.  Velocity 0 is a Note Off
+///						Velocity and note-off are switchable
 ///					
 /// CC				All Notes Off		CC 123		[Resets all notes, lowers Gate]
 ///					All Sounds Off		CC 120		[Resets all notes, lowers Gate]
@@ -269,9 +282,9 @@ Oscil<SIN512_NUM_CELLS, AUDIO_RATE> modulator2(SIN512_DATA);
 
 void setup() 
     {
-    Serial.begin(9600);
     pinMode(CV_IN3, OUTPUT);
     startMozzi();
+	frequency = FREQUENCY(60);		// Middle C
 
 	/// Setup MIDI
 	initializeParser(&parse, CHANNEL, 0, 1);
@@ -281,7 +294,7 @@ void setup()
 uint8_t on = 0;
 uint8_t gate = 0;
 uint8_t timer = 0;
-uint8_t _velocity = 0;
+uint8_t _velocity = 127;
 uint8_t vel = 0;
 uint8_t sineVel = 0;
 uint8_t pitch;
@@ -309,12 +322,12 @@ void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
 	
 	pitch = note;
 	updateOperatorFrequencies();
+#ifdef VELOCITY_SENSITIVE
 	_velocity = velocity;
+#endif
 		
 	on = 1;
-	
-	Serial.print(gate);
-		
+			
 	if (gate)
 		{
 		timer = 2;
@@ -337,7 +350,9 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 		timer = 0;
 		gate = 0;
 		digitalWrite(CV_IN3, 0);
+#ifdef RESPONDS_TO_NOTE_OFF
 		_velocity = 0;
+#endif
 		}
 	}
 

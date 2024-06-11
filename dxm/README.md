@@ -61,6 +61,13 @@ This is another three-operator algorithm, with ONE MODULATOR simultaneously modu
 This is a final three-operator algorithm, with MODUATOR 2 modulating MODULATOR 1, while MODULATOR 1 is modulating the CARRIER.  The CARRIER makes the final sound.   Each modulator has a RELATIVE PITCH to the carrier, one of  0.5, 1.0, 2.0, 3.0, ... 15.0.  For MODUATOR 1, this is selectable on POT 3.  For MODULATOR 2, this is selectable on AUDIO IN.  Each modulator also has an INDEX OF MODULATION (the "amplitude" of the  operator in Yamaha speak) which determines how much affect the modulator has on its downstream modulator or carrier.  The index of modulation for MODULATOR 1 is set with POT2/IN2.  The index of modulation for MODULATOR 2 is set with POT1/IN1.
 
 
+
+## Velocity Sensitivity and Note Off
+
+By default, DX-M is neither velocity sensitive, nor does it respond to note off by shutting off sound. You can turn on both of these features below.  However turning on response to note off may be annoying as there is a slight background hum which is more apparent when there is no sound coming from the oscillator. To turn one or both of these two features, uncomment the appropriate #defines in the code as instructed.
+
+
+
 ## MIDI Response
 
 - Note On/Off
