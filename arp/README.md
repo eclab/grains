@@ -24,6 +24,8 @@ but beware that it's not volt/octave at present, and GRAINS has a very limited r
 3.5 octaves, so it's easy to go out of bounds by transposing.  By default a CV input value of 0
 (detatched) is dead-center tranposed.
 
+## Grains Output Warning
+This program outputs note CV information from GRAINS.  If you feed this into (for example) a VCO, 2OSC/d, or 2OSC, it will not be proper 1V/oct because they pull too much amperage and this causes the GRAINS to output incorrect voltages.  Even feeding into another GRAINS will cause the pitch to drop a bit.  You can fix this by feeding into a buffered mult first.  The 555 does not have this issue (its inputs are buffered).
 
 ## CLOCK OUT Option
 

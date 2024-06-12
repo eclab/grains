@@ -12,6 +12,12 @@
 /// Quant is pretty simple.  You provide a CV on IN 1, and specify the scale you would
 /// like to quantize to. The pitch is quantized to AUDIO OUT.
 ///
+/// GRAINS OUTPUT WARNING: this program outputs note CV information from GRAINS.  If you feed this into
+/// (for example) a VCO, 2OSC/d, or 2OSC, it will not be proper 1V/oct because they pull too much amperage 
+/// and this causes the GRAINS to output incorrect voltages.  Even feeding into another GRAINS will cause 
+/// the pitch to drop a bit.  You can fix this by feeding into a buffered mult first.  The 555 does not have
+/// this issue (its inputs are buffered).
+///
 /// RANGE AND RESOLUTION
 /// 
 /// Mozzi's output is capable of a range of 42 notes. That's about 3.5 octaves.  This 

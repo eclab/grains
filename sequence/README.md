@@ -4,6 +4,9 @@ SEQUENCE is 4, 8, or 16-step, 8-pattern step sequencer for values and rests. SET
 
 You will need to install the Mozzi Library.  You can do this from the Library Manager in your Arduino IDE.
 
+## Grains Output Warning
+This program outputs note CV information from GRAINS.  If you feed this into (for example) a VCO, 2OSC/d, or 2OSC, it will not be proper 1V/oct because they pull too much amperage and this causes the GRAINS to output incorrect voltages.  Even feeding into another GRAINS will cause the pitch to drop a bit.  You can fix this by feeding into a buffered mult first.  The 555 does not have this issue (its inputs are buffered).
+
 __NOTE:__ Normally a step sequencer has a lot of knobs.  But GRAINS has only 3.  It can still do all the functions of a step sequencer, but things are gonna be pretty fiddly.  That's life with three knobs.
 
 The sequencer is CLOCKED and can be RESET.  It contains 8 patterns, each of up to 16 steps (8 by default). You can shorten the number of steps of any of the patterns as you like.  Each clock, the sequencer will output the next CV value, and it will also output a GATE which will be high for a period; or if the step is a REST, it the GATE will be low for the entire step.  
