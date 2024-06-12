@@ -26,7 +26,7 @@
 // You can adjust them here
 
 #define LESLIE_FREQUENCY 5.66                           // This is the 450 speed.  The classic slower speed is 0.66, but it's too slow
-#define LESLIE_VOLUME 6                                 // Values are 0 (min but not gone), 1, 2, 3, 4, 5, 6 (max).
+#define LESLIE_VOLUME 2                                 // Values are 0 (min but not gone), 1, 2, 3, 4, 5, 6 (max).
 #define LESLIE_PITCH 60                                 // Values are 1.0 (lots) ... 128.0 or more (little).  Can be floating point.
 
 /// ADJUSTING TUNING AND TRACKING
@@ -462,8 +462,8 @@ void updateControl()
 // Scale from -32768...+32767 to -240 ... +240
 inline int16_t scaleAudio(int16_t val)
   {
-  if (val == 0) return 0;
-  return ((val >> 4) * 15) >> 7;
+  //if (val == 0) return 0;
+  return (val >> 7); // ((val >> 4) * 15) >> 7;
   }
 
 int updateAudio()                             
