@@ -6,7 +6,7 @@ SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
 You will need to install the Mozzi Library.  You can do this from the Library Manager in your Arduino IDE.
 
-# Pluck-M Versus Pluck
+## Pluck-M Versus Pluck
 
 PLUCK-M is the MIDI version of PLUCK.  This allows it to have precise tuning, which is quite difficult for PLUCK.  It also allows PLUCK-M to free up POT1 for other duties, so now both Decay and Atonality can have their own pots.  Pluck-M also is velocity sensitive, and Pluck is not.
 

@@ -121,17 +121,20 @@
 /// they are fully warmed up.
 ///
 /// By default the note corresponding to 0V is C0, three octaves below middle C, that is MIDI note 24, 
-/// or 32.7 Hz.  You can customize the tuning for this Grains program but only UP. To do this, you 
+/// or 32.7 Hz.  You can customize the tuning for this Grains program.  This can be done 
+/// in two ways.  First, you can add pitch to the tuning with a CV value to Audio In.  Second, you 
 /// can transpose the pitch up by changing the TRANSPOSE_OCTAVES and/or TRANSPOSE_SEMITONES #defines 
-/// in the code to positive integers.
+/// in the code to positive integers.  You can also change TRANSPOSE_BITS: a "bit" is the minimum possible
+/// change Grains can do, equal to 1/17 of a semitone.
 ///
 /// IMPORTANT NOTE: unlike other grains oscillators in my repository, DX does not have a separate
 /// Pitch Tune option on Audio In, because it needs to use Audio In for other purposes.  You can only
-/// use TRANSPOSE\_OCTAVES and/or TRANSPOSE\_SEMITONES.
+/// use TRANSPOSE_OCTAVES, TRANSPOSE_SEMITONES, or TRANPOSE_BITS.
 
 
+#define TRANSPOSE_BITS (-6)
 #define TRANSPOSE_SEMITONES 0
-#define TRANSPOSE_OCTAVES 0
+#define TRANSPOSE_OCTAVES 2
 
 
 /// 2-OPERATOR CONFIGURATION
@@ -377,8 +380,8 @@ inline float getFrequency(uint8_t pitch, uint8_t tune)
         pA = p;
         pitchCV = (pitchCV * 7 + p1) >> 3;
         }
-    uint16_t finalPitch = pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205;
-    return FREQUENCY(finalPitch > 1535 ? 1535 : finalPitch);
+    int16_t finalPitch = pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205 + TRANSPOSE_BITS;
+    return FREQUENCY(finalPitch < 0 ? 0 : (finalPitch > 1535 ? 1535 : finalPitch));
     }
 
 uint16_t indexOfModulation = 0;
@@ -456,7 +459,7 @@ int updateAudio()
     // The modulator is 128 in range.  Multiply it in and we have 65536 in range.
 	Q15n16 pm = (indexOfModulation >> 1) * (uint32_t)(lastModulationValue = modulator.phMod(selfpm));
     int16_t s1 = carrier.phMod(pm);
-    return s1; //scaleAudio(s1);
+    return s1;
 #elif (ALGORITHM == 2)
     // indexOfModulation is 1024 in range.
     // INDEX_OF_MODULATION_2_SCALING is 8 in range.  Multiply them and >> 1 and 

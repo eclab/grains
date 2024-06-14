@@ -224,6 +224,10 @@ initialize();
 			steps[i][j] = (EEPROM.read(pos++) << 8) + EEPROM.read(pos++);
 			}
 		}
+
+	// load the last pot so we don't automatically make changes
+    lastPot1 = (3 * pot1 + mozziAnalogRead(CV_POT_IN1)) >> 2;
+	lastPot2 = (3 * pot2 + mozziAnalogRead(CV_POT_IN2)) >> 2;
 	}
 	
 void save()

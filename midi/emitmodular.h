@@ -5,25 +5,6 @@
 /// Version 0.3:        "Passes Tests, Modular Stuff Added"
 
 
-/// NOTE ON MIDI INJECTION
-/// MIDI Injection is inserting MIDI directives into an existing stream.  It's a lightweight form of MIDI Merge.
-/// This has to be done in such a way as not to conflict with running status or system real-time commands.
-/// The simplest way to do injection is to take data from the incoming stream, parse it into messages,
-/// and then emit the messages.  To do injection, you'd just emit additional messages when you like.
-/// This works fine except for latency: messages like note on or poly AT must wait until the entire
-/// message is received before it is emitted.  This will incur a roughly 3-byte or 1 millisecond latency.
-/// The worst latency will be for sysex messages, but those have the least concern generally.  NRPN and 14-bit
-/// CC can cause problems latency-wise as well if you're trying to interweave them with other messages.
-
-/// NOTE ON MIDI MERGE
-/// MIDI Merge can be done the same way as MIDI Injection -- parse two incoming streams with two existing
-/// parsers, and as the messages come out, emit them to an outgoing stream.  It has the same latency
-/// concerns as injection does.  You may wish to only permit clock or active sensing requests to come from
-/// one of the two parsers; or just set one parser to reject all non-voiced messages.
-
-
-
-
 #ifndef __EMIT_MODULAR_H
 #define __EMIT_MODULAR_H
 #include "emitmidi.h"

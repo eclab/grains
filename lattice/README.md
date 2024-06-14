@@ -8,6 +8,29 @@ Set your Grains to **GRAINS MODE**.  (If you want MOZZI mode, change CV_AUDIO_OU
 
 It implements much of Mutable Instruments's Grids algorithm except for swing, accents, and internal tempo.  It is not nearly as convenient as [TOPOGRAF](https://www.tangiblewaves.com/store/p76/TOPOGRAF.html) because Grains does not have as many knobs and sockets exposed, but it can do quite a lot and has a variety of configuration options.
 
+## About Grids/TOPOGRAF
+
+Grids was an early Mutable Instruments drum pattern generator.  It outputs
+a pattern for three drums.  Grids has six knobs, thus six parameters:  
+X, Y, DRUM 1 COMPLEXITY, DRUM 2 COMPLEXITY, DRUM 3 COMPLEXITY, and CHAOS.
+
+X and Y select a drum pattern in a 2D space.  This pattern has information for
+all three drums. The space is set up so that nearby patterns will tend to sound
+similar and will morph from one to the other as you move from one pattern to
+the other in the space.
+
+For each drum note for a given drum, the note has a certain level of COMPLEXITY.
+If you turn up the COMPLEXITY knob above that note's COMPLEXITY, the note will
+start sounding, otherwise it will be muted.  Thus turning the knob down will only
+cause "basic" or "critical" notes to be sounded, and turning it up will gradually
+include more and more embellishments.  This can be done for each of the drums
+separately (three knobs).
+
+CHAOS introduces randomness into whether a drum note is sounded or muted regardless
+of complexity. 
+
+## How Lattice Works
+
 Lattice has three configurations:
 
 - A SIMPLE configuration

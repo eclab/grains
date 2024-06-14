@@ -27,7 +27,7 @@
 
 #define LESLIE_FREQUENCY 5.66                           // This is the 450 speed.  The classic slower speed is 0.66, but it's too slow
 #define LESLIE_VOLUME 1                                 // Values are 0 (min but not gone), 1, 2, 3, 4, 5, 6 (max).
-#define LESLIE_PITCH 90                                 // Values are 1.0 (lots) ... 128.0 or more (little).  Can be floating point.
+#define LESLIE_PITCH 128                                 // Values are 1.0 (lots) ... 128.0 or more (little).  Can be floating point.
 
 /// ADJUSTING TUNING AND TRACKING
 ///
@@ -40,10 +40,12 @@
 /// they are fully warmed up.
 ///
 /// By default the note corresponding to 0V is C0, three octaves below middle C, that is MIDI note 24, 
-/// or 32.7 Hz.  You can customize the tuning for this Grains program but only UP.  This can be done 
+/// or 32.7 Hz.  You can customize the tuning for this Grains program.  This can be done 
 /// in two ways.  First, you can add pitch to the tuning with a CV value to Audio In.  Second, you 
 /// can transpose the pitch up by changing the TRANSPOSE_OCTAVES and/or TRANSPOSE_SEMITONES #defines 
-/// in the code to positive integers.
+/// in the code to positive integers.  You can also change TRANSPOSE_BITS: a "bit" is the minimum possible
+/// change Grains can do, equal to 1/17 of a semitone.
+///
 
 /// CONFIGURATION
 ///
@@ -353,7 +355,8 @@ void initializeFrequency(uint8_t pitch, uint8_t tune)
     pitchCV = mozziAnalogRead(pitch);
     tuneCV = mozziAnalogRead(tune);
     }
-        
+
+#define TRANSPOSE_BITS 0
 #define TRANSPOSE_SEMITONES 0
 #define TRANSPOSE_OCTAVES 0
 #define LARGE_JUMP 32
@@ -385,7 +388,8 @@ inline float getFrequency(uint8_t pitch, uint8_t tune)
         pA = p;
         pitchCV = (pitchCV * 7 + p1) >> 3;
         }
-    return FREQUENCY(pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205);
+    int16_t finalPitch = pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205 + TRANSPOSE_BITS;
+    return FREQUENCY(finalPitch < 0 ? 0 : (finalPitch > 1535 ? 1535 : finalPitch));
     }
 
 
@@ -462,8 +466,7 @@ void updateControl()
 // Scale from -32768...+32767 to -240 ... +240
 inline int16_t scaleAudio(int16_t val)
   {
-  //if (val == 0) return 0;
-  return (val >> 7); // ((val >> 4) * 15) >> 7;
+  return (val >> 8); // ((val >> 4) * 15) >> 7;
   }
 
 int updateAudio()                             

@@ -78,10 +78,11 @@
 /// they are fully warmed up.
 ///
 /// By default the note corresponding to 0V is C0, three octaves below middle C, that is MIDI note 24, 
-/// or 32.7 Hz.  You can customize the tuning for this Grains program but only UP.  This can be done 
+/// or 32.7 Hz.  You can customize the tuning for this Grains program.  This can be done 
 /// in two ways.  First, you can add pitch to the tuning with a CV value to Audio In.  Second, you 
 /// can transpose the pitch up by changing the TRANSPOSE_OCTAVES and/or TRANSPOSE_SEMITONES #defines 
-/// in the code to positive integers.
+/// in the code to positive integers.  You can also change TRANSPOSE_BITS: a "bit" is the minimum possible
+/// change Grains can do, equal to 1/17 of a semitone.
 
 
 /// CONFIGURATION
@@ -582,8 +583,8 @@ inline float getFrequency(uint8_t pitch, uint8_t tune)
         pA = p;
         pitchCV = (pitchCV * 7 + p1) >> 3;
         }
-    uint16_t finalPitch = pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205;
-    return FREQUENCY(finalPitch > 1535 ? 1535 : finalPitch);
+    int16_t finalPitch = pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205 + TRANSPOSE_BITS;
+    return FREQUENCY(finalPitch < 0 ? 0 : (finalPitch > 1535 ? 1535 : finalPitch));
     }
 
 void updateControl() 

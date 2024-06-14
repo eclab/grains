@@ -6,11 +6,11 @@
 
 /// PARA-M
 ///
-/// Para-M is a MIDI-driven 3-voice Paraphonic synthesizer with a mixed square/saw/triangle- and sine waves.
+/// Para-M is a MIDI-driven 3-voice Paraphonic synthesizer with a mixed square/saw/triangle and sine waves.
 /// Para-M is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
 /// Para-M can select between square and sine, saw and sine, or triangle and sine.  You select
-/// which one you want in the code.  The default is square and sine.
+/// which one you want in the code.  The default is saw and sine.
 ///
 /// SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 ///
@@ -31,6 +31,24 @@
 
 /// #define GATE    
 
+
+/// CHANNEL
+///
+/// You can set Para-M's channel to 0...15 (for channels 1...16) or to OMNI (to listen to any of them).
+/// This is set here:
+
+// Set this to 0...15, or to OMNI
+#define CHANNEL OMNI
+
+
+/// MULTI MODE
+/// 
+/// Normally Para-M plays chords using the given channel.  But instead you can set it to play one note
+/// each from a different channel, like MPE.  The channels will be CHANNEL, CHANNEL+1, and CHANNEL+1.
+/// Thus you should only set CHANNEL to values 0...12.  Do not set CHANNEL to OMNI.  MULTI mode is turned
+/// on by uncommenting the following #define:
+
+// #define MULTI
 
 
 /// MONO-M VS PARA-M
@@ -57,6 +75,16 @@
 // #define USE_TRI
 
 
+/// MIDI RESPONSE
+///
+/// MIDI NOTES 		Note On/Off
+///						Pitch: All notes C0 through G10, but realistically C0 through B8
+///						Velocity: Velocity 0...127 for Note On.  Velocity 0 is a Note Off
+///					
+/// CC				All Notes Off		CC 123		[Resets all notes, lowers Gate]
+///					All Sounds Off		CC 120		[Resets all notes, lowers Gate]
+
+
 /// CONFIGURATION
 ///
 /// IN 1            Saw/Square/Tri Vs Sine CV
@@ -72,9 +100,6 @@
 /// POT 2           [Unused]
 ///
 /// POT 3           [Unused]
-
-
-
 
 
 PROGMEM const float frequencies[128] =
@@ -94,6 +119,7 @@ PROGMEM const float frequencies[128] =
 2489.08, 2637.09, 2793.89, 2960.03, 3136.04, 3322.52, 3520.09,
 3729.4, 3951.16, 4186.11, 4435.03, 4698.75, 4978.15, 5274.17,
 5587.79, 5920.06, 6272.08, 6645.04, 7040.17, 7458.8, 7902.33,
+// Obviously beyond this it's moot
 8372.22, 8870.06, 9397.5, 9956.31, 10548.3, 11175.6, 11840.1,
 12544.2, 13290.1, 14080.3, 14917.6, 15804.7, 16744.4, 17740.1,
 18795., 19912.6, 21096.7, 22351.2, 23680.2, 25088.3 
@@ -564,7 +590,11 @@ void setup()
 	pinMode(CV_IN3, OUTPUT);
 
 	/// Setup MIDI
+#ifdef MULTI	
 	initializeParser(&parse, OMNI, 0, 1);
+#else
+	initializeParser(&parse, CHANNEL, 0, 1);
+#endif
 	softSerial.begin(MIDI_RATE);
     }
 
@@ -575,6 +605,121 @@ uint8_t sinevels[3] = {0, 0, 0 };
 uint8_t times[3] = { 0, 0, 0 };
 uint8_t gate = 0;
 uint8_t play[3] = {0, 0, 0};
+
+#ifdef MULTI
+
+void cc(midiParser* parser, unsigned char parameter, unsigned char value)
+	{
+	uint8_t voice = CHANNEL - parser->channel;
+	if (voice > 2) 	// invalid
+		return;
+	
+	if (parameter == 120 || parameter == 123)	// All Sound Off or All Notes Off
+		{
+		for(uint8_t i = 0; i < 3; i++)
+			{
+			on[i] = 0;
+			}
+		
+		// everyone is off, lower gate
+		digitalWrite(CV_IN3, 0);
+		gate = 0;
+		}
+	}
+
+
+void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
+	{
+	uint8_t voice = CHANNEL - parser->channel;
+	if (voice > 2) 	// invalid
+		return;
+		
+	if (!on[0] && !on[1] && !on[2])
+		{ play[0] = 0; play[1] = 0; play[2] = 0; }
+
+	if (!gate)
+		{
+		digitalWrite(CV_IN3, 1);
+		gate = 1;
+		}
+	
+	if (!on[voice])
+		{
+		play[voice] = 1;
+		on[voice] = 1;
+		}
+		
+	// Again more hoisting because C++ templates are poop
+	if (voice == 0)
+		{
+		notes[0] = note;
+		vels[0] = velocity >> 1;
+		meta1.setFreq(FREQUENCY(note));
+		sine1.setFreq(FREQUENCY(note));
+		}
+	else if (voice == 1)
+		{
+		notes[1] = note;
+		vels[1] = velocity >> 1;
+		meta2.setFreq(FREQUENCY(note));
+		sine2.setFreq(FREQUENCY(note));
+		}
+	else if (voice == 2)
+		{
+		notes[2] = note;
+		vels[2] = velocity >> 1;
+		meta3.setFreq(FREQUENCY(note));
+		sine3.setFreq(FREQUENCY(note));
+		}
+	}
+
+void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
+	{
+	uint8_t voice = CHANNEL - parser->channel;
+	if (voice > 2) 	// invalid
+		return;
+		
+	for(uint8_t i = 0; i < 3; i++)
+		{
+		if (notes[i] == note && on[i])
+			{
+			on[i] = 0;
+			break;
+			}
+		}
+		
+	// is everyone off?
+	for(uint8_t i = 0; i < 3; i++)
+		{
+		if (on[i])
+			{
+			return;
+			}
+		}
+	
+	// everyone is off, lower gate
+	digitalWrite(CV_IN3, 0);
+	gate = 0;
+	}
+
+
+#else
+
+void cc(midiParser* parser, unsigned char parameter, unsigned char value)
+	{
+	if (parameter == 120 || parameter == 123)	// All Sound Off or All Notes Off
+		{
+		for(uint8_t i = 0; i < 3; i++)
+			{
+			on[i] = 0;
+			}
+		
+		// everyone is off, lower gate
+		digitalWrite(CV_IN3, 0);
+		gate = 0;
+		}
+	}
+
 
 void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
 	{
@@ -594,7 +739,7 @@ void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
 			vels[0] = velocity >> 1;
 			meta1.setFreq(FREQUENCY(note));
 			sine1.setFreq(FREQUENCY(note));
-				play[0] = 1;
+			play[0] = 1;
       		on[0] = 1;
       		
 			return;
@@ -606,7 +751,7 @@ void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
 			meta2.setFreq(FREQUENCY(note));
 			sine2.setFreq(FREQUENCY(note));
 				play[1] = 1;
-      on[1] = 1;
+      		on[1] = 1;
 			return;
 			}
 		if (!on[2])
@@ -681,6 +826,7 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 	gate = 0;
 	}
 
+#endif
 
 uint8_t alpha;
 void updateControl() 
@@ -700,7 +846,7 @@ int updateAudio()
     
     // I'm hoisting these, may be a teeny bit faster in some cases...
 
-#ifndef GATE    
+#ifdef GATE    
     if (alpha >= 128)
     	{
 		if (on[0])

@@ -54,7 +54,7 @@ By default the note corresponding to 0V is C0, three octaves below middle C, tha
 or 32.7 Hz.  You can customize the tuning for this Grains program but only UP.  This can be done 
 in two ways.  First, you can add pitch to the tuning with a CV value to Audio In.  Second, you 
 can transpose the pitch up by changing the TRANSPOSE\_OCTAVES and/or TRANSPOSE\_SEMITONES #defines 
-in the code to positive integers.
+in the code to positive integers.  You can also change TRANSPOSE\_BITS: a "bit" is the minimum possible change Grains can do, equal to 1/17 of a semitone.
 
 
 ## Grains Bug

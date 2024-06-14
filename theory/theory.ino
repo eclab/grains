@@ -206,19 +206,24 @@ void loop()
 // As a result, the PREVIOUS analogRead() may bleed into this one.
 // The throwaway blocks the bleed in most cases.  We might need two throwaways.    
     analogRead(CV_AUDIO_IN);
-
+    analogRead(CV_AUDIO_IN);
     float w = analogRead(CV_AUDIO_IN) * 0.0009775171;   // that is, / 1023
+    analogRead(CV_POT_IN1);
     float x = analogRead(CV_POT_IN1) * 0.0009775171;   // that is, / 1023
+    analogRead(CV_POT_IN2);
     float y = analogRead(CV_POT_IN2) * 0.0009775171;   // that is, / 1023
+    analogRead(CV_POT3);
     float z = analogRead(CV_POT3) * 0.0009775171;   // that is, / 1023
 
 #if defined(AAA)
+    analogRead(CV_IN3);
     float c = analogRead(CV_IN3) * 0.0009775171;   // that is, / 1023
     float b = digitalRead(CV_GATE_OUT);
     uint8_t a = AAA(w,x,y,z,c,b);
 
     digitalWrite(CV_AUDIO_OUT, a);
 #elif defined(AA)
+    analogRead(CV_IN3);
     float c = analogRead(CV_IN3) * 0.0009775171;   // that is, / 1023
     uint8_t a = AA(w,x,y,z,c);
     uint8_t b = BB(w,x,y,z,c,a); 

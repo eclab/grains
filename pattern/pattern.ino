@@ -286,7 +286,7 @@ void loop()
         } 
 
     // smoothed input
-    analogRead(CV_POT_IN1);
+    analogRead(CV_POT_IN1);   // throwaway
     int16_t in0 = analogRead(CV_POT_IN1);
     int16_t in1 = analogRead(CV_POT_IN1);
     int16_t in2 = analogRead(CV_POT_IN1);

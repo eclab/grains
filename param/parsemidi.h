@@ -96,7 +96,7 @@
 
 #define ALLOW_NOTES
 //#define ALLOW_POLY_AT
-//#define ALLOW_CC
+#define ALLOW_CC
 //#define ALLOW_HIGH_RES_CC				// You must ALSO call setHighResUsed(...) to state which CCs are high-res
 //#define ALLOW_RPN_NRPN
 //#define ALLOW_PC

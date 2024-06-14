@@ -1,10 +1,10 @@
 # Para-M
 
-Para-M is a MIDI-driven 3-voice Paraphonic synthesizer with a mixed square/saw/triangle- and sine waves.
+Para-M is a MIDI-driven 3-voice Paraphonic synthesizer with a mixed square/saw/triangle and sine waves.
 Para-M is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 
 Para-M can select between square and sine, saw and sine, or triangle and sine.  You select
-which one you want in the code.  The default is square and sine.
+which one you want in the code.  The default is saw and sine.
 
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
@@ -31,6 +31,26 @@ However Mono-M has twice as many waves in its memory, so it will sound less alia
 ## Choosing Saw vs Square vs Triangle
 
 The choice of wave is deterined by changing a #define in the code.
+
+
+## Gate Mode
+
+By default Mono-M does not stop playing notes when it receives a NOTE OFF -- 
+that is the responsibility of your envelope and VCA (it will send them a gate off).
+However you can change this behavior by uncommenting a #define in the code.
+
+
+## MIDI Response
+
+- Note On/Off
+    - Pitch: All MIDI notes C0 through G10, but realistically C0 through B8 
+    - Velocity: 0...127 for Note On.  Velocity 0 is a Note Off
+
+- CC
+    - All Notes Off (CC 123) Resets all notes, lowers Gate
+    - All Sounds Off (CC 120) Resets all notes, lowers Gate
+
+
 
 ## Configuration
 

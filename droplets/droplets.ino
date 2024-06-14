@@ -50,10 +50,11 @@
 /// they are fully warmed up.
 ///
 /// By default the note corresponding to 0V is C0, three octaves below middle C, that is MIDI note 24, 
-/// or 32.7 Hz.  You can customize the tuning for this Grains program but only UP.  This can be done 
+/// or 32.7 Hz.  You can customize the tuning for this Grains program.  This can be done 
 /// in two ways.  First, you can add pitch to the tuning with a CV value to Audio In.  Second, you 
 /// can transpose the pitch up by changing the TRANSPOSE_OCTAVES and/or TRANSPOSE_SEMITONES #defines 
-/// in the code to positive integers.
+/// in the code to positive integers.  You can also change TRANSPOSE_BITS: a "bit" is the minimum possible
+/// change Grains can do, equal to 1/17 of a semitone.
 ///
 /// I recognize that Droplets will be hard to tune because of the tinkles.  By far the easiest to tune 
 /// with is OCTAVES, which is the very last droplet option (turn the droplet knob fully to the right).
@@ -232,7 +233,8 @@ void initializeFrequency(uint8_t pitch, uint8_t tune)
     pitchCV = mozziAnalogRead(pitch);
     tuneCV = mozziAnalogRead(tune);
     }
-        
+      
+#define TRANSPOSE_BITS  
 #define TRANSPOSE_SEMITONES 0
 #define TRANSPOSE_OCTAVES 0
 #define LARGE_JUMP 32
@@ -264,8 +266,8 @@ inline float getFrequency(uint8_t pitch, uint8_t tune)
         pA = p;
         pitchCV = (pitchCV * 7 + p1) >> 3;
         }
-    uint16_t finalPitch = pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205;
-    return FREQUENCY(finalPitch > 1535 ? 1535 : finalPitch);
+    int16_t finalPitch = pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205 + TRANSPOSE_BITS;
+    return FREQUENCY(finalPitch < 0 ? 0 : (finalPitch > 1535 ? 1535 : finalPitch));
     }
 
 
@@ -432,25 +434,24 @@ PROGMEM const uint8_t chords[NUM_CHORDS][NUM_NOTES] =
     {_C, _C, _C, _Eb, _Gb, _A, _C1, _Eb, _Gb1, _A1, _C2, _Eb, _Gb2, _A, _C3 },              // dim7
     {_C, _C, _C, _E, _Ab, _C1, _E, _Ab1, _C2, _E, _Ab2, _C3, _E, _Ab2, _C4 },               // Aug7
     {_C, _D, _E, _G, _A, _C1, _D1, _E1, _G1, _A1, _C2, _D2, _E2, _G2, _A2  },               // Pentatonic
-    {_C, _C, _C, _D, _E, _Gb, _Ab, _Bb, _C1, _D1, _E1, _Gb1, _Ab1, _Bb1, _C2 },              // Whole Tone
-    {_C, _C, _C, _Eb, _F, _Gb, _G, _Bb, _C1, _Eb1, _F1, _Gb1, _G1, _Bb1, _C2 },                    // Blues
-//    {_C, _C, _C, _Db, _D, _Eb, _E, _F, _Gb, _G, _Ab, _A, _Bb, _B, _C1 },                    // Chromatic
+    {_C, _C, _C, _D, _E, _Gb, _Ab, _Bb, _C1, _D1, _E1, _Gb1, _Ab1, _Bb1, _C2 },             // Whole Tone
+    {_C, _C, _C, _Eb, _F, _Gb, _G, _Bb, _C1, _Eb1, _F1, _Gb1, _G1, _Bb1, _C2 },             // Blues
     {_C, _C, _G, _C1, _G1, _C2, _G2, _C3, _G3, _C4, _C1, _G1, _C2, _G2, _C3 },              // 5 + Oct
     {_C, _C, _C, _C1, _C2, _C3, _C4, _C1, _C2, _C3, _C4, _C1, _C2, _C3, _C4 },              // Oct
 
     // Shortened
-    {_C, _C, _C, _E, _G, _C1, _E1, _G1, _C2, _E, _G, _C1, _E1, _G1, _C2 },                 // Maj
-    {_C, _C, _C, _Eb, _G, _C1, _Eb1, _G1, _C2, _Eb, _G, _C1, _Eb1, _G1, _C2,},             // min
-    {_C, _C, _C, _E, _G, _B, _C1, _E, _G, _B, _C1, _E1, _G1, _B1, _C2,  },                 // Maj7
-    {_C, _C, _C, _Eb, _G, _Bb, _C1, _Eb, _G, _Bb, _C1, _Eb1, _G1, _Bb1, _C2,  },           // min7
+    {_C, _C, _C, _E, _G, _C1, _E1, _G1, _C2, _E, _G, _C1, _E1, _G1, _C2 },                  // Maj
+    {_C, _C, _C, _Eb, _G, _C1, _Eb1, _G1, _C2, _Eb, _G, _C1, _Eb1, _G1, _C2,},              // min
+    {_C, _C, _C, _E, _G, _B, _C1, _E, _G, _B, _C1, _E1, _G1, _B1, _C2,  },                  // Maj7
+    {_C, _C, _C, _Eb, _G, _Bb, _C1, _Eb, _G, _Bb, _C1, _Eb1, _G1, _Bb1, _C2,  },            // min7
     {_C, _C, _C, _E, _G, _Bb, _C1, _E, _G, _Bb, _C1, _Eb, _G1, _Bb1, _C2 },                 // 7
-    {_C, _C, _C, _Eb, _Gb, _A, _C1, _Eb, _Gb, _A, _C1, _Eb, _Gb1, _A1, _C2 },              // dim7
-    {_C, _C, _C, _E, _Ab, _C1, _E, _Ab1, _C2, _E, _Ab, _C1, _E, _Ab1, _C2,},               // Aug7
+    {_C, _C, _C, _Eb, _Gb, _A, _C1, _Eb, _Gb, _A, _C1, _Eb, _Gb1, _A1, _C2 },               // dim7
+    {_C, _C, _C, _E, _Ab, _C1, _E, _Ab1, _C2, _E, _Ab, _C1, _E, _Ab1, _C2,},                // Aug7
     {_C, _D, _E, _G, _A, _C, _D, _E, _G, _A, _C1, _D1, _E1, _G1, _A1, },                    // Pentatonic
     {_C, _C, _C, _D, _E, _Gb, _Ab, _Bb, _C1, _D, _E, _Gb, _Ab, _Bb, _C1, },                 // Whole Tone
-    {_C, _C, _C, _Eb, _F, _Gb, _G, _Bb, _C1, _Eb, _F, _Gb, _G, _Bb, _C1 },                    // Blues
-    {_C, _C, _C, _G, _C1, _G1, _C2, _G2, _C3, _G, _C1, _G1, _C2, _G2, _C3 },              // 5 + Oct
-    {_C, _C, _C, _C1, _C2, _C1, _C2, _C1, _C2, _C1, _C2, _C1, _C2, _C1, _C2 },             // Oct
+    {_C, _C, _C, _Eb, _F, _Gb, _G, _Bb, _C1, _Eb, _F, _Gb, _G, _Bb, _C1 },                  // Blues
+    {_C, _C, _C, _G, _C1, _G1, _C2, _G2, _C3, _G, _C1, _G1, _C2, _G2, _C3 },                // 5 + Oct
+    {_C, _C, _C, _C1, _C2, _C1, _C2, _C1, _C2, _C1, _C2, _C1, _C2, _C1, _C2 },              // Oct
 
     };
         
@@ -497,7 +498,7 @@ void updateControl()
     }
 
 int16_t nextSine = 0;                           // what's the next oscillator to use?
-uint8_t countIn[NUM_SINES];                    // this is a count-up which does a fade-IN on the sound to prevent clicks.
+uint8_t countIn[NUM_SINES];                     // this is a count-up which does a fade-IN on the sound to prevent clicks.
 int16_t gains[4];                               // this is the fade-OUT on the sound for the release
 uint8_t max[4];                                 // this is the amount to reset gains to each time
 uint8_t counters[4];                            // this is how long we wait before decreasing gains by 12

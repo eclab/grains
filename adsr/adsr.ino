@@ -72,6 +72,33 @@
 
 
 
+
+/// ATTACK LEVEL
+///
+/// The #define below sets the ATTACK LEVEL.  This value can be between 0.0 and 1.0 includsive.
+/// This is the value that the attack rises to
+/// before the decay begins.  This is also the the value that HOLD stays at if you are doing AHR.
+/// If you are doing ASR, this has no effect -- attack goes to the sustain level. 
+
+#define ATTACK_LEVEL 1.0
+
+
+
+
+/// INVERSION
+///
+/// If you remove the comment below, the entire envelope will become inverted: 
+/// high voltage becomes low voltage and vice versa.  This is useful to attach to 
+/// a VCA to do ducking, for example.  Note that this also inverts the ATTACK_LEVEL,
+/// so if you change the ATTACK_LEVEL to, say, 0.8, then ducking will only go down
+/// to 0.2 rather than 0.0.
+
+// #define INVERT
+
+
+
+
+
 /// GRAINS BUG
 /// 
 /// There is a bug in GRAINS that affects Pots (Dials) 1 and 2.  If you set the 
@@ -163,7 +190,7 @@
 float stages[NUM_STAGES][2] =
     {
     //RATE //TO LEVEL
-    { 0.0, 1.0 },
+    { 0.0, ATTACK_LEVEL },
     { 0.999, 0.5 },
     { 0.9995, 0.0 },
     };
@@ -416,29 +443,29 @@ void updateControl()
 #if (AHR == 1)
     stages[0][0] = rates[(at * 8) >> 5];                    // attack
     stages[1][0] = rates[(su * 8) >> 5];                    // sustain knob now is HOLD RATE (decay rate)
-    stages[1][1] = 1.0;                                                             // sustain stays at 1.0
+    stages[1][1] = ATTACK_LEVEL;                            // sustain stays at ATTACK_LEVEL
     stages[2][0] = rates[(de * 8) >> 5];                    // decay knob now is RELEASE
 #elif (ASR == 1)
     re = (re == INITIAL ? mozziAnalogRead(CV_IN3) : (re * 7 + mozziAnalogRead(CV_IN3)) >> 3);
     stages[0][0] = rates[(at * 8) >> 5];                    // attack
-    stages[0][1] = (su + re) / 1023.0;                              // attack goes to sustain level
+    stages[0][1] = (su + re) / 1023.0;                      // attack goes to sustain level
     if (stages[0][1] > 1.0) stages[0][1] = 1.0;
-    stages[1][0] = 0;                                                               // no decay
-    stages[1][1] = stages[0][1];                                            // sustain
+    stages[1][0] = 0;                                       // no decay
+    stages[1][1] = stages[0][1];                            // sustain
     stages[2][0] = rates[(de * 8) >> 5];                    // release uses decay rate
 #elif (RELEASE == 1)
     re = (re == INITIAL ? mozziAnalogRead(CV_IN3) : (re * 7 + mozziAnalogRead(CV_IN3)) >> 3);
     stages[0][0] = rates[(at * 8) >> 5];                    // attack
     stages[1][0] = rates[(de * 8) >> 5];                    // decay
-    stages[1][1] = su / 1023.0;                                             // sustain
+    stages[1][1] = su / 1023.0;                             // sustain
     stages[2][0] = rates[(re * 8) >> 5];                    // release is now IN3
 #else
     re = (re == INITIAL ? mozziAnalogRead(CV_IN3) : (re * 7 + mozziAnalogRead(CV_IN3)) >> 3);
     stages[0][0] = rates[(at * 8) >> 5];                    // attack
     stages[1][0] = rates[(de * 8) >> 5];                    // decay
-    stages[1][1] = (su + re) / 1023.0;                              // sustain
+    stages[1][1] = (su + re) / 1023.0;                      // sustain
     if (stages[1][1] > 1.0) stages[1][1] = 1.0;
-    stages[2][0] = stages[1][0];                                    // release
+    stages[2][0] = stages[1][0];                            // release
 #endif  
     if (g && !gate)
         {
@@ -467,12 +494,19 @@ void updateControl()
 int updateAudio()    
     {
     updateStateMachine();
+    
 #if (AHR == 1)
     if (stage == HOLD)
-        return ((int16_t)(stages[0][1]) * 487) - 244;
+        returnval = stages[0][1];
     else
 #endif
-        return ((int16_t)(state * 487)) - 244;
+        returnval = state;
+        
+#ifdef INVERT
+		returnval = 1.0 - returnval;
+#endif
+
+    return ((int16_t)(returnval * 487)) - 244;
     }
 
 void loop() 

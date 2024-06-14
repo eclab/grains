@@ -57,9 +57,9 @@ The index of modulation of MODULATOR 1 can be scaled DOWN with Pot 2.  But the i
 
 Grains's Inputs track 1.3V/octave, not 1V/octave: we'll need to scale them to track properly.   To do this, you can adjust the Pitch CV Scaling on Pot 1.  This GRAINS program is set up to play  the C three octaves below Middle C when it receives 0V.  You should be able to use Pot 1 to scale  the pitch such that high Cs play in tune as well.  Note that as GRAINS resistors  warm up, the scaling will change and you will need to adjust the tracking again, at least until  they are fully warmed up.
 
-By default the note corresponding to 0V is C0, three octaves below middle C, that is MIDI note 24,  or 32.7 Hz.  You can customize the tuning for this Grains program but only UP. To do this, you  can transpose the pitch up by changing the TRANSPOSE_OCTAVES and/or TRANSPOSE_SEMITONES #defines  in the code to positive integers.
+By default the note corresponding to 0V is C0, three octaves below middle C, that is MIDI note 24,  or 32.7 Hz.  You can customize the tuning for this Grains program but only UP. To do this, you  can transpose the pitch up by changing the TRANSPOSE\_OCTAVES and/or TRANSPOSE\_SEMITONES #defines  in the code to positive integers.  You can also change TRANSPOSE\_BITS: a "bit" is the minimum possible change Grains can do, equal to 1/17 of a semitone.
 
-IMPORTANT NOTE: unlike other grains oscillators in my repository, DX does not have a separate Pitch Tune option on Audio In, because it needs to use Audio In for other purposes.  You can only use TRANSPOSE\_OCTAVES and/or TRANSPOSE\_SEMITONES. 
+IMPORTANT NOTE: unlike other grains oscillators in my repository, DX does not have a separate Pitch Tune option on Audio In, because it needs to use Audio In for other purposes.  You can only use TRANSPOSE\_OCTAVES, TRANSPOSE\_SEMITONES, or TRANSPOSE\_BITS.
 
 
 

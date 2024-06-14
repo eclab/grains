@@ -21,14 +21,14 @@
 /// MIDI from your DAW or controller and sends it over the USB port to the GRAINS.  
 /// This program is located in the "java" subdirectory.
 ///
-/// The general hookup to a controller as follows: DAVE <---> Dave Java Program <----> Controller Device
-/// The hookup to a typical DAW is:  DAVE <---> Dave Java Program <---> MIDI Loopback Device <---> DAW
+/// The general hookup to a controller as follows: DAVE <--- Dave Java Program <---- Controller Device
+/// The hookup to a typical DAW is:  DAVE <--- Dave Java Program <--- MIDI Loopback Device <--- DAW
 ///     (Though Logic on the Mac doesn't need a Loopback.  Ableton does)
 /// See the Dave java program README for more information.
 ///
 /// You may have noticed that neither the MB/1 nor MASTER I/O have a WonkyStuff-style MIDI In port.
 /// They just have MIDI TRS-B jacks.  However it is possible to send MIDI to them from the GRAINS
-/// with some wiring.   See the file "docs/TRS.md" in the dave directory for more information.
+/// with some wiring.   See the file "docs/TRS.md" in the "dave" directory for more information.
 ///
 /// DAVE works in one or more MODES and has a few configuration options beyond that.
 ///
@@ -143,7 +143,7 @@
 /// on CHANNEL 1 for the MCO/4, and it can also still produce the THREE output CCs, but one of 
 /// them is now from a CV in.
 /// 
-/// - DIGITAL OUT outputs MIDI from USB, with the note data being generated
+/// - DIGITAL OUT outputs MIDI with the note data being generated
 /// - IN 1 receives the pitch.  Set POT 1 to MAN, or else adjust POT 1 to scale things 
 ///   (probably around 2'oclock) to 1V/oct
 /// - AUDIO IN receives the gate
@@ -182,7 +182,7 @@
 #define NOTE_GENERATOR_CHANNEL 1	
 
 /// SET THE NOTES THAT THE USB_TRIGGERS AND INTERNAL_TRIGGERS MODES MODES RESPOND TO (INTERNAL_TRIGGERS USES JUST THE FIRST THREE)
-uint8_t triggerNotes[4] = { 60, 62, 64, 65 };		// MIDDLE C, D, E, and F
+const uint8_t triggerNotes[4] = { 60, 62, 64, 65 };		// MIDDLE C, D, E, and F
 
 
 
@@ -216,9 +216,112 @@ uint8_t triggerNotes[4] = { 60, 62, 64, 65 };		// MIDDLE C, D, E, and F
 /// the only ones which will receive injection will be those channels from 0...NUM_VOICES-1
 /// which have INJECT_POTS_TO_CHANNEL[...] set to 1.
 
-const boolean INJECT_POTS_TO_CHANNEL[16] = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
+/// DELAY
 
+const boolean INJECT_POTS_TO_CHANNEL[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+
+// When negative, represents the last note off
+// When positive, represents a delayed note on
+int8_t delayPitches[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+uint8_t delayAmounts[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+uint8_t delayVels[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+#define MIN_DELAY 5
+
+void delayOrPlayNoteOn(uint8_t pitch, uint8_t vel, uint8_t channel)
+	{
+	// If the last note off was too recent
+	if (delayPitches[channel] < 0 &&			// Note OFF
+		delayAmounts[channel] != 0 &&			// Was Released
+		delayAmounts[channel] < MIN_DELAY)		// Too recently
+		{
+		// Play the NOTE OFF
+		write(MIDI_NOTE_OFF + channel);
+		write(0 - delayPitches[channel]);
+		write(delayVels[channel]);
+		
+		// Delay the NOTE ON
+		delayPitches[channel] = pitch;
+		delayAmounts[channel] = MIN_DELAY - delayAmounts[channel];
+		delayVels[channel] = vel;
+		}
+	// If we have a delayed note on, uh oh, just play it, this probably shouldn't have happened
+	else if (delayPitches[channel] >= 0 &&		// Note ON
+		delayAmounts[channel] != 0)			// Is Delayed
+		{
+		// Play and remove the DELAYED NOTE ON
+		write(MIDI_NOTE_ON + channel);
+		write(delayPitches[channel]);
+		write(delayVels[channel]);
+		delayAmounts[channel] = 0;
+
+		// Play the NOTE ON
+		write(MIDI_NOTE_ON + channel);
+		write(pitch);
+		write(vel);
+		}
+	// No delayed NOTE ON, no too-recently-delayed NOTE OFF
+	else
+		{
+		// Play the NOTE ON
+		write(MIDI_NOTE_ON + channel);
+		write(pitch);
+		write(vel);
+		}
+	}
+
+void delayOrPlayNoteOff(uint8_t pitch, uint8_t vel, uint8_t channel)
+	{
+	// If we have a delayed note on, uh oh, just play it, this probably shouldn't have happened
+	if (delayPitches[channel] >= 0 &&		// Note ON
+		delayAmounts[channel] != 0)			// Is Delayed
+		{
+		// Play and remove the DELAYED NOTE ON
+		write(MIDI_NOTE_ON + channel);
+		write(delayPitches[channel]);
+		write(delayVels[channel]);
+		delayAmounts[channel] = 0;
+		}
+		
+	// Play the NOTE OFF
+	write(MIDI_NOTE_OFF + channel);
+	write(pitch);
+	write(vel);
+
+	// Register the NOTE OFF
+	delayPitches[channel] = pitch;
+	delayVels[channel] = vel;
+	delayAmounts[channel] = 1;
+	}
+
+void incrementDelay()
+	{
+	for(uint8_t channel = 0; channel < 16; channel++)
+		{
+		// If we're delayed
+		if (delayAmounts[16] >= 1)
+			{
+			// If the delay is a NOTE OFF
+			if (delayPitches[16] < 0)
+				{
+				delayAmounts[16]++;		// 255 will increment to 0
+				}
+			// If the delay is a NOTE ON
+			else
+				{
+				// If we are ready to play the NOTE ON
+				if (delayAmounts[16] == 1)
+					{
+					write(MIDI_NOTE_ON + channel);
+					write(0 - delayPitches[channel]);
+					write(delayVels[channel]);
+					}
+				delayAmounts[16]--;		// 1 will decrement to 0
+				}
+			}
+		}
+	}
 
 
 /// DE-LEGATO
@@ -282,6 +385,7 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define PORT_1_TO_PORT_2 3
 #define PORT_1_TO_NONE 4
 #define NONE_TO_PORT_1 5
+#define USB_TO_USB 6
 #define CONFIGURATION	USB_TO_PORT_1
 
 // What channel is sent to output 1?
@@ -305,6 +409,7 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #include "NeoSWSerial.h"   // you have to install this via the library manager
 #include <NeoHWSerial.h>    // you have to install this via the library manager
 #include <FlexiTimer2.h>    // you have to install this via the library manager, but I include a zip just in case
+#include "parsemidi.h"
 
 ////////// PINOUTS
 
@@ -338,7 +443,7 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define RESET
 
 #elif (MODE == USB_ROUTER)
-#define CONFIGURATION USB_TO_PORT_1
+#define CONFIGURATION	USB_TO_USB			//  USB_TO_PORT_1
 #define OUTPUT_CHANNEL ALL
 #define FILTER_STYLE 	NONE
 #define CLOCK
@@ -350,7 +455,7 @@ const uint8_t DELEGATO_CHANNELS[16] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 #define POT_5_CC NONE
 #define RESET
 #endif
-NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
+//NeoSWSerial softSerial(BLANK_SERIAL, CV_GATE_OUT, PIN_UNUSED);
 
 /*
 #elif (MODE == INTERNAL_ROUTER)
@@ -575,7 +680,7 @@ void setup()
 	softSerial.begin(MIDI_RATE);
 #endif
 
-#if (CONFIGURATION == USB_TO_PORT_1 || CONFIGURATION == USB_TO_BOTH || CONFIGURATION == PORT_1_TO_PORT_2 )
+#if (CONFIGURATION == USB_TO_PORT_1 || CONFIGURATION == USB_TO_BOTH || CONFIGURATION == PORT_1_TO_PORT_2 || CONFIGURATION == USB_TO_USB)
 		// set up timer
 			FlexiTimer2::set(TIMER_SPEED, 1.0 / 1000, setInject);
 			FlexiTimer2::start();
@@ -873,8 +978,11 @@ void filterChannel(uint8_t c)
 inline void write(uint8_t c)
 	{
 //debug(c);
-#if (CONFIGURATION != USB_TO_NONE)
+#if (CONFIGURATION != USB_TO_NONE && CONFIGURATION != USB_TO_USB)
  	softSerial.write(c);
+#endif
+#if (CONFIGURATION == USB_TO_USB)
+	NeoSerial.write(c);
 #endif
 	}
 
@@ -1144,6 +1252,10 @@ void setInject()
 // Injects a single CC message into the stream.
 void injectCC(uint8_t param, uint8_t value)
 	{
+			write(MIDI_CC); 
+			write(param); 
+			write(value);
+
 	for(uint8_t i = 0; i <= NUM_VOICES; i++)
 		{
 		if (INJECT_POTS_TO_CHANNEL[i])
