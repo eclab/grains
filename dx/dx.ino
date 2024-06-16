@@ -42,35 +42,40 @@
 /// real time (with an envelope, say).
 ///
 /// The arrangement of operators -- which operators modulate which other ones, and which operators
-/// are carriers -- is called an ALGORITHM.  This weird term stems from Yamaha.  DX offers four
-/// algorithms.  The first algorithm has a single modulator modulating a single carrier, and the
-/// modulator can also modulate itself.  The second algorithm has two modulators both modulating
-/// a single carrier.  The third algorithm has one modulator modulating two carriers.  And the
-/// fourth algorithm has a modulator modulating a second modulator, while that second modulator
-/// modulates a carrier.
+/// are carriers -- is called an ALGORITHM.  This weird term stems from Yamaha.  DX offers five
+/// algorithms (the first two are just minor variantas of one another.  The first algorithm has a 
+/// single modulator modulating a single carrier, and the modulator can also modulate itself.  
+/// The second algorithm adds scaling of self-modulation to the mix.  The third algorithm has 
+/// two modulators both modulating a single carrier.  The fourth algorithm has one modulator 
+/// modulating two carriers.  And the fifth algorithm has a modulator modulating a second modulator, 
+/// while that second modulator modulates a carrier.
 ///
 ///
 /// THE ALGORITHMS
 ///
-/// You set the algorithm by changing the following define to a value 1...4
+/// You set the algorithm by changing the following define to a value 0...4
 ///
-/// Confused?  Then just stick with the 2-modulator ALGORITHM 1, ignoring self modulation, to get your
-/// feet wet.
+/// Confused?  Then just stick with the 2-modulator ALGORITHM 0 to get your feet wet.
 
 
-#define ALGORITHM 1
+#define ALGORITHM 0
 
 
-/// ALGORITHM 1.  This is a two-operator algorithm, with a MODULATOR and a CARRIER.  The CARRIER makes
+/// ALGORITHM 0.  This is a two-operator algorithm, with a MODULATOR and a CARRIER.  The CARRIER makes
 /// the final sound, and so you will specify the carrier's note pitch on POT1/IN1.  The 
 /// modulator has a RELATIVE PITCH to the carrier, one of 0.5, 1.0, 2.0, 3.0, ... 15.0, selectable
 /// on POT 3.  The modulator also has an INDEX OF MODULATION (the "amplitude" of the operator in Yamaha
 /// speak) which determines how much affect the modulator has on the carrier.  This is set with POT2/IN2.
 ///
 /// This is the basic setup.  However the modulator can also be optionally SELF MODULATED, that is, it
-/// modulates itself.  You specify the INDEX OF SELF MODULATION with IN3.  Because this is often done with
-/// an envelope, you'll need a way to temper its maximum value.  This is done by setting the INDEX OF SELF
-/// MODULATION SCALING on AUDIO IN.   
+/// modulates itself.  You specify the INDEX OF SELF MODULATION with IN3.  You can tweak the PITCH
+/// of the oscillator on AUDIO IN.
+///
+///
+/// ALGORITHM 1.  This is identical to ALGORITHM 0 except that AUDIO IN no longer does pitch adjustment,
+/// but rather lets you set the maximum value of self-modulation.  This is important because often self
+/// modulation is is changed with an envelope, so you need a way to temper its maximum value.  Thus
+/// AUDIO IN now sets the INDEX OF SELF MODULATION SCALING.
 ///
 ///
 /// ALGORITHM 2.  This is a three-operator algorithm, with TWO MODULATORS simultaneously modulating the same
@@ -134,10 +139,26 @@
 
 #define TRANSPOSE_BITS (-6)
 #define TRANSPOSE_SEMITONES 0
-#define TRANSPOSE_OCTAVES 2
+#define TRANSPOSE_OCTAVES 0
 
 
-/// 2-OPERATOR CONFIGURATION
+/// 2-OPERATOR CONFIGURATION WITH PITCH SCALING
+///
+/// IN 1            Pitch CV
+/// IN 2            Index of Modulation CV
+/// IN 3            Index of Self Modulation CV
+/// AUDIO IN (A)    Pitch Scaling
+/// AUDIO OUT       Out
+/// DIGITAL OUT (D) [Unused]
+///
+/// POT 1           Pitch Scaling        [Set the switch to In1]
+///
+/// POT 2           Index of Modulation Scaling
+///
+/// POT 3           Modulator Relative Pitch	[One of 0.5, 1, 2, 3 ... 15]
+
+
+/// 2-OPERATOR CONFIGURATION WITH SELF-MODULATION SCALING
 ///
 /// IN 1            Pitch CV
 /// IN 2            Index of Modulation CV
@@ -387,6 +408,7 @@ inline float getFrequency(uint8_t pitch, uint8_t tune)
 uint16_t indexOfModulation = 0;
 uint16_t indexOfModulation2 = 0;
 uint16_t indexOfModulationScaling2 = 0;
+uint8_t tune = 0;
 float relativeFrequency = 0;
 float relativeFrequency2 = 0;
 int16_t lastModulationValue = 0;
@@ -396,10 +418,23 @@ void updateControl()
 	uint16_t pot3 = mozziAnalogRead(CV_POT3);
 	uint16_t pot2 = mozziAnalogRead(CV_POT_IN2);
 	uint16_t in3 = mozziAnalogRead(CV_IN3);
-    uint16_t audioIn = mozziAnalogRead(CV_AUDIO_IN);
-    float frequency = getFrequency(CV_POT_IN1, 0);		// Note no pitch scaling
 
-#if (ALGORITHM == 1)			// 2 Operator
+#if (ALGORITHM == 0)
+    float frequency = getFrequency(CV_POT_IN1, CV_AUDIO_IN);
+#else
+    float frequency = getFrequency(CV_POT_IN1, 0);		// Note no pitch scaling
+    uint16_t audioIn = mozziAnalogRead(CV_AUDIO_IN);
+#endif
+
+#if (ALGORITHM == 0)			// 2 Operator
+	indexOfModulation = pot2;
+	indexOfModulation2 = in3;
+	indexOfModulationScaling2 = 1023;			// fixed to 1.0
+	uint8_t rf = pot3 >> 5;		// 0 ... 15
+	float relativeFrequency = (rf == 0 ? frequency * 0.5 : frequency * rf);
+    carrier.setFreq(frequency);
+    modulator.setFreq(relativeFrequency);
+#elif (ALGORITHM == 1)			// 2 Operator
 	indexOfModulation = pot2;
 	indexOfModulation2 = in3;
 	indexOfModulationScaling2 = (1023 - audioIn);
@@ -449,7 +484,18 @@ inline int16_t scaleAudio(int16_t val)
 
 int updateAudio()    
     {
-#if (ALGORITHM == 1)
+#if (ALGORITHM == 0)
+    // indexOfModulation is 1024 in range.  Going >> 1 and we have 512 in range.  indexOfModulationScaling2 is
+    // 1024 in range.  Multiply it in and >> 10 and we're still 512 range.
+    // lastModulationValue is 128 in range.  Multiply it in and we have 65536 in range.
+	Q15n16 selfpm = (((indexOfModulation2 >> 1) * (uint32_t)indexOfModulationScaling2) >> 10) * lastModulationValue;
+    // indexOfModulation is 1024 in range.  INDEX_OF_MODULATION_SCALE is 4 in range.
+    // Multiply them and >> 3 and we have 512 in range.  
+    // The modulator is 128 in range.  Multiply it in and we have 65536 in range.
+	Q15n16 pm = (indexOfModulation >> 1) * (uint32_t)(lastModulationValue = modulator.phMod(selfpm));
+    int16_t s1 = carrier.phMod(pm);
+    return s1;
+#elif (ALGORITHM == 1)		// same as Algorithm 0
     // indexOfModulation is 1024 in range.  Going >> 1 and we have 512 in range.  indexOfModulationScaling2 is
     // 1024 in range.  Multiply it in and >> 10 and we're still 512 range.
     // lastModulationValue is 128 in range.  Multiply it in and we have 65536 in range.
