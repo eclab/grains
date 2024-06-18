@@ -82,7 +82,7 @@ Status: Working.  But every once in a while I'll get a MIDI error due to the use
 
 ## LFO
 
-An warpable LFO with pulse (with pulse width), warpable saw/tri/ramp, and warpable sine waves, with a wide range of rates.  Can be reset, and outputs a sync trigger.  Requires Mozzi.
+A warpable LFO with pulse (with pulse width), warpable saw/tri/ramp, and warpable sine waves, with a wide range of rates.  Can be reset, and outputs a sync trigger.  Requires Mozzi.
 
 Status: Working.  However GRAINS can only reach about 4V, so it goes about 0-4V or so.
 
