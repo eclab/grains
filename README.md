@@ -33,7 +33,7 @@ Status: Working
 
 ## Tangle
 
-A combined digital logic function and buffered multi which can do various things, including trigger merges, inversion, thresholding, gate comparison, and so on.
+A combined digital logic function and buffered mult which can do various things, including trigger merges, inversion, thresholding, gate comparison, and so on.
 
 Status: Working
 
