@@ -5,7 +5,7 @@
 
 ## Introduction 
 
-Modular MIDI is based on John Tuffen's design (wonkystuff) for the modules he developed for the AE Modular system.  In his approach, MIDI entered the system via a TRS-B MIDI port on a **Distributor Module** (the **wonkystuff mb/1** or **MIDI Brain**), and then travelled from module to module using standard AE Modular sockets and wires, just like Gate/CV or Audio.  
+Modular MIDI is based on the design by John Tuffen (wonkystuff) for the modules he developed for the AE Modular system.  In his approach, MIDI entered the system via a TRS-B MIDI port on a **Distributor Module** (the **wonkystuff mb/1** or **MIDI Brain**), and then travelled from module to module using standard AE Modular sockets and wires, just like Gate/CV or Audio.  
 
 The mb/1 Distributor Module divided incoming MIDI messages up by channel, and each channel had its own dedicated outgoing AE Modular socket.  This meant that modules attached to a given MIDI socket on the Distributor didn't need to care what channel they were on, and could just operate in so-called OMNI mode (ignoring channel information).  Additionally, MIDI clock messages were converted into a variety of CV messages.  The mb/1 also provided a copy of all incoming MIDI.
 
