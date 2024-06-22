@@ -102,9 +102,9 @@ One simple scheme to avoid this is to have modules which do so-called **CC Learn
 
 The alternative scheme we propose here is to assign each module an **ID**.  This is just a number 1, 2, ..., 15.  The ID of the module determines which CC parameters it's allowed to use.  Each ID is allotted 9 CC parameters, which we will call parameters "a" through "i".  Which ID your module is using will determine *which* CC parameters correspond to those "a" through "i" (so modules with different IDs will stay out of each others' CC regions).
 
-Normally CC parameters are "7-bit", meaning that each CC can only be set low-resolution values (0...127).  But your module has the option of bundling two CCs together to make a "14-bit" CC pair with much higher resolution.  When this is done, one CC is called the "Most Significant Byte" (or "MSB") of the parameter, and the other is called the "Least Significant Byte" (or "LSB").
+Normally CC parameters are "7-bit", meaning that each CC can only be set to low-resolution values (0...127).  But at its discretion your module has the option of bundling two CCs together to make a "14-bit" CC pair with much higher resolution.  When this is done, one CC is called the "Most Significant Byte" (or "MSB") of the parameter, and the other is called the "Least Significant Byte" (or "LSB").
 
-Your module has the option to bundle parameter "a" up with parameter "i". The combined parameter is just called "a", and "i" ceases to be available via CC.  The module can additionally bundle "b" with "h" in a similar fashion.  Whether your module does this is up to it: see its documentation.
+Your module has the option to bundle parameter "a" up with parameter "i". The combined parameter is just called "a", and "i" ceases to be available via CC.  The module can additionally bundle "b" with "h" in a similar fashion.  Whether your module bundles one or both of these is entirely up to the manufacturer: see the module documentation.
 
 Below is a table, for each ID and each parameter a...i, of the CC parameter number assigned to that parameter.  For example, if your module was ID 2, and it used "a/i" as a 14-bit parameter but kept "b" and "h" separate, then the CCs for "a/i" would be the 14-bit parameter 14 and 46 (MSB and LSB), "b" would be 15, "c" would be 70, "d" would be 71, "e" would be 72, "f", would be 73, "g" would be 75, and "h" would be 47.
 
@@ -201,7 +201,7 @@ ID | Default ID Category
 7  | CC --> Gate/CV/Trigger Generators
 8  | Miscellaneous
 
-If you are fortunate, you will never need to change the ID, just leaving it as the default.  But if you have two modules listening in on the same channel with the same ID, you may need to change one to some other unused ID to keep them from conflicting.
+If you are fortunate, you will never need to change the ID, and just leave it as the default.  But if you have two modules listening in on the same channel with the same ID, you may need to change one to some other unused ID to keep them from conflicting.
 
 Your modules may also respond to certain other CC functionality, such as Bank Select, Modulation Wheel, Glide MSB, Volume MSB, Pan MSB, Expression Controller, Sustain Pedal, Legato Switch, MPE Timbre, All Sounds O/ff, Reset All Controllers, and All Notes Off.
 
