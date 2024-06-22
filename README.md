@@ -33,7 +33,7 @@ Status: Working
 
 ## Tangle
 
-A combined digital logic function and buffered multi which can do various things, including trigger merges, inversion, thresholding, gate comparison, and so on.
+A combined digital logic function and buffered mult which can do various things, including trigger merges, inversion, thresholding, gate comparison, and so on.
 
 Status: Working
 
@@ -82,7 +82,7 @@ Status: Working.  But every once in a while I'll get a MIDI error due to the use
 
 ## LFO
 
-An warpable LFO with pulse (with pulse width), warpable saw/tri/ramp, and warpable sine waves, with a wide range of rates.  Can be reset, and outputs a sync trigger.  Requires Mozzi.
+A warpable LFO with pulse (with pulse width), warpable saw/tri/ramp, and warpable sine waves, with a wide range of rates.  Can be reset, and outputs a sync trigger.  Requires Mozzi.
 
 Status: Working.  However GRAINS can only reach about 4V, so it goes about 0-4V or so.
 
