@@ -113,80 +113,80 @@ Modules can have their IDs changed so that they don't conflict with one another,
 Some CCs have traditional (non-required) uses. You may find them in your DAW's list of CC names.  We list some of them in this table, because certain IDs (see the next table after this one) have been lined up to conveniently correspond with these names if your module sees fit.
 
 
-ID  | Parameter   | 7-bit CC Parameter | 14 bit CC Parameter MSB/LSB | Traditional Use
-----|-------------|--------------------|-----------------------------|----------------
-1   | a           | 8                  | 8 / 40                      |
-1   | b           | 9                  | 9 / 41                      |
-1   | c           | 65                 |                             | Glide Switch
-1   | d           | 66                 |                             |
-1   | e           | 67                 |                             |
-1   | f           | 69                 |                             |
-1   | g           | 112                |                             |
-1   | h           | 41   [only if "1 b" is 7-bit] |                  |
-1   | i           | 40   [only if "1 a" is 7-bit] |                  |
-2   | a           | 14                 | 14 / 46                     |
-2   | b           | 15                 | 15 / 47                     |
-2   | c           | 70                 |                             |
-2   | d           | 71                 |                             |
-2   | e           | 72                 |                             | Release
-2   | f           | 73                 |                             | Attack
-2   | g           | 75                 |                             | Decay
-2   | h           | 47 [only if "2 b" is 7-bit] |                    |
-2   | i           | 46 [only if "2 a" is 7-bit] |                    |
-3   | a           | 16                 | 16 / 48                     |
-3   | b           | 17                 | 17 / 49                     |
-3   | c           | 76                 |                             | Vibrato Rate
-3   | d           | 77                 |                             | Vibrato Depth
-3   | e           | 78                 |                             | Vibrato Delay    
-3   | f           | 79                 |                             |
-3   | g           | 80                 |                             |
-3   | h           | 49 [only if "3 b" is 7-bit] |                    |
-3   | i           | 48 [only if "3 a" is 7-bit] |                    |
-4   | a           | 18                 | 18 / 50                     |
-4   | b           | 19                 | 19 / 51                     |
-4   | c           | 81                 |                             |
-4   | d           | 82                 |                             |
-4   | e           | 83                 |                             |
-4   | f           | 84                 |                             |
-4   | g           | 85                 |                             |
-4   | h           | 51 [only if "4 b" is 7-bit] |                    |
-4   | i           | 50 [only if "4 a" is 7-bit] |                    |
-5   | a           | 20                 | 20 / 52                     |
-5   | b           | 21                 | 21 / 53                     |
-5   | c           | 86                 |                             |
-5   | d           | 87                 |                             |
-5   | e           | 88                 |                             | High Res Velocity    
-5   | f           | 89                 |                             |
-5   | g           | 90                 |                             |
-5   | h           | 53 [only if "5 b" is 7-bit] |                    |
-5   | i           | 52 [only if "5 a" is 7-bit] |                    |
-6   | a           | 12                 | 22 / 44                     | FX Control 1
-6   | b           | 13                 | 23 / 45                     | FX Control 2
-6   | c           | 91                 |                             | FX 1 Amount 
-6   | d           | 92                 |                             | FX 2 Amount
-6   | e           | 93                 |                             | FX 3 Amount  
-6   | f           | 94                 |                             | FX 4 Amount
-6   | g           | 95                 |                             | FX 5 Amount
-6   | h           | 45 [only if "6 b" is 7-bit] |                    |
-6   | i           | 44 [only if "6 a" is 7-bit] |                    |
-7   | a           | 22                  | 24 / 54                    |
-7   | b           | 23                  | 25 / 55                    |
-7   | c           | 102                 |                            |
-7   | d           | 103                 |                            |
-7   | e           | 104                 |                            |
-7   | f           | 105                 |                            |
-7   | g           | 106                 |                            |
-7   | h           | 55 [only if "7 b" is 7-bit] |                    |
-7   | i           | 54 [only if "7 a" is 7-bit] |                    |
-8   | a           | 24                  | 8 / 56                     |
-8   | b           | 25                  | 9 / 57                     |
-8   | c           | 107                 |                            |
-8   | d           | 108                 |                            |
-8   | e           | 109                 |                            |
-8   | f           | 110                 |                            |
-8   | g           | 111                 |                            |
-8   | h           | 57 [only if "8 b" is 7-bit] |                    |
-8   | i           | 56 [only if "8 a" is 7-bit] |                    |
+ID  | Parameter   | 7-bit CC Parameter          | 14 bit CC Parameter MSB/LSB | Traditional Use
+----|-------------|-----------------------------|-----------------------------|----------------
+1   | a           | 8                           | 8 / 40                      |
+1   | b           | 9                           | 9 / 41                      |
+1   | c           | 65                          |                             | Glide Switch
+1   | d           | 66                          |                             |
+1   | e           | 67                          |                             |
+1   | f           | 69                          |                             |
+1   | g           | 112                         |                             |
+1   | h           | 41 [only if "1 b" is 7-bit] |                             |
+1   | i           | 40 [only if "1 a" is 7-bit] |                             |
+2   | a           | 14                          | 14 / 46                     |
+2   | b           | 15                          | 15 / 47                     |
+2   | c           | 70                          |                             |
+2   | d           | 71                          |                             |
+2   | e           | 72                          |                             | Release
+2   | f           | 73                          |                             | Attack
+2   | g           | 75                          |                             | Decay
+2   | h           | 47 [only if "2 b" is 7-bit] |                             |
+2   | i           | 46 [only if "2 a" is 7-bit] |                             |
+3   | a           | 16                          | 16 / 48                     |
+3   | b           | 17                          | 17 / 49                     |
+3   | c           | 76                          |                             | Vibrato Rate
+3   | d           | 77                          |                             | Vibrato Depth
+3   | e           | 78                          |                             | Vibrato Delay    
+3   | f           | 79                          |                             |
+3   | g           | 80                          |                             |
+3   | h           | 49 [only if "3 b" is 7-bit] |                             |
+3   | i           | 48 [only if "3 a" is 7-bit] |                             |
+4   | a           | 18                          | 18 / 50                     |
+4   | b           | 19                          | 19 / 51                     |
+4   | c           | 81                          |                             |
+4   | d           | 82                          |                             |
+4   | e           | 83                          |                             |
+4   | f           | 84                          |                             |
+4   | g           | 85                          |                             |
+4   | h           | 51 [only if "4 b" is 7-bit] |                             |
+4   | i           | 50 [only if "4 a" is 7-bit] |                             |
+5   | a           | 20                          | 20 / 52                     |
+5   | b           | 21                          | 21 / 53                     |
+5   | c           | 86                          |                             |
+5   | d           | 87                          |                             |
+5   | e           | 88                          |                             | High Res Velocity    
+5   | f           | 89                          |                             |
+5   | g           | 90                          |                             |
+5   | h           | 53 [only if "5 b" is 7-bit] |                             |
+5   | i           | 52 [only if "5 a" is 7-bit] |                             |
+6   | a           | 12                          | 22 / 44                     | FX Control 1
+6   | b           | 13                          | 23 / 45                     | FX Control 2
+6   | c           | 91                          |                             | FX 1 Amount 
+6   | d           | 92                          |                             | FX 2 Amount
+6   | e           | 93                          |                             | FX 3 Amount  
+6   | f           | 94                          |                             | FX 4 Amount
+6   | g           | 95                          |                             | FX 5 Amount
+6   | h           | 45 [only if "6 b" is 7-bit] |                             |
+6   | i           | 44 [only if "6 a" is 7-bit] |                             |
+7   | a           | 22                          | 24 / 54                     |
+7   | b           | 23                          | 25 / 55                     |
+7   | c           | 102                         |                             |
+7   | d           | 103                         |                             |
+7   | e           | 104                         |                             |
+7   | f           | 105                         |                             |
+7   | g           | 106                         |                             |
+7   | h           | 55 [only if "7 b" is 7-bit] |                             |
+7   | i           | 54 [only if "7 a" is 7-bit] |                             |
+8   | a           | 24                          | 8 / 56                      |
+8   | b           | 25                          | 9 / 57                      |
+8   | c           | 107                         |                             |
+8   | d           | 108                         |                             |
+8   | e           | 109                         |                             |
+8   | f           | 110                         |                             |
+8   | g           | 111                         |                             |
+8   | h           | 57 [only if "8 b" is 7-bit] |                             |
+8   | i           | 56 [only if "8 a" is 7-bit] |                             |
 
 Every module that uses CC has assigned a **Default ID**.  The Default ID is its initial ID value.  Some simple modules cannot change this to a different ID, but more sophisticated ones can.  The Default ID is associated with the category of the module.  The Default ID categories are as follows:
 
@@ -284,9 +284,9 @@ The ADSR's MIDI IN can also be connected to receive MIDI from your DAW; and it w
 
 ### Another Possibility
 
-What if you also want to modulate your LFO from *another module*?  For example, imagine you wanted an ADSR to control the rate of your LFO, and the LFO controlled the cutoff of the Filter.  Your LFO might be able to do this.  Let's say the LFO rate is its parameter "d".  You set the ADSR to modulate "d" and attach it to the LFO.  The LFO is attached to the Filter as usual.  Attach the ADSR to receive MIDI from your DAW or controller, and it will pass it along to the LFO, which passes it on to the Filter.
+What if you also want to modulate your LFO from *another module*?  For example, imagine you wanted an ADSR to control the rate of your LFO, while the LFO controlled the cutoff of the Filter.  Your LFO might be able to do this.  Let's say the LFO rate is its parameter "d".  You set the ADSR to modulate "d" and attach it to the LFO.  The LFO is attached to the Filter as usual.  Attach the ADSR to receive MIDI from your DAW or controller, and it will pass it along to the LFO, which passes it on to the Filter.
 
-You have to instruct the LFO not to pass modulation CCs it gets from the ADSR on to the Filter.  Then it should work.
+Now you have to instruct the LFO not to pass modulation CCs it gets from the ADSR on to the Filter.  Then it should work.
 
 ### Yet Another Possibility
 
