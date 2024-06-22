@@ -112,7 +112,7 @@ Some CCs have traditional (non-required) uses. You may find them in your DAW's l
 ID  | Parameter   | 7-bit CC Parameter | 14 bit CC Parameter MSB/LSB | Traditional Use
 ----|-------------|--------------------|-----------------------------|----------------
 1   | a           | 8                  | 8 / 40                      |
-    | b           | 9                  | 9 / 41                      |
+.    | b           | 9                  | 9 / 41                      |
     | c           | 65                 |                             | Glide Switch
     | d           | 66                 |                      |
     | e           | 67                 |                          |
