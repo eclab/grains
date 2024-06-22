@@ -50,7 +50,7 @@ Let's start with the *disadvantages* of MIDI.  First, **MIDI is slow**.  It runs
 
 We'll address ways around some of these issues.  But if MIDI has so many problems, why bother with it?  Because its advantages are legion.
 
-MIDI has **stable pitch tuning**.  You will never need to tune an oscillator again.  Just tell it to play a note and it plays it.  MIDI also has facilities for **microtuning** if you wanted to customize the tuning of your notes.
+MIDI has **stable pitch tuning**.  You will never need to tune an oscillator again.  Just tell it to play a note and it plays it.  MIDI also has facilities for **microtuning** via the **MIDI Tuning Standard**, if you wanted to customize the tuning of your notes.
 
 MIDI only needs a single wire to **control many parameters,** reducing the number of cables.   In contrast, CV requires one wire for each parameter.  
 
