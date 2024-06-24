@@ -31,7 +31,7 @@ Modular MIDI only adds conventions to standard MIDI.  It does not break or signi
 
 - **Patch Manipulation.**  Standard MIDI has Program Change and Bank Select to load new patches.  Modular MIDI extends this with a few new directives (as Auxiliary Parameters): *Program Save*, *Current Program Save*, and *Current Program Revert*.  Modular MIDI also has a proposed redefinition of the Bank Select MSB as *Module Select*, allowing one to specify *which* module (by ID) should have its patches loaded, saved, reverted, etc.
 
-- **MIDI Polyphonic Expression (MPE).**  Modular MIDI tries hard to be roughly interoperable with MPE, with some caveats.
+- **MIDI Polyphonic Expression (MPE).**  Modular MIDI can be made compatible with MPE with some work.
  
 ## Topology and Data Format
 
@@ -77,23 +77,25 @@ In most cases, each channel represents a single *voice*, that is, a single note 
 
 This structure allows for MPE, for polyphony, and for **multitimbral synthesizers**.
 
-Streams of MIDI data are of two kinds:
+Streams of MIDI data are mostly of two kinds:
 
-- Most data streams consists of voiced messages from only a single channel, plus unvoiced messages.  A stream of this kind is meant to control a **voice chain**, which is a group of modules that all listen to that stream, and work together to form a single *voice*.  For example, a MIDI oscillator, MIDI envelope, and MIDI filter might all listen to this stream to play a single note, that is, they act like a **monophonic synthesizer.**  This is likely the most common situation.  Indeed it's likely common for a voice chain to just consist of a *single* module, such as the wonkystuff mco/1.  Since all voiced messagesin these data streams are of the same channel, it is reasonable for these modules to simply respond to OMNI.
-	
-- Some data streams consists of all messages, and are not filtered by channel.  A stream of this kind typically goes to a **polyphonic module**, which has been set up to listen to a select set of channels and play several voices as in response to notes on those channels.  Polyphonic modules can do what they like with this data: they could respond polyphonically to multiple notes on the same channel; or to one note per channel; or whatever they liked.
+- Most data streams consists of voiced messages from only a single channel, plus unvoiced messages.  A stream of this kind is meant to control a **voice chain**, which is a group of modules that all listen to that stream, and work together to form a single *voice*.  For example, a MIDI oscillator, MIDI envelope, and MIDI filter might all listen to this stream to play a single note, that is, they act like a **monophonic synthesizer.**  This is likely the most common situation.  Indeed it's likely common for a voice chain to just consist of a *single* MIDI module, such as the wonkystuff mco/1, working with various non-MIDI modules (filters, envelopes, VCAs).  Since all voiced messages in these data streams are of the same channel, it is reasonable for these modules to simply respond to OMNI.
 
-It is also reasonable for a polyphonic module to have multiple **IN** sockets, each responding to MIDI data on a single channel, but different channels per socket.  This is essentially like having multiple monophonic modules in a single package.
+  Some voice chains are intended to handle multiple notes, not a single one.  The most common scenario is drum synthesizers or drum sample players, where different notes indicate different drums, possibly playing at the same time though on the same channel.
+  	
+- Some data streams consists of all messages, and are not filtered by channel.  A stream of this kind typically goes to a **polyphonic module**, which has been set up to listen to one or more channels and play several voices as in response to notes on those channels.  Polyphonic modules can do what they like with this data: they could respond polyphonically to multiple notes on the same channel; or to one note per channel; or whatever they liked.
+
+  It is also reasonable for a polyphonic module to have multiple **IN** sockets, each responding to MIDI data on a single channel, but different channels per socket.  This is essentially like having multiple single voice modules in one package.
 
 ### Distributor MPE Suggestions
 
-The channel-per-voice approach described is roughly compatible with MIDI Polyphonic Expression (MPE) and a Distributor module should be able to handle MPE.
+The channel-per-voice approach described can be made compatible with MIDI Polyphonic Expression (MPE) with some work by the Distributor.
 
-MPE is meant for the situation where each note (each voice) is sent on a separate channel.  This is mostly compatible with the distributor modules as described so far.  However there are a few considerations:
+MPE is meant for the situation where each note (each voice) is usually sent on a separate channel.  This is mostly compatible with the distributor modules as described so far.  However there are a few considerations:
 
 - The distributor should be flexible with regard to channel allocation.  The musician might wish to allocate up to two MPE "Zone" (as set of channels allocated to the voices of an MPE instrument), plus use other channels for other non-MPE voices.
 	
-- Each MPE Zone has a "Master Channel" solely for voiced messages intended for every channel (every voice) in the Zone.  MPE calls these "Zone Messages".  Care must be taken as to how to merge Zone messages with per-channel messages.  For example, Pitch Bend at the Zone level might be added to pitch bend at the channel level; or one might supercede the other.  In most cases, messages on the Master Channel should simply be injected into each of the individual channels: for example the Sustain Pedal message, which might possibly only be found on the Master Channel.
+- Each MPE Zone has a "Master Channel" for voiced messages intended for every channel (every voice) in the Zone.  MPE calls these "Zone Messages".  Care must be taken as to how to merge Zone messages with per-channel messages.  For example, Pitch Bend at the Zone level might be added to pitch bend at the channel level; or one might supercede the other.  In many cases, messages on the Master Channel should simply be injected into each of the individual channels: for example the Sustain Pedal message, which might possibly only be found on the Master Channel.  It is also permitted, though discouraged, for note messages to be sent to a Master Channel.  A distributor would have to determine how to play these notes, such as redistributing them to existing zone channels.
 	
 - An MPE zone has a fixed number of channels, and thus normally a fixed number of notes.  What if the musician plays more than that number of notes at a time?  MPE will **spill** those notes to channels it is already using for other notes.  Most receiver modules cannot play more than one note.  The distributor *could* handle this situation for them, by sending a preemptive NOTE OFF message to turn off the old note; but this is not appropriate if the receiver module is a sophisticated polyphonic module which can play multiple notes.  Thus either this behavior should be switchable, or the distributor should allow the individual receivers to deal with it themselves.
 
