@@ -56,7 +56,7 @@ MIDI enables **polyphony** and **multitimbralism**.  You can have multiple notes
 
 MIDI allows modules to **save and recall parameter information** (patches).
 
-Practically every DAW, keyboard, controller, sequencer, groovebox, drum machine, and synthesizer in the world **speak MIDI.**  This should not be discounted.
+Practically every DAW, keyboard, controller, sequencer, groovebox, drum machine, and synthesizer in the world **speak MIDI**.  This should not be discounted.
 
 ### Need for Modular MIDI Conventions
 
@@ -96,17 +96,101 @@ Multiple modules (MIDI or not) work together to create a single voice.  You migh
 
 Controlling modules on a voice chain with CC parameters is a major issue.  MIDI only has 128 CC parameters per channel, and realistically only about 100 are available.  But you may have multiple modules listening in on the same channel: for example, you might have a filter module, an envelope module, and an oscillator module.  They're by different vendors, and each of them can be programmed using CC messages.  How do you prevent them from accidentally overlapping?  You don't want to adjust your filter cutoff only to find that your oscillator tuning has changed as well...
 
-One simple scheme to avoid this is to have modules which do so-called **CC Learn**.  Here, you might press a "learn" button, and then send a CC message, and the module moves all of its CC pararameter numbers so that the lowest one is the same as that CC message.  This can work for simple devices but training many modules to avoid one another, and to avoid certain standardized CC message parameters, may be difficult.
+### CC Learn
 
-The alternative scheme we propose here is to assign each module an **ID**.  This is just a number 1, 2, ..., 15.  The ID of the module determines which CC parameters it's allowed to use.  Each ID is allotted 9 CC parameters, which we will call parameters "a" through "i".  Which ID your module is using will determine *which* CC parameters correspond to those "a" through "i" (so modules with different IDs will stay out of each others' CC regions).
+Some modules might avoid overlapping CCs using so-called **CC Learn**.  Here, you might press a "learn" button, and then send a CC message, and the module moves all of its CC pararameter numbers so that the lowest one is the same as that CC message.  This can work for simple devices but training many modules to avoid one another, and to avoid certain standardized CC message parameters, may be difficult.
 
-Normally CC parameters are "7-bit", meaning that each CC can only be set to low-resolution values (0...127).  But at its discretion your module has the option of bundling two CCs together to make a "14-bit" CC pair with much higher resolution.  When this is done, one CC is called the "Most Significant Byte" (or "MSB") of the parameter, and the other is called the "Least Significant Byte" (or "LSB").  Your module has the option to bundle parameter "a" up with parameter "i". The combined parameter is just called "a", and "i" ceases to be available via CC.  The module can additionally bundle "b" with "h" in a similar fashion.  Whether your module bundles one or both of these is entirely up to the manufacturer: see the module documentation.
+### IDs
 
-Below is a table, for each ID and each parameter a...i, of the CC parameter number assigned to that parameter.  For example, if your module was ID 2, and it used "a/i" as a 14-bit parameter but kept "b" and "h" separate, then the CCs for "a/i" would be the 14-bit parameter 14 and 46 (MSB and LSB), "b" would be 15, "c" would be 70, "d" would be 71, "e" would be 72, "f", would be 73, "g" would be 75, and "h" would be 47.
+Other modules might avoid overlapping CCs by assigning each module a different **ID**.  An ID is just a number 1, 2, ..., 15, and each ID bestows on its module the right to use a certain range of CC parameters.  Let's call those parameters "a" through "i".  Your module's ID determines *which* CC parameters correspond to those "a" through "i".  That way modules with different IDs use different CC ranges.
 
-Modules can have their IDs changed so that they don't conflict with one another, and thus the CCs associated with their respective parameter numbers can change too.  In some situations, a module might even take up 2 or more IDs.
+The ["ID and CC Parameter Table"](#id-and-cc-parameter-table) below says which CC parameters belong which IDs.
 
-Some CCs have traditional (non-required) uses. You may find them in your DAW's list of CC names.  We list some of them in this table, because certain IDs (see the next table after this one) have been lined up to conveniently correspond with these names if your module sees fit.
+Every module that uses CC has assigned a **Default ID**.  The Default ID is its initial ID value.  Some simple modules cannot change this to a different ID, but more sophisticated ones can.  The Default ID is associated with the category of the module, as is shown in the ["Default ID Table"](#default-id-table). 
+
+Some modules can have their IDs changed so that they don't conflict with one another, and this changes the CCDs corresponding to the paramters "a" through "i".  In some situations, a module might even take up 2 or more IDs.  If you are fortunate, you will never need to change the ID, and just leave it as the default.  
+
+### Common CCs
+
+Your modules may also respond to certain other CC functionality.  Modular MIDI supports:
+
+- Bank Select (MSB and LSB)
+- Modulation Wheel (MSB and LSB)
+- Glide (MSB only)
+- Volume (MSB only)
+- Pan (MSB only)
+- Expression Controller (MSB and LSB)
+- Sustain Pedal
+- Legato Switch
+- MPE Timbre
+- All Sounds Off
+- Reset All Controllers
+- All Notes Off
+
+These CCs are sent to all modules, who are free to respond to them if they like.
+
+## Auxiliary Parameters and Additional IDs
+
+Only 8 IDs have space allotted to them in the CC space.  But there is space for 7 more IDs in what we call the **Auxiliary Parameters**.  Auxiliary Parameters are set with CCs 3 and 35.  CC 3's value sets the auxiliary parameter number, and CC 35's value sets the auxiliary parameter value.  Send CC first, and then CC 35.
+
+The ["Auxiliary Parameters Table"](#auxiliary-parameters-table) lists the auxiliary parameters for ach of IDs 9...15.  There are 16 parameters allotted to each, all 7-bit values. You can think of these as parameters "a" through "p".  Auxiliary Parameters are half the speed of regular CCs (because you need to send two CCs to do them).
+
+## NRPN
+
+If your module supports it, and your DAW or controller does, you can also be able to set up to 256 parameters in your module using NRPN.  NRPN is a bit slower than CC but it has much higher resolution and many more parameters.  The first 9 parameters in your NRPN region correspond to the CC parameters "a" through "i", if your ID is in the Auxiliary Parameter space, the first 16 parameters correspond to its parameters "a" through "p".  The ["NRPN Table"](#nrpn-table) lists which NRPN parameters belong to which ID.
+
+## Loading and Saving Patches
+
+Your module might support loading and saving patches.
+
+Loading a patch is done in the usual MIDI way: via a Bank Select (both MSB and LSB), followed by a Program Change command.  The Bank Select selects your bank, and the Program Change selects the patch in the bank.
+
+Modular MIDI also supports **Program Save**.  This is an Auxiliary Parameter, and its value indicates the patch slot to save your current parameters to.
+
+Modular MIDI further supports **Current Program Save**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 0.  It instructs the module to save its current parameters to the patch slot it is presently using.  
+
+Finally, Modular MIDI supports **Current Program Revert**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 1.  It instructs the module to reload its current parameters from the patch slot it is presently using.  
+
+See the ["Saving and Loading Table"](#saving-and-loading-table) for information on these three commands.
+
+## Modulation CC Messages
+
+Modules might not just respond to MIDI from your DAW or Controller.  They might also send messages to other modules to control them.  For example, you might have a sequencer module which sends MIDI notes to other modules to play them.
+
+Another possibility is to have **modulator modules** sending messages to modulate **target modules**.  For example, you might have an LFO which is sending CC messages to modulate a Filter module.  
+
+We have a scheme to make modulation simple.  A modulation module can send CCs to control any one of the first 8 parameters ("a" through "h") of your target module.  It doesn't need to know the ID of the module.  Instead it just sends it one of 8 **modulation CC messages**.
+
+For example, your Filter might have "a" as its Cutoff and "b" as its Resonance.  Your LFO could have a knob on it where you set what it's modulating ("a" through "h").  If you set it to "a", and hook its MIDI MODULATION THRU to the Filter's MIDI IN, then the LFO will control the Filter Cutoff.
+
+The first two modulation parameters are 14-bit high-resolution, and the rest are 7-bit low-resolution.
+
+The ADSR's MIDI IN can also be connected to receive MIDI from your DAW; and it will pass that MIDI on to the Filter as well (as well as **injecting** the modulation CC messages necessary to control the Filter).
+
+### Another Possibility
+
+What if you also want to modulate your LFO from *another module*?  For example, imagine you wanted an ADSR to control the rate of your LFO, while the LFO controlled the cutoff of the Filter.  Your LFO might be able to do this.  Let's say the LFO rate is its parameter "d".  You set the ADSR to modulate "d" and attach it to the LFO.  The LFO is attached to the Filter as usual.  Attach the ADSR to receive MIDI from your DAW or controller, and it will pass it along to the LFO, which passes it on to the Filter.
+
+Now you have to instruct the LFO not to pass modulation CCs it gets from the ADSR on to the Filter.  Then it should work.
+
+### Yet Another Possibility
+
+What if you want your ADSR *and* your LFO to *both* modulate your Filter?  For example, imagine you wanted an ADSR to control the filter resonance, while the LFO controls the filter cutoff.  
+
+This is almost the same arrangement: the ADSR connects to the LFO, which connects to the Filter.  Your Filter's resonance is "b", so you set the ADSR to modulate "b".  But this time you have to instruct the LFO to *ignore and pass on* modulation CCs it gets (from the ADSR) to the Filter.
+
+
+## Tables
+
+### ID and CC Parameter Table
+
+Below is a table, for each ID and each parameter a...i, of the CC parameter number assigned to that parameter.
+
+Normally CC parameters are "7-bit", meaning that each CC can only be set to low-resolution values (0...127).  At its discretion a module has the option of bundling two CCs together to make a "14-bit" CC pair with much higher resolution.  When this is done, one CC is called the "Most Significant Byte" (or "MSB") of the parameter, and the other is called the "Least Significant Byte" (or "LSB").  The module has the option to bundle parameter "a" up with parameter "i". The combined parameter is just called "a", and "i" ceases to be available as a CC.  The module can additionally bundle "b" with "h" in a similar fashion.
+
+Let's say that your module is ID 2, and it uses 14-bit b/i but not a/h.  Then parameter a is CC 14, parameter b is (14-bit) MSB 15, LSB 47, parameter c is 70, parameter d is 71, parameter e is 72, parameter f is 73, parameter g if 75, and parameter h is 47.  Your module documentation will say what the parameters a...h mean.
+
+Some CCs have historic/traditional (and obsolete) uses. You may find them in your DAW's list of CC names.  We list some of them in this table, because certain IDs (see the ["Default ID Table"](#default-id-table)) have been lined up to conveniently correspond with these names if your module sees fit to use them.
 
 
 ID  | Parameter   | 7-bit CC Parameter          | 14 bit CC Parameter MSB/LSB | Traditional Use
@@ -184,7 +268,11 @@ ID  | Parameter   | 7-bit CC Parameter          | 14 bit CC Parameter MSB/LSB | 
 8   | h           | 57 [only if "8 b" is 7-bit] |                             |
 8   | i           | 56 [only if "8 a" is 7-bit] |                             |
 
-Every module that uses CC has assigned a **Default ID**.  The Default ID is its initial ID value.  Some simple modules cannot change this to a different ID, but more sophisticated ones can.  The Default ID is associated with the category of the module.  The Default ID categories are as follows:
+
+
+### Default ID Table
+
+Modules have a Default ID (or "Initial ID") corresponding to a category that they belong to.  You may be able to change this ID to something else.  The default IDs are:
 
 ID | Default ID Category
 ---|-----------------------------------------------------
@@ -197,13 +285,10 @@ ID | Default ID Category
 7  | CC --> Gate/CV/Trigger Generators
 8  | Miscellaneous
 
-If you are fortunate, you will never need to change the ID, and just leave it as the default.  But if you have two modules listening in on the same channel with the same ID, you may need to change one to some other unused ID to keep them from conflicting.
 
-Your modules may also respond to certain other CC functionality, such as Bank Select, Modulation Wheel, Glide MSB, Volume MSB, Pan MSB, Expression Controller, Sustain Pedal, Legato Switch, MPE Timbre, All Sounds O/ff, Reset All Controllers, and All Notes Off.
+### Auxiliary Parameters Table
 
-## Auxiliary Parameters and Additional IDs
-
-Only 8 IDs have space allotted to them in the CC space.  But there is space for 7 more IDs in what we call the **Auxiliary Parameters**.  Auxiliary Parameters are set with CCs 3 and 35.  CC 3's value sets the auxiliary parameter number, and CC 35's value sets the auxiliary parameter value.  Send CC first, and then CC 35.  Notice that 
+IDs 9...15 get 16 parameters each in the Auxiliary Parameters space.  You can call them parameters "a" through "p".  Use CC 3 to set the parameter number, then use CC 35 to set its value.
 
 CC 3 Value     | Auxiliary Parameters                      
 ---------------|-------------------------------
@@ -215,13 +300,12 @@ CC 3 Value     | Auxiliary Parameters
 96-111         | First 16 Parameters for ID 14
 112-127        | First 16 Parameters for ID 15
 
-Notice that each of the IDS 9...15 have 16 parameters allotted to them.  They are all "7-bit".  You can think of these as parameters "a" through "p".
 
-We will discuss Program Save, Current Program Save, and Current Program Revert in a section below.
 
-## NRPN
 
-If your module supports it, you can also be able to set up to 256 parameters in your module using NRPN.  NRPN is a bit slower than CC but it has much higher resolution and more parameters.  Unfortunately many DAWs and controllers do not support it.  The first 9 parameters in your NRPN region correspond to the CC parameters "a" through "i": and if your ID is in the Auxiliary Parameter space, the first 16 parameters correspond to its parameters "a" through "p".
+### NRPN Table
+
+Each ID gets 256 parameters, all 14-bit, in the NRPN space.  The first 9 parameters correspond to the parameters "a...i" in CC for IDs 1...8.  The first 16 parameters correspond to the parameters "a...p" in Auxiliary Parameters for IDs 9...15.
 
 NRPN Region  | Function                      
 -------------|-------------------------------
@@ -242,53 +326,12 @@ NRPN Region  | Function
 3840-4095    | 256 Parameters for ID 15
 
 
-## Loading and Saving Patches
-
-Your module might support loading and saving patches.
-
-Loading a patch is done in the usual MIDI way: via a Bank Select (both MSB and LSB), followed by a Program Change command.  The Bank Select selects your bank, and the Program Change selects the patch in the bank.
-
-Modular MIDI also supports **Program Save**.  This is an Auxiliary Parameter, and its value indicates the patch slot to save your current parameters to.
-
-Modular MIDI further supports **Current Program Save**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 0.  It instructs the module to save its current parameters to the patch slot it is presently using.  
-
-Finally, Modular MIDI supports **Current Program Revert**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 1.  It instructs the module to reload its current parameters from the patch slot it is presently using.  
-
-The following table shows the Auxiliary Parameters for these commands:
+### Saving and Loading Table
 
 CC 3 Value     | Auxiliary Parameter                      
 ---------------|-------------------------------
 0              | Program Save (CC 35 = program number)         
 1              | Current Program Save (CC 35 = 0)
 1              | Current Program Revert (CC 35 = 1)
-
-
-
-## Modulation CC Messages
-
-Modules might not just respond to MIDI from your DAW or Controller.  They might also send messages to other modules to control them.  For example, you might have a sequencer module which sends MIDI notes to other modules to play them.
-
-Another possibility is to have **modulator modules** sending messages to modulate **target modules**.  For example, you might have an LFO which is sending CC messages to modulate a Filter module.  
-
-We have a scheme to make modulation simple.  A modulation module can send CCs to control any one of the first 8 parameters ("a" through "h") of your target module.  It doesn't need to know the ID of the module.  Instead it just sends it one of 8 **modulation CC messages**.
-
-For example, your Filter might have "a" as its Cutoff and "b" as its Resonance.  Your LFO could have a knob on it where you set what it's modulating ("a" through "h").  If you set it to "a", and hook its MIDI MODULATION THRU to the Filter's MIDI IN, then the LFO will control the Filter Cutoff.
-
-The first two modulation parameters are 14-bit high-resolution, and the rest are 7-bit low-resolution.
-
-The ADSR's MIDI IN can also be connected to receive MIDI from your DAW; and it will pass that MIDI on to the Filter as well (as well as **injecting** the modulation CC messages necessary to control the Filter).
-
-### Another Possibility
-
-What if you also want to modulate your LFO from *another module*?  For example, imagine you wanted an ADSR to control the rate of your LFO, while the LFO controlled the cutoff of the Filter.  Your LFO might be able to do this.  Let's say the LFO rate is its parameter "d".  You set the ADSR to modulate "d" and attach it to the LFO.  The LFO is attached to the Filter as usual.  Attach the ADSR to receive MIDI from your DAW or controller, and it will pass it along to the LFO, which passes it on to the Filter.
-
-Now you have to instruct the LFO not to pass modulation CCs it gets from the ADSR on to the Filter.  Then it should work.
-
-### Yet Another Possibility
-
-What if you want your ADSR *and* your LFO to *both* modulate your Filter?  For example, imagine you wanted an ADSR to control the filter resonance, while the LFO controls the filter cutoff.  
-
-This is almost the same arrangement: the ADSR connects to the LFO, which connects to the Filter.  Your Filter's resonance is "b", so you set the ADSR to modulate "b".  But this time you have to instruct the LFO to *ignore and pass on* modulation CCs it gets (from the ADSR) to the Filter.
-
 
 
