@@ -5,7 +5,7 @@
 
 ## Introduction 
 
-Modular MIDI is based on the design by John Tuffen (wonkystuff) for the modules he developed for the AE Modular system.  In his approach, MIDI entered the system via a TRS-B MIDI port on a **Distributor Module** (the **wonkystuff mb/1** or **MIDI Brain**), and then travelled from module to module using standard AE Modular sockets and wires, just like Gate/CV or Audio.  
+Modular MIDI is based on the design by John Tuffen (wonkystuff) for the modules he developed for the AE Modular system.  In his approach, MIDI entered the system via a MIDI port on a **Distributor Module** (the **wonkystuff mb/1** or **MIDI Brain**), and then travelled from module to module using standard AE Modular sockets and wires, just like Gate/CV or Audio.  
 
 The mb/1 Distributor Module divided incoming MIDI messages up by channel, and each channel had its own dedicated outgoing AE Modular socket.  This meant that modules attached to a given MIDI socket on the Distributor didn't need to care what channel they were on, and could just operate in so-called OMNI mode (ignoring channel information).  Additionally, MIDI clock messages were converted into a variety of CV messages.  The mb/1 also provided a copy of all incoming MIDI.
 
@@ -13,13 +13,13 @@ Attached to the mb/1 were various modules which responded to MIDI.  For example,
 
 Each of these modules had a "MIDI IN" port from which they received MIDI messages, and a "MIDI THRU" port where they passed on the same messages to other modules, so multiple modules could listen for the same messages.  For example, this allowed two detuned oscillators to respond to the same notes.
 
-In fall of 2023, Tuffen, Mathias Brussel (of tangible waves), and Sean Luke (George Mason University) began work in a standardized set of MIDI conventions to extend this model to more complex scenarios.  This eventually led to a paper, ["Module-Level MIDI"](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf), presented at the Sound and Music Computing (SMC) conference in Summer of 2024.  Those conventions led to the ones you are reading here.
+In fall of 2023, Tuffen, Mathias Brüssel (of tangible waves), and Sean Luke (George Mason University) began work in a standardized set of MIDI conventions to extend this model to more complex scenarios.  This eventually led to a paper, ["Module-Level MIDI"](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf), presented at the Sound and Music Computing (SMC) conference in Summer of 2024.  Those conventions led to the ones you are reading here.
 
 ### A MIDI Primer
 
-The Music Instrument Digital Interface (MIDI) was developed to allow a controller, or a keyboard, or a DAW, or a groovebox, to play another synthesizer remotely.  MIDI is a very simple protocol: a **sender** sends **messages** one at a time, which are heard by one or more **receviers**.  Perhaps a DAW or controller is a sender, and one or more synthesizers are receivers.  It's one-way only: a receiver cannot respond to the sender.  These messages consist of between one and three bytes each, and there is one special kind of message ("System Exclusive") that can be longer.  
+The Music Instrument Digital Interface (MIDI) was developed to allow a controller, or a keyboard, or a DAW, or a groovebox, to play another synthesizer remotely.  MIDI is a very simple protocol: a **sender** sends **messages** one at a time, which are heard by one or more **receviers**.  Perhaps a DAW or controller is a sender, and one or more synthesizers are receivers.  It's one-way only: a receiver cannot respond to the sender. 
 
-Some messages are **voiced messages**.  This means that they are tagged with a **channel** -- a number 1...16 -- which indicates who among the various receivers is supposed to respond to that message.  A receiver commonly is set up to respond to messages on a single channel, but a receiver can also be set up to respond to all voiced messages regardless of channel: this is called being OMNI.
+Some messages are **voiced messages**.  This means that they are tagged with a **channel** -- a number 1...16 -- which indicates who among the various receivers is supposed to respond to that message.  A receiver commonly is set up to respond to messages on a single channel, but can also be set up to respond to all voiced messages regardless of channel: this is called being **OMNI**.
 
 There are several kinds of voiced messages:
 
@@ -33,24 +33,22 @@ There are several kinds of voiced messages:
 
 - CONTROL CHANGE or CC messages tell the receiver that it should change some parameter X to some new value Y.  What parameter X is, and how Y affects it, is defined by the receiver.  For example, the receiver may have documented that if it is told to change parameter 14, that's the filter cutoff.  Think of them like virtual knobs on your synthesizer.  They are roughly the equivalent of CV.
 
-There are also a few **unvoiced** messages, that is, global messages that *everyone* always listens to.  The most common such messages are **clock** messages to keep everyone in sync.  For example, CLOCK START tells everyone that the timing clock has reset and started.  The CLOCK PULSE message is sent out 24 times per quarter note.  CLOCK START stops the clock.  CLOCK CONTINUE restarts the clock from where Clock Continue stopped it, rather than ressetting it.
+There are also a few **unvoiced** messages, that is, global messages that *everyone* always listens to.  The most common such messages are **clock** messages to keep everyone in sync.  
 
 There are a few other MIDI conventions you should be aware of to understand stuff below.
 
-- REGISTERED and NON-REGISTERED PROGRAM NUMBERS (RPN and NRPN).  The number of CC parameters is limited, and they have low resolution.  RPN and NRPN are a scheme which uses a combination of a few special CC messages to provide many more parameters, and also to greatly increase their resolution.  This fixes a lot of problems, but even though RPN and NRPN have been around for a long time, they are still not well supported by DAWs and controllers, which is a tremendous shame.  They are also somewhat slower than a single CC message.
+- REGISTERED and NON-REGISTERED PROGRAM NUMBERS (RPN and NRPN).  The number of CC parameters is limited, and they have low resolution.  RPN and NRPN are a scheme which uses a special combination of CC messages to provide many more parameters, and also to greatly increase their resolution.  This fixes a lot of problems, but RPN/NRPN are not well supported by DAWs and controllers, even though they've been around for forever.  They are also somewhat slower than a single CC message.
 
-- MIDI POLYPHONIC EXPRESSION (MPE).  MIDI doesn't have per-note parameters.  For example, if you wanted to bend one note being played on channel 3, but not the others, too bad.  They'll all get bent.  The same thing goes for CC messages.  MPE fixes this by assigning each note its own channel.  A receiver would listen not to a single channel but to (say) 8 channels, and play the notes that arrive on those channels.  When a bend or CC message arrives on a channel, it only applies to that channel's note.   But this wastes channels, which are a precious commodity.  Nonetheless MPE is becoming increasingly common, and it it meshes well with Modular MIDI.
-
-- SYSTEM EXCLUSIVE (or SYSEX) MESSAGES.  Sysex is a special kind of unvoiced, variable-length message whose meaning is left to the receiver.  Sysex can be used for anything the receiver likes, but to use sysex, a manufacturer must register and pay for a Manufacturer's ID from the MIDI Manufacturer's Association.  There are also certain standardized sysex protocols.  The most important, for our purposes, is the **MIDI Tuning Standard**, which allows the musician to customize the tunings of notes in a module.
+- MIDI POLYPHONIC EXPRESSION (MPE).  MIDI doesn't have per-note parameters.  For example, f you wanted to bend one note being played on channel 3, but not the others, too bad.  They'll all get bent.  MPE fixes this by assigning each note its own channel.  A receiver would listen to a range of channels, and play the notes that arrive on those channels.  When a bend or CC message arrives on a channel, it only applies to that note.   This wastes channels, which are a precious commodity.  Still MPE is now very common, and meshes well with Modular MIDI.
 
 
 ### Why MIDI?
 
-Let's start with the *disadvantages* of MIDI.  First, **MIDI is slow**.  It runs at 32150 bits per second.   Additionally, depending on how modules hand messages off to one another, it could also build up **latency** in some situations.  Second, MIDI parameters are often pretty low resolution: if you used CC for a filter sweep, it might create a stepping effect for example.  Third, MIDI CC parameters are useful but there aren't many of them: only about 100 usable ones.  If you have multiple modules, they might all want to use CC parameters, and you could easily run out of them.
+Let's start with the *disadvantages* of MIDI.  First, **MIDI is slow**, and depending on how modules hand messages off to one another, it could have a lot of **latency**.  Second, many MIDI parameters are often pretty **low resolution** (just 128 values).  If you used CC for a filter sweep, it might create an undesirable stepping effect for example.  Third, MIDI CC parameters are useful but they are **scarce**: there only about 100 ones available.  If you have multiple modules, they might all want to use CC parameters, and you could easily run out of them.
 
 We'll address ways around some of these issues.  But if MIDI has so many problems, why bother with it?  Because its advantages are legion.
 
-MIDI has **stable pitch tuning**.  You will never need to tune an oscillator again.  Just tell it to play a note and it plays it.  MIDI also has facilities for **microtuning** via the **MIDI Tuning Standard**, if you wanted to customize the tuning of your notes.
+MIDI has **stable pitch tuning**.  You will never need to tune an oscillator again.  Just tell it to play a note and it plays it.  MIDI also has facilities for **microtuning**, if you wanted to customize the tuning of your notes.
 
 MIDI only needs a single wire to **control many parameters,** reducing the number of cables.   In contrast, CV requires one wire for each parameter.  
 
