@@ -190,7 +190,7 @@ Normally CC parameters are "7-bit", meaning that each CC can only be set to low-
 
 Let's say that your module is ID 2, and it uses 14-bit b/i but not a/h.  Then parameter a is CC 14, parameter b is (14-bit) MSB 15, LSB 47, parameter c is 70, parameter d is 71, parameter e is 72, parameter f is 73, parameter g if 75, and parameter h is 47.  Your module documentation will say what the parameters a...h mean.
 
-Some CCs have historic/traditional (and obsolete) uses. You may find them in your DAW's list of CC names.  We list some of them in this table, because certain IDs (see the ["Default ID Table"](#defaultidtable)) have been lined up to conveniently correspond with these names if your module sees fit to use them.
+Some CCs have historic/traditional (and obsolete) uses. You may find them in your DAW's list of CC names.  We list some of them in this table, because certain IDs (see the ["Default ID Table"](#default-id-table)) have been lined up to conveniently correspond with these names if your module sees fit to use them.
 
 
 ID  | Parameter   | 7-bit CC Parameter          | 14 bit CC Parameter MSB/LSB | Traditional Use
