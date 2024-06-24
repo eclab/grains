@@ -104,9 +104,9 @@ Some modules might avoid overlapping CCs using so-called **CC Learn**.  Here, yo
 
 Other modules might avoid overlapping CCs by assigning each module a different **ID**.  An ID is just a number 1, 2, ..., 15, and each ID bestows on its module the right to use a certain range of CC parameters.  Let's call those parameters "a" through "i".  Your module's ID determines *which* CC parameters correspond to those "a" through "i".  That way modules with different IDs use different CC ranges.
 
-The ["ID and CC Parameters Table"](#idtable) below says which CC parameters belong which IDs.
+The ["ID and CC Parameter Table"](#id-and-cc-parameter-table) below says which CC parameters belong which IDs.
 
-Every module that uses CC has assigned a **Default ID**.  The Default ID is its initial ID value.  Some simple modules cannot change this to a different ID, but more sophisticated ones can.  The Default ID is associated with the category of the module, as is shown in the ["Default ID Table"](#defaultidtable). 
+Every module that uses CC has assigned a **Default ID**.  The Default ID is its initial ID value.  Some simple modules cannot change this to a different ID, but more sophisticated ones can.  The Default ID is associated with the category of the module, as is shown in the ["Default ID Table"](#default-id-table). 
 
 Some modules can have their IDs changed so that they don't conflict with one another, and this changes the CCDs corresponding to the paramters "a" through "i".  In some situations, a module might even take up 2 or more IDs.  If you are fortunate, you will never need to change the ID, and just leave it as the default.  
 
@@ -133,11 +133,11 @@ These CCs are sent to all modules, who are free to respond to them if they like.
 
 Only 8 IDs have space allotted to them in the CC space.  But there is space for 7 more IDs in what we call the **Auxiliary Parameters**.  Auxiliary Parameters are set with CCs 3 and 35.  CC 3's value sets the auxiliary parameter number, and CC 35's value sets the auxiliary parameter value.  Send CC first, and then CC 35.
 
-The ["Auxiliary Parameters Table"](#auxiliaryparameterstable) lists the auxiliary parameters for ach of IDs 9...15.  There are 16 parameters allotted to each, all 7-bit values. You can think of these as parameters "a" through "p".  Auxiliary Parameters are half the speed of regular CCs (because you need to send two CCs to do them).
+The ["Auxiliary Parameters Table"](#auxiliary-parameters-table) lists the auxiliary parameters for ach of IDs 9...15.  There are 16 parameters allotted to each, all 7-bit values. You can think of these as parameters "a" through "p".  Auxiliary Parameters are half the speed of regular CCs (because you need to send two CCs to do them).
 
 ## NRPN
 
-If your module supports it, and your DAW or controller does, you can also be able to set up to 256 parameters in your module using NRPN.  NRPN is a bit slower than CC but it has much higher resolution and many more parameters.  The first 9 parameters in your NRPN region correspond to the CC parameters "a" through "i", if your ID is in the Auxiliary Parameter space, the first 16 parameters correspond to its parameters "a" through "p".  The ["NRPN Table"](#nrpntable) lists which NRPN parameters belong to which ID.
+If your module supports it, and your DAW or controller does, you can also be able to set up to 256 parameters in your module using NRPN.  NRPN is a bit slower than CC but it has much higher resolution and many more parameters.  The first 9 parameters in your NRPN region correspond to the CC parameters "a" through "i", if your ID is in the Auxiliary Parameter space, the first 16 parameters correspond to its parameters "a" through "p".  The ["NRPN Table"](#nrpn-table) lists which NRPN parameters belong to which ID.
 
 ## Loading and Saving Patches
 
@@ -151,7 +151,7 @@ Modular MIDI further supports **Current Program Save**.  This is an Auxiliary Pa
 
 Finally, Modular MIDI supports **Current Program Revert**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 1.  It instructs the module to reload its current parameters from the patch slot it is presently using.  
 
-See the ["Saving and Loading Table"](#savingandloadingtable) for information on these three commands.
+See the ["Saving and Loading Table"](#saving-and-loading-table) for information on these three commands.
 
 ## Modulation CC Messages
 
@@ -182,7 +182,6 @@ This is almost the same arrangement: the ADSR connects to the LFO, which connect
 
 ## Tables
 
-(#idtable)
 ### ID and CC Parameter Table
 
 Below is a table, for each ID and each parameter a...i, of the CC parameter number assigned to that parameter.
@@ -271,7 +270,6 @@ ID  | Parameter   | 7-bit CC Parameter          | 14 bit CC Parameter MSB/LSB | 
 
 
 
-(#defaultidtable)
 ### Default ID Table
 
 Modules have a Default ID (or "Initial ID") corresponding to a category that they belong to.  You may be able to change this ID to something else.  The default IDs are:
@@ -288,7 +286,6 @@ ID | Default ID Category
 8  | Miscellaneous
 
 
-(#auxiliaryparameterstable)
 ### Auxiliary Parameters Table
 
 IDs 9...15 get 16 parameters each in the Auxiliary Parameters space.  You can call them parameters "a" through "p".  Use CC 3 to set the parameter number, then use CC 35 to set its value.
@@ -306,7 +303,6 @@ CC 3 Value     | Auxiliary Parameters
 
 
 
-(#nrpntable)
 ### NRPN Table
 
 Each ID gets 256 parameters, all 14-bit, in the NRPN space.  The first 9 parameters correspond to the parameters "a...i" in CC for IDs 1...8.  The first 16 parameters correspond to the parameters "a...p" in Auxiliary Parameters for IDs 9...15.
@@ -330,7 +326,6 @@ NRPN Region  | Function
 3840-4095    | 256 Parameters for ID 15
 
 
-(#savingandloadingtable)
 ### Saving and Loading Table
 
 CC 3 Value     | Auxiliary Parameter                      
