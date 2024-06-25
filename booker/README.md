@@ -14,7 +14,7 @@ By default the note corresponding to 0V is C0, three octaves below middle C, tha
 
 ## Volume
 
-Some drawbar settings are quiet, others are loud.  You can compensate with the volume knob.
+Some drawbar settings are quiet and can get overwhelmed by noise, others are loud and can distort.  You can compensate with the volume knob.
 
 
 ## Drawbar Settings
