@@ -12,6 +12,12 @@ Other GRAINS firmware repositories:
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
 
+## Respite
+
+A fix to make it possible to use 2ENV with fast gate release / raise combinations that often occur with MIDI notes.
+
+Status: Working.
+
 ## Pluck-M
 
 A MIDI-based version of Pluck, a 4-voice Karplus-Strong string plucking simulator.  Requires Mozzi.
