@@ -318,7 +318,7 @@ To this collection I typically add the following, which I use to seed random num
 
 - Pot 3.  This is the input from potentiometer 3.  Pot 3 and IN 3 have nothing to do with each other.
 
-- Audio In.  This input can be used for CV input, and when using a library such as Mozzi, you can modify the library to allow this to be used for audio input (badly).  The problem with Audio In is that its impedance is very different from the other inputs, and so it takes longer for the analog pin to read voltage.  It takes so long in fact that analogRead(...) often won't work right.  If you do an analogRead(...) on IN3 and then do an analogRead(...) on AudioIn, often AudioIn will be just set to what IN3 as set to!  You have to throw that away and do a *second* analogRead(...) on AudioIn to get what you need.  Note that you don't have this option in Mozzi.  Mozzi does all the analog reading before you even get to their special analog read functions, which just report what it read.  So you'l have to hope for the best there.
+- Audio In.  This input can be used for CV input, and when using a library such as Mozzi, you can modify the library to allow this to be used for audio input (badly).  The problem with Audio In is that its impedance is very different from the other inputs, and so it takes longer for the analog pin to read voltage.  It takes so long in fact that analogRead(...) often won't work right.  If you do an analogRead(...) on IN3 and then do an analogRead(...) on AudioIn, often AudioIn will be just set to what IN3 was set to!  You have to throw that away and do a *second* analogRead(...) on AudioIn to get what you need.  Note that you don't have this option in Mozzi.  Mozzi does all the analog reading before you even get to their special analog read functions, which just report what it read.  So you'll have to hope for the best there.
 
 - Audio Out.  This is a digital output which goes through a low-pass filter.  This means it's slow if you use it as a digital out.  It's set up like this so that libraries like Mozzi can use it to do filtered PWM.  If you're using Mozzi (etc.), you'd not output on Audio Out, you let Mozzi handle it.  If you're writing your own code, you can use Audio Out as a slow digital out.
 
@@ -326,9 +326,9 @@ To this collection I typically add the following, which I use to seed random num
 
 Though these pins are by default meant for certain input and output functions, they in fact can be changed to be used for different purposes:
 
-- IN 1.  Can be used for analog or digital input, keeping mind that POT2 is attenuating the voltage.
+- IN 1.  Can be used for analog or digital input, keeping in mind that POT2 is attenuating the voltage.
  
-- IN 2.  Can be used for analog or digital input, keeping mind that POT2 is attenuating the voltage.
+- IN 2.  Can be used for analog or digital input, keeping in mind that POT2 is attenuating the voltage.
 
 - IN 3.  Can be used for analog or digital input, or for digital output (but a bit slow due to the filter).
  
@@ -336,7 +336,7 @@ Though these pins are by default meant for certain input and output functions, t
 
 - Audio In.  Can be used for analog or digital input, or for digital output (but a bit slow due to the filter).
 
-- Audio Out.  Can be used for analog (via filtered PWM) or digital output.  Digital output will be slow do to the filter.
+- Audio Out.  Can be used for analog (via filtered PWM) or digital output.  Digital output will be slow due to the filter.
 
 - Gate ("Digital") Out.  Can be used for digital input or output.
 
