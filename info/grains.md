@@ -1,5 +1,7 @@
 # GRAINS on AE Modular
 
+This is a set of notes on programming GRAINS that might be useful to you if you're working on a GRAINS project.
+
 ## Kinds of GRAINS Modules
 
 There are three versions of the GRAINS AE Modular module in the wild:
@@ -49,7 +51,7 @@ The 328P does not have integer division.  Integer division is very expensive as 
     a = x / 8;
     a = x >> 3;
     
-This sounds great, but there's a catch: the 328P can only right-shift by **one**.  So to shift by 3, it ust shift by 1 three times.
+This sounds great, but there's a catch: the 328P can only right-shift by **one**.  So to shift by 3, it must shift by 1 three times.
 
 This isn't so bad: for example, shifting by 9 is just a shift by 8 (moving a byte over) followed by a shift by 1.  And shifting by 4 can be done with a special swap instruction.  Unfortunately GCC doesn't do many of these tricks yet.  Still, better than nothing.
 
