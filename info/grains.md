@@ -35,6 +35,23 @@ The Arduino Library is LGPL.
 
 All code below is licensed as Apache 2.0.
 
+## Explicit Numerical Types
+
+C's numerical types are vague.  Is a short 16-bit or 32-bit?  Is an int 16-bit, 32-bit, or 64-bit?  Is a char unsigned?  And so on.  
+
+Because the Arduino is an 8-bit machine with 16-bit and 32-bit options, its numerical type sizes are different from what you'd see on a 32-bit machine.  Because the size of the type matters so much in signal processing, it's best not to refer to int, short, long, or char at all.  Instead, you should refer to:
+
+- uint8\_t (an unsigned 8-bit value: an unsigned byte)
+- int8\_t (a signed 8-bit value: a signed byte)
+- uint16\_t (an unsigned 16-bit value)
+- int16\_t (a signed 16-bit value)
+- uint32\_t (an unsigned 32-bit value)
+- int32\_t (a signed 32-bit value)
+- float (a 32-bit floating-point value)
+
+Get used to using these religiously in Arduino code: they'll make your life much easier, especially for coding for GRAINS.
+
+You can use bool to describe boolean values, but it's just the same thing as a uint8\_t, and false is just the same thing as 0 while true is the same thing as 1 (or non-zero).  I don't bother with that.
 
 ## Math Tips
 
@@ -169,11 +186,11 @@ Work just like you'd want them to.  You'll often scale 16-bit signed audio down 
 
 ### Integer Sizes
 
-The 328P is an 8-bit processor with only one or two instructions to assist in 16-bit arithmetic.  16-bit and 32-bit arithmetic are faked with multiple 8-bit instructions.  Generally they're 2x and 4x the cost of 8-bit arithmetic (you can google to find exact timings for Arduinos).  You want to stay 8-bit (uint8_t) as much as you can, but you'll be doing a variety of things in 16-bit (uint16_t).  Sometimes you have no choice but to bump to 32-bit (uint32_t) but you want to drop out of it as soon as you can.
+The 328P is an 8-bit processor with only one or two instructions to assist in 16-bit arithmetic.  16-bit and 32-bit arithmetic are faked with multiple 8-bit instructions.  Generally they're 2x and 4x the cost of 8-bit arithmetic (you can google to find exact timings for Arduinos).  You want to stay 8-bit (uint8\_t) as much as you can, but you'll be doing a variety of things in 16-bit (uint16\_t).  Sometimes you have no choice but to bump to 32-bit (uint32\_t) but you want to drop out of it as soon as you can.
 
 ### Fixed-Point Arithmetic
 
-Mozzi makes a lot of noise about its (very limited) fixed-point arithmetic package as a way to get much of the value of floating-point arithmetic with much less computational cost.  But fixed-point arithmetic is really simple.  It's just integer arithmetic where you imagine your integers as being some power of two times your decimal values.
+Mozzi makes a lot of noise about its (very limited) fixed-point arithmetic package as a way to get much of the value of floating-point arithmetic with much less computational cost.  But fixed-point arithmetic is really simple.  It's just integer arithmetic where you imagine your integers as being some power of two times your decimal (or fractional) values.
 
 For example, let's say you need two decimals worth of precision (100).  The power of two that encompasses that is 7 bits or 128.  So let's do 128.  In this case if you have a 16-bit number, you have 9 bits left, or 512.  So your biggest value is 512 + 127/128 or just below 513.
 
@@ -181,7 +198,7 @@ So how do you do this?  Let's say you have 92.42.  You convert it to your fixed-
 
     uint16_t fixed1 = (uint16_t) (92.42 * 128);
 
-128 is the **scaling factor**.  It's the size of your decimal range.  
+128 is the **scaling factor**.  It's the size of your fractional range.  
 
 You can add two fixed point numbers together, and you can multiply a fixed point number by a normal integer.  To multiply two fixed point numbers together, you'll wind up with a fixed-point number with a squared scaling factor (128 * 128 = 16384).  You'll ultimately need to divide it by 128 to get it back down to 128 again.
 
@@ -190,9 +207,20 @@ You can add two fixed point numbers together, and you can multiply a fixed point
     
 Note that even though we're dividing by 128, by multiplying two 16-bit integers we're going to go into a 32-bit integer range.
 
+You can get the integer portion of the fixed number by dividing by the scaling factor (128), as in:
+
+	uint16_t intportion = fixed1 / 128; 	// or
+	uint16_t intportion = fixed1 >> 7;
+	
+From there you can get the "fractional" portion so to speak.  Our "fractional" portion is parts of 128, so you we can say:
+
+	uint16_t fracportion = fixed1 & 127;
+
+This will be a value 0...127.
+
 To go back to floating-point, you can do:
 
-	float result = fixed / 128.0;		// Note 128.0 is a float
+	float result = fixed1 / 128.0;		// Note 128.0 is a float
 
 Anyway, the point is that fixed-point arithmetic isn't remotely as complex and mysterious as Mozzi's package makes it out to be.
 
@@ -230,13 +258,19 @@ Mozzi instead uses a macro called CONSTTABLE\_STORAGE.  This allows Mozzi to swi
 
 PROGMEM access is slightly slower than accessing RAM, but it's not bad at all.  You should use it liberally.
 
+To get the PROGMEM facility, you can do 
+
+    #include <avr/pgmspace.h>
+    
+If you're doing Mozzi, it already includes this file, so you don't need to.  
+
 You create a PROGMEM table of uint8_t like this:
 
-    const PROGMEM uint8_t myTable = { 1, 2, 3, 4, 5 };
+    const PROGMEM uint8_t myTable[5] = { 1, 2, 3, 4, 5 };
     
 You can make tables of any numerical type (uint16\_t, int8\_t, int32\_t, float, whatever).  
 
-To access an element, you can't access it directly -- it in a completely different memory space.  You have to use a special function, such as pgm\_read\_byte\_near(...).  This function takes a pointer to an element in the table (like where you'd expect the data), and looks it up in *code space*.  To do all this, I would make a little macro.
+To access an element, you can't access it directly -- it's in a completely different memory space.  You have to use a special function, such as pgm\_read\_byte\_near(...).  This function takes a pointer to an element in the table (like where you'd expect the data), and looks it up in *code space*.  To do all this, I would make a little macro.
 
     #define getMyTable(index) ((uint8_t) pgm_read_byte_near(&myTable[index]))
 
@@ -258,7 +292,7 @@ To get a float you need to use pgm\_read\_float\_near(...)
  
 Notice the term "near".  There are also "far" versions of these functions.  They are for much larger tables, in 32-bit addressed spaces.  You don't have that much memory on the GRAINS, it's only 32K, which fits into 16-bit addressing.  So don't worry about them unless GRAINS is upgraded to a bigger chip.
 
-It is possible to do other stuff, like tables of const stucts, or tables of const pointers, or tables of const but it gets complex and I'd avoid it.  Notably you can hack things up to do multdimensional tables, but I'd just do regular arrays in PROGMEM and keep a table of pointers to them in regular memory.
+It is possible to do other stuff, like tables of const stucts, or tables of const pointers, but it gets complex and I'd avoid it.  Notably you can hack things up to do multdimensional tables.  I've done that occasionally.
 
 ## Analog and Digital Pins
 
@@ -417,7 +451,7 @@ However, updateControl(...) takes time away from updateAudio(...), and this is r
 
 And if the CONTROL\_RATE is too high, you'll start getting audible clicks in your sound due to updateAudio(...) sitting and waiting for updateControl(...) to finish.
 
-The Filtered PWM is also not very good for soft sounds.  If you've got a large amplitude sound wave, it's great.  If it dwindles to a very soft wave, you'll here weird whiny and noisy distortion.  
+The Filtered PWM is also not very good for soft sounds.  If you've got a large amplitude sound wave, it's great.  If it dwindles to a very soft wave, you'll hear weird whiny and noisy distortion.  
 
 MIDI applications have a big advantage over non-MIDI applications here, because you don't have to poll for changes in pitch in every call to updateControl(...), so you don't have to do mozziAnalogRead(...) and do frequency conversion etc.  Instead, you just check for incoming MIDI messages, and if there are none, you're done.  You only change pitch when a MIDI message comes in.  This makes MIDI both simpler and faster, which is valuable here (and pitch is stable, so your frequency table can be very small, just one frequency for each semitone).
 
@@ -427,7 +461,7 @@ Mozzi uses the Oscil, MetaOscil, and Sample classes to define oscillators which 
 
 ## MIDI
 
-MIDI is achieved by setting up a serial port at 32768 BPS and reading from it.  I have a package called "MIDI" in my collection which is designed to make it easy to parse MIDI and respond to messages.  It's set up so that you can turn off everything you don't want, which automatically makes the code in the library smaller and faster.
+MIDI is achieved by setting up a serial port at 32150 BPS and reading from it.  I have a package called "MIDI" in my collection which is designed to make it easy to parse MIDI and respond to messages.  It's set up so that you can turn off everything you don't want, which automatically makes the code in the library smaller and faster.
 
 MIDI has a big advantage over Gate/CV in GRAINS because you only update pitch and volume information etc. when MIDI messages arrive, as opposed to constantly polling gate/CV information in every call to updateControl(...).  As a result, many of my MIDI apps run at a CONTROL\_RATE of 256, which is pretty good.
 
@@ -457,6 +491,8 @@ Then you define some MIDI functions according to what you turned on in parsemidi
         {
         // update pitches here...
         }
+
+If and when we get an upgraded GRAINS which exposes the hardware UART transmit and receive ports, then we'll be able to do highly reliable MIDI over serial.  But right now all we have is software serial.
 
 ## EEPROM
 
