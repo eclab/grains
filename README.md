@@ -12,6 +12,10 @@ Other GRAINS firmware repositories:
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
 
+## Info
+
+This directory contains documents with useful information for developing GRAINS etc.
+
 ## Respite
 
 A fix to make it possible to use 2ENV with fast gate release / raise combinations that often occur with MIDI notes.
@@ -99,16 +103,19 @@ A nasty bitcrusher.  Requires Mozzi.
 Status: Working.  It helps that the arduino is already pretty aliased!  Mozzi must be *modified* to use Bit, which may not be worthwhile.
 
 ## Byte
+
 A ByteBeat emitter in the style of AlgoDrone or ByteBeat-Xfade.  You can choose from 16 Bytebeats, *sort of* change their pitch and speed, change their volume, and reset them.  You can of course define your own ByteBeats.  Requires Mozzi.
 
 Status: Working.  Maybe at some point I'll figure out how to hack Mozzi to allow real pitch control.
 
 ## Pluck
+
 A 4-voice Karplus-Strong string plucking simulator.  Requires Mozzi.
 
 Status: Working, but because it has to commit to a pitch immediately (to build the Karplus-Strong sample table) sometimes it can get off pitch on some notes thanks to GRAINS/Mozzi's inaccuracy in Analog Input reads.  Could use some work there.
 
 ## Arp
+
 A 16-note random melody generator.  Think of it as Topograf / Lattice for notes rather than drums.  Requires Mozzi.
 
 Status: Working, but GRAINS's severe limits on note output range can hamper things.
