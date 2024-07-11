@@ -68,7 +68,7 @@ The 328P does not have integer division.  Integer division is very expensive as 
     a = x / 8;
     a = x >> 3;
     
-This sounds great, but there's a catch: the 328P can only right-shift by **one**.  So to shift by 3, it must shift by 1 three times.
+This sounds great, but there's a catch: the 328P can only right-shift by **one** in assembly code.  So to shift by 3, it must shift by 1 three times.
 
 This isn't so bad: for example, shifting by 9 is just a shift by 8 (moving a byte over) followed by a shift by 1.  And shifting by 4 can be done with a special swap instruction.  Unfortunately GCC doesn't do many of these tricks yet.  Still, better than nothing.
 
@@ -192,7 +192,7 @@ The 328P is an 8-bit processor with only one or two instructions to assist in 16
 
 Mozzi makes a lot of noise about its (very limited) fixed-point arithmetic package as a way to get much of the value of floating-point arithmetic with much less computational cost.  But fixed-point arithmetic is really simple.  It's just integer arithmetic where you imagine your integers as being some power of two times your decimal (or fractional) values.
 
-For example, let's say you need two decimals worth of precision (100).  The power of two that encompasses that is 7 bits or 128.  So let's do 128.  In this case if you have a 16-bit number, you have 9 bits left, or 512.  So your biggest value is 512 + 127/128 or just below 513.
+For example, let's say you need two decimals worth of precision (100).  The power of two that encompasses that is 7 bits or 128.  So let's do 128.  In this case if you have a 16-bit number, you have 9 bits left for the integer portion, or 512.  So your biggest value is 511 + 127/128 or just below 512.
 
 So how do you do this?  Let's say you have 92.42.  You convert it to your fixed-point number as:
 
@@ -222,6 +222,8 @@ To go back to floating-point, you can do:
 
 	float result = fixed1 / 128.0;		// Note 128.0 is a float
 
+The examples I gave were for unsigned fixed-point numbers.  But you can totally do signed numbers.  But you should be consistent. And watch out for rolling over in addition or subtraction, you don't want that.
+
 Anyway, the point is that fixed-point arithmetic isn't remotely as complex and mysterious as Mozzi's package makes it out to be.
 
 ### Floating Point Exponentiation
@@ -246,7 +248,7 @@ Sine is also far too expensive.  It's best to just store it as a lookup table.  
 
 Arduino's random number generator is really bad.  It'll do for noise but it's not amazing.  It's also a bit pokey.  The traditional way to randomize is to call randomSeed(...) on an analog pin.  The best pin choice for this in GRAINS is A5.  You'd do this in setup().
 
-Another way to get different random seeds each time you start up GRAINS is to load an unsigned 16-bit integer from the EEPROM, call randomSeed(...) on it, increment it, and save it back to EEPROM. 
+Another way to get different random seeds each time you start up GRAINS is to load an unsigned 16-bit integer from the EEPROM, set it to 1 if it's 0, call randomSeed(...) on it, then increment it and save it back to EEPROM. 
 
 If you need a faster random() function, Mozzi has an xorshift library which will do okay.
 
@@ -498,6 +500,6 @@ If and when we get an upgraded GRAINS which exposes the hardware UART transmit a
 
 The GRAINS has 1K of EEPROM.  This allows you to store data that survives power cycling and then reload it.  I use it to store sequencer note data for example.  It's particularly useful to store preferences, or perhaps stored patch data (such as CCs) sent over MIDI.
 
-You should read up about how to use the EEPROM in the Arduino documentation.  It's important that you never use EEPROM.write().  Instead, always use EEPROM.update(), which will keep the EEPROM from burning out prematurely.
+You should read up about how to use the EEPROM in the Arduino documentation.  It's important that you never use EEPROM.write().  Instead, always use EEPROM.update(), which will help keep the EEPROM from burning out prematurely.
 
 Never call EEPROM.update() in a loop or call it every time you have updateControl() called etc.  It should be called very sparingly, such as ONCE when a user needs to save something.  Remember that the EEPROM has roughly 100,000 write cycles.
