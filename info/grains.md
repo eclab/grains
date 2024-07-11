@@ -425,12 +425,13 @@ The main problem with these functions is that, though the math is not complex (i
 
 - Just output in the range -128 ... +127.  This is quieter though.
 
-- Provide a gain knob.  Let's say that POT 3 was your gain knob, and you read it earlier in updateControl(...) and scaled it down to 0...7, where 4 is identity.  You might do:
+- Provide a gain knob.  Let's say that POT 3 was your gain knob, and you read it earlier in updateControl(...) and scaled it down to 0...15.  Let's assume you want 0 to be 0.0 gain, 8 to be the 1.0 gain, and 15 to be just under 2.0 gain.  You might do:
 
-        // Scales -128...+127 to whatever, given pot3 gain.  pot3 goes 0...7
-        inline int16_t scale(int16_t val)
-        	{
-        	return (val * pot3) >> 2;
+        // Scales -128...+127 to whatever, given pot3 gain. 
+        // pot3 variable goes 0...15
+        inline int16_t scaleWithPot(int16_t val)
+         	{
+        	return (val * pot3) >> 3;
         	}
         	
  Obviously if the musician turns the knob up too much, this will produce values outside the -244 ... +243 range and clip.  But that's to be expected.
