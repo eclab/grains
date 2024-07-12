@@ -10,8 +10,10 @@ There are three versions of the GRAINS AE Modular module in the wild:
 
 - The revised GRAINS had a switch to set AUDIO OUT to Pin 11, or to Pin 9, as required by the Mozzi Library.  Why the difference?  Because Pin 9 has high-resolution PWM, resulting in much higher quality sound output.  It's not clear why Ginkosynthese used Pin 11 in the first place.
 
-- A prototype version of "GRAINS v2.0", which many people have seen in my rack, exposes all the pins that the original GRAINS versions did not.  This includes a few LEDs, some buttons, more digital ins/outs, and some analog ins.  Critically, hardware serial transmit and receive are exposed as sockets (enabling better MIDI).  Robert has changed the USB port to USB C.  I'd like to see a fourth pot as well but it's not in my prototype, and I think it's probably not going to happen.  I do not know when, or even if, Robert will release a v2.0; he is focusing on other stuff for the time being.  Who knows if it'll happen.  I will not release software for this version until after it's released.
+- A prototype version of "GRAINS v2.0", which I got from Robert and many people have seen in my rack, exposes all the pins that the original GRAINS versions did not.  This includes a few LEDs, some buttons, more digital ins/outs, and some analog ins.  Critically, hardware serial transmit and receive are exposed as sockets (enabling better MIDI).  Robert has also changed the USB port to USB C.  I'd like to see a fourth pot as well but it's not in my prototype, and I think it's probably not going to happen.  
 
+ This is just an early prototype.  I do not know when, or even if, Robert will release a v2.0; he is focusing on other stuff for the time being.  Who knows if it'll happen. 
+ 
 ## Coding Options
 
 You have three coding options:
