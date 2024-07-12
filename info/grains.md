@@ -18,7 +18,7 @@ There are three versions of the GRAINS AE Modular module in the wild:
 
 You have three coding options:
 
-- Use Mozzi.  Mozzi is good for making oscillators, CV generators, and CV converters.  It *can* be used to make audio converters (like filters or effects) but you (and the musician) have to modify your Mozzi library, and the sound is truly terrible.  I'd not generate audio converters.  I have one in my collection, called BIT.
+- Use Mozzi.  Mozzi is good for making oscillators, CV generators, and CV converters.  It *can* be used to make audio converters (like filters or effects) but you (and the musician) have to modify your Mozzi library, and the sound is truly terrible.  I'd not build audio converters with GRAINS.  I have one in my collection, called BIT, which is intentionally noisy sounding.
 
 - Use the Ginkosynthese GRAINS library.  I think Mozzi is superior to it in all ways, so I do not use it.  However the Ginkosynthese GRAINS library does work on old GRAINS modules whereas Mozzi does not.
 
