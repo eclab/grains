@@ -254,7 +254,7 @@ If you need a faster random() function, Mozzi has an xorshift library which will
 
 ## PROGMEM
 
-PROGMEM is a C macro which allows you to store constant data in the 32K code space of the 328P.   Any large const table or array should be stored this way.  This includes sound waves, wavetables, pitch to frequency lookup tables, you name it.
+PROGMEM is a C macro which allows you to store constant data in the 32K code space of the 328P.   Any large const array should be stored this way.  This includes sound waves, wavetables, pitch to frequency lookup tables, you name it.
 
 Mozzi instead uses a macro called CONSTTABLE\_STORAGE.  This allows Mozzi to switch to the proper const storage mechanism depending on the platform.  For the 328P it just gets expanded to PROGMEM.
 
@@ -276,15 +276,15 @@ To access an element, you can't access it directly -- it's in a completely diffe
 
     #define getMyTable(index) ((uint8_t) pgm_read_byte_near(&myTable[index]))
 
-Notice I'm casting the byte into the type I want (uint8\_t in this case).  Now you can access elements in your table like this:
+Notice I'm casting the byte into the signed/unsigned type I want (uint8\_t in this case).  Now you can access elements in your table like this:
 
     uint8_t element2 = getMyTable(2);	// should return a 3
 
-To get a 16-bit integer you need to use pgm\_read\_word\_near(...), which casts into the signed/unsigned form you want (here, int16\_t).
+To get a 16-bit integer you need to use pgm\_read\_word\_near(...), and then cast into the signed/unsigned form you want (here, int16\_t).
 
     #define getMySecondTable(index) ((int16_t) pgm_read_word_near(&mySecondTable[index]))
 
-To get a 32-bit integer you need to use pgm\_read\_dword\_near(...), which casts into the signed/unsigned form you want (here, int32\_t).
+To get a 32-bit integer you need to use pgm\_read\_dword\_near(...), and then cast into the signed/unsigned form you want (here, int32\_t).
 
     #define getMyThirdTable(index) ((int32_t) pgm_read_dword_near(&myThirdTable[index]))
 
@@ -292,9 +292,9 @@ To get a float you need to use pgm\_read\_float\_near(...)
 
     #define getMyFourthTable(index) pgm_read_float_near(&myFourthTable[index])
  
-Notice the term "near".  There are also "far" versions of these functions.  They are for much larger tables, in 32-bit addressed spaces.  You don't have that much memory on the GRAINS, it's only 32K, which fits into 16-bit addressing.  So don't worry about them unless GRAINS is upgraded to a bigger chip.
+Notice the term "near".  There are also "far" versions of these functions.  They are for much larger arrays, in 32-bit addressed spaces.  You don't have that much memory on the GRAINS, it's only 32K, which fits into 16-bit addressing.  So don't worry about them unless GRAINS is upgraded to a bigger chip.
 
-It is possible to do other stuff, like tables of const stucts, or tables of const pointers, but it gets complex and I'd avoid it.  Notably you can hack things up to do multdimensional tables.  I've done that occasionally.
+It is possible to do other stuff, like tables of const stucts, or tables of const pointers, but it gets a little more complex.  Notably you can hack things up to do multdimensional tables.  I've done that occasionally.
 
 ## Analog and Digital Pins
 
@@ -338,7 +338,7 @@ Though these pins are by default meant for certain input and output functions, t
 
 - Audio In.  Can be used for analog or digital input, or for digital output (but a bit slow due to the filter).
 
-- Audio Out.  Can be used for analog (via filtered PWM) or digital output.  Digital output will be slow due to the filter.
+- Audio Out.  Can be used for analog (via filtered PWM) or digital output (via filtered PWM).  Digital output will be slow due to the filter and PWM.
 
 - Gate ("Digital") Out.  Can be used for digital input or output.
 
@@ -350,25 +350,7 @@ You can a pin to be output or input with pinMode(...).  Do this in setup(...).
 
 You can use digitalRead(...) on analog pins to read them as if they were digital pins.  This just does an analogRead(...) and tests to see if it's over 512.  This isn't very good because there's noise in analogRead(...), so if you're near 512, it may drop down again for a bit, then rise again, resulting in multiple on/off readings.  You don't want that.
 
-Instead you might consider doing something like this to avoid noise:
- 
-    #define HIGH 612
-    #define LOW 412
-    
-    /// This part is inside a function
-    uint16_t val = analogRead(pin);
-    if (val >= 612)
-        {
-        // I am definitely high
-        // do stuff here
-        }
-    else if (val < 412)
-        {
-        // I am definitely low
-        // do stuff here
-        }
-
-You can also use this approach to trigger on *going* high or low, rather than *being* high or low:
+Instead you might consider doing something like this to avoid noise.  The code pattern below, which I use a lot, triggers actions based on whether we're *going* high or low (not *being* high or low):
 
     #define HIGH 612
     #define LOW 412
@@ -388,7 +370,21 @@ You can also use this approach to trigger on *going* high or low, rather than *b
         // do stuff here in response
         state = 0;
         }
+
+But you could then tack on the following code to check if you are *currently* high or low (I don't do that so often):
+
+    if (state == 0)
+        {
+        // I think I am low
+        // do stuff here if you need to
+        }
+    else if (state == 1)
+        {
+        // I think I am high
+        // do stuff here if you need to
+        }
         
+               
 ### About Audio Out
 
 Audio Out is a digital pin which the Mozzi and Ginkosynthese GRAINS libraries set to have its PWM turned on.  The result is then pushed through a filter to approximate a DAC.
@@ -435,6 +431,32 @@ The main problem with these functions is that, though the math is not complex (i
         	}
         	
  Obviously if the musician turns the knob up too much, this will produce values outside the -244 ... +243 range and clip.  But that's to be expected.
+
+### Outputting a Trigger
+
+To output a trigger, you need to raise a digital out, but then quickly lower it.  To do this, you raise the digital out, then *schedule* it to be lowered.  I do that like this:
+
+    #define MAX_COUNTDOWN 16 // or whatever is the right interval length
+    uint8_t triggerCountdown = 0;
+    
+    /// *** The following code should appear at the very 
+    /// top of your loop() or updateAudio() or updateControl()
+    if (triggerCountdown >= 1)
+    	{
+    	if (triggerCountdown == 1)
+    		{
+    		digitalWrite(myPin, 0);
+    		} 
+    	triggerCountdown--;
+    	}
+
+    /// The following code, located elsewhere, starts the trigger
+    digitalWrite(myPin, 1);
+    triggerCountdown = MAX_COUNTDOWN;
+                
+Note the code marked ***.  This is put in some main looped function.  But some looped functions are called more often than others.  loop() will call super fast so maybe you'll need a bigger countdown than just a uint8_t.  updateAudio() is called 16K times a second.  updateControl() is called CONTROL\_RATE times a second (these are Mozzi functions, see more about them below).  I often do it in updateAudio(), or sometimes updateControl() with a very small MAX\_COUNTDOWN.
+
+This trick can be used for other delayed effects too.  For example, if I'm using Audio Out's PWM as a digital output, it's pretty slow to respond.  If I'm also using Gate Out (Digital Out) to output, it's really fast.  If I need them to line up, I need Digital Out to wait a bit.  I might set Audio Out's digital output, then set a very short countdown, and when it's done I set Digital Out's output.
  
 ## Tips for Using Mozzi
 
