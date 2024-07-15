@@ -494,6 +494,7 @@ void updateControl()
 int updateAudio()    
     {
     updateStateMachine();
+    float returnval; 
     
 #if (AHR == 1)
     if (stage == HOLD)
