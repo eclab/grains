@@ -6,7 +6,7 @@
 
 /// RUCKUS
 ///
-/// Ruckus is a noise and sample and hold generator.  
+/// Ruckus is a noise and sample and hold generator with optional smoothing. 
 /// Ruckus is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
 /// MAKING NOISE 
@@ -34,8 +34,7 @@
 ///
 /// Note that Sample and Hold only goes up to under 4V or so, due to limitations of Mozzi.  If IN3
 /// is inputting a value larger than this, it will be clipped.
-///
-/// Looking for a random wanderer rather than a traditional sample and hold?  Try STOCHASTIC.  
+
 
 
 /// CONFIGURATION
@@ -91,13 +90,12 @@ uint8_t choice = CHOICE_WHITE;
 uint16_t cutoff = 65535;
 uint16_t resonance = 0;
 
-
 void setup() 
     {
     // some reasonable initial defaults
     randSeed(RANDOM_PIN);
     pinMode(CV_IN3, INPUT);
-    pinMode(CV_AUDIO_IN, OUTPUT);
+    //pinMode(CV_AUDIO_IN, INPUT);
     pinMode(CV_GATE_OUT, INPUT);
     startMozzi();
     filterlp.setCutoffFreqAndResonance(cutoff, resonance);
@@ -113,7 +111,6 @@ int16_t toQuasi9Bit(int16_t val)
 // Scale from -32768...+32767 to -240 ... +240
 inline int16_t scaleAudio(int16_t val)
   {
-  if (val == 0) return 0;
   return ((val >> 4) * 15) >> 7;
   }
 
@@ -131,7 +128,8 @@ inline int16_t scaleAudioSmallCV(int16_t val)		// val ranges 0...1023
 
 // ugh, cast unsigned to signed...	
 union _cast { uint16_t unsign; int16_t sign; } cast;
-int16_t hold;
+uint16_t hold;
+uint16_t lastHold = 0;
 uint8_t trigger; 
 
 void updateControl() 
@@ -165,10 +163,10 @@ void updateControl()
         uint8_t scale = mozziAnalogRead(CV_POT_IN1) >> 5;
         int16_t shift = mozziAnalogRead(CV_POT_IN2);
         int16_t val = ((((xorshift96() & 1023) - 512) * scale) >> 4) + shift;
-        //Serial.println(val);
         if (val < 0) val = 0; 
         if (val > 1023) val = 1023;
-				hold = scaleAudioSmallCV(val);
+        	lastHold = hold;
+				hold = val;
         trigger = 1;
 				}
 			else if (!high) trigger = 0;
@@ -184,7 +182,8 @@ void updateControl()
         int16_t val = (((mozziAnalogRead(CV_IN3) - 512) * scale) >> 4) + shift;
         if (val < 0) val = 0; 
         if (val > 1023) val = 1023;
-        hold = scaleAudioSmallCV(val);
+        lastHold = hold;
+        hold = val;
         trigger = 1;
 				}
 			else if (!high) trigger = 0;
@@ -200,7 +199,7 @@ void updateControl()
         int16_t val = (((mozziAnalogRead(CV_IN3) - 512) * scale) >> 4) + shift;
         if (val < 0) val = 0; 
         if (val > 1023) val = 1023;
-        hold = scaleAudioSmallCV(val);
+        hold = val;
 				}
 			}
 		break;
@@ -251,7 +250,7 @@ int updateAudio()
     	case CHOICE_RANDOM_SAMPLE_AND_HOLD:
     	case CHOICE_SAMPLE_AND_HOLD:
     	case CHOICE_TRACK_AND_HOLD:
-    	return hold;
+    	return scaleAudioSmallCV(hold);
     	break;
     	}
     return 0;		// uh....
