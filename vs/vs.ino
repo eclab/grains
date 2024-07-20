@@ -203,7 +203,7 @@ void setup()
 	osc1.setFreq(FREQUENCY(60));
 	osc2.setFreq(FREQUENCY(60));
 	osc3.setFreq(FREQUENCY(60));
-	Serial.begin(115200);
+	//Serial.begin(115200);
     load();
     }
     
