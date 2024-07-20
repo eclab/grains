@@ -474,12 +474,20 @@ void updateControl()
 #endif	
     }
 
+/*
 // Scale from -128...+127 to -240 ... +240
 inline int16_t scaleAudio(int16_t val)
   {
   //Serial.println(val);
   return (val * 15) >> 3;
   }
+*/
+
+/** Maps -128 ... +127 to -168 ... +167 */ 
+inline int16_t scaleAudioSmall(int16_t val)
+	{
+	return (val * 21) >> 4;
+	}
 
 
 int updateAudio()    
@@ -494,7 +502,7 @@ int updateAudio()
     // The modulator is 128 in range.  Multiply it in and we have 65536 in range.
 	Q15n16 pm = (indexOfModulation >> 1) * (uint32_t)(lastModulationValue = modulator.phMod(selfpm));
     int16_t s1 = carrier.phMod(pm);
-    return s1;
+    return scaleAudioSmall(s1);
 #elif (ALGORITHM == 1)		// same as Algorithm 0
     // indexOfModulation is 1024 in range.  Going >> 1 and we have 512 in range.  indexOfModulationScaling2 is
     // 1024 in range.  Multiply it in and >> 10 and we're still 512 range.
@@ -505,7 +513,7 @@ int updateAudio()
     // The modulator is 128 in range.  Multiply it in and we have 65536 in range.
 	Q15n16 pm = (indexOfModulation >> 1) * (uint32_t)(lastModulationValue = modulator.phMod(selfpm));
     int16_t s1 = carrier.phMod(pm);
-    return s1;
+    return scaleAudioSmall(s1);
 #elif (ALGORITHM == 2)
     // indexOfModulation is 1024 in range.
     // INDEX_OF_MODULATION_2_SCALING is 8 in range.  Multiply them and >> 1 and 
@@ -515,7 +523,7 @@ int updateAudio()
 	// Like PM above
 	Q15n16 pm = ((indexOfModulation >> 1) * ((uint32_t)modulator.next())) >> 1;
     int16_t s1 = carrier.phMod(pm + pm2);
-    return s1;
+    return scaleAudioSmall(s1);
 #elif (ALGORITHM == 3)
 	uint32_t mod = modulator.next();
 	// Like PM2 above
@@ -523,7 +531,7 @@ int updateAudio()
 	// Like PM above
 	Q15n16 pm = (indexOfModulation >> 1) * mod;
     int16_t s1 = (carrier.phMod(pm) + carrier2.phMod(pm2)) >> 1;
-    return s1;
+    return scaleAudioSmall(s1);
 #else
 	uint32_t mod = modulator2.next();
 	// Like PM2 above
@@ -531,7 +539,7 @@ int updateAudio()
 	// Like PM above
 	Q15n16 pm = (indexOfModulation >> 1) * modulator.phMod(pm2);
     int16_t s1 = carrier.phMod(pm);
-    return s1;
+    return scaleAudioSmall(s1);
 #endif	
     }
 
