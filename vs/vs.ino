@@ -17,7 +17,7 @@
 ///
 /// VS crossfades between four waveforms in a special way.  You can control the cross-fading
 /// manually with two CVs, such as with a joystick; and you can also use the same to program
-/// about 8 seconds of CV crossfading movement.
+/// about 4 seconds of CV crossfading movement.
 ///
 ///
 /// HOW VECTOR SYNTHESIS WORKS
@@ -36,7 +36,7 @@
 /// in the corner (x=0, y=0), Wave 2 in the corner (x=1, y=1), wave 3 in (x=0, y=1), and wave 4
 /// in (x=1, y=0).  All four waves are mixed together (25% each) in the center.  
 ///
-/// You can either manually change these CVs to your heart's content, or you can record up to 8
+/// You can either manually change these CVs to your heart's content, or you can record up to 4
 /// seconds of CV-twiddling, and that will be played back each time a new note/chord is played.
 ///
 ///
@@ -47,10 +47,10 @@
 /// directory, and you can also use any of the AKWF waveform files from the AKWF project 
 /// (just copy them over to the "vs" directory and use them from there)
 
-#define VS_1        "akwf/AKWF_theremin/AKWF_theremin_0002.h"              
-#define VS_2        "akwf/AKWF_bw_sin/AKWF_sin_0001.h"
-#define VS_3        "akwf/AKWF_nes/AKWF_nes_pulse_25.h"               
-#define VS_4        "akwf/AKWF_0005/AKWF_0462.h"
+#define VS_1        "vs/vs_100.h"              
+#define VS_2        "vs/vs_42.h"
+#define VS_3        "vs/vs_76.h"               
+#define VS_4        "vs/vs_53.h"
 
 
 /// PLAYING MODES
@@ -59,11 +59,14 @@
 ///
 ///	FREE MODE: the wave mix is set by changing IN1/POT1 and IN2/POT2.
 ///
-/// RECORD MODE: the wave mix is *recorded* by changing IN1/POT1 and IN2/POT2 for up to 8 seconds.
+/// RECORD MODE: the wave mix is *recorded* by changing IN1/POT1 and IN2/POT2 for up to 4 seconds.
 /// Recording starts when a note is played.  During recording you can hear the note even if it's
 /// been released.  The GATE OUT is raised at the beginning of recording and only lowered at the 
 /// end of recording.  Recording stops when the time has elapsed or if the mode is changed to PLAY
 /// or FREE.
+///
+/// When you have stopped recording, VS will save your internal recording to the EEPROM so that it's
+/// available even after you reboot.
 ///
 /// PLAY MODE: when a note is played, the recorded wave mix is played back.  When a note is played,
 /// the GATE OUT is raised, and when a note stops being played, the GATE OUT is lowered.
@@ -133,7 +136,7 @@ PROGMEM const float frequencies[128] =
 
 
 #define FREQUENCY(pitch) pgm_read_float_near(&frequencies[pitch])
-#define CONTROL_RATE 128			// must be 128, so we can play wave for 8 secs
+#define CONTROL_RATE 128			// must be 128, so we can play wave for 4 secs
 
 #define CV_POT_IN1    A2    // X
 #define CV_POT_IN2    A1    // Y
@@ -145,7 +148,7 @@ PROGMEM const float frequencies[128] =
 #define RANDOM_PIN    A5
 
 
-
+#include <EEPROM.h>
 #include <MozziGuts.h>
 #include <Oscil.h>
 #include <MetaOscil.h>
@@ -192,18 +195,23 @@ void setup()
     startMozzi();
 
 	pinMode(CV_IN3, OUTPUT);
+	pinMode(CV_GATE_OUT, INPUT);
 	/// Setup MIDI
 	initializeParser(&parse, CHANNEL, 0, 1);
 	softSerial.begin(MIDI_RATE);
-	//Serial.begin(115200);
+	osc0.setFreq(FREQUENCY(60));
+	osc1.setFreq(FREQUENCY(60));
+	osc2.setFreq(FREQUENCY(60));
+	osc3.setFreq(FREQUENCY(60));
+	Serial.begin(115200);
+    load();
     }
     
-uint8_t[4] weights;			
-uint32_t[4] outputs;
+uint8_t weights[4];			
 
 uint8_t gate = 0;
 uint8_t timer = 0;
-uint8_t _velocity = 0;
+uint8_t velocity = 63;
 uint8_t pitch;
 
 void cc(midiParser* parser, unsigned char parameter, unsigned char value)
@@ -216,30 +224,22 @@ void cc(midiParser* parser, unsigned char parameter, unsigned char value)
 		}
 	}
 	
-void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
+void noteOn(midiParser* parser, unsigned char note, unsigned char _velocity)
 	{
 	pitch = note;
 	
-	osc0.setFreq(FREQUENCY[note]);
-	osc1.setFreq(FREQUENCY[note]);
-	osc2.setFreq(FREQUENCY[note]);
-	osc3.setFreq(FREQUENCY[note]);
+	osc0.setFreq(FREQUENCY(note));
+	osc1.setFreq(FREQUENCY(note));
+	osc2.setFreq(FREQUENCY(note));
+	osc3.setFreq(FREQUENCY(note));
 
-	_velocity = velocity;
-		
-	if (gate)
-		{
-		timer = 2;
-		digitalWrite(CV_IN3, 0);
-		gate = 0;
-		}
-	else
-		{
-		digitalWrite(CV_IN3, 1);
-		gate = 1;		
-		timer = 0;
-		}
+	velocity = _velocity;
 	
+	// I have to delay the gate to give the oscillators time.  Originally
+	// I was delaying the gate for new NOTE ON in legato, but now I do it always	
+	timer = 2;
+	digitalWrite(CV_IN3, 0);
+	gate = 0;	
 	}
 
 void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
@@ -252,20 +252,36 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 		}
 	}
 
-uint8_t data[1024];
+uint16_t len = 0;
+uint8_t data[1024];			// this will push us to the edge...
 
-// write wave sequence
-inline void store() 
+// Write wave sequence.  I want to be careful here to avoid burning out EEPROMS!.  
+// I have two levels of protection.
+// 1. I am using update(), not write()
+// 2. This function is only called if 'recording' is turned on, and the immediately
+//    afterwards, 'recording' is turned off.  'recording' is only turned on when 
+//    we enter recording the first time.
+void store() 
 	{ 
-	for(uint8_t i = 0; i < 1024; i++)
+	// stretch first
+	if (len >= 2 && len != 1024)
+		{
+		for(uint16_t i = len; i < 1024; i++)
+			{
+			data[i] = data[i - 2];
+			data[i + 1] = data[i + 1 - 2];
+			}
+		}
+	len = 1024;
+	for(uint16_t i = 0; i < 1024; i++)
 		EEPROM.update(i, data[i]); 
 	}
 
 // load wave sequence
-inline void load() 
+void load() 
 	{ 
-	for(uint8_t i = 0; i < 1024; i++)
-		data[i] = EEPROM.get(i); 
+	for(uint16_t i = 0; i < 1024; i++)
+		data[i] = EEPROM.read(i); 
 	}
 	
 
@@ -291,18 +307,27 @@ uint16_t lastGate = GATE_INITIALIZED;
 #define MODE_PLAY	1
 #define MODE_RECORD 2
 
+uint8_t lastMode = 255;
+uint8_t recording;
+
 void updateControl() 
     {
     uint8_t mode = (mozziAnalogRead(CV_POT3) * 3) >> 10;
     
     if (mode == MODE_FREE)
     	{
-    	uint8_t x = mozziAnalogRead(CV_POT1) >> 3;
-    	uint8_t y = mozziAnalogRead(CV_POT2) >> 3;
+    	if (recording) store();
+    	recording = false;			// turn off recording so we don't store multiple times!
+    	
+    	uint8_t x = mozziAnalogRead(CV_POT_IN1) >> 3;
+    	uint8_t y = mozziAnalogRead(CV_POT_IN2) >> 3;
     	updateWeights(x, y);
     	}
     else if (mode == MODE_PLAY)
     	{
+    	if (recording) store();
+		recording = false;			// turn off recording so we don't store multiple times!
+		
     	if (gate && (lastGate == 0 || lastGate == GATE_INITIALIZED))
     		{
     		count = 0;
@@ -310,43 +335,50 @@ void updateControl()
     		}
     	else if (gate)
     		{
-    		count+=2;
-    		if (count > 1023) count = 1023;
+    		count += 2;
+    		if (count > 1022) count = 1022;
     		updateWeights(data[count], data[count+1]);
+    		}
+    	else	// gate up
+    		{
     		}
     	}
     else		// mode == MODE_RECORD
     	{
     	if (gate)
     		{
-    		if (count < 1024)
+    		if (gate && (lastGate == 0 || lastGate == GATE_INITIALIZED))		// just raised gate
     			{
-				uint8_t x = mozziAnalogRead(CV_POT1) >> 3;
-    			uint8_t y = mozziAnalogRead(CV_POT2) >> 3;
+    			count = 0;
+    			len = 0;
+    			recording = true;			// start recording
+    			}
+    			
+    		if (len < 1024)
+    			{
+				uint8_t x = mozziAnalogRead(CV_POT_IN1) >> 3;
+    			uint8_t y = mozziAnalogRead(CV_POT_IN2) >> 3;
     	
     		    data[count] = x;
 	    		data[count+1] = y;
-    			count+=2;
+    			updateWeights(data[count], data[count+1]);
+    			count += 2;
+    			len += 2;
     			}
-    		}
-    	else if (!gate && (lastGate == 1 || lastGate == GATE_INITIALIZED))		// just released gate
-    		{
-    		for(uint8_t i = count + 1; i < 1024; i++)
+    		else	// len >= 1024, we're done
     			{
-    			data[i] = data[count];	// set remainder to the final value
+    			if (recording) store();
+    			recording = false;			// turn off recording so we don't store multiple times!
     			}
-    		
-    		count = 0;
     		}
     	else
     		{
-    		// just in case...
-    		count = 0;
+    		if (recording) store();
+    		recording = false;			// turn off recording so we don't store multiple times!
     		}
     	}
     
     lastGate = gate;
-    
      
     if (timer > 0)
     	{
@@ -390,20 +422,19 @@ inline int16_t scaleAudioBiased(int16_t val)
 	return (((val >> 4) * 13) >> 7) - 36;
 	}
 
+int16_t outputs[4];
+
 int updateAudio()    
     {
     outputs[0] = osc0.next();
     outputs[1] = osc1.next();
     outputs[2] = osc2.next();
     outputs[3] = osc3.next();
-    
-    int16_t sum =
-    	((outputs[0] * weights[0]) +
+    	 
+	return (((outputs[0] * weights[0]) +
     	 (outputs[1] * weights[1]) +
     	 (outputs[2] * weights[2]) +
-    	 (outputs[3] * weights[3])) * _velocity) >> 9;		// ranges -32K to +32K
-
-	return scaleAudio(sum);
+    	 (outputs[3] * weights[3])) * (int32_t)velocity) >> 12;
     }
 
 void loop() 

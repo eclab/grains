@@ -243,18 +243,6 @@ void updateControl()
     sine.setFreq(frequency);
     }
 
-/*
-// Scale from -32768...+32767 to -240 ... +240
-inline int16_t scaleAudio(int16_t val)
-  {
-  return ((val >> 4) * 15) >> 7;
-  }
-*/
-
-// (sine.next() * 21) >> 4
-
-
-
 /** Maps -128 ... +127 to -240 ... +238 */ 
 inline int16_t scaleAudioFull(int16_t val)
 	{
