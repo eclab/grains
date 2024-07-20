@@ -14,20 +14,20 @@ Other GRAINS firmware repositories:
 
 ### Firmware Summary
 
-| Oscillators | MIDI Osc | Digital Out | CV Out     | Other |
-|:------------|:---------|:------------|:-----------|:------|
-| DX          | DX-M     | Tangle      | Multiplex  | MIDI  |
-| Pluck       | Pluck-M  | Tardy       | Sequence   | Info  |
-| Byte        | Mono-M   | Chrono      | LFO        | Scope |
-| Droplets    | Para-M   | Pattern     | Arp        | Dave  |
-| AKWF        | VS       | Elements    | Quant      | Bit   |
-| 808         |          | Lattice     | ADSR       |       |
-| Voice       |          | Beats       | Multilevel |       |
-| Chordal     |          | Geiger      | Stochastic |       |
-| Booker      |          | Pulses      |            |       |
-| Evolution   |          | Divvy       |            |       |
-| Oration     |          | Multiple    |            |       |
-| Oration 2   |          | Respite     |            |       |
+| Oscillators | MIDI Osc | Digital Out | CV Out      | Other |
+|:------------|:---------|:------------|:------------|:------|
+| DX          | DX-M     | Tangle      | Multiplex   | MIDI  |
+| Pluck       | Pluck-M  | Tardy       | Sequence    | Info  |
+| Byte        | Mono-M   | Chrono      | LFO         | Scope |
+| Droplets    | Para-M   | Pattern     | Arp         | Dave  |
+| AKWF        | VS       | Elements    | Quant       | Bit   |
+| 808         |          | Lattice     | ADSR        |       |
+| Voice       |          | Beats       | Multilevel  |       |
+| Chordal     |          | Geiger      | Stochastic  |       |
+| Booker      |          | Pulses      | Switchblade |       |
+| Evolution   |          | Divvy       |             |       |
+| Oration     |          | Multiple    |             |       |
+| Oration 2   |          | Respite     |             |       |
 
 
 
@@ -229,17 +229,53 @@ A two- or three-output square-wave LFO generator.  Options include two independe
 
 Status: Working
 
+## Pluck
+
+A 4-voice Karplus-Strong string plucking simulator.  Requires Mozzi.
+
+Status: Working, but because it has to commit to a pitch immediately (to build the Karplus-Strong sample table) sometimes it can get off pitch on some notes thanks to GRAINS/Mozzi's inaccuracy in Analog Input reads.  Could use some work there.
+
+## Quant
+
+A Note Quantizer.  Requires Mozzi.
+
+Status: Working, but requires a lookup table to deal with some nonlinearity in the pitch output of GRAINS. The table is tuned for my GRAINS: let me know if it's working for yours as well.
+
 ## Respite
 
 A fix to make it possible to use 2ENV with fast gate release / raise combinations that often occur with MIDI notes.
 
 Status: Working.
 
+## Ruckus
+
+A filtered and unfiltered white noise generator, plus various forms of Sample and Hold.  Requires Mozzi.
+
+Status: Working, but I was hoping to do pink noise as well, but am having some hiccups.  Ran into a lot of Mozzi bugs, reported.
+
+## Scope
+
+An oscilloscope with four switchable analog/digital inputs, an extra digital input, and a little digital function generator.  Uses the Serial Plotter on your laptop's Arduino IDE.
+
+Status: Working
+
 ## Sequence
 
 A step sequencer with 8 patterns, each of which can have up to 16 steps (8 is typical), including rests.  You can select the gate length, increment through patterns or select them manually, and edit all the steps entirely from the knobs on the GRAINS.  
 
 Status: Working.  It's quite fiddly because there are only three knobs, but it's doable.  16 steps is particularly fiddly, perhaps not worth the effort.  But 8 works great.
+
+## Stochastic
+
+A random walk generator (free or about a mean), plus sample and hold, plus added fuzz.   Requires Mozzi. 
+
+Status: Working
+
+## Switchblade
+
+A combination fixed-lag smoother (slew), summed attenuverter, and noise-fuzzer.  Requires Mozzi.
+
+Status: Working
 
 ## Tangle
 
@@ -258,42 +294,6 @@ Status: Working
 One, Two, or Three digital outputs set up as functions of four, five, or six analog+digital inputs.  You specify the functions in the code (it's set up to make it easy!), including special randomness and logic functions.
 
 Status: Working, but like Pattern, its usefulness may be limited due to noise.
-
-## Pluck
-
-A 4-voice Karplus-Strong string plucking simulator.  Requires Mozzi.
-
-Status: Working, but because it has to commit to a pitch immediately (to build the Karplus-Strong sample table) sometimes it can get off pitch on some notes thanks to GRAINS/Mozzi's inaccuracy in Analog Input reads.  Could use some work there.
-
-## Quant
-
-A Note Quantizer.  Requires Mozzi.
-
-Status: Working, but requires a lookup table to deal with some nonlinearity in the pitch output of GRAINS. The table is tuned for my GRAINS: let me know if it's working for yours as well.
-
-## Ruckus
-
-A filtered and unfiltered white noise generator, plus various forms of Sample and Hold.  Requires Mozzi.
-
-Status: Working, but I was hoping to do pink noise as well, but am having some hiccups.  Ran into a lot of Mozzi bugs, reported.
-
-## Scope
-
-An oscilloscope with four switchable analog/digital inputs, an extra digital input, and a little digital function generator.  Uses the Serial Plotter on your laptop's Arduino IDE.
-
-Status: Working
-
-## Stochastic
-
-A random walk generator (free or about a mean), plus sample and hold, plus added fuzz.   Requires Mozzi. 
-
-Status: Working
-
-## Switchblade
-
-A combination fixed-lag smoother (slew), summed attenuverter, and noise-fuzzer.  Requires Mozzi.
-
-Status: Working
 
 ## Voice
 
