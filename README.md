@@ -20,7 +20,7 @@ Other GRAINS firmware repositories:
 | Pluck       | Pluck-M  | Tardy       | Sequence   | Info  |
 | Byte        | Mono-M   | Chrono      | LFO        | Scope |
 | Droplets    | Para-M   | Pattern     | Arp        | Dave  |
-| AKWF        |          | Elements    | Quant      | Bit   |
+| AKWF        | VS       | Elements    | Quant      | Bit   |
 | 808         |          | Lattice     | ADSR       |       |
 | Voice       |          | Beats       | Multilevel |       |
 | Chordal     |          | Geiger      | Stochastic |       |
@@ -30,6 +30,12 @@ Other GRAINS firmware repositories:
 | Oration 2   |          | Respite     |            |       |
 
 
+
+## NEW: VS
+
+A MIDI-based monophonic vector synthesis oscillator, with most of the waves from the Prophet VS.  Requires Mozzi.
+
+Status: Working.  However, highly aliased as it only has one copy of each VS waveform and cannot resample (the same problem as AKWF).
 
 ## 808
 
