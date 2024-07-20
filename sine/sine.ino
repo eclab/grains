@@ -276,7 +276,7 @@ inline int16_t scaleAudioSmallBiased(int16_t val)
 int updateAudio()    
     {
     // this is close to our maximum (-244 ... +243)
-    // return scaleAudioFull(sine.next());
+    //return scaleAudioFull(sine.next());
     
     // For audio,
     // this is what I normally use centered at 2.5V but not exceeding max distortion
@@ -286,7 +286,11 @@ int updateAudio()
     // For CV,
     // this is what I normally use to allow as low as 0V roughly
     // (-244 ... +170)
-    // return scaleAudioSmallBiased(sine.next());
+    //return scaleAudioSmallBiased(sine.next());
+
+    // For audio,
+    // this is the raw values, -128 ... +127
+    //return sine.next();
     }
 
 
