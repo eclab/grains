@@ -1,6 +1,6 @@
 # VS
 
-VS is a MIDI-driven 1-voice paraphonic vector synthesizer.
+VS is a MIDI-driven 1-voice vector synthesizer.
 
 VS is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino. VS only responds to MIDI, via the wonkystuff mb/1, IMDI MAIN module, or from DAVE. 
 
