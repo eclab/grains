@@ -55,15 +55,15 @@
 
 /// PLAYING MODES
 ///
-/// VS has three MODES
+/// VS has three MODES, specified by POT 3.
 ///
 ///	FREE MODE: the wave mix is set by changing IN1/POT1 and IN2/POT2.
 ///
-/// RECORD MODE: the wave mix is *recorded* by changing IN1/POT1 and IN2/POT2 for up to 4 seconds.
-/// Recording starts when a note is played.  During recording you can hear the note even if it's
-/// been released.  The GATE OUT is raised at the beginning of recording and only lowered at the 
-/// end of recording.  Recording stops when (1) the time has elapsed or (2) the note is released or 
-// (3) the mode is changed back to PLAY or FREE.
+/// RECORD MODE: the wave mix is **recorded** by changing IN1/POT1 and IN2/POT2 for up to 4 seconds. 
+/// When a note is played, the GATE OUT is raised, and when a note is released, the GATE OUT is lowered.  
+/// Recording stops when (1) the time has elapsed or (2) the note is released or (3) the mode is 
+/// changed back to PLAY or FREE.
+
 
 ///
 /// When you have stopped recording, VS will save your internal recording to the EEPROM so that it's
