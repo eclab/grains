@@ -10,7 +10,9 @@ You will need to install the Mozzi Library.  You can do this from the Library Ma
 
 VS crossfades between four waveforms in a special way.  You can control the cross-fading manually with two CVs, such as with a joystick; and you can also use the same to program about 4 seconds of CV crossfading movement.
 
+## Warning: use of EEPROM
 
+VS saves your vector recording to the GRAINS's EEPROM.  The EEPROM is like a little hard drive, and it's designed for this purpose.  It can only be written to about 100,000 times.  So it's just fine to use, except if a program goes crazy and writes to it over and over again and wears it out until it doesn't work any longer.  I have added some safeguards, and I'm pretty sure that VS will not go nuts, but you have been warned.  
 
 ## How Vector Synthesis Works
 
