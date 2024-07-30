@@ -807,6 +807,17 @@ static boolean pleaseDie = false;
 		fileMenu.add(beats);
 		menubar.add(fileMenu);
 
+		JMenuItem aria = new JMenuItem("Convert .mid file to Aria .txt");
+		aria.addActionListener(new ActionListener()
+			{
+			public void actionPerformed(ActionEvent e)
+				{
+				new Aria(serialPanel).doit();
+				}
+			});
+		fileMenu.add(aria);
+		menubar.add(fileMenu);
+
 		JMenu actionMenu = new JMenu("Action");
 		JMenuItem reload = new JMenuItem("Reload Devices");
 		reload.addActionListener(new ActionListener()

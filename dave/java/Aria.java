@@ -23,7 +23,7 @@ public class Aria
 	{
 	JComponent parent;
 	
-	public Aria(JComponent parent) { parent = this.parent; }	
+	public Aria(JComponent parent) { this.parent = parent; }	
 	
 	//// HANDLING ERROR MESSAGES
 	
@@ -156,7 +156,9 @@ public class Aria
 		public Note(int pos, int pitch) { this.pos = pos; this.pitch = pitch; }
 		public String pitch() 
 			{ 
-			return "_" + KEYS[(pitch - 60) % 12] + (pitch - 60 < 12 ? "" : (pitch - 60) / 12 + 1) + " "; 
+			String str =  "_" + KEYS[(pitch - 60) % 12] + (pitch - 60 < 12 ? ", " : ((pitch - 60) / 12 + 1) + ", ");
+//			System.err.println("++> " + str);
+			return str; 
 			}
 
 		public String toString()
@@ -220,38 +222,32 @@ public class Aria
 		if (len == 16) return "_R1, ";
 	
 		// Now it's uglier
-		boolean didRest = false;
 		String str = "";
 		for(int i = len; i > 0; )
 			{
 			if (i >= 16)
 				{
-				if (didRest) str += "_N8, TIE, ";
-				else { str += "_R8, "; didRest = true; }
+				str += "_R1, ";
 				i -= 16;
 				}
 			else if (i >= 8)
 				{
-				if (didRest) str += "_N4, TIE, ";
-				else { str += "_R4, "; didRest = true; }
+				str += "_R2, ";
 				i -= 8;
 				}
 			else if (i >= 4)
 				{
-				if (didRest) str += "_N2, TIE, ";
-				else { str += "_R2, "; didRest = true; }
+				str += "_R4, ";
 				i -= 4;
 				}
 			else if (i >= 2)
 				{
-				if (didRest) str += "_N1, TIE, ";
-				else { str += "_R1, "; didRest = true; }
+				str += "_R8, ";
 				i -= 2;
 				}
 			else if (i >= 1)
 				{
-				if (didRest) str += "TIE, ";
-				else { str += "_R, "; didRest = true; }
+				str += "_R, ";
 				i -= 1;
 				}
 			}
@@ -260,6 +256,43 @@ public class Aria
 		
 	/// READING THE MIDI FILE AND LOADING THE ARRAY
 
+	public ArrayList<Note> waiting = new ArrayList<>();
+	
+	public Note findWaiting(int pitch)
+		{
+		for(int i = waiting.size() - 1; i >= 0; i--)
+			{
+			Note note = waiting.get(i);
+			if (note.pitch == pitch) 
+				{
+				waiting.remove(i);
+				return note;
+				}
+			}
+		return null;
+		}
+
+	public int findWaitingPos(int pitch)
+		{
+		for(int i = waiting.size() - 1; i >= 0; i--)
+			{
+			Note note = waiting.get(i);
+			if (note.pitch == pitch) 
+				{
+				return i;
+				}
+			}
+		return -1;
+		}
+		
+	public Note lastNote()
+		{
+		if (waiting.size() == 0) return null;
+		return waiting.get(waiting.size() - 1);
+		}
+
+
+String stringResult = null;
 	public boolean read(Sequence sequence)
 		{
 		boolean warnedNotes = false;
@@ -280,7 +313,6 @@ public class Aria
 			}
 		int resolution = sequence.getResolution();
 		
-		Note lastNote = null;
 		ArrayList<Note> notes = new ArrayList<>();
 				
         // FIXME: At present we only load a single track
@@ -295,51 +327,68 @@ public class Aria
 				if (isNoteOn(shortMessage))
 					{
                     int pitch = shortMessage.getData1();
+                    System.err.println("--> NOTE ON " + pitch + " AT " + pos + " (" + e.getTick() + ")");
                     
                     if (pitch < 60)
                     	{
                     	System.err.println("NOTE WITH PITCH LESS THAN MIDDLE C: " + pitch);
                     	}
-                    else if (pitch > 41)
+                    else if (pitch > 60 + 41)
                     	{
                     	System.err.println("NOTE WITH PITCH HIGHER THAN F 3 OCTAVES ABOVE MIDDLE C: " + pitch);
                     	}
-                    else if (lastNote== null)
+                    else if (lastNote() == null)
                     	{
-                    	lastNote = new Note(pos, pitch);
+                    	Note current = new Note(pos, pitch);
+                    	waiting.add(current);
 						System.err.println("" + pitch + " " + pos);
                     	}
                     else
                     	{
                     	System.err.println("OVERLAPPING NOTE " + pitch);
+                    	Note current = new Note(pos, pitch);
+                    	waiting.add(current);
                     	}
 					}
 					
 				if (isNoteOff(shortMessage))
 					{
                     int pitch = shortMessage.getData1();
+                    System.err.println("--> NOTE OFF " + pitch + " AT " + pos + " (" + e.getTick() + ")");
                     
-                    if (lastNote == null)
-                    	{
-                    	System.err.println("NO NOTE " + pitch);
-                    	}
-                    else if (lastNote.pitch != pitch)
+                    int lastPos = findWaitingPos(pitch);
+                    if (lastPos == -1)
                     	{
                     	System.err.println("NO NOTE FOR PITCH " + pitch);
-                    	lastNote = null;		// otherwise we might fail for the rest of the sequence
                     	}
-                    else
+                    else if (lastPos == waiting.size() - 1)	// it's the last one
                     	{
-                    	lastNote.len = pos - lastNote.pos;
-                    	if (lastNote.len <= 0)
+                    	Note current = waiting.get(lastPos);
+                    	waiting.remove(lastPos);
+                    	current.len = pos - current.pos;
+                    	if (current.len <= 0)
                     		{
                     		System.err.println("LENGTH TOO SHORT FOR PITCH " + pitch);
                     		}
                     	else
                     		{
-                    		notes.add(lastNote);
+                    		notes.add(current);
                     		}
-                    	lastNote = null;
+                    	}
+                    else									// someone in front beat us
+                    	{
+                    	Note current = waiting.get(lastPos);
+                    	Note next = waiting.get(lastPos + 1);
+                    	waiting.remove(lastPos);
+                    	current.len = next.pos - current.pos;
+                    	if (current.len <= 0)
+                    		{
+                    		System.err.println("LENGTH TOO SHORT FOR PITCH " + pitch);
+                    		}
+                    	else
+                    		{
+                    		notes.add(current);
+                    		}
                     	}
 					}
 					
@@ -349,41 +398,42 @@ public class Aria
         StringBuilder build = new StringBuilder();
         build.append("{\t");
         
+		Note lastNote = null;
+
 		// Now we need to write out notes and maybe rests
 		int count = 0;
 		final int MAX_COUNT = 8;
 		for(int i = 0; i < notes.size(); i++)
 			{
 			Note note = notes.get(i);
-			if (note.len == 1)
+			System.err.println("NOTE " + i + ": " + note.pos + " " + note.len + " " + note.pitch + " " + note);
+			if (i > 1)
 				{
-				if (i > 1)
+				// Do we have a rest?
+				int space = note.pos - (lastNote.pos + lastNote.len);
+				if (space > 0)
 					{
-					// Do we have a rest?
-					int space = note.pos - (lastNote.pos + lastNote.len);
-					if (space > 0)
-						{
-						build.append(rest(space));
-						}
-					count++;
-					if (count > MAX_COUNT)
-						{
-						build.append("\n\t");
-						count = 0;
-						}
+					build.append(rest(space));
 					}
-				build.append(note.toString());
 				count++;
 				if (count > MAX_COUNT)
 					{
 					build.append("\n\t");
 					count = 0;
 					}
-				lastNote = note;
 				}
+			build.append(note.toString());
+			count++;
+			if (count > MAX_COUNT)
+				{
+				build.append("\n\t");
+				count = 0;
+				}
+			lastNote = note;
 			}
 		build.append(" },\n");
-        System.err.println(build);
+		stringResult = build.toString();
+        System.err.println(stringResult);
         return true;
         }
 		
@@ -451,6 +501,7 @@ public class Aria
     		if (!read(sequence)) return;
     		}
     	
+    	/*
         FileDialog fd2 = new FileDialog(getFrame(parent), "Save Aria Data...", FileDialog.SAVE);
                 
         disableMenuBar();
@@ -474,5 +525,15 @@ public class Aria
 				// do nothing
 				}
 			}
+	*/
+		JTextArea area = new JTextArea(stringResult);
+		area.setLineWrap(false);
+		JScrollPane pane = new JScrollPane(area);
+		JFrame frame = new JFrame();
+		frame.getContentPane().setLayout(new BorderLayout());
+		frame.getContentPane().add(pane, BorderLayout.CENTER);
+		frame.setSize(new Dimension(600, 400));
+		frame.setTitle("Aria Snippet");
+		frame.show();
 		}
 	}

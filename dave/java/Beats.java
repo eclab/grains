@@ -28,7 +28,7 @@ public class Beats
 	int[][] beats = new int[NUM_TRACKS][MAX_LENGTH];
 
 	
-	public Beats(JComponent parent) { parent = this.parent; }	
+	public Beats(JComponent parent) { this.parent = parent; }	
 	
 	//// HANDLING ERROR MESSAGES
 	
