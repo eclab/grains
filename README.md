@@ -25,17 +25,17 @@ Other GRAINS firmware repositories:
 | Voice       |          | Beats       | Multilevel  |       |
 | Chordal     |          | Geiger      | Stochastic  |       |
 | Booker      |          | Pulses      | Switchblade |       |
-| Evolution   |          | Divvy       |             |       |
+| Evolution   |          | Divvy       | Memoir      |       |
 | Oration     |          | Multiple    |             |       |
 | Oration 2   |          | Respite     |             |       |
 
 
 
-## NEW: VS
+## New: Memoir
 
-A MIDI-based monophonic vector synthesis oscillator, with most of the waves from the Prophet VS.  Requires Mozzi.
+A real-time CV recorder.  Can record between 4 and 32 seconds (depending on desired resolution) of CV information and an accompanying track of gate/trigger information.  Requires Mozzi.
 
-Status: Working.  However, highly aliased as it only has one copy of each VS waveform and cannot resample (the same problem as AKWF).
+Status: Working. 
 
 ## 808
 
@@ -300,5 +300,12 @@ Status: Working, but like Pattern, its usefulness may be limited due to noise.
 A complete synthesizer voice: oscillator, 2-pole filter, and amplifier.  You provide the envelopes.  Square, Sawtooth, and Triangle waves offered, plus Low-pass, High-pass, Band-pass, and Notch filter types.  Requires Mozzi.
 
 Status: Working, but the filter is not amazing, particularly at high resonance and frequency.  Sawtooth is a bit buzzy here and there (just not enough memory to put in more waves).
+
+## VS
+
+A MIDI-based monophonic vector synthesis oscillator, with most of the waves from the Prophet VS.  Requires Mozzi.
+
+Status: Working.  However, highly aliased as it only has one copy of each VS waveform and cannot resample (the same problem as AKWF).
+
 
 
