@@ -167,6 +167,8 @@ Status: Working.  However GRAINS can only reach about 4V, so it goes about 0-4V 
 
 Not a GRAINS project per se.  This is a lightweight MIDI library designed for small controllers.  I have developed it for the various MIDI-controlled projects on this page.
 
+If you're looking for a MIDI router or toolkit application for GRAINS, check out DAVE.
+
 Status: Under Development.
 
 ## Mono-M
