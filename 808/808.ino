@@ -787,7 +787,7 @@ uint8_t counter = 1;
 uint8_t triggerOutCountdown = 0;
 
 
- void updateControl0()
+inline void updateControl0()
     {
       /*
       if (triggerOutCountdown > 0)
@@ -820,7 +820,7 @@ uint8_t triggerOutCountdown = 0;
     triggered[0] = val;
     }
     
-void updateControl1()
+inline void updateControl1()
     {
     // POT 3            END 1
     // POT 2            START 1
@@ -860,7 +860,7 @@ void updateControl1()
     }
  
 
-void updateControl2()
+inline void updateControl2()
     {       
     // POT 3            VOLUME
     // POT 2            PITCH 2
@@ -906,7 +906,7 @@ void updateControl2()
 
 
 
-void updateControl3()
+inline void updateControl3()
     {
     // POT 3            VOLUME
     // POT 2            PITCH 2
@@ -954,7 +954,7 @@ void updateControl3()
     else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
     }
 
-void updateControl4()
+inline void updateControl4()
     {
     // POT 3            VOLUME
     // POT 2            UNUSED
@@ -1000,7 +1000,7 @@ void updateControl4()
         
     }
 
-void updateControl5()
+inline void updateControl5()
     {
     // POT 3            VOLUME
     // POT 2            UNUSED
@@ -1046,7 +1046,7 @@ void updateControl5()
     else if (triggered[4] && val4 < LOW_TRIGGER_BOUNDARY) { triggered[4] = 0; }
     }
 
-void updateControl5A()
+inline void updateControl5A()
     {
     // POT 3            VOLUME
     // POT 2            UNUSED
@@ -1088,7 +1088,7 @@ void updateControl5A()
     else if (triggered[3] && val3 < LOW_TRIGGER_BOUNDARY) { triggered[3] = 0; }
     }
 
-void updateControl6()
+inline void updateControl6()
     {
     // POT 3            VOLUME
     // POT 2            UNUSED
@@ -1130,7 +1130,7 @@ void updateControl6()
     else if (triggered[3] && val3 < LOW_TRIGGER_BOUNDARY) { triggered[3] = 0; }
     }
 
-void updateControl7()
+inline void updateControl7()
     {
     // POT 3            VOLUME
     // POT 2            UNUSED
@@ -1172,7 +1172,7 @@ void updateControl7()
     else if (triggered[3] && val3 < LOW_TRIGGER_BOUNDARY) { triggered[3] = 0; }
     }
 
-void updateControl7A()
+inline void updateControl7A()
     {
     // POT 3            VOLUME
     // POT 2            SAMPLES 2 -> { 2, 3, 4 }
@@ -1210,7 +1210,7 @@ void updateControl7A()
     else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
     }
 
-void updateControl8()
+inline void updateControl8()
     {
     // POT 3            VOLUME
     // POT 2            SAMPLES 2 -> { 2, 3, 4 }
@@ -1248,7 +1248,7 @@ void updateControl8()
     else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
     }
 
-void updateControl9()
+inline void updateControl9()
     {
     // POT 3            VOLUME
     // POT 2            SAMPLES 2 -> { 2, 3, 4, 5 }
@@ -1313,7 +1313,7 @@ void updateControl9()
 uint8_t finalGain = 0;
 uint8_t lastChord = 255;
 uint8_t completed = false;
-void updateControl10()
+inline void updateControl10()
     {       
     // POT 3            CHORD CHOICE
     // POT 2            VOLUME
@@ -1536,7 +1536,7 @@ inline int16_t scaleAudioBiased(int16_t val)
 
 
 
-int updateAudio0()
+inline int updateAudio0()
     {
     // POT 3            END 1
     // POT 2            START 1
@@ -1556,7 +1556,7 @@ int updateAudio0()
     return scaleAudio(CC(sample0, GAIN_0) * 8);
     }
 
-int updateAudio1()
+inline int updateAudio1()
     {
     // POT 3            END 1
     // POT 2            START 1
@@ -1576,7 +1576,7 @@ int updateAudio1()
     return scaleAudio(CC(sample0, GAIN_0) * 8);
     }
         
-int updateAudio2()
+inline int updateAudio2()
     {
     // POT 3            VOLUME
     // POT 2            PITCH 2
@@ -1593,7 +1593,7 @@ int updateAudio2()
     return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1)) * (uint32_t) pot[2]) >> 6); 
     }
 
-int updateAudio3()
+inline int updateAudio3()
     {
     // POT 3            VOLUME
     // POT 2            PITCH 2
@@ -1607,7 +1607,7 @@ int updateAudio3()
     return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2)) * (uint32_t) pot[2]) >> 6);
     }
 
-int updateAudio4()
+inline int updateAudio4()
     {
     // POT 3            VOLUME
     // POT 2            UNUSED
@@ -1621,7 +1621,7 @@ int updateAudio4()
     return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + CC(sample3, GAIN_3)) * (uint32_t) pot[2]) >> 6);
     }
 
-int updateAudio5()
+inline int updateAudio5()
     {
     // POT 3            VOLUME
     // POT 2            UNUSED
@@ -1635,7 +1635,7 @@ int updateAudio5()
     return scaleAudio((((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + CC(sample3, GAIN_3) + CC(sample4, GAIN_4))) * (uint32_t) pot[2]) >> 6);
     }
 
-int updateAudio5A()
+inline int updateAudio5A()
     {
     // POT 3            VOLUME
     // POT 2            UNUSED
@@ -1649,7 +1649,7 @@ int updateAudio5A()
     return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + (pot[0] < 512 ? CC(sample3, GAIN_3) : CC(sample4, GAIN_4))) * (uint32_t) pot[2]) >> 6);
     }
 
-int updateAudio6()
+inline int updateAudio6()
     {
     // POT 3            VOLUME
     // POT 2            UNUSED
@@ -1663,7 +1663,7 @@ int updateAudio6()
     return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + (pot[0] < 341 ? CC(sample3, GAIN_3) : (pot[0] < 682 ? CC(sample4, GAIN_4) : CC(sample5, GAIN_5)))) * (uint32_t) pot[2]) >> 6);
     }
 
-int updateAudio7()
+inline int updateAudio7()
     {
     // POT 3            VOLUME
     // POT 2            UNUSED
@@ -1680,7 +1680,7 @@ int updateAudio7()
                             (pot[0] < 768 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6)))) * (uint32_t) pot[2]) >> 6);
     }
 
-int updateAudio7A()
+inline int updateAudio7A()
     {
     // POT 3            VOLUME
     // POT 2            SAMPLES 2 -> { 2, 3, 4 }
@@ -1694,7 +1694,7 @@ int updateAudio7A()
     return scaleAudio(((CC(sample0, GAIN_0) + (pot[1] < 341 ? CC(sample1, GAIN_1) : (pot[1] < 682 ? CC(sample2, GAIN_2) : CC(sample3, GAIN_3))) + (pot[0] < 341 ? CC(sample4, GAIN_4) : (pot[0] < 682 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6)))) * (uint32_t) pot[2]) >> 6);
     }
 
-int updateAudio8()
+inline int updateAudio8()
     {
     // POT 3            VOLUME
     // POT 2            SAMPLES 2 -> { 2, 3, 4 }
@@ -1712,7 +1712,7 @@ int updateAudio8()
                             (pot[0] < 768 ? CC(sample6, GAIN_6) : CC(sample7, GAIN_7)))) * (uint32_t) pot[2]) >> 6);
     }
 
-int updateAudio9()
+inline int updateAudio9()
     {
     // POT 3            VOLUME
     // POT 2            SAMPLES 2 -> { 2, 3, 4, 5 }
@@ -1733,7 +1733,7 @@ int updateAudio9()
     }
 
 #if (FORMAT == FORMAT_10)
-int updateAudio10()
+inline int updateAudio10()
     {
     // POT 3            CHORD CHOICE
     // POT 2            VOLUME
