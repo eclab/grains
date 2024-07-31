@@ -80,18 +80,17 @@
 // That takes up 89% of memory.  If you want more samples, they have to be SHORT.
 
 
-/*
-#define SAMPLE_1        "tr808/RS.h" //SD0050.h" // "tr808/BD7525.h"                
+#define SAMPLE_1        "tr808/BD5000.h"             
 #define SAMPLE_2        "tr808/CP.h"
-#define SAMPLE_3        "tr808/BD7500.h"            
+#define SAMPLE_3        "tr808/RS.h"             
 #define SAMPLE_4        "tr808/CH.h"
 #define SAMPLE_5        "tr808/OH00.h"
-#define SAMPLE_6        "tr808/SD0050.h" // CB.h"
+#define SAMPLE_6        "tr808/SD1050.h"
 #define SAMPLE_7        "tr808/HC00.h"          
-#define SAMPLE_8        "tr808/HC50.h"
+#define SAMPLE_8        "tr808/CB.h"
 #define SAMPLE_9        "tr808/MA.h"
-*/
 
+/*
              #define SAMPLE_1        "blank1.h"
              #define SAMPLE_2        "blank2.h"
              #define SAMPLE_3        "blank3.h"
@@ -101,6 +100,7 @@
              #define SAMPLE_7        "blank7.h"
              #define SAMPLE_8        "blank8.h"
              #define SAMPLE_9        "blank9.h"
+*/
 
 /// Here is an example with all empty samples, showing use of all the "blank" files.
 /// You probably don't want this!  :-)
@@ -175,7 +175,7 @@
 /// You set the format by changing the following value.  For example, to set to FORMAT_7,
 /// you would change below to   #define FORMAT FORMAT_7
 
-#define FORMAT FORMAT_10
+#define FORMAT FORMAT_0
 
 
 /// The CONTROL_RATE value below indicates how often per second Mozzi checks for incoming
@@ -1312,6 +1312,7 @@ void updateControl9()
 #if (FORMAT == FORMAT_10)
 uint8_t finalGain = 0;
 uint8_t lastChord = 255;
+uint8_t completed = false;
 void updateControl10()
     {       
     // POT 3            CHORD CHOICE
@@ -1507,18 +1508,34 @@ inline int16_t C(int8_t value, uint8_t volume) { return ((value * volume) * 32) 
 
 uint16_t sum;
 
-// Scale from -32768...+32767 to -240 ... +240
-inline int16_t scaleAudio(int16_t val)
-  {
-  return ((val >> 4) * 15) >> 7;
-  }
 
-// Scale from -4096...+4095 to -240 ... +240
+
+/** Maps -128 ... +127 to -168 ... +167 */ 
 inline int16_t scaleAudioSmall(int16_t val)
-  {
-  return ((val >> 1) * 15) >> 7;
-  }
-  
+	{
+	return (val * 21) >> 4;
+	}
+	
+/** Maps -128 ... +127 to -244 ... +170 */ 
+inline int16_t scaleAudioSmallBiased(int16_t val)
+	{
+	return ((val * 13) >> 3) - 36;
+	}
+
+/** Maps -32768 ... +32767 to -168 ... +167 */ 
+inline int16_t scaleAudio(int16_t val)
+	{
+	return ((val >> 5) * 21) >> 7;
+	}
+	
+/** Maps -32768 ... +32767 to -244 ... +171 */ 
+inline int16_t scaleAudioBiased(int16_t val)
+	{
+	return (((val >> 4) * 13) >> 7) - 36;
+	}
+
+
+
 int updateAudio0()
     {
     // POT 3            END 1
