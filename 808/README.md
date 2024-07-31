@@ -10,7 +10,7 @@ To set up 808, you just have to do two things:
 
 - State the sample files you're using and
 
-- State which FORMAT you're using.  The FORMAT is the layout of the 808's interface. There are 11 formats available, and they dictate both how many samples will be used which will be grouped to the same trigger (you can only play one sample from a group on a given trigger at a given time).
+- State which FORMAT you're using.  The FORMAT is the layout of the 808's interface. There are 13 formats available, and they dictate both how many samples will be used which will be grouped to the same trigger (you can only play one sample from a group on a given trigger at a given time).
 
 FORMATS differ in capability based on the number of samples involved so as to maximize GRAINS's limited interface.  FORMAT\_1 has only one sample but lets you specify the start and end sample points, and the pitch.  FORMAT\_2 has two samples but you can specify their pitch; similarly for FORMAT\_3 and FORMAT\_4.  FORMAT\_5 has up to 5 triggers.  FORMATS 6, 7, 7A, 8, and 9 have increasing numbers of samples, but they are crammed into selectable groups with smaller and smaller numbers of triggers.  
 
@@ -43,7 +43,7 @@ Is a sample too loud compared to the others?  You can adjust the relative gain o
 
 ## Setting the Format
 
-There are 12 formats, and they dictate the number of samples used, how they're grouped, and how the interface is presented.   You set the format with a #define in the code.  Here is a summary of the formats:
+There are 13 formats, and they dictate the number of samples used, how they're grouped, and how the interface is presented.   You set the format with a #define in the code.  Here is a summary of the formats:
 
 - **FORMAT\_0** \
 A single sample, with no features, intended to reduce noise as much as possible
