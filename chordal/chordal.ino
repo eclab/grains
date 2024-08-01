@@ -35,8 +35,8 @@
 /// Set it right here:
 
 
-#define USE_SQUARE
-// #define USE_SAW
+//#define USE_SQUARE
+ #define USE_SAW
 // #define USE_TRI
 
 
@@ -48,7 +48,24 @@
 /// Intervals: minor 3, Major 3, 4, 5, minor 6, Major 6, minor 7, octave, octave + minor 3, octave + major 3, octave + 5
 /// Triads: minor, minor first inversion, minor second inversion, Major, Major first inversion, Major second inversion
 /// Sevenths: 7, minor 7, Major 7, diminished 7
-/// Octave Triads: minor + octave, Major + octave  
+/// Octave Triads: minor + octave, Major + octave 
+///
+/// You can CUSTOMIZE the chords if you like, it's not difficult.
+/// Each chord is arranged as an array of FOUR numbers.  The first number is the number of
+/// notes in the chord beyond the fundamental (the basic pitch).  The remaining numbers are
+/// the semitone pitches of each of those notes.  Notes that don't exist are set to 0.  So 
+/// for example, the major triad (let's say C E G) has two notes (E and G) beyond the 
+/// fundamental C.  The first note (E) is 4 semitones above C, and the second note (G) is
+/// 7 semitones above C.  There is no third additional note, so it's 0.  Thus we have:   
+/// { 2, 4, 7, 0 },     Search for "uint8_t chords[24][4]" below to get the list of chords
+/// and try replacing them with your own.
+
+
+/// INVERSION
+///
+/// You can set the INVERSION of the chord to one of 8 values.  This moves lower notes UP
+/// by one octave, inverting the chord up one note at a time.  The default inversion is 0 (none).
+/// You might find this useful in combination with an LFO to make arpeggios, for example.
 
 
 /// ADJUSTING TUNING AND TRACKING
@@ -74,8 +91,8 @@
 ///
 /// IN 1            Pitch CV
 /// IN 2            Mix CV              [Low: all Sine, High: all Square/Saw/Tri]
-/// IN 3            [Unused]
-/// AUDIO IN (A)        Pitch CV Tune  
+/// IN 3            Inversion
+/// AUDIO IN (A)    Pitch CV Tune  
 /// AUDIO OUT       Out
 /// DIGITAL OUT (D) [Unused]
 ///
@@ -665,11 +682,32 @@ inline float getFrequency(uint8_t pitch, uint8_t tune)
 uint8_t chord = 0;
 int8_t chordCounter = -1;
 int16_t alpha = 0;
+uint8_t inversion = 0;
+uint8_t invert[4];
+
+/*
+// This is only correct for dividends 0...17, which is enough for us
+inline uint8_t div3(uint8_t dividend)
+	{
+	return ((5 * (dividend + 1)) >> 4);
+	}
+*/
+
+PROGMEM const uint8_t inversions[4][4][8] = 
+	{
+	{ { 1, 1, 2, 2, 4, 4, 8, 8 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 } },
+	{ { 1, 1, 2, 2, 2, 2, 4, 4 }, { 1, 1, 1, 1, 2, 2, 2, 2 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 } },
+	{ { 1, 2, 2, 2, 4, 4, 4, 8 }, { 1, 1, 2, 2, 2, 4, 4, 4 }, { 1, 1, 1, 2, 2, 2, 4, 4 }, { 0, 0, 0, 0, 0, 0, 0, 0 } },
+	{ { 1, 2, 2, 2, 2, 4, 4, 4 }, { 1, 1, 2, 2, 2, 2, 4, 4 }, { 1, 1, 1, 2, 2, 2, 2, 4 }, { 1, 1, 1, 1, 2, 2, 2, 2 } }
+	};
+	
+#define INVERSION(chord, idx, inv) pgm_read_byte_near(&inversions[chord][idx][inv])
+
 
 void updateControl() 
     {
     float frequency = getFrequency(CV_POT_IN1, CV_AUDIO_IN);
-
+	
     uint8_t d = (mozziAnalogRead(CV_POT3) * 24) >> 10;
     if (d != chord)
         {
@@ -679,23 +717,79 @@ void updateControl()
         }
     else chordCounter = -1;
 
-    alpha = mozziAnalogRead(CV_POT_IN2) >> 2;               // should we filter this?
-        
-    meta1.setFreq(frequency);
-    sine1.setFreq(frequency);
+	inversion = mozziAnalogRead(CV_IN3) >> 7;		// this goes 0...7.  Too little?
+	
     uint8_t* c = chords[chord];
+    for(int i = 0; i < 4; i++)
+    	{
+    	invert[i] = INVERSION(c[0], i, inversion);
+    	}
+    	
+		/*
+		INV	OC1	
+		0 	1	
+		1 	1	
+		2 	2	
+		3 	2	
+		4 	4	
+		5 	4	
+		6 	8	
+		7 	8	
+		*/
+		/*
+		INV	OC1	OC2
+		0 	1	1
+		1 	1	1
+		2 	2	1
+		3	2	1
+		4 	2	2
+		5 	2	2
+		6 	4	2
+		7 	4	2
+		*/
+		/*
+		INV	OC1	OC2	OC3
+		0 	1	1	1
+		1 	2	1	1
+		2 	2	2	1
+		3 	2	2	2
+		4 	4	2	2
+		5 	4	4	2
+		6 	4	4	4
+		7 	8	4	4
+		*/
+		/*
+		INV	OC1	OC2	OC3	OC4
+		0 	1	1	1	1
+		1 	2	1	1	1
+		2 	2	2	1	1
+		3 	2	2	2	1
+		4 	2	2	2	2
+		5 	4	2	2	2
+		6 	4	4	2	2
+		7 	4	4	4	2
+		*/
+	
+    alpha = mozziAnalogRead(CV_POT_IN2) >> 2;               // should we filter this?
+    
+    float freq = frequency * invert[0];
+    meta1.setFreq(freq);
+    sine1.setFreq(freq);
     if (c[0] >= 1)
         {
-        meta2.setFreq(frequency * semitoneFrequencyRatios[c[1]]);
-        sine2.setFreq(frequency * semitoneFrequencyRatios[c[1]]);
+        freq = frequency * invert[1] * semitoneFrequencyRatios[c[1]];
+        meta2.setFreq(freq);
+        sine2.setFreq(freq);
         if (c[0] >= 2)
             {
-            meta3.setFreq(frequency * semitoneFrequencyRatios[c[2]]);
-            sine3.setFreq(frequency * semitoneFrequencyRatios[c[2]]);
+            freq = frequency * invert[2] * semitoneFrequencyRatios[c[2]];
+            meta3.setFreq(freq);
+            sine3.setFreq(freq);
             if (c[0] >= 3)
                 {
-                meta4.setFreq(frequency * semitoneFrequencyRatios[c[3]]);
-                sine4.setFreq(frequency * semitoneFrequencyRatios[c[3]]);
+                freq = frequency * invert[3] * semitoneFrequencyRatios[c[3]];
+                meta4.setFreq(freq);
+                sine4.setFreq(freq);
                 }
             }
         }
@@ -703,12 +797,38 @@ void updateControl()
 
     }
 
+/** Maps -128 ... +127 to -168 ... +167 */ 
+inline int16_t scaleAudioSmall(int16_t val)
+	{
+	return (val * 21) >> 4;
+	}
+	
+/** Maps -128 ... +127 to -244 ... +170 */ 
+inline int16_t scaleAudioSmallBiased(int16_t val)
+	{
+	return ((val * 13) >> 3) - 36;
+	}
+
+/** Maps -32768 ... +32767 to -168 ... +167 */ 
+inline int16_t scaleAudio(int16_t val)
+	{
+	return ((val >> 5) * 21) >> 7;
+	}
+	
+/** Maps -32768 ... +32767 to -244 ... +171 */ 
+inline int16_t scaleAudioBiased(int16_t val)
+	{
+	return (((val >> 4) * 13) >> 7) - 36;
+	}
+
+/*
 // Scale from -32768...+32767 to -240 ... +240
 inline int16_t scaleAudio(int16_t val)
   {
   if (val == 0) return 0;
   return ((val >> 4) * 15) >> 7;
   }
+*/
 
 int updateAudio()    
     {

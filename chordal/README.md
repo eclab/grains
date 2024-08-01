@@ -4,7 +4,7 @@ Chordal is a chording oscillator.  Chordal is meant to run on the AE Modular GRA
 
 Chordal can play chords of your choice, using a mixture of either square waves and sine waves, or sawtooth waves and sine waves, or triangle waves and sine waves.  (It can't be a mixture of, say, square and saw because GRAINS doesn't have enough memory.  It has to be sine.).   You select sawtooth, square, or triangle as a #define in the code. The default is square.
 
-You can set the pitch CV and tune, the amount of square/saw/tri vs sine wave, and the chord choice.
+You can set the pitch CV and tune, the amount of square/saw/tri vs sine wave, the inversion of the chord (up to several octaves) and the chord choice.
 
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
@@ -53,6 +53,12 @@ The chords are, in order:
   - minor + Octave
   - Major + Octave
 
+You can also customize these chords to any combination of up to 4 notes.  It's not difficult: see the instructions in the source code.
+
+## Inversion
+
+You can set the **inversion** of the chord to one of 8 values.  This moves lower notes UP by one octave, inverting the chord up one note at a time.  The default inversion is 0 (none). You might find this useful in combination with an LFO to make arpeggios, for example.
+
 ## Configuration
 
 #### IN 1
@@ -60,7 +66,7 @@ Pitch CV
 #### IN 2
 Mix CV [Low: all Sine, High: all Square/Saw/Tri]
 #### IN 3
-[Unused]
+Inversion
 #### AUDIO IN (A)
 Pitch CV Tune
 #### AUDIO OUT
