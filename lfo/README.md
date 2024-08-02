@@ -68,7 +68,7 @@ Shape/PWM
 
 [If not using the CV, set switch to MAN, else set to IN2 and put pot at roughly 2'oclock]
 #### POT 2
-Rte
+Rate
 
 [If not using the CV, set switch to MAN, else set to IN2 and put pot at roughly 2'oclock]
 #### POT 3

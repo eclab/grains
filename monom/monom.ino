@@ -25,7 +25,7 @@
 
 /// CHANNEL
 ///
-/// You can set DX-M's channel to 0...15 (for channels 1...16) or to OMNI (to listen to any of them).
+/// You can set Mono-M's channel to 0...15 (for channels 1...16) or to OMNI (to listen to any of them).
 /// This is set here:
 
 // Set this to 0...15, or to OMNI

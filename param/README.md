@@ -30,7 +30,7 @@ However Mono-M has twice as many waves in its memory, so it will sound less alia
 
 ## Choosing Saw vs Square vs Triangle
 
-The choice of wave is deterined by changing a #define in the code.
+The choice of wave is determined by changing a #define in the code.
 
 
 ## Gate Mode

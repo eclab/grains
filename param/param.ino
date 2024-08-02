@@ -44,8 +44,8 @@
 /// MULTI MODE
 /// 
 /// Normally Para-M plays chords using the given channel.  But instead you can set it to play one note
-/// each from a different channel, like MPE.  The channels will be CHANNEL, CHANNEL+1, and CHANNEL+1.
-/// Thus you should only set CHANNEL to values 0...12.  Do not set CHANNEL to OMNI.  MULTI mode is turned
+/// each from a different channel, like MPE.  The channels will be CHANNEL, CHANNEL+1, and CHANNEL+2.
+/// Thus you should only set CHANNEL to values 0...13.  Do not set CHANNEL to OMNI.  MULTI mode is turned
 /// on by uncommenting the following #define:
 
 // #define MULTI
@@ -58,7 +58,7 @@
 
 /// CHOOSING SAW VS SQUARE VS TRIANGLE
 ///
-/// The choice of wave is deterined by the #define used below.  Notice that two are commented out
+/// The choice of wave is determined by the #define used below.  Notice that two are commented out
 /// as // #define ...   To select a wave, remove the // but make sure that the other two waves
 /// have been commented out (they have // in front of them).  For example, to use square, you'd
 /// change things to look like this:
@@ -840,6 +840,32 @@ void updateControl()
 		}
     }
 
+/** Maps -128 ... +127 to -168 ... +167 */ 
+inline int16_t scaleAudioSmall(int16_t val)
+	{
+	return (val * 21) >> 4;
+	}
+	
+/** Maps -128 ... +127 to -244 ... +170 */ 
+inline int16_t scaleAudioSmallBiased(int16_t val)
+	{
+	return ((val * 13) >> 3) - 36;
+	}
+
+/** Maps -32768 ... +32767 to -168 ... +167 */ 
+inline int16_t scaleAudio(int16_t val)
+	{
+	return ((val >> 5) * 21) >> 7;
+	}
+	
+/** Maps -32768 ... +32767 to -244 ... +171 */ 
+inline int16_t scaleAudioBiased(int16_t val)
+	{
+	return (((val >> 4) * 13) >> 7) - 36;
+	}
+
+
+
 int updateAudio()    
     {
     int16_t sum = 0;
@@ -918,7 +944,7 @@ int updateAudio()
 		}
 #endif
 
-    return ((sum >> 6) * 15 ) >> 5;
+    return scaleAudioSmall(((sum >> 6) * 15 ) >> 5);
     }
 
 

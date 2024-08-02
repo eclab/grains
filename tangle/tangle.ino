@@ -12,7 +12,7 @@
 ///
 /// SET GRAINS TO GRAINS MODE.  (If you want MOZZI mode, change CV_AUDIO_OUT to 9)
 ///
-/// Tangle has two INPUTS, three BUFFERED OUTPUTS, and an INVERTED OUTPUT.
+/// By default Tangle has two INPUTS, three BUFFERED OUTPUTS, and an INVERTED OUTPUT.
 ///
 /// It takes the values of the two inputs, runs them through a function you select via POT 3,
 /// then outputs the result to the three outputs, and outputs its inverse on the inverted output.
@@ -23,6 +23,19 @@
 /// - A or B			[If either is HIGH, we output HIGH]
 /// - A and B			[Both must be HIGH to output HIGH]
 /// - A nequal (xor) B	[If A and B differ we output HIGH]
+
+
+/// PAIRED TWO-INPUT OPTION
+///
+/// Instead of two inputs, you can configure Tangle to have two PAIRS of inputs, and each
+/// pair is run through a function and sent to one of two OUTPUTS.  There is no invered output.
+///
+/// For example, pair A1 and B1 might be put through "A1 or B1", and sent to output 1,
+/// and pair A2 and B2 likewise are put through "A2 or B2", and sent to output 2.
+/// You turn on the paired two-option by uncommenting (removing the // in front of) the following #define:
+
+// #define PAIRED_INPUT
+
 
 
 /// HOW YOU COULD USE TANGLE
@@ -58,7 +71,7 @@
 /// our purposes) at about the 2 o'clock position on the Dial.  Beyond that it stays at 1.0
 
 
-/// CONFIGURATION 
+/// STANDARD CONFIGURATION 
 ///
 /// IN 1            Input A
 /// IN 2            Input B
@@ -73,6 +86,21 @@
 ///                 
 /// POT 3           Function
         
+/// PAIRED-INPUT CONFIGURATION 
+///
+/// IN 1            Input A 1
+/// IN 2            Input B 1
+/// IN 3            Input A 2
+/// AUDIO IN (A)    Input B 2
+/// AUDIO OUT       Output 1
+/// DIGITAL OUT (D) Output 2
+///
+/// POT 1           [Unused]: Keep switch on IN1 and set knob to roughly 2'oclock position
+///
+/// POT 2           [Unused]: Keep switch on IN1 and set knob to roughly 2'oclock position
+///                 
+/// POT 3           Function
+
 
 #define FUNC_A 0
 #define FUNC_OR 1
@@ -98,13 +126,21 @@ uint8_t function;
 
 void setup() 
     {
+#ifdef PAIRED_INPUT
     pinMode(CV_AUDIO_OUT, OUTPUT);
-    pinMode(CV_AUDIO_IN, OUTPUT);
-    pinMode(CV_IN3, OUTPUT);
     pinMode(CV_GATE_OUT, OUTPUT);
-     
+    pinMode(CV_AUDIO_IN, INPUT);
+    pinMode(CV_IN3, INPUT);
     pinMode(CV_POT_IN1, INPUT);
     pinMode(CV_POT_IN2, INPUT);
+#else    
+    pinMode(CV_AUDIO_OUT, OUTPUT);
+    pinMode(CV_GATE_OUT, OUTPUT);
+    pinMode(CV_AUDIO_IN, OUTPUT);
+    pinMode(CV_IN3, OUTPUT);
+    pinMode(CV_POT_IN1, INPUT);
+    pinMode(CV_POT_IN2, INPUT);
+#endif
     }
 
 // Others we could include
@@ -116,6 +152,39 @@ void setup()
 void loop() 
     {
 	uint8_t function = (analogRead(CV_POT3) >> 8);		// 0...3
+
+#ifdef PAIRED_INPUT
+	uint8_t in1 = digitalRead(CV_POT_IN1);
+	uint8_t in2 = digitalRead(CV_POT_IN2);
+	uint8_t in3 = digitalRead(CV_IN3);
+	uint8_t in4 = digitalRead(CV_AUDIO_IN);
+	uint8_t out1 = 0;
+	uint8_t out2 = 0;
+	
+	switch(function)
+		{
+		case FUNC_A:
+			out1 = in1;
+			out2 = in3;
+		break;
+		case FUNC_OR:
+			out1 = (in1 || in2);
+			out2 = (in3 || in4);
+		break;
+		case FUNC_AND:
+			out1 = (in1 && in2);
+			out2 = (in3 && in4);
+		break;
+		case FUNC_XOR:
+			out1 = (in1 != in2);
+			out2 = (in3 != in4);
+		break;
+		}
+		
+	digitalWrite(CV_AUDIO_OUT, out1);
+	digitalWrite(CV_GATE_OUT, out2);
+
+#else
 	uint8_t in1 = digitalRead(CV_POT_IN1);
 	uint8_t in2 = digitalRead(CV_POT_IN2);
 	uint8_t out = 0;
@@ -154,6 +223,7 @@ void loop()
 	digitalWrite(CV_AUDIO_IN, out);
 	digitalWrite(CV_IN3, out);
 	digitalWrite(CV_GATE_OUT, !out);
+#endif
     }
 
 
