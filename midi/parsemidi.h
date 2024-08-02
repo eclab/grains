@@ -164,9 +164,10 @@
 
 
 // SYSTEM EXCLUSIVE BUFFER SIZE
-// You need to tune this if you have turned on ALLOW_SYSTEM_EXCLUSIVE, otherwise ignore this.
-// The data size does not include the F0 nor any F7.  These are not included in the buffer that is passed to you.
-// You will not receive a callback until the message is complete -- that is, we do not do the Casio CZ broken sysex thing.
+// You might need to tune this if you have turned on ALLOW_SYSTEM_EXCLUSIVE, otherwise ignore this.
+// This is the size of the buffer that is filled and then given to you for system exclusive messages.
+// A system exclusive message can be BIGGER than this buffer, in which case you will be given
+// multiple buffers in succession.  The buffer does not include F0 nor any F7.
 // If a system exclusive message exceeds SYSTEM_EXCLUSIVE_BUFFER_SIZE in length, then it is ignored.
 
 #define SYSTEM_EXCLUSIVE_BUFFER_SIZE 64             // can be no larger than MAX_SYSTEM_EXCLUSIVE_BUFFER_SIZE (254, defined in miditypes.h)

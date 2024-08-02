@@ -33,6 +33,8 @@ Some of my projects are GPL because they use viral GPL code and thus must be GPL
 
 Mozzi used to be distibuted under a broken, viral, non-open-source license: Creative Commons CC-BY-NC-SA 4.0.  This license was not meant for code and has all manner of problems.  Thankfully, Mozzi has seen the light and is now redistributed as LGPL.
 
+Ginkosyntheses's GRAINS examples are all GPL.
+
 The Arduino Library is LGPL.
 
 All code below is licensed as Apache 2.0.

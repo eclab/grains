@@ -610,6 +610,7 @@ public class Generate
 	
 	public static long randomLong() 
 		{
+		// XORSHIFT, constants from https://www.javamex.com/tutorials/random_numbers/xorshift.shtml
  		 seed ^= (seed << 21);
  		 seed ^= (seed >>> 35);
  		 seed ^= (seed << 4);

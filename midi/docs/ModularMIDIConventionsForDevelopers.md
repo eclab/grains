@@ -35,7 +35,7 @@ Modular MIDI only adds conventions to standard MIDI.  It does not break or signi
  
 ## Topology and Data Format
 
-There are no requirements placed on hardware transport or speed, except that a given modular platform should standardize on one approach.  We provide the example below that we are using for the AE Modular system.  We then make topological and organizational recommendations.
+There are no requirements placed on hardware transport or speed, except that a given modular platform should standardize on one approach.  We provide the example below illustrating usage on the AE Modular system.  We then make topological and organizational recommendations.
 
 ### Example Transport Hardware: AE Modular
 
@@ -51,7 +51,7 @@ Within a modular system, all modules should send MIDI at the same speed.  This s
 
 We presume that in most cases, a modular setup would have a **distributor module**, which receives external MIDI, breaks it up it per-channel, and outputs messages for each channel via per channel AE modular sockets.  Non-voiced data (like clock) are ideally copied to every channel socket.  Attached to each socket is a chain of one more **receiever modules** meant to respond to messages on that channel.  These receiver modules typically are set up to be OMNI.  A distributor module should also just output *all* its incoming MIDI via a general-purpose **THRU**.
 
-* Every receiver module should have at least one (and usually only one) **IN** socket from which it receives MIDI data.  It is suggested that the distributor also have an **IN** socket, either receive data from external MIDI or from the in socket, in a switchable manner.
+* Every receiver module should have at least one (and usually only one) **IN** socket from which it receives MIDI data.  It is suggested that the distributor also have an **IN** socket, to receive data instead of its external MIDI socket, in a switchable manner.
 
 * Generally a receiver should have at least one **THRU** socket where the data from the **IN** socket is passed through unmolested.  This should be done by simply buffering the IN signal via an op-amp and re-broadcasting it out THRU. Buffering would have essentially no latency.  THRU allows multiple modules to easily be chained together to listen to the same channel.
 

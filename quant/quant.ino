@@ -12,12 +12,6 @@
 /// Quant is pretty simple.  You provide a CV on IN 1, and specify the scale you would
 /// like to quantize to. The pitch is quantized to AUDIO OUT.
 ///
-/// GRAINS OUTPUT WARNING: this program outputs note CV information from GRAINS.  If you feed this into
-/// (for example) a VCO, 2OSC/d, or 2OSC, it will not be proper 1V/oct because they pull too much amperage 
-/// and this causes the GRAINS to output incorrect voltages.  Even feeding into another GRAINS will cause 
-/// the pitch to drop a bit.  You can fix this by feeding into a buffered mult first.  The 555 does not have
-/// this issue (its inputs are buffered).
-///
 /// OUTPUT PITCH RANGE AND RESOLUTION
 /// 
 /// Mozzi cannot go down to 0V.  Its minimum is a little more, transposing up by about a half
@@ -30,10 +24,10 @@
 /// This is also the quantizer's range: values above that will just get quantized to the 
 /// top note.
 ///
-/// One of the issues in using this quantizer is that GRAINS does not have a buffered:
+/// One of the issues in using this quantizer is that GRAINS does not have a buffer:
 /// the voltage its output will produce is strongly affected by the amperage being pulled
 /// by the oscillator it's plugged into, and different AE oscillators pull different amounts.
-/// VCO is particularly bad here -- it pulls a lot of voltage, thus scaling down Quant's output
+/// VCO is particularly bad here -- it pulls a lot of amperage, thus scaling down Quant's output
 /// so it's no longer v/oct.  555 is much better (its inputs are buffered).  And you can
 /// generally fix matters by plugging GRAINS into a buffered mult, and then attaching
 /// the buffered mult to your oscillator.  But even the buffered mults differ a bit!
@@ -287,7 +281,7 @@ uint16_t positions[48] =
    0,   13,  22,  30,  39,  47,  56,  64,  73,  82,  90,  99,
    107, 116, 125, 133, 142, 151, 159, 168, 176, 185, 194, 202,
    211, 220, 228, 237, 245, 254, 262, 271, 280, 288, 297, 306,
-   314, 323, 331, 340, 348, 356, 365, 373, 382, 390, 403, 403	
+   314, 323, 331, 340, 348, 356, 365, 373, 382, 390, 403, 403			// 2OSC2 has 47 notes
 };
 #endif
 

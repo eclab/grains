@@ -7,14 +7,6 @@ SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
 You will need to install the Mozzi Library.  You can do this from the Library Manager in your Arduino IDE.
 
-You can use Memoir to record a stream of CV changes plus a separate stream of Gate/Trigger events over a period of time.  The shortest time is 4 seconds, the longest time is 32 seconds.  At 4 seconds, the recording is 128 updates per second.  At 32 seconds, the recording is 16 updates per second.
-
-After you have recorded this stream, you can trigger it to play back at any time.
-
-## Warning: use of EEPROM
-
-Memoir saves your CV recording to the GRAINS's EEPROM.  The EEPROM is like a little hard drive, and it's designed for this purpose.  It can only be written to about 100,000 times.  So it's just fine to use, except if a program goes crazy and writes to it over and over again and wears it out until it doesn't work any longer.  I have added some safeguards, and I'm pretty sure that Memoir will not go nuts, but you have been warned. 
-
 ## Recording 
 
 Recording is initiated by sending a trigger to the RECORD TRIGGER, which is AUDIO IN.  Thereafter recording will go on for some number of seconds, or until a PLAY TRIGGER (IN 3) is sent.  Then the recording is saved.

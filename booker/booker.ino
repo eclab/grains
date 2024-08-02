@@ -66,7 +66,7 @@
 /// to change the selections.  There is a big list of 99 selections below you could swap in.
 
 #define NUM_DRAWBAR_SELECTIONS 16
-int16_t drawbars[NUM_DRAWBAR_SELECTIONS][9] = 
+uint8_t drawbars[NUM_DRAWBAR_SELECTIONS][9] = 
     {
     { 8, 8, 8, 8, 8, 8, 8, 8, 8 },    // 888888888 Full Organ
     { 8, 8, 5, 3, 2, 4, 5, 8, 8 },    // 885324588 Blues
@@ -293,7 +293,7 @@ PROGMEM const float frequencies[1024+512] = {
 
 
 #define FREQUENCY(pitch) pgm_read_float_near(&frequencies[pitch])
-#define CONTROL_RATE 100                        // More than this and we're gonna get clicks probably
+#define CONTROL_RATE 128                        // More than this and we're gonna get clicks probably
 
 #include <MozziGuts.h>
 #include <Oscil.h>
@@ -462,20 +462,13 @@ void updateControl()
         }
     }                                             
 
-
-// Scale from -32768...+32767 to -240 ... +240
-inline int16_t scaleAudio(int16_t val)
-  {
-  return (val >> 8); // ((val >> 4) * 15) >> 7;
-  }
-
 int updateAudio()                             
     { 
-    int16_t* d = drawbars[organ];
-    int32_t val = 0;
-    for(uint8_t i = 0; i < 9; i++)
+    uint8_t* d = drawbars[organ];
+    int32_t val = oscils[0].next() * d[0];		// hoisting this out gives me just enough computational space to avoid clicks, ugh
+    for(uint8_t i = 1; i < 9; i++)
         {
         val += (oscils[i].next() * d[i]);
         }
-    return scaleAudio((val >> 8) * gain);
+    return ((val >> 8) * gain) >> 8;
     }

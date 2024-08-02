@@ -19,7 +19,7 @@
 #define UNSIGNED_16_BIT_INT             unsigned short                          // uint16_t
 #define SIGNED_16_BIT_INT               signed short                            // int16_t
 
-// Don't fool with this
+// Don't fool with this, making it larger than 254 will break things
 #define MAX_SYSTEM_EXCLUSIVE_BUFFER_SIZE 254
 
 

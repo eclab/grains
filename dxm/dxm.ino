@@ -280,17 +280,6 @@ Oscil<SIN512_NUM_CELLS, AUDIO_RATE> modulator2(SIN512_DATA);
 #define carrier2 modulator2			// for convenience
 
 
-void setup() 
-    {
-    pinMode(CV_IN3, OUTPUT);
-    startMozzi();
-	frequency = FREQUENCY(60);		// Middle C
-
-	/// Setup MIDI
-	initializeParser(&parse, CHANNEL, 0, 1);
-	softSerial.begin(MIDI_RATE);
-    }
-
 uint8_t on = 0;
 uint8_t gate = 0;
 uint8_t timer = 0;
@@ -302,6 +291,17 @@ uint8_t pitch;
 uint16_t audioIn;
 uint16_t pot3;
 float frequency;
+
+void setup() 
+    {
+    pinMode(CV_IN3, OUTPUT);
+    startMozzi();
+	frequency = FREQUENCY(60);		// Middle C
+
+	/// Setup MIDI
+	initializeParser(&parse, CHANNEL, 0, 1);
+	softSerial.begin(MIDI_RATE);
+    }
 
 void cc(midiParser* parser, unsigned char parameter, unsigned char value)
 	{
@@ -336,9 +336,9 @@ void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
 		}
 	else
 		{
-		digitalWrite(CV_IN3, 1);
-		gate = 1;		
-		timer = 0;
+		digitalWrite(CV_IN3, 0);
+		gate = 0;		
+		timer = 1;
 		}
 	}
 
@@ -425,6 +425,32 @@ void updateControl()
 	updateOperatorFrequencies();
     }
 
+/** Maps -128 ... +127 to -168 ... +167 */ 
+inline int16_t scaleAudioSmall(int16_t val)
+	{
+	return (val * 21) >> 4;
+	}
+	
+/** Maps -128 ... +127 to -244 ... +170 */ 
+inline int16_t scaleAudioSmallBiased(int16_t val)
+	{
+//  return (val * 15) >> 3;
+ return ((val * 13) >> 3) - 36;
+	}
+
+/** Maps -32768 ... +32767 to -168 ... +167 */ 
+inline int16_t scaleAudio(int16_t val)
+	{
+	return ((val >> 5) * 21) >> 7;
+	}
+	
+/** Maps -32768 ... +32767 to -244 ... +171 */ 
+inline int16_t scaleAudioBiased(int16_t val)
+	{
+	return (((val >> 4) * 13) >> 7) - 36;
+	}
+
+
 
 int updateAudio()    
     {
@@ -437,7 +463,8 @@ int updateAudio()
     // The modulator is 128 in range.  Multiply it in and we have 65536 in range.
 	Q15n16 pm = (indexOfModulation >> 1) * (uint32_t)(lastModulationValue = modulator.phMod(selfpm));
     int16_t s1 = carrier.phMod(pm);
-    return (s1 * _velocity) >> 7;
+	return scaleAudioSmall((s1 * _velocity) >> 7);			// too costly :-(
+    //return ((s1 * _velocity) >> 7);
 #elif (ALGORITHM == 2)
     // indexOfModulation is 1024 in range.
     // INDEX_OF_MODULATION_2_SCALING is 8 in range.  Multiply them and >> 1 and 
@@ -447,7 +474,7 @@ int updateAudio()
 	// Like PM above
 	Q15n16 pm = ((indexOfModulation >> 1) * ((uint32_t)modulator.next())) >> 1;
     int16_t s1 = carrier.phMod(pm + pm2);
-    return (s1 * _velocity) >> 7;
+    return scaleAudioSmall((s1 * _velocity) >> 7);			// too costly :-(
 #elif (ALGORITHM == 3)
 	uint32_t mod = modulator.next();
 	// Like PM2 above
@@ -455,7 +482,7 @@ int updateAudio()
 	// Like PM above
 	Q15n16 pm = (indexOfModulation >> 1) * mod;
     int16_t s1 = (carrier.phMod(pm) + carrier2.phMod(pm2)) >> 1;
-    return (s1 * _velocity) >> 7;
+    return scaleAudioSmall((s1 * _velocity) >> 7);			// too costly :-(
 #else
 	uint32_t mod = modulator2.next();
 	// Like PM2 above
@@ -463,7 +490,7 @@ int updateAudio()
 	// Like PM above
 	Q15n16 pm = (indexOfModulation >> 1) * modulator.phMod(pm2);
     int16_t s1 = carrier.phMod(pm);
-    return (s1 * _velocity) >> 7;
+    return scaleAudioSmall((s1 * _velocity) >> 7);			// too costly :-(
 #endif	
     }
 

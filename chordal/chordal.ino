@@ -629,6 +629,7 @@ void setup()
 #endif
     initializeFrequency(CV_POT_IN1, CV_AUDIO_IN);
     startMozzi();
+    //Serial.begin(115200);
     }
 
 
@@ -718,6 +719,8 @@ void updateControl()
     else chordCounter = -1;
 
 	inversion = mozziAnalogRead(CV_IN3) >> 7;		// this goes 0...7.  Too little?
+	
+//	Serial.println(mozziAnalogRead(CV_IN3));
 	
     uint8_t* c = chords[chord];
     for(int i = 0; i < 4; i++)
@@ -830,6 +833,11 @@ inline int16_t scaleAudio(int16_t val)
   }
 */
 
+inline uint8_t div3(uint8_t dividend)
+	{
+	return ((0x55 * (dividend + 1)) >> 8);
+	}
+
 int updateAudio()    
     {
     int16_t sq1 = meta1.next();
@@ -850,9 +858,14 @@ int updateAudio()
             return scaleAudio(((sq1 + sq2) * (alpha >> 1) + ((255 - alpha) >> 1)*(s1 + s2)));
             break;
         case 2:
+            return scaleAudio(((sq1 + sq2 + sq3) * div3(alpha) + (div3((255 - alpha))) * (s1 + s2 + s3)));
+            break;
+        /*
             sq4 = sq3 >> 1;
             sq3 = sq4;
             // FALL THRU
+        */	
+        	break;
         case 3:
             return scaleAudio(((sq1 + sq2 + sq3 + sq4) * (alpha >> 2) + ((255 - alpha) >> 2) * (s1 + s2 + s3 + s4)));
             break;

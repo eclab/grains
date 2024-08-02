@@ -40,8 +40,8 @@
 /// Set it right here:
 
 
-#define USE_SQUARE
-//#define USE_SAW
+//#define USE_SQUARE
+#define USE_SAW
 //#define USE_TRI
 
 
@@ -552,6 +552,7 @@ void initializeFrequency(uint8_t pitch, uint8_t tune)
     tuneCV = mozziAnalogRead(tune);
     }
         
+#define TRANSPOSE_BITS 0
 #define TRANSPOSE_SEMITONES 0
 #define TRANSPOSE_OCTAVES 0
 #define LARGE_JUMP 32
@@ -604,12 +605,38 @@ int16_t toQuasi9Bit(int16_t val)
 	return ((val >> 6) * 61) >> 7;
 	}
 
+/*
 // Scale from -32768...+32767 to -240 ... +240
 inline int16_t scaleAudio(int16_t val)
   {
   if (val == 0) return 0;
   return ((val >> 4) * 15) >> 7;
   }
+*/
+
+/** Maps -128 ... +127 to -168 ... +167 */ 
+inline int16_t scaleAudioSmall(int16_t val)
+	{
+	return (val * 21) >> 4;
+	}
+	
+/** Maps -128 ... +127 to -244 ... +170 */ 
+inline int16_t scaleAudioSmallBiased(int16_t val)
+	{
+	return ((val * 13) >> 3) - 36;
+	}
+
+/** Maps -32768 ... +32767 to -168 ... +167 */ 
+inline int16_t scaleAudio(int16_t val)
+	{
+	return ((val >> 5) * 21) >> 7;
+	}
+	
+/** Maps -32768 ... +32767 to -244 ... +171 */ 
+inline int16_t scaleAudioBiased(int16_t val)
+	{
+	return (((val >> 4) * 13) >> 7) - 36;
+	}
 
 int updateAudio()    
     {

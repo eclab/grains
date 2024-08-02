@@ -1,6 +1,6 @@
 # Ruckus
 
-Ruckus is a noise and sample and hold generator.  Ruckus is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
+Ruckus is a noise and sample and hold generator with optional smoothing.  Ruckus is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 
 ## Making Noise 
 
@@ -11,14 +11,13 @@ Ruckus can make:
 - Pulse noise pushed through a resonant 12db lowpass filter with adjustable cutoff
 - Pulse noise pushed through a resonant 12db high pass filter with adjustable cutoff
 - Pulse noise pushed through a resonant 12db bandpass filter with adjustable cutoff
-- Sample and Hold of input CV
-- Sample and Hold of random values
-- Trigger and Hold of input CV
+- Sample and Hold of random values (optionally smoothed)
+- Sample and Hold of input CV (optionally smoothed)
+- Track and Hold of input CV (optionally smoothed)
 	
 ## About Pulse Noise
 
-This is just noise which consists entirely of maximum (5V) or minimum (0V) values.  It sounds
-something like white noise but I can make it much louder.
+This is just noise which consists entirely of maximum (5V) or minimum (0V) values.  It sounds something like white noise but I can make it much louder.
 
 ## About Sample and Hold
 
@@ -31,8 +30,18 @@ Ruckus can do three kinds of sample and hold:
 
 In these cases, IN1 serves to SCALE the sample and hold signal, and IN2 serves to SHIFT it. A shift of 0 is dead center.
 
-Note that Sample and Hold only goes up to under 4V or so, due to limitations of Mozzi.  If IN3
-is inputting a value larger than this, it will be clipped.
+Note that Sample and Hold only goes up to under 4V or so, due to limitations of Mozzi.  If IN3 is inputting a value larger than this, it will be clipped.
+
+## About Smoothing
+
+AUDIO IN provides 8 levels of smoothing CV for the sample and hold and track and hold options. Smoothing will cause the hold to gradually reach its target rather than immediately snap there. Smoothing affects the entire wave in track and hold, not just the held portion (sorry).
+
+- 0 is unsmoothed
+- 1...6 are smoothed to increasing levels
+- 7 locks the output to its current value
+
+If you have nothing connected to AUDIO IN, then it should be unsmoothed by default.
+
 
 Looking for a random wanderer rather than a traditional sample and hold?  Try STOCHASTIC.  
 
@@ -46,7 +55,7 @@ Looking for a random wanderer rather than a traditional sample and hold?  Try ST
 #### IN 3
 Sample and Hold Input
 #### AUDIO IN (A)
-[UNUSED]
+Unsmoothed [MIN] <--> Increasing Levels of Smoothing <--> [MAX] Locked Output
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 

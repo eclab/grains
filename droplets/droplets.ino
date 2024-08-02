@@ -214,7 +214,6 @@ Oscil<SIN1024_NUM_CELLS, AUDIO_RATE> sines[4] =
 
 void setup() 
     {
-    //Serial.begin(115200);
     // some reasonable initial defaults
     pinMode(CV_GATE_OUT, INPUT);
     initializeFrequency(CV_POT_IN1, CV_AUDIO_IN);
@@ -234,7 +233,7 @@ void initializeFrequency(uint8_t pitch, uint8_t tune)
     tuneCV = mozziAnalogRead(tune);
     }
       
-#define TRANSPOSE_BITS  
+#define TRANSPOSE_BITS 0
 #define TRANSPOSE_SEMITONES 0
 #define TRANSPOSE_OCTAVES 0
 #define LARGE_JUMP 32
@@ -554,6 +553,7 @@ inline int16_t attenuate(uint8_t i, int8_t in)
     }
         
 
+/*
 // Scale from -32768...+32767 to -192 ... +191.  That's about as good as we can do.
 // If we scale to -208...+207 (* 13), -224...+223 (* 14), or -240...+239 (* 15),
 // we get some distortion, which is as I predicted because it appears
@@ -563,6 +563,31 @@ inline int16_t scaleAudio(int16_t val)
   {
   return ((val >> 4) * 12) >> 7;
   }
+*/
+/** Maps -128 ... +127 to -168 ... +167 */ 
+inline int16_t scaleAudioSmall(int16_t val)
+	{
+	return (val * 21) >> 4;
+	}
+	
+/** Maps -128 ... +127 to -244 ... +170 */ 
+inline int16_t scaleAudioSmallBiased(int16_t val)
+	{
+	return ((val * 13) >> 3) - 36;
+	}
+
+/** Maps -32768 ... +32767 to -168 ... +167 */ 
+inline int16_t scaleAudio(int16_t val)
+	{
+	return ((val >> 5) * 21) >> 7;
+	}
+	
+/** Maps -32768 ... +32767 to -244 ... +171 */ 
+inline int16_t scaleAudioBiased(int16_t val)
+	{
+	return (((val >> 4) * 13) >> 7) - 36;
+	}
+
 
 int updateAudio()    
     {
