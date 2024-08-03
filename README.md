@@ -21,21 +21,21 @@ Other GRAINS firmware repositories:
 | Byte        | Mono-M   | Chrono      | LFO         | Scope |
 | Droplets    | Para-M   | Pattern     | Arp         | Dave  |
 | AKWF        | VS       | Elements    | Quant       | Bit   |
-| 808         |          | Lattice     | ADSR        |       |
+| 808         | Booker-M | Lattice     | ADSR        |       |
 | Voice       |          | Beats       | Multilevel  |       |
 | Chordal     |          | Geiger      | Stochastic  |       |
 | Booker      |          | Pulses      | Switchblade |       |
 | Evolution   |          | Divvy       | Memoir      |       |
 | Oration     |          | Multiple    |             |       |
 | Oration 2   |          | Respite     |             |       |
+|             |          | Iterate     |             |       |
 
 
+## New: Iterate
 
-## New: Memoir
+A Sequential Switch, very similar to the Doepfer A151.  Successive gates or triggers are multiplexed out to up to four different outputs, either in series or randomly selected.
 
-A real-time CV recorder.  Can record between 4 and 32 seconds (depending on desired resolution) of CV information and an accompanying track of gate/trigger information.  Requires Mozzi.
-
-Status: Working. 
+Status: Working.
 
 ## 808
 
@@ -162,6 +162,12 @@ Status: Working
 A warpable LFO with pulse (with pulse width), warpable saw/tri/ramp, and warpable sine waves, with a wide range of rates.  Can be reset, and outputs a sync trigger.  Requires Mozzi.
 
 Status: Working.  However GRAINS can only reach about 4V, so it goes about 0-4V or so.
+
+## Memoir
+
+A real-time CV recorder.  Can record between 4 and 32 seconds (depending on desired resolution) of CV information and an accompanying track of gate/trigger information.  Requires Mozzi.
+
+Status: Working. 
 
 ## MIDI
 
