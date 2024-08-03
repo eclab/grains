@@ -12,6 +12,7 @@ Other GRAINS firmware repositories:
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
+
 ### Firmware Summary
 
 | Oscillators | MIDI Osc | Digital Out | CV Out      | Other |
@@ -31,9 +32,15 @@ Other GRAINS firmware repositories:
 |             |          | Iterate     |             |       |
 
 
+## New: Booker-M
+
+A MIDI-Controlled Hammond Organ simulator with a built-in Leslie and a variety of organ drawbar combinations.  Requires Mozzi.
+
+Status: Working, but it pushes Mozzi to its limits I think, and so is pretty hissy.
+
 ## New: Iterate
 
-A Sequential Switch, very similar to the Doepfer A151.  Successive gates or triggers are multiplexed out to up to four different outputs, either in series or randomly selected.
+A multiplexer, in the same vein as, but not the same as, the Doepfer A151 sequential switch.  Successive gates or triggers are multiplexed out to up to four different outputs, either in series or randomly selected.
 
 Status: Working.
 
