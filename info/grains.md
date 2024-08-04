@@ -315,16 +315,18 @@ GRAINS has seven inputs and outputs.  They're commonly defined as follows:
 To this collection I typically add the following, which I use to seed random number generators (see the math section earlier).
 	
 	#define RANDOM_PIN    A5
+	
+There is a bug in all of the analog inputs: they seem to have a reference voltage of about 4V.  This means that everything is scaled so that 4V or above (roughly) will be read as 1023.  For IN1 and IN2, you can scale this back down such that only 5V will read as 1023, by setting their potentiometers to about the 2 o'clock or maybe 3 o'clock position.  Nothing can be done for IN1 and IN2.  If set to MAN, the maximum potentiometer position is exactly 1023.  I consider all this a significant bug but I don't know what is causing it: AREF is properly being pinned to ground with a capacitor, so it should be 5V internally.
 
 - IN 1.  This is attenuated by POT1 or alternatively replaced by POT1.  Note that when attenuated, if you set POT1 to about the 2 o'clock position, IN1 will be maximal.  Higher than that and you're just multiplying IN1 by larger values, but they're clipped at 1023 in the Arduino.  I consider this a bug.
 
 - IN 2.  This is just like IN1 (with its own POT2), and with the same bug.
 
-- IN 3.  This is a pure CV input.  It's filtered a bit.
+- IN 3.  This is a pure CV input.  It's filtered a bit.  It maxes out (1023) at about 4V.
 
-- Pot 3.  This is the input from potentiometer 3.  Pot 3 and IN 3 have nothing to do with each other.
+- Pot 3.  This is the input from potentiometer 3.  Pot 3 and IN 3 have nothing to do with each other.  
 
-- Audio In.  This input can be used for CV input, and when using a library such as Mozzi, you can modify the library to allow this to be used for audio input (badly).  The problem with Audio In is that its impedance is very different from the other inputs, and so it takes longer for the analog pin to read voltage.  It takes so long in fact that analogRead(...) often won't work right.  If you do an analogRead(...) on IN3 and then do an analogRead(...) on AudioIn, often AudioIn will be just set to what IN3 was set to!  You have to throw that away and do a *second* analogRead(...) on AudioIn to get what you need.  Note that you don't have this option in Mozzi.  Mozzi does all the analog reading before you even get to their special analog read functions, which just report what it read.  So you'll have to hope for the best there.
+- Audio In.  This input can be used for CV input, and when using a library such as Mozzi, you can modify the library to allow this to be used for audio input (badly).  It maxes out (1023) at about 4V.  The problem with Audio In is that its impedance is very different from the other inputs, and so it takes longer for the analog pin to read voltage.  It takes so long in fact that analogRead(...) often won't work right.  If you do an analogRead(...) on IN3 and then do an analogRead(...) on AudioIn, often AudioIn will be just set to what IN3 was set to!  You have to throw that away and do a *second* analogRead(...) on AudioIn to get what you need.  Note that you don't have this option in Mozzi.  Mozzi does all the analog reading before you even get to their special analog read functions, which just report what it read.  So you'll have to hope for the best there.
 
 - Audio Out.  This is a digital output which goes through a low-pass filter.  This means it's slow if you use it as a digital out.  I have also found that you must explicitly set it to 0 first (perhaps in setup) if you intend to write output with digitalWrite().  It's slow because of the filter.  It's set up like this so that libraries like Mozzi can use it to do filtered PWM.  If you're using Mozzi (etc.), you'd not output on Audio Out, you let Mozzi handle it.  If you're writing your own code, you can use Audio Out as a slow digital out.
 
