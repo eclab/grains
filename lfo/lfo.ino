@@ -21,6 +21,11 @@
 /// the rate: Short, Medium, and Long.  Within a range you can adjust the rate with the RATE
 /// knob or CV.
 
+/// Note that the Pulse wave is fairly rounded, kinda like a moderate exponential attack and 
+/// decay of an envelope.  This is because of the filter built into AUDIO_OUT.  If you're 
+/// looking for a sharper Pulse wave, consider the PULSES GRAINS firmware instead.
+
+
 /// CENTERING
 ///
 /// Mozzi has a limited top range of 4.1V for its CV.  If your LFO is centered at 2.5V, this 
