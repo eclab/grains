@@ -64,7 +64,7 @@ We presume that in most cases, a modular setup would have a **distributor module
 * It would be unusual -- and almost always an error -- to have a cycle in the MIDI connections.  That is, you are unlikely to see a situation where module A is connected to B, which is connected to C, which is then connected to A again.
 
 * It is certainly possible for a MIDI receiver to emit MIDI directly.  For example, if you had a Sequencer Module, it might emit its own stream of MIDI to control downstream modules; and it could do this while being itself controlled by MIDI as well!
-
+ 
 * It is possible for a device to perform **MIDI Merge** -- to take MIDI data from multiple sources, via multiple **IN** sockets, and merge the data to send out one (or more) **Software THRU**.  This is not forbidden but is a very rare need, and it potentially causes MIDI cycles, which are bad, if the musician is not careful.
 
 * These conventions do not consider the implications of a module sending MIDI data *out of the modular system*: you're on your own there.  Note that if your modular MIDI format sends data at a higher speed than 31250, then you will have to deal with slowing, and possibly buffering, the data to send it out.
@@ -86,6 +86,9 @@ Streams of MIDI data are mostly of two kinds:
 - Some data streams consists of all messages, and are not filtered by channel.  A stream of this kind typically goes to a **polyphonic module**, which has been set up to listen to one or more channels and play several voices as in response to notes on those channels.  Polyphonic modules can do what they like with this data: they could respond polyphonically to multiple notes on the same channel; or to one note per channel; or whatever they liked.
 
   It is also reasonable for a polyphonic module to have multiple **IN** sockets, each responding to MIDI data on a single channel, but different channels per socket.  This is essentially like having multiple single voice modules in one package.
+  
+  One very common scenario would be polyphonic notes arriving on a single channel.  It's reasonable to create a MIDI Distributor module which breaks those notes up and sends them to different outputs for separate downstream voice chains.
+
 
 ### Distributor MPE Suggestions
 

@@ -79,16 +79,32 @@ This isn't so bad: for example, shifting by 9 is just a shift by 8 (moving a byt
 If you want to divide by constants OTHER than powers of 2, it might make sense to use certain classic tricks:
 
     
+    // Range of 0...255.  No 32-bit arithmetic.
+    inline uint8_t div3Byte(uint8_t dividend)
+        {
+        uint16_t invDivisor = 0x55;
+        uint8_t div = (uint8_t) ((invDivisor * (dividend + 1)) >> 8);
+        return div;
+        }
+
     // Range of 0...65535
-    uint16_t div3(uint16_t dividend)
+    inline uint16_t div3(uint16_t dividend)
         {
         uint32_t invDivisor = 0x5555;
         uint16_t div = (uint16_t) ((invDivisor * (dividend + 1)) >> 16);
         return div;
         }
 
+    // Range of 0...255.  No 32-bit arithmetic.
+    inline uint8_t div5Byte(uint8_t dividend)
+        {
+        uint16_t invDivisor = 0x33;
+        uint8_t div = (uint8_t) ((invDivisor * (dividend + 1)) >> 8);
+        return div;
+        }
+
     // Range of 0...65535   
-    uint16_t div5(uint16_t dividend)
+    inline uint16_t div5(uint16_t dividend)
         {
         uint32_t invDivisor = 0x3333;
         uint16_t div = (uint16_t) ((invDivisor * (dividend + 1)) >> 16);
@@ -96,7 +112,8 @@ If you want to divide by constants OTHER than powers of 2, it might make sense t
         }
 
     // Range of 0...16385
-    uint16_t div6(uint16_t dividend)
+    // Note, (div3(dividend) >> 1) has range 0...65535 but a tiny bit slower
+    inline uint16_t div6(uint16_t dividend)
         {
         uint32_t invDivisor = 0x2AAA;
         uint16_t div = (uint16_t) ((invDivisor * (dividend + 1)) >> 16);
@@ -104,7 +121,7 @@ If you want to divide by constants OTHER than powers of 2, it might make sense t
         }
     
     // Range of 0...32773
-    uint16_t div7(uint16_t dividend)
+    inline uint16_t div7(uint16_t dividend)
         {
         uint32_t invDivisor = 0x2492;
         uint16_t div = (uint16_t) ((invDivisor * (dividend + 1)) >> 16);
@@ -112,7 +129,7 @@ If you want to divide by constants OTHER than powers of 2, it might make sense t
         }
 
     // Range of 0...9369
-    uint16_t div9(uint16_t dividend)
+    inline uint16_t div9(uint16_t dividend)
         {
         uint32_t invDivisor = 0x1C71; 
         uint16_t div = (uint16_t) ((invDivisor * (dividend + 1)) >> 16);
@@ -120,31 +137,16 @@ If you want to divide by constants OTHER than powers of 2, it might make sense t
         }
             
     // Range of 0...9369
-    uint16_t div10(uint16_t dividend)
+    // Note, (div5(dividend) >> 1) has range 0...65535 but a tiny bit slower
+    inline uint16_t div10(uint16_t dividend)
         {
         uint32_t invDivisor = 0x1999;
         uint16_t div = (uint16_t) ((invDivisor * (dividend + 1)) >> 16);
         return div;
         }
 
-	// 20% slower version, but Range of 0...43690 
-    uint16_t div10slow(uint16_t dividend)
-        {
-        uint16_t div = ((dividend >> 1) + dividend) >> 1;
-        div = ((div >> 4) + div); 
-        div = ((div >> 8) + div) >> 3;
-    
-        uint16_t remainder = ((div << 2) + div) << 1;
-        remainder = dividend - remainder;
-        if (remainder >= 10) 
-            {
-            remainder = remainder - 10;
-            div = div + 1;
-            }
-        return div;
-        }
-
     // Range of 0...16391
+    // Note, a (div3(dividend) >> 2) has range 0...65535 but a tiny bit slower
     uint16_t div12(uint16_t dividend)
         {
         uint32_t invDivisor = 0x1555; 
@@ -152,6 +154,8 @@ If you want to divide by constants OTHER than powers of 2, it might make sense t
         return div;
         }
     
+    // Range of 0...4294967296	(full 32 bit range)
+    // Note: div10(div10(n)) likely to be faster, but smaller range
     uint32_t div100(uint32_t n) 
         {
         uint32_t q, r;
@@ -344,7 +348,7 @@ Though these pins are by default meant for certain input and output functions, t
 
 - Audio In.  Can be used for analog or digital input, or for digital output (but a bit slow due to the filter).
 
-- Audio Out.  Can be used for analog (via filtered PWM) or digital output (via filtered PWM).  Digital output will be slow due to the filter and PWM.
+- Audio Out.  Can be used for analog (via filtered PWM) or digital output (via filtered PWM).  Can also be used as digital output via digitalWrite().  Digital output will be slow due to the filter and PWM.  If you use analogWrite(), the PWM is slow and bounces around; I would not do that.
 
 - Gate ("Digital") Out.  Can be used for digital input or output.
 
