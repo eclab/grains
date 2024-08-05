@@ -12,16 +12,22 @@ Other GRAINS firmware repositories:
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
+There are two **special directories**:
+
+* **INFO**.  This contains useful documentation on GRAINS, MIDI, and other topics you might like to read. 
+
+* **MIDI**.  This contains MIDI library code useful for developers.  It's not a GRAINS firmware application. 
+
 
 ### Firmware Summary
 
 | Oscillators | MIDI Osc | Digital Out | CV Out      | Other |
 |:------------|:---------|:------------|:------------|:------|
-| DX          | DX-M     | Tangle      | Multiplex   | MIDI  |
-| Pluck       | Pluck-M  | Tardy       | Sequence    | Info  |
+| DX          | DX-M     | Tangle      | Multiplex   | Dave  |
+| Pluck       | Pluck-M  | Tardy       | Sequence    | Bit   |
 | Byte        | Mono-M   | Chrono      | LFO         | Scope |
-| Droplets    | Para-M   | Pattern     | Arp         | Dave  |
-| AKWF        | VS       | Elements    | Quant       | Bit   |
+| Droplets    | Para-M   | Pattern     | Arp         |       |
+| AKWF        | VS       | Elements    | Quant       |       |
 | 808         | Booker-M | Lattice     | ADSR        |       |
 | Voice       |          | Beats       | Multilevel  |       |
 | Chordal     |          | Geiger      | Stochastic  |       |
@@ -154,7 +160,7 @@ Status: Working
 
 ## Info
 
-This directory contains documents with useful information for developing GRAINS etc.
+This directory contains documents with useful information for developing GRAINS, using MIDI, etc.
 
 Status: A work in progress, I guess!
 
@@ -168,7 +174,7 @@ Status: Working
 
 A warpable LFO with pulse (with pulse width), warpable saw/tri/ramp, and warpable sine waves, with a wide range of rates.  Can be reset, and outputs a sync trigger.  Requires Mozzi.
 
-Status: Working.  However GRAINS can only reach about 4V, so it goes about 0-4V or so.
+Status: Working.  However GRAINS can only reach about 4V, so it goes about 0-4V or so.  LFO's pulse waves are by necessity pretty rounded: if you want sharp pulse waves, see PULSES instead. 
 
 ## Memoir
 
@@ -242,7 +248,7 @@ Status: Working.  Unlike Pluck, pitch is very stable.
 
 A two- or three-output square-wave LFO generator.  Options include two independent LFOs, one with pulsewidth; three Square-wave LFOs all with 50% pulse width; and a mixture of three Square-wave LFOs in the same output.  You can reset and sync two LFOs to the third.
 
-Status: Working
+Status: Working.  If you want more LFO waves, see the LFO firmware.
 
 ## Pluck
 
