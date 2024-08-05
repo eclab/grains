@@ -25,13 +25,13 @@ There are two **special directories**:
 |:------------|:---------|:------------|:------------|:------|
 | DX          | DX-M     | Tangle      | Multiplex   | Dave  |
 | Pluck       | Pluck-M  | Tardy       | Sequence    | Bit   |
-| Byte        | Mono-M   | Chrono      | LFO         | Scope |
-| Droplets    | Para-M   | Pattern     | Arp         |       |
-| AKWF        | VS       | Elements    | Quant       |       |
-| 808         | Booker-M | Lattice     | ADSR        |       |
+| Booker      | Booker-M | Chrono      | LFO         | Scope |
+| Droplets    | VS       | Pattern     | Arp         |       |
+| AKWF        | Mono     | Elements    | Quant       |       |
+| 808         | Para     | Lattice     | ADSR        |       |
 | Voice       |          | Beats       | Multilevel  |       |
 | Chordal     |          | Geiger      | Stochastic  |       |
-| Booker      |          | Pulses      | Switchblade |       |
+| Byte        |          | Pulses      | Switchblade |       |
 | Evolution   |          | Divvy       | Memoir      |       |
 | Oration     |          | Multiple    |             |       |
 | Oration 2   |          | Respite     |             |       |
@@ -190,7 +190,7 @@ If you're looking for a MIDI router or toolkit application for GRAINS, check out
 
 Status: Under Development.
 
-## Mono-M
+## Mono
 
 A MIDI-Controlled monophonic oscillator.  You can choose between Sine and either Saw, Triangle, or Square.  Requires Mozzi.
 
@@ -226,7 +226,7 @@ A variation of Oration which uses an older version of Talkie, and so can vary pi
 
 Status: Working
 
-## Para-M
+## Para
 
 A MIDI-Controlled 3-voice paraphonic oscillator, meant to play chords from your keyboard or DAW or groovebox.  You can choose between Sine and either Saw, Triangle, or Square.  Requires Mozzi.
 

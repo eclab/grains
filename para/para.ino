@@ -4,12 +4,12 @@
 // Released under the Apache 2.0 License
 
 
-/// PARA-M
+/// PARA
 ///
-/// Para-M is a MIDI-driven 3-voice Paraphonic synthesizer with a mixed square/saw/triangle and sine waves.
-/// Para-M is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
+/// Para is a MIDI-driven 3-voice Paraphonic synthesizer with a mixed square/saw/triangle and sine waves.
+/// Para is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
-/// Para-M can select between square and sine, saw and sine, or triangle and sine.  You select
+/// Para can select between square and sine, saw and sine, or triangle and sine.  You select
 /// which one you want in the code.  The default is saw and sine.
 ///
 /// SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
@@ -17,7 +17,7 @@
 /// You will need to install the Mozzi Library.  You can do this from the Library Manager
 /// in your Arduino IDE.
 
-/// Para-M also sends a Gate via IN 3 whenever all of its notes have been released and one
+/// Para also sends a Gate via IN 3 whenever all of its notes have been released and one
 /// new one has been started.  This means it won't send a gate if you release only one note,
 /// then play a new one, while other notes are held down.  Various grooveboxes (such as the
 /// Polyend Tracker) behave like this when playing all new notes suddenly, so you need to put
@@ -25,7 +25,7 @@
 
 /// GATE MODE
 ///
-/// By default Para-M does not stop playing notes when it receives a NOTE OFF -- 
+/// By default Para does not stop playing notes when it receives a NOTE OFF -- 
 /// that is the responsibility of your envelope and VCA (it will send them a gate off).
 /// However you can change this behavior by uncommenting the following #define:
 
@@ -34,7 +34,7 @@
 
 /// CHANNEL
 ///
-/// You can set Para-M's channel to 0...15 (for channels 1...16) or to OMNI (to listen to any of them).
+/// You can set Para's channel to 0...15 (for channels 1...16) or to OMNI (to listen to any of them).
 /// This is set here:
 
 // Set this to 0...15, or to OMNI
@@ -43,7 +43,7 @@
 
 /// MULTI MODE
 /// 
-/// Normally Para-M plays chords using the given channel.  But instead you can set it to play one note
+/// Normally Para plays chords using the given channel.  But instead you can set it to play one note
 /// each from a different channel, like MPE.  The channels will be CHANNEL, CHANNEL+1, and CHANNEL+2.
 /// Thus you should only set CHANNEL to values 0...13.  Do not set CHANNEL to OMNI.  MULTI mode is turned
 /// on by uncommenting the following #define:
@@ -51,10 +51,10 @@
 // #define MULTI
 
 
-/// MONO-M VS PARA-M
+/// MONO VS PARA
 ///
-/// Para-M has three voices.  Mono-M has only one.
-/// However Mono-M has twice as many waves in its memory, so it will sound less aliased for many notes.
+/// Para has three voices.  Mono has only one.
+/// However Mono has twice as many waves in its memory, so it will sound less aliased for many notes.
 
 /// CHOOSING SAW VS SQUARE VS TRIANGLE
 ///

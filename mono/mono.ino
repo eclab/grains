@@ -4,12 +4,12 @@
 // Released under the Apache 2.0 License
 
 
-/// MONO-M
+/// MONO
 ///
-/// Mono-M is a MIDI-driven Monophonic synthesizer with a mixed square/saw/triangle and sine waves.
-/// Mono-M is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
+/// Mono is a MIDI-driven Monophonic synthesizer with a mixed square/saw/triangle and sine waves.
+/// Mono is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
-/// Mono-M can mix between square and sine, saw and sine, or triangle and sine.  You select
+/// Mono can mix between square and sine, saw and sine, or triangle and sine.  You select
 /// which one you want in the code.  The default is square and sine.
 ///
 /// You can set the amount of square/saw/tringle vs sine wave.
@@ -19,13 +19,13 @@
 /// You will need to install the Mozzi Library.  You can do this from the Library Manager
 /// in your Arduino IDE.
 
-/// Mono-M also sends a Gate via IN 3 whenever a note has been played, and drops it when the note
+/// Mono also sends a Gate via IN 3 whenever a note has been played, and drops it when the note
 /// has been released.  If you play a new note prior to the old one being released, it will also 
 /// drop the gate and wait tiny bit before raising it for the new note to prevent legato.
 
 /// CHANNEL
 ///
-/// You can set Mono-M's channel to 0...15 (for channels 1...16) or to OMNI (to listen to any of them).
+/// You can set Mono's channel to 0...15 (for channels 1...16) or to OMNI (to listen to any of them).
 /// This is set here:
 
 // Set this to 0...15, or to OMNI
@@ -33,10 +33,10 @@
 
 
 
-/// MONO-M VS PARA-M
+/// MONO VS PARA
 ///
-/// Para-M has three voices.  Mono-M has only one.
-/// However Mono-M has twice as many waves in its memory, so it will sound less aliased for many notes.
+/// Para has three voices.  Mono has only one.
+/// However Mono has twice as many waves in its memory, so it will sound less aliased for many notes.
 
 /// CHOOSING SAW VS SQUARE VS TRIANGLE
 ///
@@ -59,7 +59,7 @@
 
 /// GATE MODE
 ///
-/// By default Mono-M does not stop playing notes when it receives a NOTE OFF -- 
+/// By default Mono does not stop playing notes when it receives a NOTE OFF -- 
 /// that is the responsibility of your envelope and VCA (it will send them a gate off).
 /// However you can change this behavior by uncommenting the following #define:
 
