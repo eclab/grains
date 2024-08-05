@@ -5,6 +5,19 @@
 - John Tuffen, wonkystuff (john@wonkystuff.net)
 - Mathias Brüssel, tangible waves (mathias@tangiblewaves.com)
 
+
+
+### Table of Contents
+
+[Introduction](#introduction)	
+[Additions to Standard MIDI](#additions)   
+[Topology and Data Format](#topology)  
+[Namespaces, IDs, and CC Messages](#namespaces)  
+[MIDI Injection, Program Load/Save, and System Exclusive](#injection) 
+
+An accompanying document, **Modular MIDI Conventions for Musicians**, is a more gentle introduction for users.
+
+<a name="introduction"/></a>
 ## Introduction
 
 This document describes additions to or restrictions on MIDI intended to help modules inside a modular synthesizer talk to one another over patch cables using MIDI.  It is not meant to replace Gate/CV, only to augment it.
@@ -13,8 +26,8 @@ MIDI is primarily designed for large, monolithic devices to control other large,
 
 This document assumes that you are familiar with MIDI, and does not explain MIDI concepts.
 
-An accompanying document, **Modular MIDI Conventions for Musicians**, is a more gentle introduction for users.
 
+<a name="additions"/></a>
 ## Additions to Standard MIDI
 
 Modular MIDI only adds conventions to standard MIDI.  It does not break or significantly deviate from any MIDI standards, and everything below can be implemented as standard non-Sysex MIDI messages.  Here are the major differences:
@@ -33,6 +46,7 @@ Modular MIDI only adds conventions to standard MIDI.  It does not break or signi
 
 - **MIDI Polyphonic Expression (MPE).**  Modular MIDI can be made compatible with MPE with some work.
  
+<a name="topology"/></a>
 ## Topology and Data Format
 
 There are no requirements placed on hardware transport or speed, except that a given modular platform should standardize on one approach.  We provide the example below illustrating usage on the AE Modular system.  We then make topological and organizational recommendations.
@@ -102,6 +116,7 @@ MPE is meant for the situation where each note (each voice) is usually sent on a
 	
 - An MPE zone has a fixed number of channels, and thus normally a fixed number of notes.  What if the musician plays more than that number of notes at a time?  MPE will **spill** those notes to channels it is already using for other notes.  Most receiver modules cannot play more than one note.  The distributor *could* handle this situation for them, by sending a preemptive NOTE OFF message to turn off the old note; but this is not appropriate if the receiver module is a sophisticated polyphonic module which can play multiple notes.  Thus either this behavior should be switchable, or the distributor should allow the individual receivers to deal with it themselves.
 
+<a name="namespaces"/></a>
 ## Namespaces, IDs, and CC Messages
 
 Except in the case of polyphonic modules which may have grabbed multiple channels to themselves, channels are commonly allocated to voices, not to individual modules.  This means that multiple modules working to form a single voice will likely receive the same messages.  This isn't a problem for most messages, but it presents a serious problem for CC messages.  Consider the situation where a MIDI-controlled Oscillator and a MIDI-controlled Filter are working together to form a voice.  Both of them receive a CC message that asks that CC Parameter number 43 be changed to the value 21.  The modules are from different vendors.  The Oscillator interprets CC Parameter number 43 as Detune.  But the Filter interprets it as Filter Cutoff.  Both of them change their respective features in response to this CC message -- not what the musician intended!
@@ -192,9 +207,9 @@ CC MSB / LSB    | MSB Function / LSB Function    | Related Traditional Name
 
 - **(Open)** These CCs may be used by the module for any purpose, with the strong warning that other modules may likewise have chosen to do so. 
 
-- **Bank Select, Mod Wheel, Data Entry, and Expression Controller**.  These are standard CCs with well established functions. **Bank Select** is discussed in more detail later.  Data Entry is only used as part of RPN and NRPN.  Do not use it otherwise.  See RPN/NRPN in a section below.
+- **Bank Select, Mod Wheel, Data Entry, and Expression Controller**.  These are standard CCs with well established functions. **Bank Select** is discussed in more detail later.  **Data Entry** is only used as part of RPN and NRPN.  Do not use it otherwise.  See RPN/NRPN in a section below.
 
-- **Glide, Volume, Pan**.  These are standard CCs, but we do not define the LSB of these CCs, instead, leaving them open.
+- **Glide, Volume, Pan**.  These are standard CCs, but we do not allocate the LSB of these CCs, instead, leaving them open.
 
 - **1a, 1b, ... 8a, 8b** These CCs are the first two parameters "a" and "b" available to IDs 1 ... 8.  For example, 3b is the parameter "b" (the second parameter) available to ID 3.  These parameters are 14-bit parameter MSB/LSB pairs.  If the module wishes, it may split one of these pairs into individual 7-bit CC parameters.  In this case, it should split parameter "b" into parameters "b" and "h".  The module can also split the second pair as well: in this case, it should split parameter "a" into parameters "a" and "i".    Note that ID region 6 is out of order -- this is to align it with the traditional names "FX Ctrl 1" and "FX Ctrl 2" for convenience, since the default function of ID 6 is Effects and Audio Processors.
 
@@ -364,6 +379,9 @@ The scheme discussed here allows up to 8 modules on a channel to have between 7 
 
 - Allocate an additional ID (or more).  This is permitted.  If you do this, we suggest you allocate two IDs that are consecutive, but this is not required.  For example, your module might allocate IDs 1, 2, and 3.
 
+
+<a name="injection"/></a>
+## MIDI Injection, Program Load/Save, and System Exclusive
 
 ### MIDI Injection and Modulation CCs
 

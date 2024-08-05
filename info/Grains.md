@@ -320,6 +320,8 @@ To this collection I typically add the following, which I use to seed random num
 	
 	#define RANDOM_PIN    A5
 	
+The GRAINS is essentially an Arduino Nano, so it has eight analog pins A0...A7.  The pins A5, A6, and A7 are not connected, so any of them can be used to collect random number seed entropy.
+	
 There is a bug in all of the analog inputs: they seem to have a reference voltage of about 4V.  This means that everything is scaled so that 4V or above (roughly) will be read as 1023.  For IN1 and IN2, you can scale this back down such that only 5V will read as 1023, by setting their potentiometers to about the 2 o'clock or maybe 3 o'clock position.  Nothing can be done for IN1 and IN2.  If set to MAN, the maximum potentiometer position is exactly 1023.  I consider all this a significant bug but I don't know what is causing it: AREF is properly being pinned to ground with a capacitor, so it should be 5V internally.
 
 - IN 1.  This is attenuated by POT1 or alternatively replaced by POT1.  Note that when attenuated, if you set POT1 to about the 2 o'clock position, IN1 will be maximal.  Higher than that and you're just multiplying IN1 by larger values, but they're clipped at 1023 in the Arduino.  I consider this a bug.
