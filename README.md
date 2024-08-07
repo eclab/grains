@@ -21,21 +21,21 @@ There are two **special directories**:
 
 ### Firmware Summary
 
-| Oscillators | MIDI Osc | Digital Out | CV Out      | Other |
-|:------------|:---------|:------------|:------------|:------|
-| DX          | DX-M     | Tangle      | Multiplex   | Dave  |
-| Pluck       | Pluck-M  | Tardy       | Sequence    | Bit   |
-| Booker      | Booker-M | Chrono      | LFO         | Scope |
-| Droplets    | VS       | Pattern     | Arp         |       |
-| AKWF        | Mono     | Elements    | Quant       |       |
-| 808         | Para     | Lattice     | ADSR        |       |
-| Voice       |          | Beats       | Multilevel  |       |
-| Chordal     |          | Geiger      | Stochastic  |       |
-| Byte        |          | Pulses      | Switchblade |       |
-| Evolution   |          | Divvy       | Memoir      |       |
-| Oration     |          | Multiple    |             |       |
-| Oration 2   |          | Respite     |             |       |
-|             |          | Iterate     |             |       |
+| Oscillators | MIDI Osc | Digital Mod | CV Modulation | Other |
+|:------------|:---------|:------------|:--------------|:------|
+| DX          | DX-M     | Tangle      | Multiplex     | Dave  |
+| Pluck       | Pluck-M  | Tardy       | Sequence      | Bit   |
+| Booker      | Booker-M | Chrono      | LFO           | Scope |
+| Droplets    | VS       | Pattern     | Arp           |       |
+| AKWF        | Mono     | Elements    | Quant         |       |
+| 808         | Para     | Lattice     | ADSR          |       |
+| Voice       |          | Beats       | Multilevel    |       |
+| Chordal     |          | Geiger      | Stochastic    |       |
+| Byte        |          | Pulses      | Switchblade   |       |
+| Evolution   |          | Divvy       | Memoir        |       |
+| Oration     |          | Multiple    |               |       |
+| Oration 2   |          | Respite     |               |       |
+|             |          | Iterate     |               |       |
 
 
 ## New: Booker-M
