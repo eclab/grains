@@ -49,17 +49,48 @@
 /// This will change IN3 from TRANSPOSE to CLOCK OUT.  You can then hook IN3 up to your envelope and things
 /// should sound better.  But you've lost transposition.
 
-/// RANGE AND RESOLUTION
+/// OUTPUT PITCH RANGE AND RESOLUTION
 /// 
-/// It looks like GRAINS's range is about 42 notes (3.5 octaves or so), starting at a bit
-/// above 0V.  It's not capable of higher or lower values.
+/// Mozzi cannot go down to 0V.  Its minimum is a little more, transposing up by about a half
+/// of a semitone.   Most oscillators can be tuned to deal with this.
+/// But GRAINS oscillators have to be manually adjusted.  So for example, if you're attaching 
+/// this program to a GRAINS oscillator like DX, you might want to change the TRANPOSE_BITS
+/// to about -6.
 ///
-/// Furthermore, the range is a bit nonlinear. I have a lookup table in the code which gets
-/// as close as I can to my own GRAINS but I do not know if it matches other people's GRAINS.
-/// Send me mail and let me know how it does on your unit.
+/// Mozzi's output is capable of a range of betwen 42 and 48 notes (betwen 3.5 and 4 octaves).  
+/// This is also the quantizer's range: values above that will just get quantized to the 
+/// top note.
 ///
-/// Also note that GRAINS's resolution is only about 100 ticks per octave.  This means I
-/// can maybe get within 7 cents of a note but not nail it exactly.
+/// One of the issues in using this quantizer is that GRAINS does not have a buffer:
+/// the voltage its output will produce is strongly affected by the amperage being pulled
+/// by the oscillator it's plugged into, and different AE oscillators pull different amounts.
+/// VCO is particularly bad here -- it pulls a lot of voltage, thus scaling down Quant's output
+/// so it's no longer v/oct.  555 is much better (its inputs are buffered).  And you can
+/// generally fix matters by plugging GRAINS into a buffered mult, and then attaching
+/// the buffered mult to your oscillator.  But even the buffered mults differ a bit!
+///
+/// I have made a few tables to match different scenarios:
+///
+/// 1. You are plugged directly into a VCO
+/// 2. You are plugged directly into a 555
+/// 3. You are plugged directly into a uBUFFER.  The uBUFFER is attached to your oscillator(s).
+/// 4. You are plugged directly into a 4BUFFER.  The 4BUFFER is attached to your oscillator.
+/// 5. You are plugged directly into another GRAINS oscillator.  In this case, I suggest
+///    using the OUTPUT_UBUFFER #define below, setting TRANSPOSE_BITS on the GRAINS oscillator 
+///    to about -6, and tweaking the tracking via POT1.  It should work.
+/// 6. You are plugged directly into a 2OSC/d
+/// 7. You are plugged into a 2OSC: in this case, may your god have mercy on your soul.
+///
+/// You need to specify what you're plugged into, which will change the pitch table:
+
+#define OUTPUT_555
+//#define OUTPUT_VCO
+//#define OUTPUT_2OSCD
+//#define OUTPUT_UBUFFER
+//#define OUTPUT_4BUFFER
+
+
+
 
 
 
@@ -417,6 +448,7 @@ inline uint8_t getPitchCV(uint8_t pitch)
 // specifically for my unit.  I do not know if it is consistent for
 // other units, but I hope it is!  The range is just under 3.5 octaves,
 // and starts at slightly above 0V.
+/*
 uint16_t positions[42] = 
 {  
    0,   13,  23,  32,  41,  50,  59,  68,  78,  87,  96,  106, 	// by 9.3, except first which jumps by 13
@@ -424,6 +456,61 @@ uint16_t positions[42] =
    232, 242, 251, 261, 271, 281, 291, 300, 310, 320, 330, 339, 	// by 9.75
    349, 358, 368, 377, 386, 397		// by 9.25, except last which jumps by 11.  One more pitch is exists but is highly nonlinear	
 };
+*/
+
+
+#if defined(OUTPUT_555)
+// VALUES FOR 555
+uint16_t positions[48] = 
+{  
+// C    C#   D    D#   E    F    F#   G    G#   A     A#   B
+   0,   13,  22,  30,  38,  47,  55,  64,  72,  81,  89,  98,
+   107, 116, 124, 133, 141, 150, 159, 167, 176, 184, 193, 202,
+   210, 219, 227, 236, 244, 253, 262, 270, 279, 287, 296, 304,
+   313, 321, 330, 338, 346, 355, 363, 372, 380, 388, 399, 399		// 555 has 47 notes
+};
+#elif defined(OUTPUT_VCO)
+// VALUES FOR VCO
+uint16_t positions[48] = 
+{  
+// C    C#   D    D#   E    F    F#   G    G#   A     A#   B
+   0,   14,  24,  33,  42,  51,  60,  69,  78,  88,  97,  106,
+   115, 124, 134, 143, 152, 161, 171, 180, 189, 198, 208, 217,
+   226, 235, 244, 254, 263, 272, 281, 290, 299, 308, 318, 327,
+   350, 359, 368, 377, 385, 394, 394, 394, 394, 394, 394, 394			// VCO has only 42 notes
+};
+#elif defined(OUTPUT_UBUFFER)
+// VALUES FOR uBUFFER
+uint16_t positions[48] = 
+{  
+// C    C#   D    D#   E    F    F#   G    G#   A     A#   B
+   0,   13,  21,  29,  38,  46,  55,  63,  72,  80,  90,  97,
+   106, 114, 123, 141, 139, 148, 156, 165, 173, 182, 190, 199,
+   208, 216, 225, 233, 242, 250, 259, 267, 276, 284, 293, 301,
+   309, 318, 326, 335, 343, 351, 359, 368, 376, 384, 392, 392			// uBuffer has 47 notes
+};
+#elif defined(OUTPUT_4BUFFER)
+// VALUES FOR 4BUFFER
+uint16_t positions[48] = 
+{  
+// C    C#   D    D#   E    F    F#   G    G#   A     A#   B
+   0,   13,  21,  29,  38,  46,  55,  63,  72,  80,  89,  98,
+   107, 115, 124, 142, 140, 149, 157, 166, 174, 183, 191, 200,
+   209, 217, 226, 234, 243, 251, 260, 268, 277, 285, 294, 302,
+   311, 320, 328, 337, 345, 353, 361, 370, 378, 386, 394, 394			// 4Buffer has 47 notes
+};
+#elif defined(OUTPUT_2OSCD)
+uint16_t positions[48] = 
+{  
+// C    C#   D    D#   E    F    F#   G    G#   A     A#   B
+   0,   13,  22,  30,  39,  47,  56,  64,  73,  82,  90,  99,
+   107, 116, 125, 133, 142, 151, 159, 168, 176, 185, 194, 202,
+   211, 220, 228, 237, 245, 254, 262, 271, 280, 288, 297, 306,
+   314, 323, 331, 340, 348, 356, 365, 373, 382, 390, 403, 403			// 2OSC2 has 47 notes
+};
+#endif
+
+
 
 
 #define GET_NOISE(pos) pgm_read_byte_near(&NOISE[pos])
