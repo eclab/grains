@@ -1,11 +1,11 @@
 # Modular MIDI Conventions for Musicians
-**Version 0.5**, June 22, 2024
+**Version 0.5**, August 14, 2024
 
 Sean Luke, George Mason University (sean@cs.gmu.edu)
 
 ### Table of Contents
 
-[Introduction](#introduction).  Where Modular MIDI came from.  Why you need it.     
+[Introduction](#introduction).  The point of Modular MIDI.  Where Modular MIDI came from.  Why you need it.  Or don't.    
 [A MIDI Primer](#midiprimer).  In case you're not familiar.   
 [Connecting Modular MIDI Modules](#connecting).  How you hook stuff up.  
 [IDs and CCs](#ccs).  Lots of modules, not enough CC parameters.  What to do?  
@@ -19,6 +19,16 @@ An accompanying document, **Modular MIDI Conventions for Developers**, is a more
 
 <a name="introduction"/></a>
 ## Introduction 
+
+Modular MIDI is a set of conventions for MIDI to guarantee that multiple modules can work together to respond to your MIDI messages in a variety of ways without messing each other up.  It allows you to send MIDI to your modular synthesizer to do polyphony and timbrality, remote control of many parameters, stable pitch control and microtuning, patch saving and loading, and so on.
+
+Modular MIDI goes under different names.  Notably **IMDI** is Tangible Waves's brand name for their implementation.
+
+### Do you Need Modular MIDI?
+
+Maybe not!  If you just want to play your modular synth monophonically from MIDI, you don't need any of this stuff: you can just use the MIDI input found on Master I/O revisions 1 through 5, and be done with it.
+
+### Modular MIDI History
 
 Modular MIDI is based on the design by John Tuffen (wonkystuff) for the modules he developed for the AE Modular system.  In his approach, MIDI entered the system via a MIDI port on a **Distributor Module** (the **wonkystuff mb/1** or **Tangible Waves MIDI Brain**), and then travelled from module to module using standard AE Modular sockets and wires, just like Gate/CV or Audio.  
 
