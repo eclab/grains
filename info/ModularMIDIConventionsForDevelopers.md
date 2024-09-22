@@ -164,9 +164,7 @@ MIDI defines 128 CC parameters.  These fall into three levels:
 - Some parameters have established functions but these functions are not used much or have been lost to time; but they appear in the list of CC parameters in DAWs: we change some of these for our purposes but try to align ID regions with them to some degree for the convenience of the musician. 
 - Many parameters are unassigned.  We assign these ourselves below, or we leave them "open".
 
-The first 64 CC parameters traditionally can be used in two different ways.  First, the CCs can just be used as plain (7-bit) parameters.  Second, a CC from 0...31 can be paired with the equivalent CC from 32...63 to form a **14-bit MSB/LSB CC pair** which allows one to set parameter values with high-resolution 14 bits rather than low-resolution 7 bits.  
-
-The second 64 CC parameters can only be used as plain (7-bit) parameters.
+The first 64 CC parameters traditionally can be used in two different ways.  First, the CCs can just be used as plain (7-bit) parameters.  Second, a CC from 0...31 can be paired with the equivalent CC from 32...63 to form a **14-bit MSB/LSB CC pair** which allows one to set parameter values with high-resolution 14 bits rather than low-resolution 7 bits.  The second 64 CC parameters can only be used as plain (7-bit) parameters.  Note that (unfortunately) relatively few controller devices and DAWS support 14-bit CCs. 
 
 We have partitioned much of the unallocated CC space into eight regions of 9 CC parameters each.  Each region corresponds to an ID.  (1 through 8).  The 9 CC parameters belonging to an ID are known as parameters "a" through "i".  Obviously different IDs will have different CCs allocated to their "a" through "i" parameters.  A module of a given ID may assume that it is the *only* module in a voice chain which responds to its 9 allocated CC parameters (or that any other module responding to them does not conflict with it).
 
