@@ -15,7 +15,7 @@
 
 ### Table of Contents
 
-[Introduction](#introduction)	
+[Introduction](#introduction)  
 [Additions to Standard MIDI](#additions)   
 [Topology and Data Format](#topology)  
 [Namespaces, IDs, and CC Messages](#namespaces)  
