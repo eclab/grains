@@ -3,6 +3,14 @@
 
 Sean Luke, George Mason University (sean@cs.gmu.edu)
 
+### Other Resources
+
+[Modular MIDI Conventions for Musicians](ModularMIDIConventionsForMusicians.md).  A gentler introduction.  
+[Module-Level MIDI](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf).  An academic paper which introduces and describes the conventions.  
+[Lightweight C MIDI Library](../midi). Designed for small processors.  Contains a Modular MIDI conventions sublibrary. 
+[WonkyStuff's Early Introductory Whitepaper](https://wonkystuff.net/midi-a-new-signal-type-for-ae/). This was written before the Modular MIDI conventions were set out but it still might be useful. 
+[Tangible Waves's IMDI Page](https://www.tangiblewaves.com/imdi.html).  IMDI is TangibleWaves's brand name for the Modular MIDI convention.
+
 ### Table of Contents
 
 [Introduction](#introduction).  The point of Modular MIDI.  Where Modular MIDI came from.  Why you need it.  Or don't.    
