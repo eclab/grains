@@ -5,7 +5,7 @@ Sean Luke, George Mason University (sean@cs.gmu.edu)
 
 ### Other Resources
 
-[Modular MIDI Conventions for Developers](https://github.com/eclab/grains/edit/main/info/ModularMIDIConventionsForDevelopers.md).  The spec proper.  
+[Modular MIDI Conventions for Developers](https://github.com/eclab/grains/blob/main/info/ModularMIDIConventionsForDevelopers.md).  The spec proper.  
 [Module-Level MIDI](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf).  An academic paper which introduces and describes the conventions.  
 [Lightweight C MIDI Library](https://github.com/eclab/grains/blob/main/midi/README.md). Designed for small processors, like Arduino.  Contains a Modular MIDI conventions sublibrary.  
 [WonkyStuff's Early Introductory Whitepaper](https://wonkystuff.net/midi-a-new-signal-type-for-ae/). This was written before the Modular MIDI conventions were set out but it still might be useful.  
