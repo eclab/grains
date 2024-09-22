@@ -162,10 +162,17 @@ MIDI defines 128 CC parameters.  These fall into three levels:
 
 - Some parameters have fixed functions, or ones so broadly established and accepted that we should not change them (and we don't).
 - Some parameters have established functions but these functions are not used much or have been lost to time; but they appear in the list of CC parameters in DAWs: we change some of these for our purposes but try to align ID regions with them to some degree for the convenience of the musician. 
-- Many parameters are unassigned.  We assign these ourselves or leave them "open".
+- Many parameters are unassigned.  We assign these ourselves below, or we leave them "open".
 
-The first 64 CC parameters traditionally can be used in two different ways.  First, the CCs can just be used as plain parameters.  Second, a CC from 0...31 can be paired with the equivalent CC from 32...63 to form a **14-bit MSB/LSB CC pair** which allows one to set parameter values with high-resolution 14 bits rather than low-resolution 7 bits.  We will begin with that table:
+The first 64 CC parameters traditionally can be used in two different ways.  First, the CCs can just be used as plain (7-bit) parameters.  Second, a CC from 0...31 can be paired with the equivalent CC from 32...63 to form a **14-bit MSB/LSB CC pair** which allows one to set parameter values with high-resolution 14 bits rather than low-resolution 7 bits.  
 
+The second 64 CC parameters can only be used as plain (7-bit) parameters.
+
+We have partitioned much of the unallocated CC space into eight regions of 9 CC parameters each.  Each region corresponds to an ID.  (1 through 8).  The 9 CC parameters belonging to an ID are known as parameters "a" through "i".  Obviously different IDs will have different CCs allocated to their "a" through "i" parameters.  A module of a given ID may assume that it is the *only* module in a voice chain which responds to its 9 allocated CC parameters (or that any other module responding to them does not conflict with it).
+
+If the module wishes it, parameters "a" and "i" may be joined to form a single 14-bit parameter called "a".  Similarly, parameters "b" and "h" may be joined to form the 14-bit parameter "b".
+
+We will begin with the first 64 CCs:
 
 CC MSB / LSB    | MSB Function / LSB Function    | Related Traditional Name
 ----------------|--------------------------------|------------------
@@ -207,9 +214,9 @@ CC MSB / LSB    | MSB Function / LSB Function    | Related Traditional Name
 
 - **(Open)** These CCs may be used by the module for any purpose, with the strong warning that other modules may likewise have chosen to do so. 
 
-- **Bank Select, Mod Wheel, Data Entry, and Expression Controller**.  These are standard CCs with well established functions. **Bank Select** is discussed in more detail later.  **Data Entry** is only used as part of RPN and NRPN.  Do not use it otherwise.  See RPN/NRPN in a section below.
+- **Bank Select, Mod Wheel, Data Entry, and Expression Controller**.  These are standard CCs with well established functions, and are available to all modules. **Bank Select** is discussed in more detail later.  **Data Entry** is only used as part of RPN and NRPN.  Do not use it otherwise.  See RPN/NRPN in a section below.
 
-- **Glide, Volume, Pan**.  These are standard CCs, but we do not allocate the LSB of these CCs, instead, leaving them open.
+- **Glide, Volume, Pan**.  These are standard CCs, available to all modules, but we do not allocate the LSB of these CCs, instead, leaving them open.
 
 - **1a, 1b, ... 8a, 8b** These CCs are the first two parameters "a" and "b" available to IDs 1 ... 8.  For example, 3b is the parameter "b" (the second parameter) available to ID 3.  These parameters are 14-bit parameter MSB/LSB pairs.  If the module wishes, it may split one of these pairs into individual 7-bit CC parameters.  In this case, it should split parameter "b" into parameters "b" and "h".  The module can also split the second pair as well: in this case, it should split parameter "a" into parameters "a" and "i".    Note that ID region 6 is out of order -- this is to align it with the traditional names "FX Ctrl 1" and "FX Ctrl 2" for convenience, since the default function of ID 6 is Effects and Audio Processors.
 
