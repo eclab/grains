@@ -168,7 +168,7 @@ The first 64 CC parameters traditionally can be used in two different ways.  Fir
 
 We have partitioned much of the unallocated CC space into eight regions of 9 CC parameters each.  Each region corresponds to an ID.  (1 through 8).  The 9 CC parameters belonging to an ID are known as parameters "a" through "i".  Obviously different IDs will have different CCs allocated to their "a" through "i" parameters.  A module of a given ID may assume that it is the *only* module in a voice chain which responds to its 9 allocated CC parameters (or that any other module responding to them does not conflict with it).
 
-If the module wishes it, parameters "a" and "i" may be joined to form a single 14-bit parameter called "a".  Similarly, parameters "b" and "h" may be joined to form the 14-bit parameter "b".
+If the module wishes it, parameters "a" and "i" may be joined to form a single 14-bit CC parameter called "a".  Similarly, parameters "b" and "h" may be joined to form the 14-bit CC parameter called "b".
 
 We will begin with the first 64 CCs:
 
