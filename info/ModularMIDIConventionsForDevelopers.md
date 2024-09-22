@@ -7,7 +7,7 @@
 
 ### Other Resources
 
-[Modular MIDI Conventions for Musicians](ModularMIDIConventionsforMusicians.md).  A gentler introduction.  
+[Modular MIDI Conventions for Musicians](https://github.com/eclab/grains/edit/main/info/ModularMIDIConventionsforMusicians.md).  A gentler introduction.  
 [Module-Level MIDI](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf).  An academic paper which introduces and describes the conventions.  
 [Lightweight C MIDI Library](https://github.com/eclab/grains/blob/main/midi/README.md). Designed for small processors, like Arduino.  Contains a Modular MIDI conventions sublibrary.  
 [WonkyStuff's Early Introductory Whitepaper](https://wonkystuff.net/midi-a-new-signal-type-for-ae/). This was written before the Modular MIDI conventions were set out but it still might be useful.  
