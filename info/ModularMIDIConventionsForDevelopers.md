@@ -5,7 +5,11 @@
 - John Tuffen, wonkystuff (john@wonkystuff.net)
 - Mathias Brüssel, tangible waves (mathias@tangiblewaves.com)
 
+### Other Resources
 
+[Modular MIDI Conventions for Musicians](ModularMIDIConventionsForMusicians.md).  A gentler introduction.  
+[Module-Level MIDI](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf).  An academic paper which introduces and describes the conventions.  
+[Lightweight C MIDI Library](../midi). Designed for small processors.  Contains a Modular MIDI sublibrary. 
 
 ### Table of Contents
 
