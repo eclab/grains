@@ -6,7 +6,6 @@ Sean Luke, George Mason University (sean@cs.gmu.edu)
 
 ### Other Resources
 
-<<<<<<< HEAD
 [Modular MIDI Conventions for Musicians](ModularMIDIConventionsForMusicians.md).  A gentler introduction.  
 [Module-Level MIDI](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf).  An academic paper which introduces and describes the conventions.  
 [Lightweight C MIDI Library](../midi). Designed for small processors, like Arduino.  Contains a Modular MIDI conventions sublibrary.  
@@ -16,15 +15,6 @@ Sean Luke, George Mason University (sean@cs.gmu.edu)
 ## Table of Contents
 
 This **tutorial** is set up in **stages**.  You'd only need to read up to the level of complexity you need for your setup.
-=======
-[Modular MIDI Conventions for Developers](https://github.com/eclab/grains/blob/main/info/ModularMIDIConventionsForDevelopers.md).  The spec proper.  
-[Module-Level MIDI](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf).  An academic paper which introduces and describes the conventions.  
-[Lightweight C MIDI Library](https://github.com/eclab/grains/blob/main/midi/README.md). Designed for small processors, like Arduino.  Contains a Modular MIDI conventions sublibrary.  
-[WonkyStuff's Early Introductory Whitepaper](https://wonkystuff.net/midi-a-new-signal-type-for-ae/). This was written before the Modular MIDI conventions were set out but it still might be useful.  
-[Tangible Waves's IMDI Page](https://www.tangiblewaves.com/imdi.html).  IMDI is TangibleWaves's brand name for the Modular MIDI convention.
-
-### Table of Contents
->>>>>>> e09e2aa223dc5294afcdcb5e1b413d40632435be
 
 [Introduction](#introduction).  The point of Modular MIDI.  Where Modular MIDI came from.  Why you need it.  Or don't.    
 [A MIDI Primer](#midiprimer).  In case you're not familiar.   
@@ -66,7 +56,7 @@ Attached to the mb/1 were modules which responded to MIDI.  For example, the **m
 
 The mco/1 had a "MIDI IN" port from which it received MIDI messages, and a "MIDI THRU" port where they passed on the same messages to other modules.  For example, this allowed two detuned oscillators to respond to the same notes.
 
-In fall of 2023, Tuffen, Mathias Brüssel (of tangible waves), and Sean Luke (George Mason University) began work in a standardized set of MIDI conventions to extend this model to more complex scenarios.  This eventually led to a paper, ["Module-Level MIDI"](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf), presented at the Sound and Music Computing (SMC) conference in Summer of 2024.  Those conventions led to the ones you are reading here.
+In fall of 2023, Tuffen, Mathias Brüssel (of tangible waves), and Sean Luke (George Mason University) began work in a standardized set of MIDI conventions to extend this model to more complex scenarios.  This eventually led to a paper, **["Module-Level MIDI"](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf)**, presented at the Sound and Music Computing (SMC) conference in Summer of 2024.  Those conventions led to the ones you are reading here.
 
 ### Why MIDI?
 
@@ -341,12 +331,13 @@ Modular MIDI further supports **Current Program Save**.  This is an Auxiliary Pa
 
 Finally, Modular MIDI supports **Current Program Revert**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 1.  It instructs the module to reload its current parameters from the patch slot it is presently using (or last saved to or loaded from).  
 
-It's entirely up to your module as to whether it supports one or more of these commands.  See the ["Saving and Loading Table"](#saving-and-loading-table) for information on these three commands.
+It's entirely up to your module as to whether it supports one or more of these commands.  See the **[Saving and Loading Table](#savingandloadingtable)** for information on these three commands.
 
 
 <a name="tables"/></a>
 ## Tables
 
+<a name="idandccparametertable"/></a>
 ### ID and CC Parameter Table
 
 Below is a table, for each ID and each parameter a...i, of the CC parameter number assigned to that parameter.
@@ -355,7 +346,7 @@ Normally CC parameters are "7-bit", meaning that each CC can only be set to low-
 
 Let's say that your module is ID 2, and it uses 14-bit b/i but not a/h.  Then parameter a is CC 14, parameter b is (14-bit) MSB 15, LSB 47, parameter c is 70, parameter d is 71, parameter e is 72, parameter f is 73, parameter g if 75, and parameter h is 47.  Your module documentation will say what the parameters a...h mean.
 
-Some CCs have historic/traditional (and often obsolete) uses. You may find them in your DAW's list of CC names.  We list some of them in this table because certain IDs (see the ["Default ID Table"](#default-id-table)) have been lined up to conveniently correspond with these names if your module sees fit to use them.
+Some CCs have historic/traditional (and often obsolete) uses. You may find them in your DAW's list of CC names.  We list some of them in this table because certain IDs (see the **[Default ID Table](#default-id-table)** have been lined up to conveniently correspond with these names if your module sees fit to use them.
 
 
 ID  | Parameter   | 7-bit CC Parameter          | 14 bit CC Parameter MSB/LSB | Traditional Use
@@ -435,6 +426,7 @@ ID  | Parameter   | 7-bit CC Parameter          | 14 bit CC Parameter MSB/LSB | 
 
 
 
+<a name="defaultidtable"/></a>
 ### Default ID Table
 
 Modules have a Default ID (or "Initial ID") corresponding to a category that they belong to.  You may be able to change this ID to something else.  The default IDs are:
@@ -451,6 +443,7 @@ ID | Default ID Category
 8  | Miscellaneous
 
 
+<a name="auxiliaryparameterstable"/></a>
 ### Auxiliary Parameters Table
 
 IDs 9...15 get 16 parameters each in the Auxiliary Parameters space.  You can call them parameters "a" through "p".  Use CC 3 to set the parameter number, then use CC 35 to set its value.
@@ -468,6 +461,7 @@ CC 3 Value     | Auxiliary Parameters
 
 
 
+<a name="nrpntable"/></a>
 ### NRPN Table
 
 Each ID gets 256 parameters, all 14-bit, in the NRPN space.  The first 9 parameters correspond to the parameters "a...i" in CC for IDs 1...8.  The first 16 parameters correspond to the parameters "a...p" in Auxiliary Parameters for IDs 9...15.
@@ -491,6 +485,7 @@ NRPN Region  | Function
 3840-4095    | 256 Parameters for ID 15
 
 
+<a name="savingandloadingtable"/></a>
 ### Saving and Loading Table
 
 CC 3 Value     | Auxiliary Parameter                      
