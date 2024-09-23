@@ -1,30 +1,48 @@
 # Modular MIDI Conventions for Musicians
-**Version 0.5**, August 14, 2024
+
+**Version 0.6**, September 22, 2024
 
 Sean Luke, George Mason University (sean@cs.gmu.edu)
 
-### Table of Contents
+### Other Resources
+
+[Modular MIDI Conventions for Musicians](ModularMIDIConventionsForMusicians.md).  A gentler introduction.  
+[Module-Level MIDI](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf).  An academic paper which introduces and describes the conventions.  
+[Lightweight C MIDI Library](../midi). Designed for small processors, like Arduino.  Contains a Modular MIDI conventions sublibrary.  
+[wonkystuff's Early Introductory Whitepaper](https://wonkystuff.net/midi-a-new-signal-type-for-ae/). This was written before the Modular MIDI conventions were set out but it still might be useful.  
+[tangible waves's IMDI Page](https://www.tangiblewaves.com/imdi.html).  IMDI is tangible waves's brand name for the Modular MIDI convention.
+
+## Table of Contents
+
+This **tutorial** is set up in **stages**.  You'd only need to read up to the level of complexity you need for your setup.
 
 [Introduction](#introduction).  The point of Modular MIDI.  Where Modular MIDI came from.  Why you need it.  Or don't.    
 [A MIDI Primer](#midiprimer).  In case you're not familiar.   
-[Connecting Modular MIDI Modules](#connecting).  How you hook stuff up.  
-[IDs and CCs](#ccs).  Lots of modules, not enough CC parameters.  What to do?  
-[Auxiliary Parameters and Additional IDs](#auxiliary).  When you run out of CCs.   
-[NRPN](#nrpn).  Even more space than CCs!  
-[Loading and Saving Patches](#loading).  Program Change and friends.  
-[Modulation CC Messages](#modulation).  How one module can use MIDI to modulate other modules.  
-[Tables](#tables).  All the nitty-gritty at the end.  
+
+[Stage 0. I Just Need to Play a Note](#stage0) You don't need Modular MIDI yet.  
+[Stage 1. Setting Up a Basic MIDI-Controlled Module](#stage1) How you hook MIDI-controlled modules up.  About Distribution Modules.  
+[Stage 2. Setting Up Multiple Modules](#stage2) Getting more complicated.  
+[Stage 3. Sending Parameters](#stage3) Dealing with the mess that is MIDI CC.  Also using RPN and NRPN.  And Auxiliary Parameters.  
+[Stage 4. Modules that Control other Modules](#stage4)  Sequencers and such.  
+[Stage 5. Polyphonic Modules](#stage5)  Options for sophisticated modules.  
+[Stage 6. Saving and Loading Patches](#stage6)  Uploading and downloading.  
+
+[Tables Appendix](#tables).  All the nitty-gritty at the end.  
 
 An accompanying document, **Modular MIDI Conventions for Developers**, is a more terse description.
 
 <a name="introduction"/></a>
 ## Introduction 
 
-Modular MIDI is a set of conventions for MIDI to guarantee that multiple modules can work together to respond to your MIDI messages in a variety of ways without messing each other up.  It allows you to send MIDI to your modular synthesizer to do polyphony and timbrality, remote control of many parameters, stable pitch control and microtuning, patch saving and loading, and so on.
+**This document discusses how to run MIDI over cables between the modules inside a modular synthesizer.**
+
+MIDI is the most common protocol for modern electronic music devices to send messages to one another: notes, modulation information, etc.  But the modular synthesizer world, which predates MIDI, uses an earlier approach known as Control Voltage or CV.  MIDI has certain advantages (and disadvantages) compared to CV.  Modular MIDI won't replace CV.  Each has their place, and they play well together.
+
+The problem is that MIDI isn't designed for the fine-grained nature of individual modules.  It was meant for large devices (entire synthesizers or computers or sequencers or keyboards) to send messages to other large devices.  So Modular MIDI is a set of conventions for MIDI to guarantee that multiple small modules can work together to respond to your MIDI messages in a variety of ways without messing each other up.  
 
 Modular MIDI goes under different names.  Notably **IMDI** is Tangible Waves's brand name for their implementation.
 
-### Do you Need Modular MIDI?
+### Do You Need Modular MIDI?
 
 Maybe not!  If you just want to play your modular synth monophonically from MIDI, you don't need any of this stuff: you can just use the MIDI input found on Master I/O revisions 1 through 5, and be done with it.
 
@@ -96,137 +114,224 @@ There are a few other MIDI conventions you should be aware of to understand stuf
 - MIDI POLYPHONIC EXPRESSION (MPE).  MIDI doesn't have per-note parameters.  For example, f you wanted to bend one note being played on channel 3, but not the others, too bad.  They'll all get bent.  MPE fixes this by assigning each note its own channel.  A receiver would listen to a range of channels, and play the notes that arrive on those channels.  When a bend or CC message arrives on a channel, it only applies to that note.   This wastes channels, which are a precious commodity.  Still MPE is now very common, and meshes well with Modular MIDI.
 
 
-<a name="connecting"/></a>
-## Connecting Modular MIDI Modules
+<a name="stage0"/></a>
+## Stage 0.  I Just Need to Play a Gate/CV Note
+Then you really don't need Modular MIDI.
 
-Modular MIDI flows over standard modular cabling, and goes out of and into sockets just like Gate/CV or Audio.  
+Many people simply have a modular system where all modules respond to Gate/CV, and not to MIDI.  They just need some way to translate MIDI into Gate/CV so they can play one or more of their modules from their DAW or controller.  
 
-### Sockets
+To do this you'd typically use some kind of **MIDI to Gate/CV Interface**, such as AE Modular's **MASTER I/O.** Attach a keyboard controller, or DAW, or sequencer, or groovebox, to the interface to send MIDI notes to it. Then connect the Gate/CV output from the interface to the appropriate oscillators and envelopes, and you're basically done.  You might need to set the channel that each Gate/CV pair listens to.  
 
-A basic MIDI module will have at least two sockets for MIDI:
+You could also use this to trigger drums. As certain notes arrive on MIDI, the interface sends an appropriate gate trigger out to play a certain drum on a drum module.
 
-- **MIDI IN**.  This socket receives MIDI messages from elsewhere.  The module responds to some or all of these messages.
+There's nothing wrong with this setup if it works for you. Modular MIDI is unlikely to help you here.
 
-- **MIDI THRU**.  This socket sends an exact copy of the messages received on MIDI IN.  This enables other modules to respond to those messages as well.
+Where Modular MIDI comes into play is when you have modules which respond to MIDI directly.  Perhaps they use MIDI for stable pitch tuning or to receive parameter changes via MIDI CC rather than via CV; or maybe they are polyphonic or respond to MPE.  In these scenarios, a simple interface probably won't cut it.   
 
-It's possible that you might see some other sockets:
+<a name="stage1"/></a>
+## Stage 1.  Setting Up a Basic MIDI-Controlled Module 
 
-- **MIDI OUT**.  Maybe you have a Sequencer Module which generates its own MIDI for other modules to respond to.  It might send this out MIDI OUT to go to them.
+Let's start with a simple **MIDI-controlled oscillator module.**  This module doesn't receive Gate/CV to play notes: it receives MIDI over ordinary modular cables.
 
-- **MIDI MODULATION THRU** or **SOFT THRU**.  Some modules need to pass MIDI along but also **inject** their own MIDI into the stream, perhaps to modulate another MIDI module.  This can't happen in a standard MIDI THRU.  Thus these modules could sport a special MIDI MODULATION THRU to do this.
+To get MIDI to this module, you'll need a second module which takes normal MIDI and routes it to one or more MIDI-controlled modules.  This is called a **MIDI Distribution Module**.
 
-More sophisticated modules could have multiple copies of these sockets for different purposes.
+### Wiring the Modules Up
 
-### MIDI Distribution Modules and Voice Chains
+Your MIDI-controlled module will have a **MIDI IN** port (using your modular cabling).  In most cases it will respond to any MIDI that is sent to it regardless of what channel the MIDI messages are being sent on.  
 
-In most cases you'll want a way to get MIDI data from a DAW or controller into your modular system.  To do this you'd use a **MIDI Distribution Module**.   This module takes MIDI from a standard 5-pin, USB, or TRS MIDI connection and distributes it to your other MIDI modules.  The **Wonkystuff mb/1** is an example of a MIDI Distribution Module.
+The MIDI Distribution Module will probably have multiple **MIDI OUT** ports, one for each channel, using your modular cabling. Pick the channel you're using, and connect that MIDI OUT port to the MIDI IN port on your MIDI-controlled module.
 
-MIDI has 16 **channels**. In Modular MIDI, usually a channel represents a monophonic **voice**, that is, MIDI data for playing a single note with a certain kind of sound.  Or a channel can be used for a **drumkit**, which plays different sounds on different notes.  For purposes of discussion here, we will consider a drumkit (with multiple drums) to be a single "voice".
+Now you need to get "standard" MIDI into your MIDI Distribution Module so it has something to distribute.  Your MIDI Distribution Module will probably accept MIDI via **5-Pin DIN**, or **MIDI TRS A or B**, or **USB**, or a combination of them.  Using one of these methods, attach it to your keyboard, controller, groovebox/sequencer, or DAW.
 
-Multiple modules (MIDI or not) work together to create a single voice.  You might have an oscillator, a filter, an envelope, an LFO, etc.  Collectively these are known as a **voice chain**.  Some might be controlled by MIDI, others by Gate/CV.  The ones controlled by MIDI will be connected together (MIDI THRU of one module to the next module's MIDI IN, and so on) so they all hear the same MIDI data.  The first MIDI module will be probably connected to a dedicated output port on the MIDI Distribution Module just for messages of that channel: and so the only messages a voice chain would receive would be ones for a single channel.
+Now when you send MIDI from your keyboard (or whatever), it'll go the MIDI Distribution Module, which will then break it up by channel to various outputs, one of which is going to your MIDI-controlled module.  If you've got the module connected to the right port, it'll receive the MIDI and respond.
 
-This model works fine for **multitimbral** synthesizers -- with different kinds of synth voices on different channels.  It also works fine with **polyphonic synthesizers** using **MIDI Polyphonic Expression** or **MPE**.  MPE is set up to send out one note (one voice) per channel.  
-
-But it's common that your DAW or controller sends out polyphonic notes on a single channel.  It's plausible to have a special feature on your MIDI Distribution Module which distributes those notes to different voice chains.  Nothing forbids this.
-
-
-
-<a name="ccs"/></a>
-## IDs and CCs
-
-Controlling modules on a single voice chain with CC parameters presents a major issue.  MIDI only has 128 CC parameters per channel, and realistically only about 100 are available.  But you may have multiple modules listening in on the same channel: for example, you might have a filter module, an envelope module, and an oscillator module.  They're by different vendors, and each of them can be programmed using CC messages.  How do you prevent them from accidentally overlapping?  You don't want to adjust your filter cutoff only to find that your oscillator tuning has changed as well...
-
-### CC Learn
-
-Some modules might avoid overlapping CCs using so-called **CC Learn**.  Here, you might press a "learn" button, and then send a CC message, and the module moves all of its CC pararameter numbers so that the lowest one is the same as that CC message.  This can work for simple devices but training many modules to avoid one another, and to avoid certain standardized CC message parameters, may be difficult.
-
-### IDs
-
-Other modules might avoid overlapping CCs by assigning each module a different **ID**.  An ID is just a number 1, 2, ..., 15, and each ID bestows on its module the right to use a certain range of CC parameters.  Let's call those parameters "a" through "i".  Your module's ID determines *which* CC parameters correspond to those "a" through "i".  That way modules with different IDs use different CC ranges.
-
-The ["ID and CC Parameter Table"](#id-and-cc-parameter-table) below says which CC parameters belong which IDs.
-
-Every module that uses CC has been assigned a **Default ID**.  The Default ID is its initial ID value.  Some simple modules cannot change this to a different ID, but more sophisticated ones can.  The Default ID is associated with the category of the module, as is shown in the ["Default ID Table"](#default-id-table). 
-
-Some modules can have their IDs changed so that they don't conflict with one another, and this changes the CCs corresponding to the parameters "a" through "i".  In some situations, a module might even use 2 or more IDs.  If you are fortunate, you will never need to change the ID, and just leave it as the default.  
-
-### Common CCs
-
-Your modules may also respond to certain other CC functionality.  Modular MIDI supports:
-
-- Bank Select (MSB and LSB)
-- Modulation Wheel (MSB and LSB)
-- Glide (MSB only)
-- Volume (MSB only)
-- Pan (MSB only)
-- Expression Controller (MSB and LSB)
-- Sustain Pedal
-- Legato Switch
-- MPE Timbre
-- All Sounds Off
-- Reset All Controllers
-- All Notes Off
-
-These CCs are sent to all modules, who are free to respond to them if they like.
+How do you set the channel in the MIDI-controlled module?  You don't.  **These modules typically just listen to every single channel.**  There's nothing to set.  MIDI calls this behavior **OMNI**.  But because it's only hooked up to the Channel 1 socket on the MIDI Distribution Module, your MIDI-controlled oscillator will only get messages sent on Channel 1 anyway.
 
 
+<a name="stage2"/></a>
+## Stage 2.  Setting Up Multiple Modules 
 
-<a name="auxiliary"/></a>
-## Auxiliary Parameters and Additional IDs
+Many MIDI Distribution Modules will have many, perhaps 16, output ports, one for each channel, and can be configured to output MIDI to them in different ways.  We'll assume that here.
 
-Only 8 IDs have space allotted to them in the CC space.  But there is space for 7 more IDs in what we call the **Auxiliary Parameters**.  Auxiliary Parameters are set with CCs 3 and 35.  CC 3's value sets the auxiliary parameter number, and CC 35's value sets the auxiliary parameter value.  Send CC first, and then CC 35.
+Let's consider different scenarios.
 
-The ["Auxiliary Parameters Table"](#auxiliary-parameters-table) lists the auxiliary parameters for ach of IDs 9...15.  There are 16 parameters allotted to each, all 7-bit values. You can think of these as parameters "a" through "p".  Auxiliary Parameters are half the speed of regular CCs (because you need to send two CCs to do them).
+### Two Oscillators on the same voice (and thus the same MIDI channel)
+
+Let's imagine you have not one MIDI-controlled Oscillators but two of them.  You want them to respond to the same MIDI notes (and thus the same MIDI channel) but be detuned with respect to one another: you'll mix them together to make a cool effect.
+
+Set up the first oscillator like you did in Stage 1.
+
+The first oscillator also will have a **MIDI THRU** port.  This port copies and sends out anything the oscillator receives on MIDI IN.  Connect the MIDI THRU port to the second oscillator's MIDI IN port.  Now both oscillators are listening to the same MIDI notes.
+
+### Different Kinds of Modules working together on the same voice (and channel)
+
+You might also have a MIDI-controlled oscillator and a **MIDI-controlled envelope** working together to play the same note, so they need to listen to the same MIDI.  You'd hook them up in exactly the same way as the two oscillators.
+
+We call all the modules that work together to produce a single voice a **voice chain**, regardless of whether they're controlled by MIDI or CV.  For example: two oscillators put into a mixer, then pushed through a wave folder, a filter, and a VCA, all controlled by two envelope generators and an LFO: these modules are collectively a voice chain for one voice.
 
 
-<a name="nrpn"/></a>
-## NRPN
+### Two Oscillators playing different sounds on different channels
 
-If your module supports it, and your DAW or controller does, you can also be able to set up to 256 parameters in your module using NRPN.  NRPN is a bit slower than CC but it has much higher resolution and many more parameters.  The first 9 parameters in your NRPN region correspond to the CC parameters "a" through "i", if your ID is in the Auxiliary Parameter space, the first 16 parameters correspond to its parameters "a" through "p".  The ["NRPN Table"](#nrpn-table) lists which NRPN parameters belong to which ID.
+Maybe you want to control the oscillators separately, with different sounds, and so on different channels.  Let's say they're channels 1 and 2.
+
+Set up the first oscillator like you did in Stage 1.  [Let's say it's attached to the output for channel 1]
+
+Now set up the second oscillator just like the first, only attach it to the output for channel 2 on the Distributor.
+
+### Four Oscillators playing different notes (voices), all on the same channel
+
+Your MIDI Distributor might be able to support **note distribution**.  Here, each new note comming in on a channel gets routed out a different MIDI OUT.  You'll need to set up your MIDI Distributor appropriately, then attach the four oscillators to four different MIDI Out ports on the Distributor.
+
+### Four Oscillators playing different notes, all on the same channel, using MIDI Chaining
+
+Certain MIDI-controlled oscillators might use **chaining** to distribute multiple notes on their own.  Here you'd set up oscillator 1 like you did in Stage 2, then connect its MIDI THRU to the MIDI IN of oscillator 2, then connect its MIDI THRU to the MIDI IN of oscillator 3, then connect *its* MIDI THRU to the MIDI IN of oscillator 4.
+
+The idea is that when the first note comes in, oscillator 1 handles it.  But when the second note comes in, oscillator 1 will pass it on, so oscillator 2 will handle it, and so on.  There are a lot of gotchas and weaknesses here, but that's the general idea.
+
+### The Whole Song: Four Oscillators using MIDI Polyphonic Expression (MPE) to play different notes (voices)
+
+So you have a MPE device!  MPE is a scheme which overcomes certain weaknesses in playing multiple notes in MIDI.  It does this by assigning each note to its own channel.   It also sends some global information to one special "master" (or global) channel.
+
+If your MIDI Distributor supports MPE, you need to set up the **MPE Zone** on your DAW or controller.  If you have 4 oscillators (for 4 notes), you'd probably set up the range to be the **MPE LOW Zone**.  This will use Channel 1 as the master channel, and send the four individual notes to Channels 2 through 5.  Now just hook up outputs 2 through 5 on the Distributor to your four oscillators.
+
+### Four Oscillators on MIDI Polyphonic Expression (MPE), two oscillators playing together on another channel, and a third oscillator by itself on yet another channel!
+
+All this can be mixed and matched -- after all, you have 16 channels.
+
+* Set up the four MPE oscillators as described before.  They'll eat up channels 1 through 5.
+
+* Attach one of the two "playing-together" oscillators to the output port for channel 6 on the Distributor.  Attach the MIDI IN of the second oscillator to the MIDI THRU of the first oscillator.
+
+* Set the solo oscillator to output port 7 on the Distributor.
+
+And so on!  You have a lot of flexibility.
 
 
-<a name="loading"/></a>
-## Loading and Saving Patches
+<a name="stage3"/></a>
+## Stage 3.  Sending Parameters 
+
+CC, or **Channel Control**, is MIDI's basic way of remotely changing parameters in a device.  For example, if you wanted to change the filter cutoff, or the Attack for Envelope 3, you'd use CC to do it.
+
+Each Channel has 128 parameters, called 0 through 127.  Each parameter can be set to one of 128 values (also called 0 through 127).  Some parameters have traditional functionality, such as sustain pedal or volume.  Others are free for devices to respond to any way they like.  For example, perhaps your synthesizer interprets CC 76 as Filter Cutoff, but another synthesizer interprets CC 76 as LFO Rate.
+
+### About IDs
+
+Let's assume that you want to send CC from your controller or DAW to change certain parameters of a MIDI-controlled oscillator in real-time.  This should be easy, but there's a gotcha. 
+
+Imagine that you had a MIDI-controlled oscillator and also a MIDI-controlled envelope generator working together to play the same note, as described in Stage 2.  You send CC 35 to them, which the MIDI-controlled oscillator interprets as detune.  Great!  Unfortunately the MIDI-controlled envelope generator *interprets CC 35 as Decay Rate*, and modifies the Decay accordingly.
+
+Ugh.
+
+Modular MIDI gets around this by assigning each MIDI-controlled device its own region of CC so we don't have these conflicts.  To do this, we will **give each MIDI-controlled Device its own "ID"**.  There are 8 basic IDs.  
+
+You can assign your device any ID you like, though  different categories of devices have different **default ID settings**, as shown in the **[Default ID Table](#defaultidtable)**.  In fact, very simple modules will be fixed to these defaults and can't be changed.
+
+Each ID grants its module up to nine CC parameters.  Which CC parameters they are depends on the ID you set.  Certain of those CC parameters can be merged to form up to two "high resolution" (or so-called **14-bit**) CC parameters if the module so wishes.  We call these nine parameters "a" through "i".  If your module documentation doesn't say, consult the **[ID and CC Parameter Table](#idandccparametertable)** to determine which CC parameters correspond to "a" through "i" for your module's ID.
+
+It's possible that your module doesn't support IDs at all, probably because it doesn't have any CCs, or because it uses some other scheme to avoid other modules.
+
+It's also possible that your module requires **multiple IDs** because 9 parameters isn't enough.
+
+
+### About NRPN
+
+9 parameters isn't very much.  And the resolution of those parameters is very low (just 0...127).  And *also* even though you might have two high-resolution 14-bit CCs, very few controllers support 14-bit CC.  
+
+What if your module needs **many** more than 9 parameters, or it needs many parameters with high resolution?  Enter **Non-Registered Parameter Numbers**, or **NPRN**.
+
+NRPN is a MIDI scheme which gives each channel 16384 more parameters, and each parameter has a range of 0...16383.  It actually uses multiple CC messages internally, and so it is somewhat slower than CC.  But more importantly, its support among DAWs and controllers is limited.
+
+Even so.  Each ID grants its module 256 parameters in the NRPN space.  For example, ID 1 grants its module the parameters through 511.  The first 9 of those parameters correspond exactly to the parameters "a" through "i".   See the **[NRPN Table](#nrpntable)** as to which NRPN parameters each ID affords.
+
+Your module may support CC parameters but not NRPN parameters, at its discretion.
+
+### About Auxiliary Parameters
+
+Auxiliary Parameters are a "poor man's NRPN" invented for purposes of Modular MIDI.  They give you 7 more IDs (9 through 15), and each ID has 16 parameters ("a" through "p").  See the **[Auxiliary Parameters Table](#auxiliaryparameterstable)** for details.
+
+You would primarily use Auxiliary Parameters (and IDs 9 through 15) when you have run out of IDs 1 through 8.  If you have more than 8 MIDI modules listening in on the same channel, you might start assigning the later ones to the Auxiliary space.
+
+You set an Auxiliary Parameter by sending the parameter number in question as the value of CC 3.  Then you set the value of the parameter as the value of CC 35.
+
+Auxiliary Parameters are low-resolution like CC: they can only be set to the values 0...127.
+
+Depending on its ID, a module either has parameters in the CC space, or it has Auxiliary Parameters.  It doesn't have both.  But it can also have NRPN.  The first 16 Auxiliary parameters ("a" through "p") correspond to the first 16 parameters in its NRPN region.
+
+Your module may or may not support Auxiliary parameters (and IDs 9 through 15) at its discretion.
+
+
+### About RPN
+
+RPN is a parameter scheme identical to NRPN, but reserved for official MIDI parameters.  Modular MIDI permits modules to receive RPN if they wish.
+
+<a name="stage4"/></a>
+## Stage 4.  Modules that Control other Modules 
+
+Imagine that you had a MIDI-controlled Step Sequencer.  It received instructions via MIDI (perhaps to program it, or to step it).  But it **also controlled other MIDI modules**: it'd send the notes to play, or CC messages to respond to.
+
+MIDI isn't designed for this.  It's meant for a single device to send messages to up to 16 other devices (one per channel), and that's it.  How can we have Device A send messages to Device B while both of them **also** receive messages from your DAW?
+
+A module like the Step Sequencer is called a **MIDI Modulation Module**.  This module will, in addition to its standard MIDI THRU port, have a special port **MIDI MODULATION THRU** or **SOFT THRU** or some such name.
+
+The standard MIDI THRU port just forwards the messages received at MIDI IN.  But the MIDI MODULATION THRU does the same thing, but **also** forwards additional messages that the MIDI Modulation Module has itself **injected** into the MIDI stream.
+
+### Modulation CC Messages
+
+The MIDI Modulation Module might just inject notes, or clock MIDI, etc.  But it could also inject CC messages meant to modulate the next module downstream.  For example, a MIDI-controlled Envelope Generator module might inject CC messages to control a downstream MIDI-controlled Filter module.
+
+How is this done?  There are 8 special CC messages set aside just for this purpose.  MIDI-controlled modules that respond to CC or to NRPN or to Auxiliary Parameters should *also* respond to these special CC messages.  These 8 messages correspond to the first eight parameters, that is, "a" through "h".
+
+All you have to do is attach your MIDI-controlled Filter module's MIDI IN port to the MIDI CONTROL THRU port of your MIDI-controlled Envelope Generator module.  Additionally, on the Envelope Generator there will be some kind of control to let you set which parameter it sends.  For example, your Filter might have assigned "a" to Filter Cutoff, so you'd set the Generator to "a" to change that.
+
+And that's it!
+
+If you don't want other modules responding to this special CC, don't connect them to the MIDI CONTROL THRU port, but just to the standard THRU port.
+
+### Multiple-module modulation
+
+It's possible that you might have, say, three modules, A, B, and C, and want A to modulate B while B is modulating C.  For example, you might have an LFO modulating a filter cutoff while an envelope generator is modulating the LFO's rate.  So you'd hook Module A's CONTROL THRU to the IN of module B as usual, and Module B's CONTROL THRU to the IN of module C.  
+
+The important trixck here is that after B responds to A's injected modulation MIDI, it is expected to remove it from the stream before injecting its own and passing that on to C.   
+
+On the other hand in some cases you might want module A *and* module B to *both* control module C.  This is easy: there ought to be a switch on Module B that instructs it to pass through modulation CC messages rather than respond to and remove them.  So there you go.
+
+
+
+<a name="stage5"/></a>
+## Stage 5.  Polyphonic Modules 
+
+MIDI can send information for many notes at once.  This makes it useful for reducing the wiring necessary to control **polyphonic modules** which play many voices.
+
+### Polyphony and Voice Chains
+
+Many polyphonic modules replicate the same element N times for N voice chains.  For example, a 4-way polyphonic oscillator module or polyphonic filter module.  More sophisticated polyphonic modules might encorporate several elements, such as a module which provides 4 filters, VCAs, and envelope generators.
+
+There's not reason why a polyphonic module can't work with many monophonic modules.  For example a polyphonic oscillator module might feed MIDI (or CV) and audio into N separate filter modules; or N separate filter modules might feed MIDI and audio into a polyphonic VCA.
+
+### Polyphonic MIDI
+
+There are three major ways that a polyphonic module can work with Modular MIDI.  
+
+First, it might act as if it was N separate modules, and so attach itself to the Distribution Module with N separate MIDI wires into N separate MIDI IN (and THRU!).
+
+Second, it might take over a whole channel and respond to all the notes played polyphonically on that channel.  Thus it might connect to the Distribution Module with a single MIDI cable: but you'd need to program it to respond to a specific channel.  In this case the polyphonic module really is free to do whatever it likes with regard to CC etc. -- it owns the entire channel.
+
+Third, it might take over a whole MPE Zone (multiple channels) and respond to all the notes played polyphonically on that Zone.  Again, it'd only need a single MIDI Cable.  And again, it can now do whatever it likes with the channels on that Zone.
+
+<a name="stage6"/></a>
+## Stage 6.  Saving and Loading Patches 
 
 Your module might support loading and saving patches.
 
-Loading a patch is done in the usual MIDI way: via a Bank Select (both MSB and LSB), followed by a Program Change command.  The Bank Select selects your bank, and the Program Change selects the patch in the bank.
+Loading a patch is done in the usual MIDI way: via two Bank Select CC messages (CC 0 and CC 32), followed by a Program Change command.  The Bank Select CCs select your bank, and the Program Change selects the patch in the bank.
 
-Modular MIDI also supports **Program Save**.  This is an Auxiliary Parameter, and its value indicates the patch slot to save your current parameters to.
+Modular MIDI also supports **Program Save**.  This is a special Auxiliary Parameter, and its value indicates the patch slot the module should save its current parameters to.
 
-Modular MIDI further supports **Current Program Save**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 0.  It instructs the module to save its current parameters to the patch slot it is presently using.  
+Modular MIDI further supports **Current Program Save**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 0.  It instructs the module to save its current parameters to the patch slot it is presently using (or last saved to or loaded from).  
 
-Finally, Modular MIDI supports **Current Program Revert**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 1.  It instructs the module to reload its current parameters from the patch slot it is presently using.  
+Finally, Modular MIDI supports **Current Program Revert**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 1.  It instructs the module to reload its current parameters from the patch slot it is presently using (or last saved to or loaded from).  
 
-See the ["Saving and Loading Table"](#saving-and-loading-table) for information on these three commands.
-
-
-<a name="modulation"/></a>
-## Modulation CC Messages
-
-Modules might not just respond to MIDI from your DAW or Controller.  They might also send messages to other modules to control them.  For example, you might have a sequencer module which sends MIDI notes to other modules to play them.
-
-Another possibility is to have **modulator modules** sending messages to modulate **target modules**.  For example, you might have an LFO which is sending CC messages to modulate a Filter module.  
-
-We have a scheme to make modulation simple.  A modulation module can send CCs to control any one of the first 8 parameters ("a" through "h") of your target module.  It doesn't need to know the ID of the module.  Instead it just sends it one of 8 **modulation CC messages**.
-
-For example, your Filter might have "a" as its Cutoff and "b" as its Resonance.  Your LFO could have a knob on it where you set what it's modulating ("a" through "h").  If you set it to "a", and hook its MIDI MODULATION THRU to the Filter's MIDI IN, then the LFO will control the Filter Cutoff.
-
-The first two modulation parameters are 14-bit high-resolution, and the rest are 7-bit low-resolution.
-
-The ADSR's MIDI IN can also be connected to receive MIDI from your DAW; and it will pass that MIDI on to the Filter as well (as well as **injecting** the modulation CC messages necessary to control the Filter).
-
-### Another Possibility
-
-What if you also want to modulate your LFO from *another module*?  For example, imagine you wanted an ADSR to control the rate of your LFO, while the LFO controlled the cutoff of the Filter.  Your LFO might be able to do this.  Let's say the LFO rate is its parameter "d".  You set the ADSR to modulate "d" and attach it to the LFO.  The LFO is attached to the Filter as usual.  Attach the ADSR to receive MIDI from your DAW or controller, and it will pass it along to the LFO, which passes it on to the Filter.
-
-Now you have to instruct the LFO not to pass modulation CCs it gets from the ADSR on to the Filter.  Then it should work.
-
-### Yet Another Possibility
-
-What if you want your ADSR *and* your LFO to *both* modulate your Filter?  For example, imagine you wanted an ADSR to control the filter resonance, while the LFO controls the filter cutoff.  
-
-This is almost the same arrangement: the ADSR connects to the LFO, which connects to the Filter.  Your Filter's resonance is "b", so you set the ADSR to modulate "b".  But this time you have to instruct the LFO to *ignore and pass on* modulation CCs it gets (from the ADSR) to the Filter.
+It's entirely up to your module as to whether it supports one or more of these commands.  See the ["Saving and Loading Table"](#saving-and-loading-table) for information on these three commands.
 
 
 <a name="tables"/></a>
@@ -383,5 +488,9 @@ CC 3 Value     | Auxiliary Parameter
 0              | Program Save (CC 35 = program number)         
 1              | Current Program Save (CC 35 = 0)
 1              | Current Program Revert (CC 35 = 1)
+
+
+
+
 
 

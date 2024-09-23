@@ -113,6 +113,7 @@ If you want to divide by constants OTHER than powers of 2, it might make sense t
 
     // Range of 0...16385
     // Note, (div3(dividend) >> 1) has range 0...65535 but a tiny bit slower
+    // Note, (div3Byte(dividend) >> 1) has range 0...255 and is much faster for bytes
     inline uint16_t div6(uint16_t dividend)
         {
         uint32_t invDivisor = 0x2AAA;
@@ -129,6 +130,8 @@ If you want to divide by constants OTHER than powers of 2, it might make sense t
         }
 
     // Range of 0...9369
+    // Note, I do not know if (div3Byte(div3Byte(dividend))), which has a range of 0..255,
+    // is a faster choice for bytes.  It probably is.
     inline uint16_t div9(uint16_t dividend)
         {
         uint32_t invDivisor = 0x1C71; 
@@ -138,6 +141,7 @@ If you want to divide by constants OTHER than powers of 2, it might make sense t
             
     // Range of 0...9369
     // Note, (div5(dividend) >> 1) has range 0...65535 but a tiny bit slower
+    // Note, (div5Byte(dividend) >> 1) has a range of 0...255 and is much faster for bytes.
     inline uint16_t div10(uint16_t dividend)
         {
         uint32_t invDivisor = 0x1999;
@@ -146,7 +150,8 @@ If you want to divide by constants OTHER than powers of 2, it might make sense t
         }
 
     // Range of 0...16391
-    // Note, a (div3(dividend) >> 2) has range 0...65535 but a tiny bit slower
+    // Note, (div3(dividend) >> 2) has range 0...65535 but a tiny bit slower
+    // Note, (div3Byte(dividend) >> 2) has a range 0...255 and is much faster for bytes.
     uint16_t div12(uint16_t dividend)
         {
         uint32_t invDivisor = 0x1555; 
@@ -155,7 +160,7 @@ If you want to divide by constants OTHER than powers of 2, it might make sense t
         }
     
     // Range of 0...4294967296	(full 32 bit range)
-    // Note: div10(div10(n)) likely to be faster, but smaller range
+    // Note: div10(div10(n)) has a range of 0...10999 and is likely to be faster.
     uint32_t div100(uint32_t n) 
         {
         uint32_t q, r;
@@ -168,8 +173,6 @@ If you want to divide by constants OTHER than powers of 2, it might make sense t
         return q + (r > 99);
         }
         
-Note that these all use 32-bit integers here and there.
-
 ### Scaling Without Division
 
 One of the most common tasks you'll find yourself doing is scaling the analog inputs, which have a range 0...1023, into something smaller.  If you were scaling into another power of 2, you could always do division or shifts.  For example, scaling 0...1023 to 0...3 is just dividing by 256, otherwise known as shifting right by 8:

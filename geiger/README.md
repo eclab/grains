@@ -16,14 +16,14 @@ CV for probability of Output 1
 #### IN 2
 CV for probability of Output 2
 #### IN 3
-Output 3		
+Output 2		
 [Yes, it's been changed to an OUT]
 #### AUDIO IN (A)
 Clock or Bernoulli Trigger
 #### AUDIO OUT
-Output 1
+Output 3
 #### DIGITAL OUT (D) 
-Output 2
+Output 1
 #### POT 1
 Probability for Output 1 [Set to "In 1" only if using In 1 CV]
 #### POT 2

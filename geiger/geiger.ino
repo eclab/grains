@@ -24,15 +24,18 @@
 /// Of the remainder, the probability that the output will be OUTPUT 2 is determined by
 /// POT 2 (and IN 2).  Otherwise, it's OUTPUT 3.  So for example, to make each output
 /// trigger with equal probability, set POT 1 to 1/3 and set POT 2 to 1/2.
+///
+/// Warning: Output 3 (Audio Out) has a low-pass filter on it, and so will take a very slight
+/// delay before it fires.  Output 1 (Digital Out) is the fastest.
 
 /// CONFIGURATION
 ///
 /// IN 1            CV for probability of Output 1
 /// IN 2            CV for probability of Output 2
-/// IN 3            Output 3
+/// IN 3            Output 2
 /// AUDIO IN (A)    Clock or Bernoulli Trigger
-/// AUDIO OUT       Output 1
-/// DIGITAL OUT (D) Output 2
+/// AUDIO OUT       Output 3
+/// DIGITAL OUT (D) Output 1
 ///
 /// POT 1           Probability for Output 1 [Set to "In 1" only if using In 1 CV]
 /// POT 2           Probability for Output 2 [Set to "In 2" only if using In 2 CV]
@@ -61,10 +64,10 @@
 #define CV_POT_IN1    A2    // Probability 1
 #define CV_POT_IN2    A1    // Probability 2
 #define CV_POT3       A0    // Probability 3
-#define CV_IN3        A3    // Output 3
+#define CV_IN3        A3    // Output 2
 #define CV_AUDIO_IN   A4    // Clock or Trigger
-#define CV_AUDIO_OUT  11    // Output 1
-#define CV_GATE_OUT   8     // Output 2
+#define CV_AUDIO_OUT  11    // Output 3
+#define CV_GATE_OUT   8     // Output 1
 
 #define RANDOM_PIN              A5
 
@@ -108,32 +111,32 @@ void pulse()
 // Bernoulli
         if (random(1000) < threshold1)
             {
-            digitalWrite(CV_AUDIO_OUT, 1);
+            digitalWrite(CV_GATE_OUT, 1);
             }
         else if (random(1000) < threshold2)
             {
-            digitalWrite(CV_GATE_OUT, 1);
+            digitalWrite(CV_IN3, 1);
             }
         else
             {
-            digitalWrite(CV_IN3, 1);
+            digitalWrite(CV_AUDIO_OUT, 1);
             }
         }
     else
         {
         if (random(1000) < threshold1)
             {
-            digitalWrite(CV_AUDIO_OUT, 1);
+            digitalWrite(CV_GATE_OUT, 1);
             }
 
         if (random(1000) < threshold2)
             {
-            digitalWrite(CV_GATE_OUT, 1);
+            digitalWrite(CV_IN3, 1);
             }
 
         if (random(1000) < threshold3)
             {
-            digitalWrite(CV_IN3, 1);
+            digitalWrite(CV_AUDIO_OUT, 1);
             }
         }
 
