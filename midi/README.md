@@ -4,6 +4,8 @@ This is not a GRAINS project, though it is used in several projects.  It is a lo
 MIDI emitting and parsing library meant for small microprocessors, and contains additional
 features for the Modular MIDI conventions.  It's currently under development.
 
+For more info on Modular MIDI, see [Modular MIDI Conventions for Developers](https://github.com/eclab/grains/blob/main/info/ModularMIDIConventionsForDevelopers.md).
+
 ### emitmidi.c and emitmidi.h
 Utility code for emitting MIDI
 
