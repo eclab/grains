@@ -1,6 +1,6 @@
 # Modular MIDI Conventions for Musicians
 
-**A tutorial.**
+### A Tutorial.
 
 **Document Version 0.7**, September 25, 2024  
 **Modular MIDI Conventions Version 0.5**
