@@ -1,5 +1,7 @@
 # Modular MIDI Conventions for Developers
-**Version 0.5**, June 22, 2024
+
+**Document Version 0.7**, September 25, 2024  
+**Modular MIDI Conventions Version 0.5**
 
 - Sean Luke, George Mason University (sean@cs.gmu.edu)
 - John Tuffen, wonkystuff (john@wonkystuff.net)
