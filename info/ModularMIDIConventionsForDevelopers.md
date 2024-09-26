@@ -7,11 +7,11 @@
 
 ### Other Resources
 
-[Modular MIDI Conventions for Musicians](https://github.com/eclab/grains/blob/main/info/ModularMIDIConventionsforMusicians.md).  A gentler introduction.  
+[Modular MIDI Conventions for Musicians](https://github.com/eclab/grains/blob/main/info/ModularMIDIConventionsForMusicians.md).  A gentler introduction.  
 [Module-Level MIDI](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf).  An academic paper which introduces and describes the conventions.  
 [Lightweight C MIDI Library](https://github.com/eclab/grains/blob/main/midi/README.md). Designed for small processors, like Arduino.  Contains a Modular MIDI conventions sublibrary.  
 [WonkyStuff's Early Introductory Whitepaper](https://wonkystuff.net/midi-a-new-signal-type-for-ae/). This was written before the Modular MIDI conventions were set out but it still might be useful.  
-[Tangible Waves's IMDI Page](https://www.tangiblewaves.com/imdi.html).  IMDI is TangibleWaves's brand name for the Modular MIDI convention.
+[Tangible Waves's IMDI Page](https://www.tangiblewaves.com/imdi.html).  IMDI is TangibleWaves's brand name for the Modular MIDI conventions.
 
 ### Table of Contents
 
@@ -326,7 +326,8 @@ Auxiliary MSB  | Function
 ---------------|-------------------------------
 0              | Program Save           
 1              | Current Program Save (LSB = 0), Current Program Revert (LSB = 1), Reserved (LSB > 1)
-2-15           | Reserved
+2-14           | Reserved
+15             | Reset ID (LSB = 0), Change ID (LSB = 1...15), Reserved (LSB > 15)
 16-31          | First 16 Parameters for ID 9
 32-47          | First 16 Parameters for ID 10
 48-59          | First 16 Parameters for ID 11
