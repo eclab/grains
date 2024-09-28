@@ -111,6 +111,29 @@ Streams of MIDI data are mostly of two kinds:
   
   One very common scenario would be polyphonic notes arriving on a single channel.  It's reasonable to create a MIDI Distributor module which breaks those notes up and sends them to different outputs for separate downstream voice chains.
 
+### Distributor MIDI Mode Suggestions
+
+MIDI has four "Channel Modes" set by CCs 124 through 127, and which consist of the combinations of OMNI ON vs. OFF and MONO vs. POLY. 
+
+- MIDI Modes 1 and 2 both imply that the distributor is listening in OMNI mode, and this acts against the basic purpose of Modular MIDI.  We recommend disregarding them here.
+
+- In MIDI Mode 3 (OMNI OFF, POLY ON) each channel receives its own independent MIDI voice messages, and can potentially play polyphonically.  We recommend that this be the default mode.  For a Distributor, this implies that incoming MIDI voice messages are simply routed out the MIDI THRU socket for the appropriate channel.
+
+#### MIDI Mode 4
+
+MIDI Mode 4 (OMNI OFF, MONO ON) is a special and relatively obscure mode which, as it so happens, is also a very good match for Modular MIDI.
+ 
+In MIDI Mode 4, you can instruct an instrument listen to a range of channels N ... N + M, and treat each one as a separate voice.  If a note arrives on a channel in the range, it immediately replaces any note currently on that channel: thus at most one note can be playing on a given channel at a time.  Furthermore there is a "Global Channel" (channel N - 1, or channel 16 if N = 1), and any data which arrives on that channel is immediately rebroadcasted in parallel to all channels N ... N + M.  If this sounds suspiciously like MPE, it should!
+
+Unlike MPE, which has elaborate rules, MIDI Mode 4 is very simple: the above is about all there is to it.  MIDI Mode 4 is set up for the range N ... N + M by sending two specific CC messages to channel N.  A distributor module can respond to MIDI Mode 4 straightforwardly:
+
+- When the appropriate setup request CCs arrive, the distributor assigns channel N-1 to be a "Global Channel" which is automatically rerouted to channels N ... N+M.  Otherwise, channels N ... N+M are unchanged!
+
+- There can be multiple ranges, and they can accidentally overlap.  To disambiguate: if a request arrives to set up N ... N + M, and in this range there was already a "Global Channel" X, its special Global Channel status is revoked.
+
+- CC messages 124 ... 127 ought not be passed through to the per-THRU channel sockets.  However as they also imply an ALL NOTES OFF, then perhaps an ALL NOTES OFF could be passed through instead.
+
+- The distributor might keep track, for non-Global channels declared as MIDI Mode 4, of which notes are outstanding.  When a new note arrives, the distributor could send a NOTE OFF to the appropriate channel THRU to guarantee that the old note has been removed.
 
 ### Distributor MPE Suggestions
 
@@ -118,11 +141,15 @@ The channel-per-voice approach described can be made compatible with MIDI Polyph
 
 MPE is meant for the situation where each note (each voice) is usually sent on a separate channel.  This is mostly compatible with the distributor modules as described so far.  However there are a few considerations:
 
-- The distributor should be flexible with regard to channel allocation.  The musician might wish to allocate up to two MPE "Zone" (as set of channels allocated to the voices of an MPE instrument), plus use other channels for other non-MPE voices.
-	
+- The use of MPE on its two "Zones" should not preclude the use of non-MPE functionality of the remaining channels.
+
 - Each MPE Zone has a "Master Channel" for voiced messages intended for every channel (every voice) in the Zone.  MPE calls these "Zone Messages".  Care must be taken as to how to merge Zone messages with per-channel messages.  For example, Pitch Bend at the Zone level might be added to pitch bend at the channel level; or one might supercede the other.  In many cases, messages on the Master Channel should simply be injected into each of the individual channels: for example the Sustain Pedal message, which might possibly only be found on the Master Channel.  It is also permitted, though discouraged, for note messages to be sent to a Master Channel.  A distributor would have to determine how to play these notes, such as redistributing them to existing zone channels.
 	
 - An MPE zone has a fixed number of channels, and thus normally a fixed number of notes.  What if the musician plays more than that number of notes at a time?  MPE will **spill** those notes to channels it is already using for other notes.  Most receiver modules cannot play more than one note.  The distributor *could* handle this situation for them, by sending a preemptive NOTE OFF message to turn off the old note; but this is not appropriate if the receiver module is a sophisticated polyphonic module which can play multiple notes.  Thus either this behavior should be switchable, or the distributor should allow the individual receivers to deal with it themselves.
+
+#### Reconciling MPE and Mode 4
+
+The MPE documentation states that "If the Channel ranges all match, then the MIDI Mode 4 device will behave identically whether or not it supports MPE."  This is not quite true.  Both Pitch Bend and Channel Pressure can be sent as Zone messages or as individual channel messages, and the MPE documentation says "If an MPE synthesizer receives Pitch Bend (for example) on both a Master and a Member Channel, it must combine the data meaningfully. The same is true for Channel Pressure.".  But Mode 4 is explicit: there is no combination, but rather, they just replace one another.  We suggest if a range is declared to be both an MPE Zone and Mode 4, then Mode 4's behavior takes precedence with respect to Pitch Bend and Channel Aftertouch.
 
 <a name="namespaces"/></a>
 ## Namespaces, IDs, and CC Messages
