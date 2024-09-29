@@ -121,7 +121,7 @@ MIDI has four "Channel Modes" set by CCs 124 through 127, and which consist of t
 
 #### MIDI Mode 4
 
-MIDI Mode 4 (OMNI OFF, MONO ON) is a special and relatively obscure mode which, as it so happens, is also a very good match for Modular MIDI.
+MIDI Mode 4 (OMNI OFF, MONO ON) is a special and relatively obscure mode which, as it so happens, is also a very good match for Modular MIDI.  MIDI Mode 4 largely exists on guitar controllers and similar controllers.
  
 In MIDI Mode 4, you can instruct an instrument listen to a range of channels N ... N + M, and treat each one as a separate voice.  If a note arrives on a channel in the range, it immediately replaces any note currently on that channel: thus at most one note can be playing on a given channel at a time.  Furthermore there is a "Global Channel" (channel N - 1, or channel 16 if N = 1), and any data which arrives on that channel is immediately rebroadcasted in parallel to all channels N ... N + M.  If this sounds suspiciously like MPE, it should!
 

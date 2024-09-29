@@ -192,6 +192,13 @@ So you have a MPE controller!  MPE is a scheme which overcomes certain weaknesse
 
 If your MIDI Distributor supports MPE, you'll need to set up the **MPE Zone** on your DAW or controller.  You'd probably set up the **MPE LOW Zone**.  This will use Channel 1 as the master channel, and send the four individual notes to Channels 2 through 5 respectively.  Now just hook up outputs 2 through 5 on the Distributor to your four oscillators.
 
+### Four oscillators playing different notes, using MIDI Mode 4 (OMNI OFF, MONO)
+
+MIDI Mode 4 is like a simplified version of MPE: you can define a range of channels similar to a "Zone", each channel only plays one note at a time, and there is a "global channel" like MPE's master channel.  MIDI Mode 4 is really mostly supported by guitar controllers, not keyboard controllers or DAWs.
+
+If your MIDI Distributor supports MIDI Mode 4 on some range of channels, you'll need to set up the range from your DAW or controller.  Let's say you've set up Mode 4 on Channels 5 through 8.  This will automatically also assign Channel 4 as the global channel.  Now just hook up outputs 5 through 8 on the Distributor to your four oscillators.
+
+
 ### Mixing and matching
 
 All this can be mixed and matched -- after all, you have 16 channels.  You could set up MPE on the sockets for channels 1 through 5, set up a different oscillator on the socket for channel 6, and up two "playing together" oscillators on the socket for channel 7, say.
