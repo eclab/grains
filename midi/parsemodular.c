@@ -6,6 +6,9 @@
 
 
 #include "parsemodular.h"
+#ifdef __AVR__
+#include <avr/pgmspace.h>
+#endif
 
 #define CC_TYPE_ID_1 0
 #define CC_TYPE_ID_2 1
@@ -26,15 +29,15 @@ const signed char _CC_DATA[128] =
     {
     CC_TYPE_BANK_SELECT,
     CC_TYPE_MOD_WHEEL,
-    CC_TYPE_BREATH,
+    CC_TYPE_OPEN,
     CC_TYPE_AUXILIARY,
+    CC_TYPE_OPEN,
+    CC_TYPE_GLIDE,
+    CC_TYPE_DATA_ENTRY,
+    CC_TYPE_VOLUME,
     S(CC_TYPE_ID_1, 0),
     S(CC_TYPE_ID_1, 1),
-    CC_TYPE_DATA_ENTRY,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
+    CC_TYPE_PAN,
     CC_TYPE_EXPRESSION,
     S(CC_TYPE_ID_6, 0),
     S(CC_TYPE_ID_6, 1),
@@ -50,24 +53,24 @@ const signed char _CC_DATA[128] =
     S(CC_TYPE_ID_7, 1),
     S(CC_TYPE_ID_8, 0),
     S(CC_TYPE_ID_8, 1),
-    CC_TYPE_MODULATION + 0,
-    CC_TYPE_MODULATION + 1,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
+    CC_TYPE_MODULATION_A,
+    CC_TYPE_MODULATION_B,
+    CC_TYPE_OPEN,
+    CC_TYPE_OPEN,
+    CC_TYPE_OPEN,
+    CC_TYPE_OPEN,
         
     CC_TYPE_BANK_SELECT_LSB,
     CC_TYPE_MOD_WHEEL_LSB,
-    CC_TYPE_BREATH_LSB,
+    CC_TYPE_OPEN,
     CC_TYPE_AUXILIARY_LSB,
+    CC_TYPE_OPEN,
+    CC_TYPE_OPEN,
+    CC_TYPE_DATA_ENTRY_LSB,
+    CC_TYPE_OPEN,
     S(CC_TYPE_ID_1, 8),
     S(CC_TYPE_ID_1, 7),
-    CC_TYPE_DATA_ENTRY_LSB,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
+    CC_TYPE_OPEN,
     CC_TYPE_EXPRESSION_LSB,
     S(CC_TYPE_ID_6, 8),
     S(CC_TYPE_ID_6, 7),
@@ -85,17 +88,17 @@ const signed char _CC_DATA[128] =
     S(CC_TYPE_ID_8, 7),
     CC_TYPE_MODULATION_A_LSB,
     CC_TYPE_MODULATION_B_LSB,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
-        
+    CC_TYPE_OPEN,
+    CC_TYPE_OPEN,
+    CC_TYPE_OPEN,
+    CC_TYPE_OPEN,
+
     CC_TYPE_SUSTAIN,
     S(CC_TYPE_ID_1, 2),
     S(CC_TYPE_ID_1, 3),
     S(CC_TYPE_ID_1, 4),
+    CC_TYPE_LEGATO,
     S(CC_TYPE_ID_1, 5),
-    S(CC_TYPE_ID_1, 6),
     S(CC_TYPE_ID_2, 2),
     S(CC_TYPE_ID_2, 3),
     S(CC_TYPE_ID_2, 4),
@@ -139,22 +142,22 @@ const signed char _CC_DATA[128] =
     S(CC_TYPE_ID_8, 4),
     S(CC_TYPE_ID_8, 5),
     S(CC_TYPE_ID_8, 6),
-    CC_TYPE_MODULATION + 2,
-    CC_TYPE_MODULATION + 3,
-    CC_TYPE_MODULATION + 4,
-    CC_TYPE_MODULATION + 5,
-    CC_TYPE_MODULATION + 6,
-    CC_TYPE_MODULATION + 7,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
+    S(CC_TYPE_ID_1, 6),
+    CC_TYPE_MODULATION_C,
+    CC_TYPE_MODULATION_D,
+    CC_TYPE_MODULATION_E,
+    CC_TYPE_MODULATION_F,
+    CC_TYPE_MODULATION_G,
+    CC_TYPE_MODULATION_H,
+    CC_TYPE_OPEN,
     CC_TYPE_ALL_SOUND_OFF,
     CC_TYPE_RESET_ALL_CONTROLLERS,  
     CC_TYPE_RESERVED,
     CC_TYPE_ALL_NOTES_OFF,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
-    CC_TYPE_RESERVED,
+    CC_TYPE_RESERVED_NOTES_OFF,
+    CC_TYPE_RESERVED_NOTES_OFF,
+    CC_TYPE_RESERVED_NOTES_OFF,
+    CC_TYPE_RESERVED_NOTES_OFF,
     };
 
 	
@@ -168,7 +171,7 @@ inline unsigned char getCCData(unsigned char cc)
 	}
 
 // Returns the CC TYPE for the given CC Data.  This is a SIGNED CHAR.
-#define CC_TYPE(data) (data >= CC_TYPE_MODULATION ? data : (data & 7))
+#define CC_TYPE(data) (data >= CC_TYPE_BANK_SELECT ? data : (data & 7))
 
 signed char getCCType(unsigned char cc)
 	{
@@ -177,7 +180,7 @@ signed char getCCType(unsigned char cc)
 	}
 	
 // Returns the CC PARAMETER for the given CC Data, or CC_PARAM_NONE if there is no parameter.  This is an UNSIGNED char.
-#define CC_PARAM(data) (data >= CC_TYPE_AUXILIARY ? CC_PARAM_NONE : (data >= CC_TYPE_MODULATION ? data - CC_TYPE_MODULATION : (data >> 3)))
+#define CC_PARAM(data) (data >= CC_TYPE_BANK_SELECT ? (data >= CC_TYPE_MODULATION_A && data <= CC_TYPE_MODULATION_H ? data - CC_TYPE_MODULATION_A : CC_PARAM_NONE) : (data >> 3))
 
 unsigned char getCCParam(unsigned char cc)
 	{
@@ -237,6 +240,7 @@ unsigned char getAuxiliaryParam(UNSIGNED_16_BIT_INT value)
 	else return value - ((value >> 7) << 7);
 	}
 
+/*
 void setBothHighResCCsUsed(midiParser* parser)
     {
     for(unsigned char cc = 0; cc < 32; cc++)
@@ -260,3 +264,4 @@ void setNoHighResCCsUsed(midiParser* parser)
         else
             setHighResUsed(parser, cc, 1);
     }
+*/

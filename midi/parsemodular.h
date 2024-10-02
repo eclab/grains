@@ -28,12 +28,32 @@
 /// Turn ON at least ALLOW_CC, ALLOW_HIGH_RES_CC, ALLOW_RPN_NRPN, ALLOW_PC
 /// Turn ON ALLOW_ATOMIC_MODULATION_CC
 /// 
-/// Set up your first 32 CCs according to how you use the two first Parameters in your ID.
+/// Your ID has 9 parameters (CCs) called A, B, C, D, E, F, G, H, I.  You have the option of treating parameters A and I as a combined
+/// 14-bit "high res" parameter, which we will then call "A".  To do this, call 
+///		setHighResUsed(parser, A's CC, true);			// Where "A's CC" is the CC for Parameter A for your ID
 ///
-/// 	- If they are both 14-bit CC, then call setBothHighResCCsUsed(...)
-///		- If only the first one is 14-bit, then call setFirstHighResCCUsed(...)
-///		- If neither is 14-bit, then call setNoHighResCCsUsed(...)
+/// You further the option of treating parameters B and H as a combined 14-bit "high res" parameter, which we will then call "A".  
+/// To do this, call 
+///		setHighResUsed(parser, B's CC, true);			// Where "B's CC" is the CC for Parameter B for your ID
 ///
+/// You should set your BANK SELECT, MOD WHEEL, AUXILIARY, DATA ENTRY, and EXPRESSION CONTROLLER CCs to be 14-bit:
+///		setHighResUsed(parser, 0, true);				// Bank Select
+///		setHighResUsed(parser, 1, true);				// Mod Wheel
+///		setHighResUsed(parser, 3, true);				// Auxiliary
+///		setHighResUsed(parser, 6, true);				// Data Entry
+///		setHighResUsed(parser, 11, true);				// Expression Controller
+///
+/// You should also set MODULATION A and MODULATION B to be 14-bit:
+///		setHighResUsed(parser, 58, true);				// Modulation A
+///		setHighResUsed(parser, 59, true);				// Modulation B
+///
+/// Finally, you have the option of setting certain open CC pairs to be 14-bit if you wished:
+///		setHighResUsed(parser, 2, true);				// MSB 2, LSB 34
+///		setHighResUsed(parser, 4, true);				// MSB 4, LSB 36
+///		setHighResUsed(parser, 28, true);				// MSB 28, LSB 60
+///		setHighResUsed(parser, 29, true);				// MSB 29, LSB 61
+///		setHighResUsed(parser, 30, true);				// MSB 30, LSB 62
+///		setHighResUsed(parser, 31, true);				// MSB 31, LSB 63
 
 
 /// PROCESSING A 7-BIT OR 14-BIT CC
@@ -108,34 +128,58 @@
 
 /// CC Type and Param Constants
 
-#define CC_TYPE_MODULATION 72
-#define CC_TYPE_AUXILIARY 80
-#define CC_TYPE_BANK_SELECT 81
-#define CC_TYPE_MOD_WHEEL 82
-#define CC_TYPE_BREATH 83
-#define CC_TYPE_DATA_ENTRY 84
-#define CC_TYPE_EXPRESSION 85
-#define CC_TYPE_SUSTAIN 86
-#define CC_TYPE_MPE_TIMBRE 87
-#define CC_TYPE_INCREMENT 88
-#define CC_TYPE_DECREMENT 89
-#define CC_TYPE_NRPN_LSB 90
-#define CC_TYPE_NRPN_MSB 91
-#define CC_TYPE_RPN_LSB 92
-#define CC_TYPE_RPN_MSB 93
-#define CC_TYPE_ALL_SOUND_OFF 94
-#define CC_TYPE_RESET_ALL_CONTROLLERS 95
-#define CC_TYPE_ALL_NOTES_OFF 96
-#define CC_TYPE_RESERVED 127
-#define CC_TYPE_BANK_SELECT_LSB (-1)
-#define CC_TYPE_MOD_WHEEL_LSB (-2)
-#define CC_TYPE_BREATH_LSB (-3)
-#define CC_TYPE_DATA_ENTRY_LSB (-4)
-#define CC_TYPE_EXPRESSION_LSB (-5)
-#define CC_TYPE_AUXILIARY_LSB (-6)
-#define CC_TYPE_MODULATION_A_LSB (-7)
-#define CC_TYPE_MODULATION_B_LSB (-8)
-#define CC_PARAM_NONE 255
+#define CC_TYPE_ID_1 0						// A CC Belonging to ID 1
+#define CC_TYPE_ID_2 1						// A CC Belonging to ID 2
+#define CC_TYPE_ID_3 2						// A CC Belonging to ID 3
+#define CC_TYPE_ID_4 3						// A CC Belonging to ID 4
+#define CC_TYPE_ID_5 4						// A CC Belonging to ID 5
+#define CC_TYPE_ID_6 5						// A CC Belonging to ID 6
+#define CC_TYPE_ID_7 6						// A CC Belonging to ID 6
+#define CC_TYPE_ID_8 7						// A CC Belonging to ID 8
+
+#define CC_TYPE_BANK_SELECT 72				// Bank Select
+#define CC_TYPE_MOD_WHEEL 73				// Modulation Wheel
+#define CC_TYPE_GLIDE 74					// Glide
+#define CC_TYPE_DATA_ENTRY 75				// Data Entry
+#define CC_TYPE_VOLUME 76					// Volume
+#define CC_TYPE_PAN 77						// Pan
+#define CC_TYPE_EXPRESSION 78				// Expression Controller
+#define CC_TYPE_SUSTAIN 79					// Sustain Pedal
+#define CC_TYPE_LEGATO 80					// Legato Switch
+#define CC_TYPE_MPE_TIMBRE 81				// MPE Timbre Controller
+#define CC_TYPE_INCREMENT 82				// Increment
+#define CC_TYPE_DECREMENT 83				// Decrement
+#define CC_TYPE_NRPN_LSB 84					// NRPN LSB
+#define CC_TYPE_NRPN_MSB 85					// NRPN MSB
+#define CC_TYPE_RPN_LSB 86					// RPN LSB
+#define CC_TYPE_RPN_MSB 87					// RPN MSB
+#define CC_TYPE_ALL_SOUND_OFF 88			// All Sounds Off
+#define CC_TYPE_RESET_ALL_CONTROLLERS 89	// Reset All Controllers
+#define CC_TYPE_ALL_NOTES_OFF 90			// All Notes Off
+
+#define CC_TYPE_MODULATION_A 116			// Modulation CC
+#define CC_TYPE_MODULATION_B 117			// Modulation CC
+#define CC_TYPE_MODULATION_C 118			// Modulation CC
+#define CC_TYPE_MODULATION_D 119			// Modulation CC
+#define CC_TYPE_MODULATION_E 120			// Modulation CC
+#define CC_TYPE_MODULATION_F 121			// Modulation CC
+#define CC_TYPE_MODULATION_G 122			// Modulation CC
+#define CC_TYPE_MODULATION_H 123			// Modulation CC
+
+#define CC_TYPE_AUXILIARY 124				// Auxiliary CC
+#define CC_TYPE_OPEN 125					// Free For Use
+#define CC_TYPE_RESERVED 126				// Do Not Use
+#define CC_TYPE_RESERVED_NOTES_OFF 127		// Do Not Use, but interpret as an All Notes Off
+
+#define CC_TYPE_BANK_SELECT_LSB (-1)		// The LSB for a Bank Select, with no MSB.  This means you didn't set bank select (CC 0) to be 16-bit via setHighResUsed()
+#define CC_TYPE_MOD_WHEEL_LSB (-2)			// The LSB for Mod Wheel, with no MSB.  This means you didn't set mod wheel (CC 1) to be 16-bit via setHighResUsed()
+#define CC_TYPE_AUXILIARY_LSB (-3)			// The LSB for Auxiliary, with no MSB.  This means you didn't set auxiliary (CC 3) to be 16-bit via setHighResUsed()
+#define CC_TYPE_DATA_ENTRY_LSB (-4)			// The LSB for Data Entry, with no MSB.  This means you didn't set data entry (CC 6) to be 16-bit via setHighResUsed()
+#define CC_TYPE_EXPRESSION_LSB (-5)			// The LSB for Expression Controller, with no MSB.  This means you didn't set expression controller (CC 11) to be 16-bit via setHighResUsed()
+#define CC_TYPE_MODULATION_A_LSB (-6)		// The LSB for Modulation Parameter A, with no MSB.  This means you didn't set Modulation Parameter A (CC 26) to be 16-bit via setHighResUsed()
+#define CC_TYPE_MODULATION_B_LSB (-7)		// The LSB for Modulation Parameter B, with no MSB.  This means you didn't set Modulation Parameter B (CC 27) to be 16-bit via setHighResUsed()
+
+#define CC_PARAM_NONE 255					// Returned when the CC Parameter is requested for a CC that is not associated with an ID
 
 
 /// NRPN Type and Param Constants
@@ -193,6 +237,7 @@ extern SIGNED_16_BIT_INT getAuxiliaryType(UNSIGNED_16_BIT_INT value);
 // AUXILIARY_PARAM_NONE otherwise
 extern unsigned char getAuxiliaryParam(UNSIGNED_16_BIT_INT value);
 
+/*
 // Sets ALL 32 CCs to be high-resolution (14-bit), including the first and second parameters (a, b) of each ID
 extern void setBothHighResCCsUsed(midiParser* parser);
 
@@ -201,7 +246,7 @@ extern void setFirstHighResCCUsed(midiParser* parser);
 
 // Sets ALL 32 CCs to be high-resolution (14-bit) except the first and second parameters (a, b) of each ID
 extern void setNoHighResCCsUsed(midiParser* parser);
-
+*/
 
 
 #endif		// __PARSE_MODULAR_H

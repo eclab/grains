@@ -213,7 +213,26 @@ CC, or **Channel Control**, is MIDI's basic way of remotely changing parameters 
 
 Each Channel has 128 CC parameters, called parameters 0 through 127.  Each CC parameter can be set to one of 128 values (also 0 through 127).  Some parameters have dedicated or traditional functions, such as sustain pedal or volume.  Others are available for devices to respond to any way they like.  Perhaps your synthesizer interprets CC 76 as Filter Cutoff, but another synthesizer interprets CC 76 as LFO Rate.
 
+### Standard CC Messages
+
+Any module listening in on MIDI is free to respond to the following standard CC messages:
+
+* Bank Select (CC messages 0 and 32 for "MSB" and "LSB" respectively)
+* Modulation Wheel (CC messages 1 and 33 for "MSB" and "LSB respectively)
+* Glide Rate (CC message 5 ("MSB") only)
+* Volume (CC message 7 ("MSB") only)
+* Pan (CC message 10 ("MSB") only)
+* Expression Controller (CC messages 11 and 43 for "MSB" and "LSB" respectively)
+* Sustain Pedal (CC message 64)
+* Legato Switch (CC message 68)
+* MPE Timbre (CC message 73)
+* All Sound Off (CC message 120)
+* Reset All Controllers (CC message 121)
+* All Notes Off (CC message 123)
+
 ### About IDs
+
+Beyond the standard CCs above, a module might need a CC which it defines for its own purpose: to change filter cutoff for example, or attack rate. This sets up an ugly conflict between modules.
 
 Suppose that you had a MIDI-controlled oscillator and *also* a MIDI-controlled envelope generator working together to play the same note, as described in [Stage 2](#different).  You want to send CC 35 from your DAW to change a parameter on the oscillator, which it interprets as, oh, detune.  But there's a gotcha. Because  the MIDI-controlled envelope generator *interprets CC 35 as Decay Rate*.  So when you send CC 35, *they both change their parameters*.
 
@@ -259,6 +278,13 @@ Your module may or may not support Auxiliary parameters (and IDs 9 through 15) a
 ### About RPN
 
 RPN is a parameter scheme identical to NRPN, but reserved for official MIDI parameters.  Modular MIDI permits modules to receive RPN if they wish.
+
+### Reserved and Open CCs
+
+There are a few additional CCs available free for the taking to use for any purpose as long as the module realizes that other modules may do the same and thus create nasty conflicts.  If a module decides to use one, it'll let you know in its documentation.
+
+There are also certain CCs that modules are reserved and not permitted to touch: and we trust they won't. 
+
 
 <a name="stage4"/></a>
 ## Stage 4.  Modules that Control other Modules 
