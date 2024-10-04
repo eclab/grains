@@ -179,7 +179,7 @@
 /// THE PARSER STATE MACHINE STRUCTURE
 // Don't fool with this.  Treat it as a black box.  You can get the channel, current channel, and tag
 // by calling getParserMIDIChannel(), getParserCurrentMIDIChannel, and getParserTag() -- see below
-typedef struct midiParser
+struct midiParser
     {
     unsigned char tag;                              // The parser's tag.  This is a byte for you to use however you like.
     unsigned char channel;                          // The channel to which we are meant to listen, or OMNI 
@@ -218,7 +218,7 @@ typedef struct midiParser
 #ifdef ALLOW_MPE
     unsigned char mpeMasterChannel;                 // Is this parser part of an MPE group, and if so, what is the mpeMasterChannel?
 #endif   // ALLOW_MPE
-    } midiParser;
+    };
 
 
 
@@ -233,32 +233,32 @@ typedef struct midiParser
 #ifdef ALLOW_NOTES
 // note goes 0 ... 127, velocity goes 0 ... 127
 // IMPORTANT: noteOn will never have a velocity of 0
-extern void noteOn(midiParser* parser, unsigned char note, unsigned char velocity);
-extern void noteOff(midiParser* parser, unsigned char note, unsigned char velocity);
+extern void noteOn(struct midiParser* parser, unsigned char note, unsigned char velocity);
+extern void noteOff(struct midiParser* parser, unsigned char note, unsigned char velocity);
 #endif   // ALLOW_NOTES
 
 #ifdef ALLOW_CLOCK
-extern void clockStop(midiParser* parser);
-extern void clockStart(midiParser* parser);
-extern void clockContinue(midiParser* parser);
-extern void clockPulse(midiParser* parser);
+extern void clockStop(struct midiParser* parser);
+extern void clockStart(struct midiParser* parser);
+extern void clockContinue(struct midiParser* parser);
+extern void clockPulse(struct midiParser* parser);
 #endif   // ALLOW_CLOCK
 
 #ifdef ALLOW_BEND
 // value goes -8192 ... +8191
-extern void bend(midiParser* parser, SIGNED_16_BIT_INT value);
+extern void bend(struct midiParser* parser, SIGNED_16_BIT_INT value);
 #endif   // ALLOW_BEND
 
 #ifdef ALLOW_PC
 // program goes 0 ... 127, bankMSB goes 0 ... 127 (0 by default), and bankLSB goes 0 ... 127 (0 by default)
-extern void pc(midiParser* parser, unsigned char program, unsigned char bankMSB, unsigned char bankLSB);
+extern void pc(struct midiParser* parser, unsigned char program, unsigned char bankMSB, unsigned char bankLSB);
 #endif   // ALLOW_PC
 
 #ifdef ALLOW_CC
 // This will only be called for non-high-res, non-NRPN, non-RPN CCs
 // This will NOT be called for any CCs you have previously registered as high resolution via setHighResUsed(...)
 // parameter goes 0 ... 127, value goes 0 ... 127
-extern void cc(midiParser* parser, unsigned char parameter, unsigned char value);
+extern void cc(struct midiParser* parser, unsigned char parameter, unsigned char value);
 #endif   // ALLOW_CC
 
 #ifdef ALLOW_RPN_NRPN
@@ -269,7 +269,7 @@ extern void cc(midiParser* parser, unsigned char parameter, unsigned char value)
 // STATUS_BARE_LSB: 'value' is determined only by the LSB.  No MSB has arrived yet.  Thus 'value' = LSB.  This is normally an error.  Only returned if ALLOW_BARE_LSB.
 // STATUS_NRPN_INCREMENT: 'value' holds the amount to increment the current value by.  Usually it is 1.
 // STATUS_NRPN_DECREMENT: 'value' holds the amount to decrement the current value by.  Usually it is 1.
-extern void nrpn(midiParser* parser, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char status);
+extern void nrpn(struct midiParser* parser, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char status);
 #endif
 
 #ifdef ALLOW_HIGH_RES_CC
@@ -280,7 +280,7 @@ extern void nrpn(midiParser* parser, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_
 // STATUS_NORMAL: 'value' holds the value to set.
 // STATUS_BARE_MSB: 'value' is determined only by the MSB.  No LSB has arrived yet.  Thus 'value' = MSB * 128 + 0.
 // STATUS_BARE_LSB: 'value' is determined only by the LSB.  No MSB has arrived yet.  Thus 'value' = LSB.  This is normally an error.  Only returned if ALLOW_BARE_LSB.
-extern void highResCC(midiParser* parser, unsigned char parameter, UNSIGNED_16_BIT_INT value, unsigned char status);
+extern void highResCC(struct midiParser* parser, unsigned char parameter, UNSIGNED_16_BIT_INT value, unsigned char status);
 #endif   // ALLOW_HIGH_RES_CC
 
 #ifdef ALLOW_SYSTEM_EXCLUSIVE
@@ -290,44 +290,44 @@ extern void highResCC(midiParser* parser, unsigned char parameter, UNSIGNED_16_B
 // STATUS_SYSEX_START           The buffer contains just the start of a possibly incomplete sysex message (not including F0)
 // STATUS_SYSEX_END             The buffer contains just the end of a sysex message (not including F7)
 // STATUS_SYSEX_INCOMPLETE      The buffer contains part of a sysex message in the middle, with neither the start nor end
-extern void sysex(midiParser* parser, unsigned char* buffer, unsigned char len, unsigned char status);
+extern void sysex(struct midiParser* parser, unsigned char* buffer, unsigned char len, unsigned char status);
 #endif   // ALLOW_SYSTEM_EXCLUSIVE
 
 #ifdef ALLOW_AT
 // value goes 0 ... 127
-extern void aftertouch(midiParser* parser, unsigned char value);
+extern void aftertouch(struct midiParser* parser, unsigned char value);
 #endif   // ALLOW_AT
 
 #ifdef ALLOW_POLY_AT
 // note goes 0 ... 127, value goes 0 ... 127
-extern void polyAftertouch(midiParser* parser, unsigned char note, unsigned char value);
+extern void polyAftertouch(struct midiParser* parser, unsigned char note, unsigned char value);
 #endif   // ALLOW_POLY_AT
 
 #ifdef ALLOW_SONG_POSITION_POINTER
 // value goes 0 ... 16383
-extern void songPositionPointer(midiParser* parser, UNSIGNED_16_BIT_INT value);
+extern void songPositionPointer(struct midiParser* parser, UNSIGNED_16_BIT_INT value);
 #endif   // ALLOW_SONG_POSITION_POINTER
 
 #ifdef ALLOW_SONG_SELECT
 // song goes 0 ... 127
-extern void songSelect(midiParser* parser, unsigned char song);
+extern void songSelect(struct midiParser* parser, unsigned char song);
 #endif   // ALLOW_SONG_SELECT
 
 #ifdef ALLOW_MIDI_TIME_CODE_QUARTER_FRAME
 // data goes 0...127
-extern void midiTimeCodeQuarterFrame(midiParser* parser, unsigned char data);
+extern void midiTimeCodeQuarterFrame(struct midiParser* parser, unsigned char data);
 #endif   // ALLOW_MIDI_TIME_CODE_QUARTER_FRAME
 
 #ifdef ALLOW_ACTIVE_SENSING
-extern void activeSensing(midiParser* parser);
+extern void activeSensing(struct midiParser* parser);
 #endif   // ALLOW_ACTIVE_SENSING
 
 #ifdef ALLOW_SYSTEM_RESET
-extern void systemReset(midiParser* parser);
+extern void systemReset(struct midiParser* parser);
 #endif   // ALLOW_SYSTEM_RESET
 
 #ifdef ALLOW_TUNE_REQUEST
-extern void tuneRequest(midiParser* parser);
+extern void tuneRequest(struct midiParser* parser);
 #endif   // ALLOW_TUNE_REQUEST
 
 
@@ -342,11 +342,11 @@ extern void tuneRequest(midiParser* parser);
 // The channel can be any of 0...15 or OMNI
 // You can use the tag for anything you like: for example, if you have two MIDI devices, the tag might indicate the device
 // unvoicedMessages indicates whether this parser responds to any unvoiced messages (as opposed to ignoring them)
-void initializeParser(midiParser* parser, unsigned char channel, unsigned char tag, unsigned char unvoicedMessages);
+void initializeParser(struct midiParser* parser, unsigned char channel, unsigned char tag, unsigned char unvoicedMessages);
 
 // Resets the MIDI parser.  You don't need to call this initially but you might
 // call it if you need to reset the stream for some reason (very rare).
-void resetParser(midiParser* parser);
+void resetParser(struct midiParser* parser);
 
 // Updates the MIDI parser to reflect a new incoming byte.
 // Returns one of:
@@ -363,29 +363,29 @@ void resetParser(midiParser* parser);
 // NOTE_INVALID_ATOMIC_MODULATION_CC    A CC 26 or 27 was constructed but ignored (for the moment) because the previous CC was not the same or invalid.
 //                                      This isn't an error per se, but a declaration that the CC was not processed yet to guarantee atomicity.
 //                                      This feature is only turned on if we ALLOW_ATOMIC_MODULATION_CC.
-signed char parseMidi(midiParser* parser, unsigned char c);
+signed char parseMidi(struct midiParser* parser, unsigned char c);
 
 // Returns the parser's assigned MIDI channel
 // Will be 0...15 or OMNI
-unsigned char getParserMIDIChannel(midiParser* parser);
+unsigned char getParserMIDIChannel(struct midiParser* parser);
 
 // Returns the parser's current MIDI channel: the channel of the latest incoming voice data
 // This will be 0...15 or INVALID is there has been no valid voice data yet.
-unsigned char getParserCurrentMIDIChannel(midiParser* parser);
+unsigned char getParserCurrentMIDIChannel(struct midiParser* parser);
 
 // Returns the parser's tag
-unsigned char getParserTag(midiParser* parser);
+unsigned char getParserTag(struct midiParser* parser);
 
 #if defined(ALLOW_MPE)
 // Sets the MPE Master Channel for this parser.  If voiced messages are assigned to the MPE Master Channel,
 // they will be responded to by this parser (along with voiced messages on its regular channel).  The
 // MPE Master Channel should be either 0, 15, or NO_CHANNEL.
-void setMPEMasterChannel(midiParser* parser, unsigned char mpeChannel);
+void setMPEMasterChannel(struct midiParser* parser, unsigned char mpeChannel);
 
 // Returns the MPE Master Channel for this parser.  If voiced messages are assigned to the MPE Master Channel,
 // they will be responded to by this parser (along with voiced messages on its regular channel).  The
 // MPE Master Channel should be either 0, 15, or NO_CHANNEL.
-unsigned char getMPEMasterChannel(midiParser* parser);
+unsigned char getMPEMasterChannel(struct midiParser* parser);
 #endif	// defined(ALLOW_MPE)
 
 #if defined(ALLOW_HIGH_RES_CC)
@@ -393,7 +393,7 @@ unsigned char getMPEMasterChannel(midiParser* parser);
 // setHighResUsed(state, 3, 1), then param 3 will define the MSB and 35 will define the LSB of CC 3.
 // Only the first 32 parameters (0...31) may be turned on or off.
 // Note that CC 6 and 38 (Data Entry) will be ignored here if you have turned on RPN/NRPN, which use them instead.
-void setHighResUsed(midiParser* parser, unsigned char parameter, unsigned char on);
+void setHighResUsed(struct midiParser* parser, unsigned char parameter, unsigned char on);
 #endif	// defined(ALLOW_HIGH_RES_CC)
 
 #endif

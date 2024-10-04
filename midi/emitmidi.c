@@ -37,7 +37,7 @@
 
 
 
-void resetEmitter(midiEmitter* emitter)
+void resetEmitter(struct midiEmitter* emitter)
     {
     emitter->lastStatus = INVALID;
     emitter->lastHighResParameter = INVALID;
@@ -46,14 +46,14 @@ void resetEmitter(midiEmitter* emitter)
     emitter->lastNRPN = INVALID_BIG;
     }
 
-void initializeEmitter(midiEmitter* emitter, unsigned char tag)
+void initializeEmitter(struct midiEmitter* emitter, unsigned char tag)
     {
     emitter->tag = tag;
     resetEmitter(emitter);
     }
 
 // this is just called internally as a wrapper around emitMidi
-void doEmit(midiEmitter* emitter, unsigned char byte)
+void doEmit(struct midiEmitter* emitter, unsigned char byte)
     {
     if (emitter->lastStatus == byte)    // already emitted it as the last status byte, ignore for running status
         return;
@@ -72,14 +72,14 @@ void doEmit(midiEmitter* emitter, unsigned char byte)
     emitMidi(emitter, byte);
     }
 
-void emitNoteOn(midiEmitter* emitter, unsigned char pitch, unsigned char velocity, unsigned char channel)
+void emitNoteOn(struct midiEmitter* emitter, unsigned char pitch, unsigned char velocity, unsigned char channel)
     {
     doEmit(emitter, NOTE_ON | (channel & 15));
     doEmit(emitter, pitch & 127);
     doEmit(emitter, velocity & 127);
     }
         
-void emitNoteOffVel(midiEmitter* emitter, unsigned char pitch, unsigned char velocity, unsigned char channel)
+void emitNoteOffVel(struct midiEmitter* emitter, unsigned char pitch, unsigned char velocity, unsigned char channel)
     {
     if (velocity == 0x40) emitNoteOn(emitter, pitch, 0, channel);
     else
@@ -90,33 +90,33 @@ void emitNoteOffVel(midiEmitter* emitter, unsigned char pitch, unsigned char vel
         }
     }
 
-void emitNoteOff(midiEmitter* emitter, unsigned char pitch, unsigned char channel)     
+void emitNoteOff(struct midiEmitter* emitter, unsigned char pitch, unsigned char channel)     
     {
     emitNoteOn(emitter, pitch, 0, channel);
     }
 
-void emitClockStop(midiEmitter* emitter)
+void emitClockStop(struct midiEmitter* emitter)
     {
     doEmit(emitter, CLOCK_STOP);
     }
         
-void emitClockStart(midiEmitter* emitter)
+void emitClockStart(struct midiEmitter* emitter)
     {
     doEmit(emitter, CLOCK_START);
     }
 
-void emitClockContinue(midiEmitter* emitter)
+void emitClockContinue(struct midiEmitter* emitter)
     {
     doEmit(emitter, CLOCK_CONTINUE);
     }
 
-void emitClockPulse(midiEmitter* emitter)
+void emitClockPulse(struct midiEmitter* emitter)
     {
     doEmit(emitter, CLOCK_PULSE);
     }
 
 // value goes -8192 ... +8191, channel goes 0 ... 15
-void emitBend(midiEmitter* emitter, SIGNED_16_BIT_INT value, unsigned char channel)
+void emitBend(struct midiEmitter* emitter, SIGNED_16_BIT_INT value, unsigned char channel)
     {
     doEmit(emitter, BEND | (channel & 15));
     UNSIGNED_16_BIT_INT val = (UNSIGNED_16_BIT_INT)(value + 8192);
@@ -127,7 +127,7 @@ void emitBend(midiEmitter* emitter, SIGNED_16_BIT_INT value, unsigned char chann
 // This will only be called for non-high-res, non-NRPN, non-RPN CCs
 // This will NOT be called for any CCs you have previously registered as high resolution via setHighResUsed(...)
 // parameter goes 0 ... 127, value goes 0 ... 127, channel goes 0 ... 15
-void emitCC(midiEmitter* emitter, unsigned char parameter, unsigned char value, unsigned char channel)
+void emitCC(struct midiEmitter* emitter, unsigned char parameter, unsigned char value, unsigned char channel)
     {
     doEmit(emitter, CC | (channel & 15));
     doEmit(emitter, parameter & 127);
@@ -136,14 +136,14 @@ void emitCC(midiEmitter* emitter, unsigned char parameter, unsigned char value, 
     
 
 // program goes 0 ... 127, channel goes 0 ... 15
-void emitPC(midiEmitter* emitter, unsigned char program, unsigned char channel)       
+void emitPC(struct midiEmitter* emitter, unsigned char program, unsigned char channel)       
     {
     doEmit(emitter, PC | (channel & 15));
     doEmit(emitter, program & 127);
     }
 
 // program goes 0 ... 127, channel goes 0 ... 15
-void emitPCAndBank(midiEmitter* emitter, unsigned char program, unsigned bankMSB, unsigned bankLSB, unsigned char channel)       
+void emitPCAndBank(struct midiEmitter* emitter, unsigned char program, unsigned bankMSB, unsigned bankLSB, unsigned char channel)       
     {
     emitCC(emitter, 0, bankMSB, channel);
     emitCC(emitter, 32, bankLSB, channel);
@@ -152,7 +152,7 @@ void emitPCAndBank(midiEmitter* emitter, unsigned char program, unsigned bankMSB
     }
 
 // parameter goes 0...16383, value goes 0...16383, rpn is true or false, channel goes 0...15
-void emitNRPN(midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel)
+void emitNRPN(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel)
     {
     if (rpn) parameter += 16384;
     // Do we resubmit the parameter?
@@ -187,7 +187,7 @@ void emitNRPN(midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_B
 
 
 // parameter goes 0...16383, value goes 0...127, rpn is true or false, channel goes 0...15
-void emitNRPNIncrement(midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel)
+void emitNRPNIncrement(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel)
     {
     if (rpn) parameter += 16384;
     // Do we resubmit the parameter?
@@ -214,7 +214,7 @@ void emitNRPNIncrement(midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSI
     }
 
 // parameter goes 0...16383, value goes 0...127, rpn is true or false, channel goes 0...15
-void emitNRPNDecrement(midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel)
+void emitNRPNDecrement(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel)
     {
     if (rpn) parameter += 16384;
     // Do we resubmit the parameter?
@@ -241,7 +241,7 @@ void emitNRPNDecrement(midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSI
     }
 
 
-void emitHighResCC(midiEmitter* emitter, unsigned char parameter, UNSIGNED_16_BIT_INT value, unsigned char channel)   
+void emitHighResCC(struct midiEmitter* emitter, unsigned char parameter, UNSIGNED_16_BIT_INT value, unsigned char channel)   
     {
     unsigned char msb = (value >> 7) & 127;
 
@@ -259,7 +259,7 @@ void emitHighResCC(midiEmitter* emitter, unsigned char parameter, UNSIGNED_16_BI
 
 
 // buffer does not include 0xF0 at start nor 0xF7 at end
-void emitSysex(midiEmitter* emitter, unsigned char* buffer, unsigned char len)
+void emitSysex(struct midiEmitter* emitter, unsigned char* buffer, unsigned char len)
     {
     doEmit(emitter, 0xF0);
     for(unsigned char i = 0; i < len; i++)
@@ -270,14 +270,14 @@ void emitSysex(midiEmitter* emitter, unsigned char* buffer, unsigned char len)
     }
 
 // value goes 0 ... 127, channel goes 0 ... 15
-void emitAftertouch(midiEmitter* emitter, unsigned char value, unsigned char channel)
+void emitAftertouch(struct midiEmitter* emitter, unsigned char value, unsigned char channel)
     {
     doEmit(emitter, AT | (channel & 15));
     doEmit(emitter, value & 127);
     }
 
 // note goes 0 ... 127, value goes 0 ... 127, channel goes 0 ... 15
-void emitPolyAftertouch(midiEmitter* emitter, unsigned char note, unsigned char value, unsigned char channel)
+void emitPolyAftertouch(struct midiEmitter* emitter, unsigned char note, unsigned char value, unsigned char channel)
     {
     doEmit(emitter, POLY_AT | (channel & 15));
     doEmit(emitter, note & 127);
@@ -285,7 +285,7 @@ void emitPolyAftertouch(midiEmitter* emitter, unsigned char note, unsigned char 
     }
 
 // value goes 0 ... 16383, channel goes 0 ... 15
-void emitSongPositionPointer(midiEmitter* emitter, UNSIGNED_16_BIT_INT value)
+void emitSongPositionPointer(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT value)
     {
     doEmit(emitter, SONG_POSITION_POINTER);
     doEmit(emitter, (value >> 7) & 127);
@@ -293,36 +293,36 @@ void emitSongPositionPointer(midiEmitter* emitter, UNSIGNED_16_BIT_INT value)
     }
 
 // song goes 0 ... 127, channel goes 0 ... 15
-void emitSongSelect(midiEmitter* emitter, unsigned char song)
+void emitSongSelect(struct midiEmitter* emitter, unsigned char song)
     {
     doEmit(emitter, SONG_SELECT);
     doEmit(emitter, song & 127);
     }
 
 // data goes 0...127, channel goes 0 ... 15
-void emitMidiTimeCodeQuarterFrame(midiEmitter* emitter, unsigned char data)
+void emitMidiTimeCodeQuarterFrame(struct midiEmitter* emitter, unsigned char data)
     {
     doEmit(emitter, MIDI_TIME_CODE_QUARTER_FRAME);
     doEmit(emitter, data & 127);
     }
 
-void emitActiveSensing(midiEmitter* emitter)
+void emitActiveSensing(struct midiEmitter* emitter)
     {
     doEmit(emitter, ACTIVE_SENSING);
     }
         
-void emitSystemReset(midiEmitter* emitter)
+void emitSystemReset(struct midiEmitter* emitter)
     {
     doEmit(emitter, SYSTEM_RESET);
     }
         
-void emitTuneRequest(midiEmitter* emitter)
+void emitTuneRequest(struct midiEmitter* emitter)
     {
     doEmit(emitter, TUNE_REQUEST);
     }
 
 // Returns the parser's tag
-static inline unsigned char getEmitterTag(midiEmitter* emitter)
+static inline unsigned char getEmitterTag(struct midiEmitter* emitter)
     {
     return emitter->tag;
     }

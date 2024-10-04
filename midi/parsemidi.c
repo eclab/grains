@@ -55,7 +55,7 @@
 
 // Returns whether a given CC parameter (0...31) is being used as a 14-bit CC
 
-static inline unsigned char isHighResUsed(midiParser* parser, unsigned char parameter)
+static inline unsigned char isHighResUsed(struct midiParser* parser, unsigned char parameter)
     {
     unsigned char pos = parameter >> 3;             // which byte
     unsigned char slot = parameter & 7;             // where in the byte
@@ -65,7 +65,7 @@ static inline unsigned char isHighResUsed(midiParser* parser, unsigned char para
 
 // Sets whether a given CC parameter (0...31) is being used as a 14-bit CC
 
-void setHighResUsed(midiParser* parser, unsigned char parameter, unsigned char on)
+void setHighResUsed(struct midiParser* parser, unsigned char parameter, unsigned char on)
     {
     unsigned char pos = parameter >> 3;             // which byte
     unsigned char slot = parameter & 7;             // where in the byte
@@ -83,7 +83,7 @@ void setHighResUsed(midiParser* parser, unsigned char parameter, unsigned char o
 // Returns whether the 14-bit MSB was defined at least once so far
 // Note: returns 0 if false, and 128 if true [on purpose]
 
-static inline unsigned char isHighResMSBSet(midiParser* parser, unsigned char parameter)
+static inline unsigned char isHighResMSBSet(struct midiParser* parser, unsigned char parameter)
     {
     return parser -> highResMSB[parameter] & 0x80;
     }
@@ -91,7 +91,7 @@ static inline unsigned char isHighResMSBSet(midiParser* parser, unsigned char pa
 
 // Sets the 14-bit MSB.  Don't call this.
 
-static inline void setHighResMSB(midiParser* parser, unsigned char parameter, unsigned char val)
+static inline void setHighResMSB(struct midiParser* parser, unsigned char parameter, unsigned char val)
     {
     parser -> highResMSB[parameter] = 0x80 | val;
     }
@@ -99,7 +99,7 @@ static inline void setHighResMSB(midiParser* parser, unsigned char parameter, un
 
 // Returns the 14-bit MSB.  If not defined yet, it will be 0 by default.
 
-static inline unsigned char getHighResMSB(midiParser* parser, unsigned char parameter)
+static inline unsigned char getHighResMSB(struct midiParser* parser, unsigned char parameter)
     {
     return parser -> highResMSB[parameter] & 0x7F;
     }
@@ -111,7 +111,7 @@ static inline unsigned char getHighResMSB(midiParser* parser, unsigned char para
 // Returns whether the NRPN / RPN Parameter MSB was defined at least once so far
 // Note: returns 0 if false, and 128 if true [on purpose]
 
-static inline unsigned char isNRPNParamMSBSet(midiParser* parser)
+static inline unsigned char isNRPNParamMSBSet(struct midiParser* parser)
     {
     return parser -> nrpnParamMSB & 0x80;
     }
@@ -119,7 +119,7 @@ static inline unsigned char isNRPNParamMSBSet(midiParser* parser)
 
 // Sets the NRPN / RPN Parameter MSB.  Don't call this.
 
-static inline void setNRPNParamMSB(midiParser* parser, unsigned char param)
+static inline void setNRPNParamMSB(struct midiParser* parser, unsigned char param)
     {
     parser -> nrpnParamMSB = 0x80 | param;
     }
@@ -127,7 +127,7 @@ static inline void setNRPNParamMSB(midiParser* parser, unsigned char param)
 
 // Returns the NRPN / RPN Parameter MSB.  If not defined yet, it will be 0 by default.
 
-static inline unsigned char getNRPNParamMSB(midiParser* parser)
+static inline unsigned char getNRPNParamMSB(struct midiParser* parser)
     {
     return parser -> nrpnParamMSB & 0x7F;
     }
@@ -136,7 +136,7 @@ static inline unsigned char getNRPNParamMSB(midiParser* parser)
 // Returns whether the NRPN / RPN Parameter LSB was defined at least once so far
 // Note: returns 0 if false, and 128 if true [on purpose]
 
-static inline unsigned char isNRPNParamLSBSet(midiParser* parser)
+static inline unsigned char isNRPNParamLSBSet(struct midiParser* parser)
     {
     return parser -> nrpnParamLSB & 0x80;
     }
@@ -144,7 +144,7 @@ static inline unsigned char isNRPNParamLSBSet(midiParser* parser)
 
 // Sets the NRPN / RPN Parameter LSB.  Don't call this.
 
-static inline void setNRPNParamLSB(midiParser* parser, unsigned char param)
+static inline void setNRPNParamLSB(struct midiParser* parser, unsigned char param)
     {
     parser -> nrpnParamLSB = 0x80 | param;
     }
@@ -152,7 +152,7 @@ static inline void setNRPNParamLSB(midiParser* parser, unsigned char param)
 
 // Returns the NRPN / RPN Parameter LSB.  If not defined yet, it will be 0 by default.
 
-static inline unsigned char getNRPNParamLSB(midiParser* parser)
+static inline unsigned char getNRPNParamLSB(struct midiParser* parser)
     {
     return parser -> nrpnParamLSB & 0x7F;
     }
@@ -161,7 +161,7 @@ static inline unsigned char getNRPNParamLSB(midiParser* parser)
 // Returns whether the NRPN / RPN Value MSB was defined at least once so far
 // Note: returns 0 if false, and 128 if true [on purpose]
 
-static inline unsigned char isNRPNValueMSBSet(midiParser* parser)
+static inline unsigned char isNRPNValueMSBSet(struct midiParser* parser)
     {
     return parser -> nrpnValueMSB & 0x80;
     }
@@ -169,7 +169,7 @@ static inline unsigned char isNRPNValueMSBSet(midiParser* parser)
 
 // Sets the NRPN / RPN Value MSB.  Don't call this.
 
-static inline void setNRPNValueMSB(midiParser* parser, unsigned char val)
+static inline void setNRPNValueMSB(struct midiParser* parser, unsigned char val)
     {
     parser -> nrpnValueMSB = 0x80 | val;
     }
@@ -177,7 +177,7 @@ static inline void setNRPNValueMSB(midiParser* parser, unsigned char val)
 
 // Returns the NRPN / RPN Value MSB.  If not defined yet, it will be 0 by default.
 
-static inline unsigned char getNRPNValueMSB(midiParser* parser)
+static inline unsigned char getNRPNValueMSB(struct midiParser* parser)
     {
     return parser -> nrpnValueMSB & 0x7F;
     }
@@ -187,7 +187,7 @@ static inline unsigned char getNRPNValueMSB(midiParser* parser)
 // Called whenever we receive a new MIDI CC message.  Processes the CC message and updates
 // the CC state, calling callbacks as appropriate.
 
-signed char processCC(midiParser* parser, unsigned char param, unsigned char val)
+signed char processCC(struct midiParser* parser, unsigned char param, unsigned char val)
     {
 #ifdef ALLOW_CC
 #ifdef ALLOW_PC
@@ -402,7 +402,7 @@ signed char processCC(midiParser* parser, unsigned char param, unsigned char val
 
 
 
-void resetParser(midiParser* parser)
+void resetParser(struct midiParser* parser)
     {
     parser->currentChannel = INVALID;
     parser->status = INVALID;
@@ -441,7 +441,7 @@ void resetParser(midiParser* parser)
 
 
 // channel can be 0...15 or OMNI
-void initializeParser(midiParser* parser, unsigned char channel, unsigned char tag, unsigned char unvoicedMessages)
+void initializeParser(struct midiParser* parser, unsigned char channel, unsigned char tag, unsigned char unvoicedMessages)
     {
     parser->channel = channel;
     parser->tag = tag;
@@ -466,12 +466,12 @@ void initializeParser(midiParser* parser, unsigned char channel, unsigned char t
 
 
 #ifdef ALLOW_MPE
-void setMPEMasterChannel(midiParser* parser, unsigned char mpeMasterChannel)
+void setMPEMasterChannel(struct midiParser* parser, unsigned char mpeMasterChannel)
     {
     parser->mpeMasterChannel = mpeMasterChannel;
     }
         
-unsigned char getMPEChannel(midiParser* parser)
+unsigned char getMPEChannel(struct midiParser* parser)
     {
     return parser->mpeMasterChannel;
     }
@@ -481,7 +481,7 @@ unsigned char getMPEChannel(midiParser* parser)
 // This is just to remove redundancy in parseDataByte.
 // It sets the channel to the voice message's channel,
 // and sets up whether we should listen to this message based on the channel
-static inline unsigned char processVoiceMessage(midiParser* parser, unsigned char c, unsigned char status)
+static inline unsigned char processVoiceMessage(struct midiParser* parser, unsigned char c, unsigned char status)
     {
     unsigned char channel = c - status;
     
@@ -508,7 +508,7 @@ static inline unsigned char processVoiceMessage(midiParser* parser, unsigned cha
         
 
 // This handles the first data byte
-static inline signed char processFirstDataByte(midiParser* parser, unsigned char c)          // yes, inline
+static inline signed char processFirstDataByte(struct midiParser* parser, unsigned char c)          // yes, inline
     {
     switch(parser->status)
         {
@@ -585,7 +585,7 @@ static inline signed char processFirstDataByte(midiParser* parser, unsigned char
 
 
 // This handles the second data byte
-static inline signed char processSecondDataByte(midiParser* parser, unsigned char c)          // yes, inline
+static inline signed char processSecondDataByte(struct midiParser* parser, unsigned char c)          // yes, inline
     {
     switch(parser->status)
         {
@@ -683,7 +683,7 @@ static inline signed char processSecondDataByte(midiParser* parser, unsigned cha
 
 
 // Main MIDI Parser
-signed char parseMidi(midiParser* parser, unsigned char c)
+signed char parseMidi(struct midiParser* parser, unsigned char c)
     {
 #ifdef ALLOW_SYSTEM_EXCLUSIVE
     if (c >= STATUS && c < REALTIME)
@@ -1069,13 +1069,13 @@ signed char parseMidi(midiParser* parser, unsigned char c)
     }
 
 // Returns the parser's MIDI channel
-unsigned char getParserMIDIChannel(midiParser* parser)
+unsigned char getParserMIDIChannel(struct midiParser* parser)
     {
     return parser->channel;
     }
 
 // Returns the parser's MIDI channel
-unsigned char getParserCurrentMIDIChannel(midiParser* parser)
+unsigned char getParserCurrentMIDIChannel(struct midiParser* parser)
     {
     return parser->currentChannel;
     }

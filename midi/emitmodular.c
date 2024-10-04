@@ -10,7 +10,7 @@
 
 #define AUXILIARY_CC 3
 
-void emitModulationCCParam(midiEmitter* emitter, unsigned char param, UNSIGNED_16_BIT_INT value, unsigned char channel)
+void emitModulationCCParam(struct midiEmitter* emitter, unsigned char param, UNSIGNED_16_BIT_INT value, unsigned char channel)
 	{
 	if (param < 2)
 		{
@@ -39,7 +39,7 @@ const unsigned char _PARAM_CC_DATA[8][9] =
     { 24,  25, 107, 108, 109, 110, 111,  57,  56 }
     };
 
-void emit7BitCCParam(midiEmitter* emitter, unsigned char id, unsigned char param, unsigned char value, unsigned char channel)
+void emit7BitCCParam(struct midiEmitter* emitter, unsigned char id, unsigned char param, unsigned char value, unsigned char channel)
 	{
 #ifdef __AVR__
 	unsigned char pos = pgm_read_byte_near(&_PARAM_CC_DATA[id][param]);
@@ -49,7 +49,7 @@ void emit7BitCCParam(midiEmitter* emitter, unsigned char id, unsigned char param
 	emitCC(emitter, pos, value, channel);
 	}
 	
-void emit14BitCCParam(midiEmitter* emitter, unsigned char id, unsigned char param, UNSIGNED_16_BIT_INT value, unsigned char channel)	
+void emit14BitCCParam(struct midiEmitter* emitter, unsigned char id, unsigned char param, UNSIGNED_16_BIT_INT value, unsigned char channel)	
 	{
 #ifdef __AVR__
 	unsigned char pos = pgm_read_byte_near(&_PARAM_CC_DATA[id][param]);
@@ -59,31 +59,31 @@ void emit14BitCCParam(midiEmitter* emitter, unsigned char id, unsigned char para
 	emitHighResCC(emitter, pos, value, channel);
 	}
 
-void emitAuxiliaryParam(midiEmitter* emitter, unsigned char id, unsigned char param, unsigned char value, unsigned char channel)
+void emitAuxiliaryParam(struct midiEmitter* emitter, unsigned char id, unsigned char param, unsigned char value, unsigned char channel)
 	{
 	unsigned char msb = (id - 8) * 16 + 16 + param;
 	unsigned char lsb = value;
 	emitHighResCC(emitter, AUXILIARY_CC, param * 128 + value, channel);
 	}
 	
-void emitNRPNParam(midiEmitter* emitter, unsigned char id, unsigned char param, UNSIGNED_16_BIT_INT value, unsigned char channel)
+void emitNRPNParam(struct midiEmitter* emitter, unsigned char id, unsigned char param, UNSIGNED_16_BIT_INT value, unsigned char channel)
 	{
 	emitNRPN(emitter, id + 256 + param, value, 0, channel);
 	}
 	
-void emitProgramSave(midiEmitter* emitter, unsigned char bankMSB, unsigned char bankLSB, unsigned char program, unsigned char channel)
+void emitProgramSave(struct midiEmitter* emitter, unsigned char bankMSB, unsigned char bankLSB, unsigned char program, unsigned char channel)
 	{
 	emitCC(emitter, 0, bankMSB, channel);
 	emitCC(emitter, 32, bankLSB, channel);
 	emitHighResCC(emitter, AUXILIARY_CC, 0 * 128 + program, channel);
 	}
 	
-void emitCurrentProgramSave(midiEmitter* emitter, unsigned char channel)
+void emitCurrentProgramSave(struct midiEmitter* emitter, unsigned char channel)
 	{
 	emitHighResCC(emitter, AUXILIARY_CC, 1 * 128 + 0, channel);
 	}
 	
-void emitCurrentProgramRevert(midiEmitter* emitter, unsigned char channel)
+void emitCurrentProgramRevert(struct midiEmitter* emitter, unsigned char channel)
 	{
 	emitHighResCC(emitter, AUXILIARY_CC, 1 * 128 + 1, channel);
 	}

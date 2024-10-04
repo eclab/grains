@@ -25,35 +25,59 @@
 ///
 /// You will want to set up your parser as follows:
 ///
+/// FIRST:
 /// Turn ON at least ALLOW_CC, ALLOW_HIGH_RES_CC, ALLOW_RPN_NRPN, ALLOW_PC
 /// Turn ON ALLOW_ATOMIC_MODULATION_CC
-/// 
-/// Your ID has 9 parameters (CCs) called A, B, C, D, E, F, G, H, I.  You have the option of treating parameters A and I as a combined
+///
+/// This means you'll have to include the functions: 
+///
+///		void cc(struct midiParser* parser, unsigned char parameter, unsigned char value)
+///		void nrpn(struct midiParser* parser, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char status)
+///		void highResCC(struct midiParser* parser, unsigned char parameter, UNSIGNED_16_BIT_INT value, unsigned char status)
+///		void pc(struct midiParser* parser, unsigned char program, unsigned char bankMSB, unsigned char bankLSB)
+///
+/// ... even if their implementations are empty.
+///
+///
+/// NEXT: 
+/// You should set your BANK SELECT, MOD WHEEL, AUXILIARY, DATA ENTRY, and EXPRESSION CONTROLLER CCs to be 14-bit.
+/// You should also set MODULATION A and MODULATION B to be 14-bit:
+///		setHighResUsed(parser, 0, 1);				// Bank Select
+///		setHighResUsed(parser, 1, 1);				// Mod Wheel
+///		setHighResUsed(parser, 3, 1);				// Auxiliary
+///		setHighResUsed(parser, 6, 1);				// Data Entry
+///		setHighResUsed(parser, 11, 1);				// Expression Controller
+///		setHighResUsed(parser, 58, 1);				// Modulation A
+///		setHighResUsed(parser, 59, 1);				// Modulation B
+///
+/// The function setStandardHighResParameters(parser) will do this for you as a convenience.
+///
+///
+/// NEXT:
+/// Your ID has 9 parameters (CCs) called A, B, C, D, E, F, G, H, I.  
+/// You have the option of treating parameters A and I as a combined
 /// 14-bit "high res" parameter, which we will then call "A".  To do this, call 
 ///		setHighResUsed(parser, A's CC, true);			// Where "A's CC" is the CC for Parameter A for your ID
 ///
-/// You further the option of treating parameters B and H as a combined 14-bit "high res" parameter, which we will then call "A".  
-/// To do this, call 
+/// You further the option of treating parameters B and H as a combined 
+/// 14-bit "high res" parameter, which we will then call "A".  To do this, call 
 ///		setHighResUsed(parser, B's CC, true);			// Where "B's CC" is the CC for Parameter B for your ID
 ///
-/// You should set your BANK SELECT, MOD WHEEL, AUXILIARY, DATA ENTRY, and EXPRESSION CONTROLLER CCs to be 14-bit:
-///		setHighResUsed(parser, 0, true);				// Bank Select
-///		setHighResUsed(parser, 1, true);				// Mod Wheel
-///		setHighResUsed(parser, 3, true);				// Auxiliary
-///		setHighResUsed(parser, 6, true);				// Data Entry
-///		setHighResUsed(parser, 11, true);				// Expression Controller
+/// The method setIDHighResParameters(parser, id, setA, setB) will do this for you as a convenience, including
+/// looking up which CC corresponds to the A or B parameters for your ID.
 ///
-/// You should also set MODULATION A and MODULATION B to be 14-bit:
-///		setHighResUsed(parser, 58, true);				// Modulation A
-///		setHighResUsed(parser, 59, true);				// Modulation B
+/// Note that if you respond to multiple IDs, you can set the A and B parameters for each of them as you see fit.
 ///
-/// Finally, you have the option of setting certain open CC pairs to be 14-bit if you wished:
+///
+/// FINALLY:
+/// You have the option of setting certain open CC pairs to be 14-bit if you wished:
 ///		setHighResUsed(parser, 2, true);				// MSB 2, LSB 34
 ///		setHighResUsed(parser, 4, true);				// MSB 4, LSB 36
 ///		setHighResUsed(parser, 28, true);				// MSB 28, LSB 60
 ///		setHighResUsed(parser, 29, true);				// MSB 29, LSB 61
 ///		setHighResUsed(parser, 30, true);				// MSB 30, LSB 62
 ///		setHighResUsed(parser, 31, true);				// MSB 31, LSB 63
+
 
 
 /// PROCESSING A 7-BIT OR 14-BIT CC
@@ -237,16 +261,14 @@ extern SIGNED_16_BIT_INT getAuxiliaryType(UNSIGNED_16_BIT_INT value);
 // AUXILIARY_PARAM_NONE otherwise
 extern unsigned char getAuxiliaryParam(UNSIGNED_16_BIT_INT value);
 
-/*
-// Sets ALL 32 CCs to be high-resolution (14-bit), including the first and second parameters (a, b) of each ID
-extern void setBothHighResCCsUsed(midiParser* parser);
+// Sets standard modular parameters to 14-bit.  This includes
+// Bank Select, Mod Wheel, Auxiliar, Data Entry, Expression Controller,
+// Modulation A, and Modulation B.  This is a convenience method for setting up a parser.
+extern void setStandardHighResParameters(struct midiParser* parser);
 
-// Sets ALL 32 CCs to be high-resolution (14-bit) except the second parameter (b) of each ID
-extern void setFirstHighResCCUsed(midiParser* parser);
-
-// Sets ALL 32 CCs to be high-resolution (14-bit) except the first and second parameters (a, b) of each ID
-extern void setNoHighResCCsUsed(midiParser* parser);
-*/
+// Sets select parameters A and/or B to 14-bit for a given ID.  
+// This is a convenience method for setting up a parser.
+extern void setIDHighResParameters(struct midiParser* parser, unsigned char id, unsigned char setA, unsigned char setB);
 
 
 #endif		// __PARSE_MODULAR_H

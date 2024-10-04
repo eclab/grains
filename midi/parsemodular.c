@@ -240,28 +240,28 @@ unsigned char getAuxiliaryParam(UNSIGNED_16_BIT_INT value)
 	else return value - ((value >> 7) << 7);
 	}
 
-/*
-void setBothHighResCCsUsed(midiParser* parser)
-    {
-    for(unsigned char cc = 0; cc < 32; cc++)
-        setHighResUsed(parser, cc, 1);
-    }
-        
-void setFirstHighResCCUsed(midiParser* parser)
-    {
-    for(unsigned char cc = 0; cc < 32; cc++)
-        if (CC_TYPE(getCCData(cc)) <= CC_TYPE_ID_8)
-            setHighResUsed(parser, cc, (cc & 1) == 0);        // it's even
-        else
-            setHighResUsed(parser, cc, 1);
-    }
-        
-void setNoHighResCCsUsed(midiParser* parser)
-    {
-    for(unsigned char cc = 0; cc < 32; cc++)
-        if (CC_TYPE(getCCData(cc)) <= CC_TYPE_ID_8)
-            setHighResUsed(parser, cc, 0);
-        else
-            setHighResUsed(parser, cc, 1);
-    }
-*/
+
+void setStandardHighResParameters(struct midiParser* parser)
+	{
+	setHighResUsed(parser, 0, 1);				// Bank Select
+	setHighResUsed(parser, 1, 1);				// Mod Wheel
+	setHighResUsed(parser, 3, 1);				// Auxiliary
+	setHighResUsed(parser, 6, 1);				// Data Entry
+	setHighResUsed(parser, 11, 1);				// Expression Controller
+	setHighResUsed(parser, 58, 1);				// Modulation A
+	setHighResUsed(parser, 59, 1);				// Modulation B
+	}
+
+void setIDHighResParameters(struct midiParser* parser, uint8_t id, uint8_t setA, uint8_t setB)
+	{
+	uint8_t a[8] = { 8, 14, 16, 18, 20, 12, 22, 24 };
+	if (setA)
+		{
+		setHighResUsed(parser, a[id], 1);
+		}
+	if (setB)
+		{
+		setHighResUsed(parser, a[id] + 1, 1);
+		}
+	}
+
