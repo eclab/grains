@@ -2,18 +2,18 @@
 /// Open Source 
 /// Licensed under the Apache 2.0 License
 
-/// Version 0.3:        "Passes Tests, Modular Stuff Added"
+/// Version 0.4:        "Tweaked RPN/NRPN"
 
 
-#include "emitmidi.h"
-#include "parsemidi.h"
+#include "emitmidi.c"
+#include "parsemidi.c"
 #include <stdio.h>
 
 
-midiEmitter emit;
-midiParser parse;
+struct midiEmitter emit;
+struct midiParser parse;
 
-void emitMidi(midiEmitter* emitter, unsigned char byte)
+void emitMidi(struct midiEmitter* emitter, unsigned char byte)
     {
     printf("\t%d (%02x)\n", byte, byte);
     parseMidi(&parse, byte);
@@ -36,36 +36,36 @@ unsigned char expectedRPN;
 unsigned char expectedParam;
 unsigned char expectedStatus;
 
-void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
+void noteOn(struct midiParser* parser, unsigned char note, unsigned char velocity)
     {
     printf("NOTE ON %d/%d %d/%d %s\n", note, expectedNote, velocity, expectedVelocity,
         note == expectedNote && velocity == expectedVelocity ? "PASS" : "FAIL");
     }
 
-void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
+void noteOff(struct midiParser* parser, unsigned char note, unsigned char velocity)
     {
     printf("NOTE OFF %d/%d %d/%d %s\n", note, expectedNote, velocity, expectedVelocity,
         note == expectedNote && velocity == expectedVelocity ? "PASS" : "FAIL");
     }
 
-extern void aftertouch(midiParser* parser, unsigned char value)
+extern void aftertouch(struct midiParser* parser, unsigned char value)
     {
     printf("AT %d/%d %s\n", value, expectedValue, value == expectedValue ? "PASS" : "FAIL");
     }
         
-void polyAftertouch(midiParser* parser, unsigned char note, unsigned char value)
+void polyAftertouch(struct midiParser* parser, unsigned char note, unsigned char value)
     {
     printf("POLY AT %d/%d %d/%d %s\n", note, expectedNote, value, expectedValue,
         note == expectedNote && value == expectedValue ? "PASS" : "FAIL");
     }
         
-void cc(midiParser* parser, unsigned char parameter, unsigned char value)
+void cc(struct midiParser* parser, unsigned char parameter, unsigned char value)
     {
     printf("CC %d/%d %d/%d %s\n", parameter, expectedParameter, value, expectedValue,
         parameter == expectedParameter && value == expectedValue ? "PASS" : "FAIL");
     }
 
-void pc(midiParser* parser, unsigned char program, unsigned char bankMSB, unsigned char bankLSB)
+void pc(struct midiParser* parser, unsigned char program, unsigned char bankMSB, unsigned char bankLSB)
     {
     printf("PC %d/%d %d/%d %d/%d %s\n", program, expectedProgram, bankMSB, expectedBankMSB, bankLSB, expectedBankLSB,
         program == expectedProgram && 
@@ -73,13 +73,13 @@ void pc(midiParser* parser, unsigned char program, unsigned char bankMSB, unsign
         bankLSB == expectedBankLSB ? "PASS" : "FAIL");
     }
 
-void bend(midiParser* parser, SIGNED_16_BIT_INT value)
+void bend(struct midiParser* parser, SIGNED_16_BIT_INT value)
     {
     printf("BEND %d/%d %s\n", value, expectedValue,
         value == expectedValue ? "PASS" : "FAIL");
     }
 
-void sysex(midiParser* parser, unsigned char* buffer, unsigned char len, unsigned char status)
+void sysex(struct midiParser* parser, unsigned char* buffer, unsigned char len, unsigned char status)
     {
     printf("SYSEX ");
     if (status == STATUS_SYSEX_COMPLETE) printf("(COMPLETE) ");
@@ -97,60 +97,60 @@ void sysex(midiParser* parser, unsigned char* buffer, unsigned char len, unsigne
     printf("%s\n", pass ? "PASS" : "FAIL");
     }
 
-void midiTimeCodeQuarterFrame(midiParser* parser, unsigned char data)
+void midiTimeCodeQuarterFrame(struct midiParser* parser, unsigned char data)
     {
     printf("MIDI TIME CODE %d/%d %s\n", data, expectedData,
         data == expectedData ? "PASS" : "FAIL");
     }
 
-void songPositionPointer(midiParser* parser, UNSIGNED_16_BIT_INT value)
+void songPositionPointer(struct midiParser* parser, UNSIGNED_16_BIT_INT value)
     {
     printf("SONG POSITION %d/%d %s\n", value, expectedValue,
         value == expectedValue ? "PASS" : "FAIL");
     }
 
-void songSelect(midiParser* parser, unsigned char song)
+void songSelect(struct midiParser* parser, unsigned char song)
     {
     printf("SONG SELECT %d/%d %s\n", song, expectedSong,
         song == expectedSong ? "PASS" : "FAIL");
     }
 
-void tuneRequest(midiParser* parser)
+void tuneRequest(struct midiParser* parser)
     {
     printf("TUNE REQUEST\n");
     }
 
-void clockStart(midiParser* parser)
+void clockStart(struct midiParser* parser)
     {
     printf("CLOCK START\n");
     }
 
-void clockStop(midiParser* parser)
+void clockStop(struct midiParser* parser)
     {
     printf("CLOCK STOP\n");
     }
 
-void clockPulse(midiParser* parser)
+void clockPulse(struct midiParser* parser)
     {
     printf("CLOCK PULSE\n");
     }
 
-void clockContinue(midiParser* parser)
+void clockContinue(struct midiParser* parser)
     {
     printf("CLOCK CONTINUE\n");
     }
 
-void activeSensing(midiParser* parser)
+void activeSensing(struct midiParser* parser)
     {
     printf("ACTIVE SENSING\n");
     }
 
-void systemReset(midiParser* parser)
+void systemReset(struct midiParser* parser)
     {
     printf("SYSTEM RESET\n");
     }
 
-void nrpn(midiParser* parser, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char status)
+void nrpn(struct midiParser* parser, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char status)
     {
     if (status == STATUS_BARE_MSB)
         {
@@ -177,7 +177,7 @@ void nrpn(midiParser* parser, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT
     }
         
 
-void highResCC(midiParser* parser, unsigned char parameter, UNSIGNED_16_BIT_INT value, unsigned char status)
+void highResCC(struct midiParser* parser, unsigned char parameter, UNSIGNED_16_BIT_INT value, unsigned char status)
     {
     if (status == STATUS_BARE_MSB)
         {
@@ -367,6 +367,25 @@ int main(int argc, char* argv[])
 
     // RPN/NRPN
 
+	// Testing a single LSB.  The Novation A-station does this, grrr
+    expectedParameter = 15;
+    expectedValue = 1290;
+    expectedRPN = 0;
+    expectedStatus = STATUS_NORMAL;
+    emitCC(&emit, 98, 15, 1);
+    emitCC(&emit, 6, 10, 1);
+    emitCC(&emit, 38, 10, 1);
+
+	// Testing a single MSB.  Switching to RPN to force reset.
+    expectedParameter = 2560;
+    expectedValue = 1419;
+    expectedRPN = 1;
+    expectedStatus = STATUS_NORMAL;
+    emitCC(&emit, 101, 20, 1);
+    emitCC(&emit, 6, 11, 1);
+    emitCC(&emit, 38, 11, 1);
+
+	// Regular testing
     expectedParameter = 1234;
     expectedValue = 5678;
     expectedRPN = 0;

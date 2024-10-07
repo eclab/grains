@@ -2,7 +2,7 @@
 /// Open Source 
 /// Licensed under the Apache 2.0 License
 
-/// Version 0.3:        "Passes Tests, Modular Stuff Added"
+/// Version 0.4:        "Tweaked RPN/NRPN"
 
 
 #ifndef PARSEMIDI_H
@@ -179,7 +179,7 @@
 /// THE PARSER STATE MACHINE STRUCTURE
 // Don't fool with this.  Treat it as a black box.  You can get the channel, current channel, and tag
 // by calling getParserMIDIChannel(), getParserCurrentMIDIChannel, and getParserTag() -- see below
-struct midiParser
+struct midiParser					// we can't make this a typedef because it breaks Arduino's compilation
     {
     unsigned char tag;                              // The parser's tag.  This is a byte for you to use however you like.
     unsigned char channel;                          // The channel to which we are meant to listen, or OMNI 

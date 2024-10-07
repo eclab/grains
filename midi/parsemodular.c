@@ -2,7 +2,7 @@
 /// Open Source 
 /// Licensed under the Apache 2.0 License
 
-/// Version 0.3:        "Passes Tests, Modular Stuff Added"
+/// Version 0.4:        "Tweaked RPN/NRPN"
 
 
 #include "parsemodular.h"
@@ -240,7 +240,7 @@ unsigned char getAuxiliaryParam(UNSIGNED_16_BIT_INT value)
 	else return value - ((value >> 7) << 7);
 	}
 
-
+#ifdef ALLOW_HIGH_RES_CC			// defined in parsemidi.h
 void setStandardHighResParameters(struct midiParser* parser)
 	{
 	setHighResUsed(parser, 0, 1);				// Bank Select
@@ -264,4 +264,5 @@ void setIDHighResParameters(struct midiParser* parser, uint8_t id, uint8_t setA,
 		setHighResUsed(parser, a[id] + 1, 1);
 		}
 	}
+#endif
 

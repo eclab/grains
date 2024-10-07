@@ -2,11 +2,11 @@
 /// Open Source 
 /// Licensed under the Apache 2.0 License
 
-/// Version 0.3:        "Passes Tests, Modular Stuff Added"
+/// Version 0.4:        "Tweaked RPN/NRPN"
 
 
 #include "parsemidi.h"
-//#include <stdio.h>
+#include <stdio.h>
 
 // MIDI Status Byte Types
 #define NOTE_OFF 0x80
@@ -211,6 +211,7 @@ signed char processCC(struct midiParser* parser, unsigned char param, unsigned c
         if (param == 98)        // NRPN LSB
             {
             // At preset we do not reset the MSB even if we've emitted some NRPN values.  Is this wise?
+            if (parser->rpn == 1) setNRPNParamMSB(parser, 0);
             setNRPNParamLSB(parser, val);
             parser -> nrpnValueMSB = 0;
             parser -> rpn = 0;
@@ -219,6 +220,7 @@ signed char processCC(struct midiParser* parser, unsigned char param, unsigned c
         else if (param == 99)   // NRPN MSB
             {
             // At preset we do not reset the LSB even if we've emitted some NRPN values.  Is this wise?
+            if (parser->rpn == 1) setNRPNParamLSB(parser, 0);
             setNRPNParamMSB(parser, val);
             parser -> nrpnValueMSB = 0;
             parser -> rpn = 0;
@@ -227,6 +229,7 @@ signed char processCC(struct midiParser* parser, unsigned char param, unsigned c
         else if (param == 100)  // RPN LSB
             {
             // At preset we do not reset the MSB even if we've emitted some NRPN values.  Is this wise?
+            if (parser->rpn == 0) setNRPNParamMSB(parser, 0);
             setNRPNParamLSB(parser, val);
             parser -> nrpnValueMSB = 0;
             parser -> rpn = 1;
@@ -235,6 +238,7 @@ signed char processCC(struct midiParser* parser, unsigned char param, unsigned c
         else if (param == 101)  // RPN MSB
             {
             // At preset we do not reset the LSB even if we've emitted some NRPN values.  Is this wise?
+            if (parser->rpn == 0) setNRPNParamLSB(parser, 0);
             setNRPNParamMSB(parser, val);
             parser -> nrpnValueMSB = 0;
             parser -> rpn = 1;
@@ -242,7 +246,7 @@ signed char processCC(struct midiParser* parser, unsigned char param, unsigned c
             }
         else if (param == 96)   // Increment
             {
-            if (isNRPNParamMSBSet(parser) && isNRPNParamLSBSet(parser))
+            if (isNRPNParamMSBSet(parser) || isNRPNParamLSBSet(parser))
                 {
                 parser -> nrpnValueMSB = 0;         // invalidate later LSBs
                 nrpn(parser, getNRPNParamMSB(parser) * 128 + getNRPNParamLSB(parser), val, parser->rpn, STATUS_NRPN_INCREMENT);
@@ -255,7 +259,7 @@ signed char processCC(struct midiParser* parser, unsigned char param, unsigned c
             }
         else // if (param == 97)
             {
-            if (isNRPNParamMSBSet(parser) && isNRPNParamLSBSet(parser))
+            if (isNRPNParamMSBSet(parser) || isNRPNParamLSBSet(parser))
                 {
                 parser -> nrpnValueMSB = 0;         // invalidate later LSBs
                 nrpn(parser, getNRPNParamMSB(parser) * 128 + getNRPNParamLSB(parser), val, parser->rpn, STATUS_NRPN_DECREMENT);
@@ -272,8 +276,9 @@ signed char processCC(struct midiParser* parser, unsigned char param, unsigned c
 #ifdef ALLOW_ATOMIC_MODULATION_CC
         parser -> lastCC = param;
 #endif 		// ALLOW_ATOMIC_MODULATION_CC
-        if (isNRPNParamMSBSet(parser) && isNRPNParamLSBSet(parser))
+        if (isNRPNParamMSBSet(parser) || isNRPNParamLSBSet(parser))
             {
+            printf("Setting NRPN %d %d\n", getNRPNParamMSB(parser) * 128 + getNRPNParamLSB(parser), val * 128);
             setNRPNValueMSB(parser, val);           
             nrpn(parser, getNRPNParamMSB(parser) * 128 + getNRPNParamLSB(parser), val * 128, parser->rpn, STATUS_BARE_MSB);
             return 1;
@@ -288,7 +293,7 @@ signed char processCC(struct midiParser* parser, unsigned char param, unsigned c
 #ifdef ALLOW_ATOMIC_MODULATION_CC
         parser -> lastCC = param;
 #endif 		// ALLOW_ATOMIC_MODULATION_CC
-        if (isNRPNParamMSBSet(parser) && isNRPNParamLSBSet(parser))
+        if (isNRPNParamMSBSet(parser) || isNRPNParamLSBSet(parser))
             {
             if (isNRPNValueMSBSet(parser))
             	{

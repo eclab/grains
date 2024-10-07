@@ -2,7 +2,7 @@
 /// Open Source 
 /// Licensed under the Apache 2.0 License
 
-/// Version 0.3:        "Passes Tests, Modular Stuff Added"
+/// Version 0.4:        "Tweaked RPN/NRPN"
 
 
 #ifndef __PARSE_MODULAR_H
@@ -261,6 +261,7 @@ extern SIGNED_16_BIT_INT getAuxiliaryType(UNSIGNED_16_BIT_INT value);
 // AUXILIARY_PARAM_NONE otherwise
 extern unsigned char getAuxiliaryParam(UNSIGNED_16_BIT_INT value);
 
+#ifdef ALLOW_HIGH_RES_CC
 // Sets standard modular parameters to 14-bit.  This includes
 // Bank Select, Mod Wheel, Auxiliar, Data Entry, Expression Controller,
 // Modulation A, and Modulation B.  This is a convenience method for setting up a parser.
@@ -269,6 +270,6 @@ extern void setStandardHighResParameters(struct midiParser* parser);
 // Sets select parameters A and/or B to 14-bit for a given ID.  
 // This is a convenience method for setting up a parser.
 extern void setIDHighResParameters(struct midiParser* parser, unsigned char id, unsigned char setA, unsigned char setB);
-
+#endif
 
 #endif		// __PARSE_MODULAR_H
