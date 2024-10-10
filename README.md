@@ -29,7 +29,7 @@ There are two **special directories**:
 | Droplets    | VS       | Pattern     | Arp           |       |
 | AKWF        | Mono     | Elements    | Quant         |       |
 | 808         | Para     | Lattice     | ADSR          |       |
-| Voice       |          | Beats       | Multilevel    |       |
+| Voice       | MJQ      | Beats       | Multilevel    |       |
 | Chordal     |          | Geiger      | Stochastic    |       |
 | Byte        |          | Pulses      | Switchblade   |       |
 | Evolution   |          | Divvy       | Memoir        |       |
@@ -38,17 +38,12 @@ There are two **special directories**:
 |             |          | Iterate     |               |       |
 
 
-## New: Booker-M
+## NEW: MJQ
 
-A MIDI-Controlled Hammond Organ simulator with a built-in Leslie and a variety of organ drawbar combinations.  Requires Mozzi.
+A MIDI-controlled three-voice marimba simulator.  You can control brightness, decay, and overall volume.
 
-Status: Working, but it pushes Mozzi to its limits I think, and so is pretty hissy.
+Status: Working. 
 
-## New: Iterate
-
-A multiplexer, in the same vein as, but not the same as, the Doepfer A151 sequential switch.  Successive gates or triggers are multiplexed out to up to four different outputs, either in series or randomly selected.
-
-Status: Working.
 
 ## 808
 
@@ -89,6 +84,12 @@ Status: Working.  It helps that the arduino is already pretty aliased!  Mozzi mu
 ## Booker
 
 A Hammond Organ simulator with a built-in Leslie and a variety of organ drawbar combinations.  Requires Mozzi.
+
+Status: Working, but it pushes Mozzi to its limits I think, and so is pretty hissy.
+
+## Booker-M
+
+A MIDI-Controlled Hammond Organ simulator with a built-in Leslie and a variety of organ drawbar combinations.  Requires Mozzi.
 
 Status: Working, but it pushes Mozzi to its limits I think, and so is pretty hissy.
 
@@ -163,6 +164,12 @@ Status: Working
 This directory contains documents with useful information for developing GRAINS, using MIDI, etc.
 
 Status: A work in progress, I guess!
+
+## Iterate
+
+A multiplexer, in the same vein as, but not the same as, the Doepfer A151 sequential switch.  Successive gates or triggers are multiplexed out to up to four different outputs, either in series or randomly selected.
+
+Status: Working.
 
 ## Lattice
 
