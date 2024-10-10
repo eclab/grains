@@ -32,6 +32,8 @@ You can either manually change these CVs to your heart's content, or you can rec
 
 VS allows you set the waves you'd like to use.  You have to provide waveform files for all four waves, and they must all be different.  You can use any of the files in the "vs" directory, and you can also use any of the AKWF waveform files from the AKWF project  (just copy them over to the "vs" directory and use them from there).  
 
+By the way, the "vs" directory contains waveforms drawn from the original waves on the Prophet VS.
+
 
 ## Playing Modes
 
