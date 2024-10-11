@@ -584,8 +584,8 @@ void updateControl()
 	if (counter == 0)
 		{
     	decay = (mozziAnalogRead(CV_POT_IN1) * 7) >> 10;		// 0...6
-    	volume = mozziAnalogRead(CV_POT_IN2) >> 2;						// 0...255
-    	brightness = mozziAnalogRead(CV_POT3) >> 8;
+    	volume = mozziAnalogRead(CV_POT_IN2) >> 2;				// 0...255
+    	brightness = mozziAnalogRead(CV_POT3) >> 8;				// 0...3
     	}
 	counter++;
 	if (counter >= COUNTER_MAX) counter = 0;
