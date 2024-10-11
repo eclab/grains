@@ -17,7 +17,7 @@
 /// You will need to install the Mozzi Library.  You can do this from the Library Manager
 /// in your Arduino IDE.
 ///
-/// ALIASING: At extremely high frequencies, Reich's partials will go over Nyquist and
+/// ALIASING: At extremely high frequencies, MJQ's partials will go over Nyquist and
 /// you may hear some antialiasing effects.
 
 /// MJQ can play up to three notes at once.   These notes can either be fixed at maximum
@@ -123,7 +123,7 @@ PROGMEM const float frequencies[128] =
 
 PROGMEM const uint8_t DECAY_4096[4097] = 
 { 
-255, 255, 254, 254, 254, 253, 253, 253, 252, 252, 252, 251, 251, 251, 250, 250, 250, 249, 249, 249, 248, 248, 248, 247, 247, 247, 246, 246, 246, 245, 245, 
+256, 255, 254, 254, 254, 253, 253, 253, 252, 252, 252, 251, 251, 251, 250, 250, 250, 249, 249, 249, 248, 248, 248, 247, 247, 247, 246, 246, 246, 245, 245, 
 245, 244, 244, 244, 243, 243, 243, 242, 242, 242, 241, 241, 241, 240, 240, 240, 239, 239, 239, 238, 238, 238, 237, 237, 237, 237, 236, 236, 236, 235, 235, 235, 
 234, 234, 234, 233, 233, 233, 232, 232, 232, 231, 231, 231, 231, 230, 230, 230, 229, 229, 229, 228, 228, 228, 227, 227, 227, 226, 226, 226, 226, 225, 225, 225, 
 224, 224, 224, 223, 223, 223, 223, 222, 222, 222, 221, 221, 221, 220, 220, 220, 220, 219, 219, 219, 218, 218, 218, 217, 217, 217, 217, 216, 216, 216, 215, 215, 

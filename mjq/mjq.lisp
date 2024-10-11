@@ -1,3 +1,10 @@
+;;; Copyright 2024 Sean Luke
+;;; (sean@cs.gmu.edu)
+;;;
+;;; Released under the Apache 2.0 License
+;;;
+;;; This is just some code I used to generate the exponential dropoff tables.
+
 (defparameter *x* 0.0)
 
 (setf *x* 256.0)
