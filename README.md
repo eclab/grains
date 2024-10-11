@@ -36,7 +36,7 @@ There are two **special directories**:
 | Oration     |          | Multiple    |               |       |
 | Oration 2   |          | Respite     |               |       |
 |             |          | Iterate     |               |       |
-
+|             |          | Theory      |               |       |
 
 ## NEW: MJQ
 
