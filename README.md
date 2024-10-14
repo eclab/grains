@@ -42,7 +42,7 @@ There are two **special directories**:
 
 A MIDI-controlled three-voice marimba simulator.  You can control brightness, decay, and overall volume.
 
-Status: Working. 
+Status: Working. A bit hissy when the marimba tones are about to fade out thanks to the filtered PWM on the Grains.
 
 
 ## 808
@@ -245,6 +245,12 @@ A four-channel boolean pattern generator based on an analog input, with 21 inter
 
 Status: Working, but its use with LFOs is poor due to noise.
 
+## Pluck
+
+A 4-voice Karplus-Strong string plucking simulator.  Requires Mozzi.
+
+Status: Working, but because it has to commit to a pitch immediately (to build the Karplus-Strong sample table) sometimes it can get off pitch on some notes thanks to GRAINS/Mozzi's inaccuracy in Analog Input reads.  Could use some work there.
+
 ## Pluck-M
 
 A MIDI-based version of Pluck, a 4-voice Karplus-Strong string plucking simulator.  Requires Mozzi.
@@ -256,12 +262,6 @@ Status: Working.  Unlike Pluck, pitch is very stable.
 A two- or three-output square-wave LFO generator.  Options include two independent LFOs, one with pulsewidth; three Square-wave LFOs all with 50% pulse width; and a mixture of three Square-wave LFOs in the same output.  You can reset and sync two LFOs to the third.
 
 Status: Working.  If you want more LFO waves, see the LFO firmware.
-
-## Pluck
-
-A 4-voice Karplus-Strong string plucking simulator.  Requires Mozzi.
-
-Status: Working, but because it has to commit to a pitch immediately (to build the Karplus-Strong sample table) sometimes it can get off pitch on some notes thanks to GRAINS/Mozzi's inaccuracy in Analog Input reads.  Could use some work there.
 
 ## Quant
 
