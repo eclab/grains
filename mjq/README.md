@@ -15,12 +15,8 @@ MJQ can play up to **three notes** at once.
 ### Options
 
 * You can set the DECAY of the marimba bars with POT 1.
-* You can set the OVERALL VOLUME with POT 2 -- you'll need to decrease this as you increase the decay.
+* You can set the OVERALL VOLUME of the beeps with POT 2.  The left half of the pot goes from min to max volume, but also makes the beeps velocity sensitive.  The right half of the pot goes from min to max volume, but makes the beeps velocity INsensitive and max velocity.
 * You can set the BRIGHTNESS of the marimba bars with POT 3.  This increases the volume of the higher two partials, so you may need to reduce the overall volume as well.
-
-### Voices and Velocity
-
-Notes can either be fixed at maximum velocity, or can be velocity sensitive.  By default they're velocity sensitive.  To make them velocity insensitive and max velocity, just uncomment a certain #define in the code.
 
 ### Aliasing
 
@@ -46,7 +42,7 @@ you may hear some antialiasing effects.
 #### IN 1
 Decay CV
 #### IN 2
-Volume CV
+Overall Volume and Velocity Sensitivity CV (see POT 2 below)
 #### IN 3
 [Unused]
 #### AUDIO IN (A)
@@ -58,7 +54,10 @@ MIDI In
 #### POT 1
 Decay
 #### POT 2
-Volume
+Overall Volume and Velocity Sensitivity
+
+- Left Half: velocity sensitive, [0 ... max volume] 
+- Right half: velocity INsensitive, [0 ... max volume]
 #### POT 3
 Brightness
 

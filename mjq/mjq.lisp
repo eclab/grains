@@ -7,6 +7,35 @@
 
 (defparameter *x* 0.0)
 
+
+
+(setf *x* 256.0)
+(dotimes (i 32768)
+	(format t "~a, " (floor *x*))
+	(if (= 31 (mod i 32)) (terpri))
+	(setf *x* (* *x* 0.99983082))
+	(when (= (floor *x*) 0) (print i) (return))) 
+(terpri)
+;; 32778
+
+(setf *x* 256.0)
+(dotimes (i 16384)
+	(format t "~a, " (floor *x*))
+	(if (= 31 (mod i 32)) (terpri))
+	(setf *x* (* *x* 0.999662))
+	(when (= (floor *x*) 0) (print i) (return))) 
+(terpri)
+;; 16402
+
+(setf *x* 256.0)
+(dotimes (i 8192)
+	(format t "~a, " (floor *x*))
+	(if (= 31 (mod i 32)) (terpri))
+	(setf *x* (* *x* 0.999324))
+	(when (= (floor *x*) 0) (print i) (return))) 
+(terpri)
+;; 8200
+
 (setf *x* 256.0)
 (dotimes (i 4096)
 	(format t "~a, " (floor *x*))
