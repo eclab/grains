@@ -30,7 +30,7 @@ There are two **special directories**:
 | AKWF        | Mono     | Elements    | Quant         |       |
 | 808         | Para     | Lattice     | ADSR          |       |
 | Voice       | MJQ      | Beats       | Multilevel    |       |
-| Chordal     |          | Geiger      | Stochastic    |       |
+| Chordal     | Beep     | Geiger      | Stochastic    |       |
 | Byte        |          | Pulses      | Switchblade   |       |
 | Evolution   |          | Divvy       | Memoir        |       |
 | Oration     |          | Multiple    |               |       |
@@ -38,12 +38,11 @@ There are two **special directories**:
 |             |          | Iterate     |               |       |
 |             |          | Theory      |               |       |
 
-## NEW: MJQ
+## NEW: BEEP
 
-A MIDI-controlled three-voice marimba simulator.  You can control brightness, decay, and overall volume.
+A 9-voice MIDI-controlled sine wave generator with built-in hold, velocity sensitivity, and decay.  Can produce a variety of beeps, bloops, beeps, dings, and pings.
 
-Status: Working. A bit hissy when the marimba tones are about to fade out thanks to the filtered PWM on the Grains.
-
+Status: Working.
 
 ## 808
 
@@ -196,6 +195,12 @@ Not a GRAINS project per se.  This is a lightweight MIDI library designed for sm
 If you're looking for a MIDI router or toolkit application for GRAINS, check out DAVE.
 
 Status: Under Development.
+
+## MJQ
+
+A MIDI-controlled three-voice marimba simulator.  You can control brightness, decay, and overall volume.
+
+Status: Working. A bit hissy when the marimba tones are about to fade out thanks to the filtered PWM on the Grains.
 
 ## Mono
 
