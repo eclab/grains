@@ -803,7 +803,7 @@ if (insensitive) velocity = 127;
 	gains[voice] = velocity * 2;
 	notes[voice] = note;
 	velocities[voice] = velocity;
-	Serial.println(hold);
+	//Serial.println(hold);
 	holds[voice] = HOLD_LENGTHS[hold];
 	decays[voice] = decay;
 	decayPositions[voice] = 0;
@@ -823,7 +823,7 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 		{
 		if (notes[i] == note)	
 			{
-			Serial.println(holds[i]);
+			//Serial.println(holds[i]);
 			if (holds[i] == HOLD_INDEFINITE)
 				{
 				holds[i] = 0;
@@ -848,7 +848,7 @@ void cc(midiParser* parser, unsigned char parameter, unsigned char value)
 	
 void setup()
     {
-    Serial.begin(115200);
+    //Serial.begin(115200);
     startMozzi();
 	initializeParser(&parse, CHANNEL, 0, 1);
 	softSerial.begin(MIDI_RATE);
