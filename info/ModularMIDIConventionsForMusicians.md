@@ -421,8 +421,8 @@ ID  | Parameter   | 7-bit CC Parameter          | 14 bit CC Parameter MSB / LSB 
 5   | g           | 90                          |                               |
 5   | h           | 53 [only if "5 b" is 7-bit] |                               |
 5   | i           | 52 [only if "5 a" is 7-bit] |                               |
-6   | a           | 12                          | 22 / 44                       | FX Control 1
-6   | b           | 13                          | 23 / 45                       | FX Control 2
+6   | a           | 12                          | 12 / 44                       | FX Control 1
+6   | b           | 13                          | 13 / 45                       | FX Control 2
 6   | c           | 91                          |                               | FX 1 Amount 
 6   | d           | 92                          |                               | FX 2 Amount
 6   | e           | 93                          |                               | FX 3 Amount  
@@ -430,8 +430,8 @@ ID  | Parameter   | 7-bit CC Parameter          | 14 bit CC Parameter MSB / LSB 
 6   | g           | 95                          |                               | FX 5 Amount
 6   | h           | 45 [only if "6 b" is 7-bit] |                               |
 6   | i           | 44 [only if "6 a" is 7-bit] |                               |
-7   | a           | 22                          | 24 / 54                       |
-7   | b           | 23                          | 25 / 55                       |
+7   | a           | 22                          | 22 / 54                       |
+7   | b           | 23                          | 23 / 55                       |
 7   | c           | 102                         |                               |
 7   | d           | 103                         |                               |
 7   | e           | 104                         |                               |
@@ -439,8 +439,8 @@ ID  | Parameter   | 7-bit CC Parameter          | 14 bit CC Parameter MSB / LSB 
 7   | g           | 106                         |                               |
 7   | h           | 55 [only if "7 b" is 7-bit] |                               |
 7   | i           | 54 [only if "7 a" is 7-bit] |                               |
-8   | a           | 24                          | 8 / 56                        |
-8   | b           | 25                          | 9 / 57                        |
+8   | a           | 24                          | 24 / 56                        |
+8   | b           | 25                          | 25 / 57                        |
 8   | c           | 107                         |                               |
 8   | d           | 108                         |                               |
 8   | e           | 109                         |                               |
