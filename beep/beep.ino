@@ -672,14 +672,20 @@ PROGMEM const uint8_t DECAY_16[17] =
 256, 240, 224, 208, 192, 176, 160, 144, 128, 112, 96, 80, 64, 48, 32, 16, 0
 };
 
-// These are too short and clicky, indistinguishable from DECAY_1
-/*
 PROGMEM const uint8_t DECAY_9[9] = 
 { 
 //256, 128, 64, 32, 16, 8, 4, 2, 1, 0		// 10 of these
 256, 224, 192, 160, 128, 96, 64, 32, 0
 };
 
+
+PROGMEM const uint8_t DECAY_1[2] = 
+{ 
+256, 0
+};
+
+// These are too short and clicky, indistinguishable from DECAY_1
+/*
 PROGMEM const uint8_t DECAY_5[5] = 
 { 
 //256, 64, 16, 4, 1, 0
@@ -693,24 +699,16 @@ PROGMEM const uint8_t DECAY_3[3] =
 };
 */
 
-PROGMEM const uint8_t DECAY_1[2] = 
-{ 
-256, 0
-};
-
-
 const uint8_t* DECAYS[12] =
 	{
-	DECAY_8192, DECAY_4096, DECAY_2048, 
-	DECAY_1024, DECAY_512, DECAY_256, DECAY_128, 
-	DECAY_64, DECAY_32, DECAY_16, DECAY_1,
-	//DECAY_16, DECAY_9, 
-	//DECAY_5, DECAY_3, DECAY_1, DECAY_1, DECAY_1	// Note DECAY_1 is thrice
+	DECAY_8192, DECAY_4096, DECAY_2048, DECAY_1024, 
+	DECAY_512, DECAY_256, DECAY_128, DECAY_64, 
+	DECAY_32, DECAY_16, DECAY_9, DECAY_1,
 	};
 	
-const uint16_t DECAY_LENGTHS[12] = { 8193, 4097, 2049, 1025, 513, 257, 129, 66, 33, 17, 1 };  // 9, 5, 3, 1, 1, 1 };
+const uint16_t DECAY_LENGTHS[12] = { 8193, 4097, 2049, 1025, 513, 257, 129, 65, 33, 17, 9, 2 };
 #define HOLD_INDEFINITE 16383
-const uint16_t HOLD_LENGTHS[12] = { HOLD_INDEFINITE, /* 8192, 4096, 2048, 1023, */ 512, 256, 128, 64, 34, 16, 8, 4, 2, 1, 0 };
+const uint16_t HOLD_LENGTHS[12] = { HOLD_INDEFINITE, 512, 256, 128, 64, 34, 16, 8, 4, 2, 1, 0 };
 
 #define DECAY(decay, idx) pgm_read_byte_near(&((DECAYS[decay])[idx]))
 
@@ -823,7 +821,6 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 		{
 		if (notes[i] == note)	
 			{
-			//Serial.println(holds[i]);
 			if (holds[i] == HOLD_INDEFINITE)
 				{
 				holds[i] = 0;
@@ -848,7 +845,6 @@ void cc(midiParser* parser, unsigned char parameter, unsigned char value)
 	
 void setup()
     {
-    //Serial.begin(115200);
     startMozzi();
 	initializeParser(&parse, CHANNEL, 0, 1);
 	softSerial.begin(MIDI_RATE);
@@ -904,19 +900,19 @@ void updateControl()
 			}
 		else
 			{
-			decayPositions[i]++;
-			if (decayPositions[i] < - 1)  // there's still room to decrease
+			if (decayPositions[i] < DECAY_LENGTHS[decays[i]] - 1)  // there's still room to decrease
 				{
 				decayPositions[i]++;
-				if (decayPositions[i] >= DECAY_LENGTHS[decays[i]])
-					{
-					decayPositions[i] = DECAY_LENGTHS[decays[i]] - 1;
-					}
 				gains[i] = (getGain(i) * velocities[i]) >> 7;
 				}
+			/*
+			else 
+				{
+				decayPositions[i] = DECAY_LENGTHS[decays[i]] - 1; 	// probably not necessary
+				}
+			*/
 			}
     	}
-    //Serial.println(decay);
     }                                             
 
 int updateAudio()                             

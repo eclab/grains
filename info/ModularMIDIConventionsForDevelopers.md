@@ -52,7 +52,7 @@ Modular MIDI only adds conventions to standard MIDI.  It does not break or signi
 
 - **Patch Manipulation.**  Standard MIDI has Program Change and Bank Select to load new patches.  Modular MIDI extends this with a few new directives (as Auxiliary Parameters): *Program Save*, *Current Program Save*, and *Current Program Revert*.  Modular MIDI also has a proposed redefinition of the Bank Select MSB as *Module Select*, allowing one to specify *which* module (by ID) should have its patches loaded, saved, reverted, etc.
 
-- **MIDI Polyphonic Expression (MPE).**  Modular MIDI can be made compatible with MPE with some work.
+- **MIDI Polyphonic Expression (MPE) and MIDI Mode 4**  Modular MIDI can be made compatible with MIDI Mode 4 trivially, and largely compatible with MPE with some work.
  
 <a name="topology"/></a>
 ## Topology and Data Format
@@ -97,7 +97,7 @@ So in short: a distributor module receives MIDI data from your controller or DAW
 
 In most cases, each channel represents a single *voice*, that is, a single note for a monophonic synthesizer.  Certain channels might play multiple notes -- for example a drum module might play several drum, each a different note on the same channel.
 
-This structure allows for MPE, for polyphony, and for **multitimbral synthesizers**.
+This structure allows for MPE, for polyphony, for MIDI Mode 4, and for **multitimbral synthesizers**.
 
 Streams of MIDI data are mostly of two kinds:
 
@@ -333,7 +333,7 @@ CC    | Function                | Related Traditional Name
 
 - **(Open)** These CCs may be used by the module for any purpose, with the strong warning that other modules may likewise have chosen to do so. 
 
-- **(Reserved)** These CCs have well established functions that are not used by this specification.  Do not use or reassign them.  We note that many of the reserved parameters deal with setting MIDI Modes (mono, poly, omni).  These are obsolete and not relevant here: but these parameters unfortunately cannot be reused.
+- **(Reserved)** These CCs have well established functions that are not used by this specification.  Do not use or reassign them.  We note that many of the reserved parameters deal with setting MIDI Modes (mono, poly, omni).  These are obsolete and not relevant here: but these parameters unfortunately cannot be reused.  (Turning MIDI Mode 4 on and off should probably be handled at the distributor level, not internally between modules).
 
 - **Sustain Pedal, Legato Switch, MPE Timbre, All Sound Off, Reset All Controllers, All Notes Off**.  These are standard CCs with well established functions.
 
@@ -395,7 +395,7 @@ NRPN Region  | Function
 3328-3583    | 256 Parameters for ID 13
 3584-3839    | 256 Parameters for ID 14
 3840-4095    | 256 Parameters for ID 15
-
+4096-16383   | Reserved
 
 #### Explanation
 
