@@ -42,7 +42,7 @@ There are two **special directories**:
 
 A 9-voice MIDI-controlled sine wave generator with built-in hold, velocity sensitivity, and decay.  Can produce a variety of beeps, bloops, beeps, dings, and pings.
 
-Status: Working.
+Status: Working.  When decays get quiet, they go hissy and buzzy fast thanks to GRAINS's PWM, which can't handle small values well without lots of artifacts.
 
 ## 808
 
@@ -200,7 +200,7 @@ Status: Under Development.
 
 A MIDI-controlled three-voice marimba simulator.  You can control brightness, decay, and overall volume.
 
-Status: Working. A bit hissy when the marimba tones are about to fade out thanks to the filtered PWM on the Grains.
+Status: Working.  When decays get quiet, they go hissy and buzzy fast thanks to GRAINS's PWM, which can't handle small values well without lots of artifacts.
 
 ## Mono
 
