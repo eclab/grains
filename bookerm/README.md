@@ -38,6 +38,27 @@ Booker also has 16 selections of drawbar settings, but in the code it comes with
     876543211 Strings 
   
 
+
+## Poly Chaining
+
+If you have more than one BOOKER-M, you can set them to poly-chain the MIDI in order to play chords.  It's flakey but it works.  Sort of.
+
+Let's say you had three BOOKER-M GRAINS units called A, B, and C. You would:
+
+1. Feed MIDI into A's DIGITAL OUT
+2. Attach A's AUDIO IN to B's DIGITAL OUT
+3. Attach B's AUDIO IN to C's DIGITAL OUT
+4. Set up A to be POLY CHAINING
+5. Set up B to be POLY CHAINING
+6. Set up C to NOT POLY CHAIN [since it's the end of the chain]
+7. Set up A, B, and C to receive the same CHANNEL, commonly (but not required to be) OMNI.
+
+To set up BOOKER-M to be poly chaining, just uncomment a #define in the code.
+
+Note that BOOKER-M must use SoftSerial on the GRAINS, because it doesn't have access to the hardware serial.  SoftSerial is slow to write, and nothing can be done while it's writing.  This means that while SoftSerial is writing, GRAINS may drop incoming MIDI data, resulting in dropped notes or weirdness.  So there you have it.  We'll have to wait for GRAINS V2 to get access to hardware serial.
+
+
+
 ## MIDI Response
 
 - Note On/Off

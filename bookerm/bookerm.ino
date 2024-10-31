@@ -37,6 +37,28 @@
 #define CHANNEL OMNI
 
 
+/// POLY CHAINING
+///
+/// If you have more than one BOOKER-M, you can set them to poly-chain the MIDI in order to play chords.
+/// Let's say you had three BOOKER-M GRAINS units called A, B, and C. You would:
+///
+/// 1. Feed MIDI into A's DIGITAL OUT
+/// 2. Attach A's AUDIO IN to B's DIGITAL OUT
+/// 3. Attach B's AUDIO IN to C's DIGITAL OUT
+/// 4. Set up A to be POLY CHAINING
+/// 5. Set up B to be POLY CHAINING
+/// 6. Set up C to NOT POLY CHAIN [since it's the end of the chain]
+/// 7. Set up A, B, and C to receive the same CHANNEL, commonly (but not required to be) OMNI.
+
+/// To set up BOOKER-M to be POLY CHAINING, just uncomment (remove the // before) the following line:
+
+//#define POLY_CHAINING
+
+/// Note that BOOKER-M must use SoftSerial on the Arduino, which is slow.  It may miss incoming notes
+/// if it is busy writing notes out to the next GRAINS module.  This won't be fixed until we have access
+/// to hardware serial in GRAINS V2.
+
+
 
 /// MIDI RESPONSE
 ///
@@ -48,20 +70,32 @@
 ///					All Sounds Off		CC 120		[Resets all notes, lowers Gate]
 
 
+
+
+
+#define CV_POT_IN1    A2    // Overall Volume
+#define CV_POT_IN2    A1    // Leslie Volume
+#define CV_POT3       A0    // Organ Selection
+#define CV_IN3        A3    // Gate Out
+#define CV_AUDIO_IN   A4    // [Unused]
+#define CV_AUDIO_OUT  9     // Out
+#define CV_GATE_OUT   8     // MIDI In
+
+
 /// CONFIGURATION
 ///
-/// IN 1            [Unused]
-/// IN 2            Unused
+/// IN 1            Overall Volume CV
+/// IN 2            Leslie Gain CV
 /// IN 3            Gate Out
-/// AUDIO IN (A)    Pitch Tune
+/// AUDIO IN (A)    Poly Chain Out
 /// AUDIO OUT       Out
 /// DIGITAL OUT (D)	MIDI In
 ///
-/// POT 1           [Unused]
+/// POT 1           Overall Volume
 ///
-/// POT 2           Volume
+/// POT 2           Leslie Gain
 ///
-/// POT 3           Choice of Organ [Set the switch to MAN]
+/// POT 3           Organ Selection
 
 
 
@@ -232,6 +266,7 @@ PROGMEM const float frequencies[128] =
 #include <tables/sin1024_int8.h>
 #include "NeoSWSerial.h"   // you have to install this via the library manager
 #include "parsemidi.c"
+#include "emitmidi.c"
 
 /// OSCILLATORS
 
@@ -273,7 +308,7 @@ int8_t drawBarAmplitudes[9] =
 #define CV_POT_IN2    A1    // Leslie Volume
 #define CV_POT3       A0    // Organ Selection
 #define CV_IN3        A3    // Gate Out
-#define CV_AUDIO_IN   A4    // [Unused]
+#define CV_AUDIO_IN   A4    // Poly Chain Out
 #define CV_AUDIO_OUT  9     // Out
 #define CV_GATE_OUT   8     // MIDI In
 
@@ -281,14 +316,15 @@ int8_t drawBarAmplitudes[9] =
 #define MIDI_RATE 31250
 #define BLANK_SERIAL	  5		// Blank Serial Pin
 #define PIN_UNUSED 255
-NeoSWSerial softSerial(CV_GATE_OUT, BLANK_SERIAL, PIN_UNUSED);
+NeoSWSerial softSerial(CV_GATE_OUT, CV_AUDIO_IN, PIN_UNUSED);
 midiParser parse;
+midiEmitter emit;
 
 
 uint8_t on = 0;
 uint8_t gate = 0;
 uint8_t timer = 0;
-uint8_t pitch;
+uint8_t pitch = 255;
 
 
 void cc(midiParser* parser, unsigned char parameter, unsigned char value)
@@ -300,35 +336,36 @@ void cc(midiParser* parser, unsigned char parameter, unsigned char value)
 		digitalWrite(CV_IN3, 0);
 		gate = 0;
 		}
+#ifdef POLY_CHAINING
+	emitCC(&emit, parameter, value, getParserMIDIChannel(parser));
+#endif
 	}
 	
 float noteFrequency = 65.408;		// middle c?
 
 void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
 	{
-	pitch = note;
-
-    // set the drawbars
-    noteFrequency = FREQUENCY(note);
-        
-    // ignore velocity
-		
-	on = 1;
-		
-	/* if (gate)
+	//Serial.println(note);
+#ifdef POLY_CHAINING
+	if (gate)	// we're already playing, pass it on
 		{
-		Serial.println("GATE OFF");
-		timer = 2;
-		digitalWrite(CV_IN3, 0);
-		gate = 0;
+		emitNoteOn(&emit, note, velocity, getParserMIDIChannel(parser));
 		}
-	else */
+	else		
+#endif
 		{
-		//digitalWrite(CV_IN3, 1);
+		pitch = note;
+
+		// set the drawbars
+		noteFrequency = FREQUENCY(note);
+		
+		// ignore velocity
+		
+		on = 1;
+		
 		gate = 1;		
 		timer = 2;
 		}
-	
 	}
 
 void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
@@ -340,13 +377,24 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 		gate = 0;
 		digitalWrite(CV_IN3, 0);
 		}
+#ifdef POLY_CHAINING
+	else
+		{
+		emitNoteOffVel(&emit, note, velocity, getParserMIDIChannel(parser));
+		}
+#endif
 	}
 
+void emitMidi(struct midiEmitter* emitter, unsigned char byte)
+	{
+	softSerial.write(byte);
+	}
 
 void setup()
     {
-    //Serial.begin(9600);
+    Serial.begin(9600);
     pinMode(CV_IN3, OUTPUT);
+    pinMode(CV_AUDIO_IN, OUTPUT);
     startMozzi();
     // Fire up the leslie
 #ifdef LESLIE_ON  
@@ -363,6 +411,7 @@ void setup()
         }
         
 	initializeParser(&parse, CHANNEL, 0, 1);
+	initializeEmitter(&emit, 0);
 	softSerial.begin(MIDI_RATE);
     }
 
@@ -428,13 +477,15 @@ void updateControl()
     //Serial.println(frequency);
     }                                             
 
+uint16_t last = 0;
 int updateAudio()                             
     { 
+      if (!gate) return last;
     uint8_t* d = drawbars[organ];
     int32_t val = oscils[0].next() * d[0];		// hoisting this out gives me just enough computational space to avoid clicks, ugh
     for(uint8_t i = 1; i < 9; i++)
         {
         val += (oscils[i].next() * d[i]);
         }
-    return ((val >> 8) * gain) >> 8;
+    return last = (((val >> 8) * gain) >> 8);
     }
