@@ -21,28 +21,28 @@ There are two **special directories**:
 
 ### Firmware Summary
 
-| Oscillators | MIDI Osc | Digital Mod | CV Modulation | Other |
-|:------------|:---------|:------------|:--------------|:------|
-| DX          | DX-M     | Tangle      | Multiplex     | Dave  |
-| Pluck       | Pluck-M  | Tardy       | Sequence      | Bit   |
-| Booker      | Booker-M | Chrono      | LFO           | Scope |
-| Droplets    | VS       | Pattern     | Arp           |       |
-| AKWF        | Mono     | Elements    | Quant         |       |
-| 808         | Para     | Lattice     | ADSR          |       |
-| Voice       | MJQ      | Beats       | Multilevel    |       |
-| Chordal     | Beep     | Geiger      | Stochastic    |       |
-| Byte        |          | Pulses      | Switchblade   |       |
-| Evolution   |          | Divvy       | Memoir        |       |
-| Oration     |          | Multiple    |               |       |
-| Oration 2   |          | Respite     |               |       |
-|             |          | Iterate     |               |       |
-|             |          | Theory      |               |       |
+| Oscillators | MIDI Osc   | Digital Mod | CV Modulation | Other |
+|:------------|:-----------|:------------|:--------------|:------|
+| DX          | DX-M       | Tangle      | Multiplex     | Dave  |
+| Pluck       | Pluck-M    | Tardy       | Sequence      | Bit   |
+| Booker      | Booker-M   | Chrono      | LFO           | Scope |
+| Droplets    | VS         | Pattern     | Arp           |       |
+| AKWF        | Mono       | Elements    | Quant         |       |
+| 808         | Para       | Lattice     | ADSR          |       |
+| Voice       | MJQ        | Beats       | Multilevel    |       |
+| Chordal     | Beep       | Geiger      | Stochastic    |       |
+| Byte        | Trajectory | Pulses      | Switchblade   |       |
+| Evolution   |            | Divvy       | Memoir        |       |
+| Oration     |            | Multiple    |               |       |
+| Oration 2   |            | Respite     |               |       |
+|             |            | Iterate     |               |       |
+|             |            | Theory      |               |       |
 
-## NEW: BEEP
+## NEW: Trajectory
 
-A 9-voice MIDI-controlled sine wave generator with built-in hold, velocity sensitivity, and decay.  Can produce a variety of beeps, bloops, beeps, dings, and pings.
+A vector synthesizer similar to VS: but with four fixed waves (Sine, Saw, Square, Noise, with optional silence).  The point of Trajectory is that these waves can be arranged to have many fewer aliasing issues than the waves in VS.
 
-Status: Working.  When decays get quiet, they go hissy and buzzy fast thanks to GRAINS's PWM, which can't handle small values well without lots of artifacts.
+Status: Working.  Also works great with AE's JOYSTICK.
 
 ## 808
 
@@ -73,6 +73,12 @@ Status: Working, but GRAINS's severe limits on note output range can hamper thin
 A four-track step sequencer with song mode, capable of performing songs of up to 800 trigger patterns, each pattern between 1 and 256 steps long.  You program the patterns in the code, it's set up to be very easy. Each pattern can loop for some N iterations (specified per-pattern), or loop forever.  You can reset, advance to the next pattern, and add swing and randomness in real time.
 
 Status: Working
+
+## Beep
+
+A 9-voice MIDI-controlled sine wave generator with built-in hold, velocity sensitivity, and decay.  Can produce a variety of beeps, bloops, beeps, dings, and pings.
+
+Status: Working.  When decays get quiet, they go hissy and buzzy fast thanks to GRAINS's PWM, which can't handle small values well without lots of artifacts.
 
 ## Bit
 
@@ -338,7 +344,7 @@ Status: Working, but the filter is not amazing, particularly at high resonance a
 
 A MIDI-based monophonic vector synthesis oscillator, with most of the waves from the Prophet VS.  Requires Mozzi.
 
-Status: Working.  However, highly aliased as it only has one copy of each VS waveform and cannot resample (the same problem as AKWF).
+Status: Working.  Also works great with AE's JOYSTICK.  However, highly aliased as it only has one copy of each VS waveform and cannot resample (the same problem as AKWF).  See TRAJECTORY for a vector synthesizer with fewer aliasing issues.
 
 
 
