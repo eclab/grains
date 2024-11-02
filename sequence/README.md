@@ -45,7 +45,7 @@ In this mode, a trigger sent to IN 1 increments the PATTERN, and Reset also rese
 
 ### HOW TO UNLOCK POT 1 OR POT 2
 
-In ENTRY MODE, POT 2 is locked.  In PATTERN MODE, Pots 1 and 2 are locked.  In PATTERN STEP MODE, Pot 2 is locked.  What does this mean?  It means that when first go into one of these modes, the values of the pot are ignored until you turn the pot a little bit (about 1/32 its total distance). You'll need to do that to get Sequence to start listening to the pot.
+In ENTRY MODE, POT 2 is locked.  In PATTERN MODE, Pots 1 and 2 are locked.  In PATTERN STEP MODE, Pot 2 is locked.  What does this mean?  It means that when you first go into one of these modes, the values of the pot are ignored until you turn the pot a little bit (about 1/32 its total distance). You'll need to do that to get Sequence to start listening to the pot.
 
 ### HOW TO START PROGRAMMING A PATTERN
 

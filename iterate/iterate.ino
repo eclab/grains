@@ -6,7 +6,7 @@
 
 /// ITERATE
 ///
-/// ITERATE is a sequential switch, similar to the Doepfer A151.  It takes a series of gates or
+/// ITERATE is a multiplexer, related to but not the same as the Doepfer A151.  It takes a series of gates or
 /// triggers and breaks them up among up to four digital outputs.  You can use this to trigger
 /// different drums, for example, based on a single input.  You can also RESET the trigger
 /// sequence at any time.  Note: ITERATE is not debounced, so noise on the gates or triggers might
@@ -16,11 +16,6 @@
 /// where a randomly different output is chosen each time (the same output is never chosen twice).
 ///
 /// SET GRAINS TO GRAINS MODE.  (If you want MOZZI mode, change CV_AUDIO_OUT to 9)
-
-/// AUDIO OUT WARNING
-///
-/// Audio Out (Output #4 in Iterate) is slow because of its PMW filter -- it's not meant for this purpose.
-/// Expect triggers and gates on Audio Out to be a bit late.
 
 /// GRAINS BUG
 /// 
@@ -70,8 +65,6 @@ void setup()
     pinMode(CV_POT_IN1, INPUT);
     pinMode(CV_POT_IN2, INPUT);
     randomSeed(analogRead(A5));
-    reset();
-    //Serial.begin(9600);
     }
 
 uint8_t oldOutputs = 255;
@@ -97,10 +90,6 @@ void reset()
 			pos = random(4); 
 		break;
 		}
-    digitalWrite(CV_AUDIO_OUT, 0);
-    digitalWrite(CV_GATE_OUT, 0);
-    digitalWrite(CV_AUDIO_IN, 0);
-    digitalWrite(CV_IN3, 0);
 	}
 
 uint8_t state = 0;
@@ -136,7 +125,6 @@ void loop()
 				digitalWrite(CV_IN3, pos == 1 ? state : 0);
 				digitalWrite(CV_AUDIO_IN, pos == 2 ? state : 0);
 				digitalWrite(CV_AUDIO_OUT, pos == 3 ? state : 0);
-				//analogWrite(CV_AUDIO_OUT, pos == 3 ? (state * 255) : 0);
 				if (state == 0) pos++;
 				if (pos >= 4) pos = 0;
 			break;
@@ -199,12 +187,7 @@ void loop()
 				digitalWrite(CV_IN3, pos == 1 ? state : 0);
 				digitalWrite(CV_AUDIO_IN, pos == 2 ? state : 0);
 				digitalWrite(CV_AUDIO_OUT, pos == 3 ? state : 0);
-				//analogWrite(CV_AUDIO_OUT, pos == 3 ? (state * 255) : 0);
 			break;
 			}
 		}
 	}
-
-
-
-

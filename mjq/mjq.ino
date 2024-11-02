@@ -7,7 +7,7 @@
 /// MJQ
 ///
 /// MJQ is a MIDI-CONTROLLED marimba simulator.  In honor of Modern Jazz Quartet, I tried
-/// to get a resonator working, but GRAINS is not fast enough.  However there is some natural
+/// to get a resonator working, but GRAINS is not fast5 enough.  However there is some natural
 /// LFO resonance, enough to *sort of* sound like a vibraphone.
 /// 
 /// MJQ is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.  
@@ -111,7 +111,7 @@ PROGMEM const float frequencies[128] =
 
 
 #define FREQUENCY(pitch) pgm_read_float_near(&frequencies[pitch])
-#define CONTROL_RATE 128
+#define CONTROL_RATE 256
 
 
 
@@ -596,20 +596,24 @@ void updateControl()
 	counter++;
 	if (counter >= COUNTER_MAX) counter = 0;
 	
-	// Do this every time, after updating decay
-    for(uint8_t i = 0; i < VOICES * 3; i++)
-    	{
-    	decayPositions[i]++;
-    	if (decayPositions[i] < - 1)  // there's still room to decrease
-    		{
-    		decayPositions[i]++;
-    		if (decayPositions[i] >= DECAY_LENGTHS[decays[i]])
-    			{
-				decayPositions[i] = DECAY_LENGTHS[decays[i]] - 1;
-    			}
-    		gains[i] = (getGain(i) * velocities[i]) >> 7;
-    		}
-    	}
+	// Do this every other cycle
+	if (counter & 1)
+		{
+		// Do this every time, after updating decay
+		for(uint8_t i = 0; i < VOICES * 3; i++)
+			{
+			decayPositions[i]++;
+			if (decayPositions[i] < - 1)  // there's still room to decrease
+				{
+				decayPositions[i]++;
+				if (decayPositions[i] >= DECAY_LENGTHS[decays[i]])
+					{
+					decayPositions[i] = DECAY_LENGTHS[decays[i]] - 1;
+					}
+				gains[i] = (getGain(i) * velocities[i]) >> 7;
+				}
+			}
+		}
     }                                             
 
 int updateAudio()                             
@@ -622,5 +626,3 @@ int updateAudio()
     //Serial.println(val);
     return ((val >> 8) * volume) >> 8;
     }
-
-

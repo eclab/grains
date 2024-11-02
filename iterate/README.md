@@ -1,6 +1,6 @@
 # Iterate
 
-ITERATE is a sequential switch, similar to the Doepfer A151.  It takes a series of gates or triggers and breaks them up among up to four digital outputs.  You can use this to trigger different drums, for example, based on a single input.  You can also RESET the trigger sequence at any time.  Note: ITERATE is not debounced, so noise on the gates or triggers might cause it to advance prematurely.
+ITERATE is a multiplexer, related to but not the same as the Doepfer A151.  It takes a series of gates or triggers and breaks them up among up to four digital outputs.  You can use this to trigger different drums, for example, based on a single input.  You can also RESET the trigger sequence at any time.  Note: ITERATE is not debounced, so noise on the gates or triggers might cause it to advance prematurely.
 
 You can set the number of outputs to 2, 3, or 4 outputs, or to set them to 3 or 4 outputs where a randomly different output is chosen each time (the same output is never chosen twice).
 

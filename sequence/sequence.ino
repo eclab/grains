@@ -58,7 +58,7 @@
 /// HOW TO UNLOCK POT 1 OR POT 2
 ///
 /// In ENTRY MODE, POT 2 is locked.  In PATTERN MODE, Pots 1 and 2 are locked.  In PATTERN STEP MODE,
-/// Pot 2 is locked.  What does this mean?  It means that when first go into one of these modes, the
+/// Pot 2 is locked.  What does this mean?  It means that when you first go into one of these modes, the
 /// values of the pot are ignored until you turn the pot a little bit (about 1/32 its total distance).
 /// You'll need to do that to get Sequence to start listening to the pot.
 ///
@@ -113,7 +113,7 @@
 /// MAX NUMBER OF STEPS
 ///
 /// By default Sequence has a maximum of 8 steps per pattern.  You can change this to 16 or to 4
-/// but nothing else.  Note that 16 is extremel fiddly.  To do so, just change the #define below:
+/// but nothing else.  Note that 16 is extremely fiddly.  To do so, just change the #define below:
 
 #define NUM_STEPS 8
 
