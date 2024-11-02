@@ -236,10 +236,12 @@ inline float getFrequency(uint8_t pitch, uint8_t tune)
     return FREQUENCY(finalPitch < 0 ? 0 : (finalPitch > 1535 ? 1535 : finalPitch));
     }
 
+uint8_t gain = 255;
+
 void updateControl() 
     {
     float frequency = getFrequency(CV_POT_IN1, CV_AUDIO_IN);
-
+	gain = mozziAnalogRead(CV_POT_IN2) >> 2;
     sine.setFreq(frequency);
     }
 
@@ -269,7 +271,7 @@ int updateAudio()
     // For audio,
     // this is what I normally use centered at 2.5V but not exceeding max distortion
     // (-168 ... +167)
-    return scaleAudioSmall(sine.next());
+    return scaleAudioSmall((sine.next() * gain) >> 8);
     
     // For CV,
     // this is what I normally use to allow as low as 0V roughly
