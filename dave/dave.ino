@@ -208,8 +208,8 @@ const uint8_t triggerNotes[4] = { 60, 62, 64, 65 };		// MIDDLE C, D, E, and F
 
 // Some modes allow additional CCs (POT 4 and POT 5) instead of clock signals.  Uncomment these to turn them on:
 
-#define EXTRA_CC_4
-#define EXTRA_CC_5
+// #define EXTRA_CC_4
+// #define EXTRA_CC_5
 
 /// You can customize which channels will receive CCs from the pots by
 /// modifying the "1" values below to "0".  Regardless of the settings here,
