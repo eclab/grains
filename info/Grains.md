@@ -325,7 +325,7 @@ To this collection I typically add the following, which I use to seed random num
 	
 The GRAINS is essentially an Arduino Nano, so it has eight analog pins A0...A7.  The pins A5, A6, and A7 are not connected, so any of them can be used to collect random number seed entropy.
 	
-There is a bug in all of the analog inputs: they seem to have a reference voltage of about 4V.  This means that everything is scaled so that 4V or above (roughly) will be read as 1023.  For IN1 and IN2, you can scale this back down such that only 5V will read as 1023, by setting their potentiometers to about the 2 o'clock or maybe 3 o'clock position.  Nothing can be done for IN1 and IN2.  If set to MAN, the maximum potentiometer position is exactly 1023.  I consider all this a significant bug but I don't know what is causing it: AREF is properly being pinned to ground with a capacitor, so it should be 5V internally.
+There is a bug in all of the analog inputs: they seem to have a reference voltage of about 4V.  This means that everything is scaled so that 4V or above (roughly) will be read as 1023 -- it's **not volt per octave.**  For IN1 and IN2, you can scale this back down such that only 5V will read as 1023, by setting their potentiometers to about the 2 o'clock or maybe 3 o'clock position.  Nothing can be done for IN3 and AUDIO IN.  If set to MAN, the maximum potentiometer position is exactly 1023.  I consider all this a significant bug but I don't know what is causing it: AREF is properly being pinned to ground with a capacitor, so it should be 5V internally.
 
 - IN 1.  This is attenuated by POT1 or alternatively replaced by POT1.  Note that when attenuated, if you set POT1 to about the 2 o'clock position, IN1 will be maximal.  Higher than that and you're just multiplying IN1 by larger values, but they're clipped at 1023 in the Arduino.  I consider this a bug.
 
@@ -400,13 +400,11 @@ But you could then tack on the following code to check if you are *currently* hi
         }
         
                
-### About Audio Out
+### Audio Out
 
 Audio Out is a digital pin which the Mozzi and Ginkosynthese GRAINS libraries set to have its PWM turned on.  The result is then pushed through a filter to approximate a DAC.
 
-In Mozzi, this filtered PWM is designed for audio rates, not CV.  However it can be used for CV, but is affected by the impedance of the item its connected to.  This particularly causes problems if the CV output is meant to be volt per octave for pitches.   For example, let's say that you are using Mozzi to output CV values from 0...5V corresponding to notes.  Depending on the oscillator you attach this CV to, the oscillator may pull significant amperage from Audio Out, resulting in it scaling down its voltage.  Instead of outputting 3.2 volts you might instead output 3.1 volts.  This would be fine (you could write a table to adjust for it) except that many oscillators are different.  For example, the 555 oscillator has a built-in op-amp and doesn't cause this much.  But the VCO has significant issues.
-
-I have found that GRAINS + Mozzi filtered PWM has problems in audio as well.  Notionally, filtered PWM has an amplitude range of -244 ... +243, corresponding to voltages from 0 to 5V.  Because this is between 8 and 9 bits, Mozzi calls this "8.5 Bit".  Ideally you'd like to scale your audio from (typically) -128 ... +127 to   -244 ... +243 in order to make GRAINS as loud as possible to reduce noise.  However I have found that the upper portion of this range is significantly distorted above +175.  So realistically you can only do -244 ... +175 for CV, or if you want to keep your audio properly centered at 2.5V, you can only do -175 ... +175.  I wrote a few functions you can use in Mozzi's updateAudio(...) function to do this scaling:
+Notionally, filtered PWM has an amplitude range of -244 ... +243, corresponding to voltages from 0 to 5V.  Because this is between 8 and 9 bits, Mozzi calls this "8.5 Bit".  Ideally you'd like to scale your audio from (typically) -128 ... +127 to -244 ... +243 in order to make GRAINS as loud as possible to reduce noise.  However I have found that the upper portion of this range is significantly distorted above +175.  So realistically you can only do -244 ... +175 for CV.  Since you want to keep your audio properly centered at 2.5V, you can only do -175 ... +175.  You need to do this as fast as possible.  I wrote a few functions you can use in Mozzi's updateAudio(...) function to scale very rapidly to between -168 and +167, which is pretty close:
 
     /** Maps -128 ... +127 to -168 ... +167 */ 
     inline int16_t scaleAudioSmall(int16_t val)
@@ -414,25 +412,13 @@ I have found that GRAINS + Mozzi filtered PWM has problems in audio as well.  No
     	return (val * 21) >> 4;
     	}
     	
-    /** Maps -128 ... +127 to -244 ... +170 */ 
-    inline int16_t scaleAudioSmallBiased(int16_t val)
-    	{
-    	return ((val * 13) >> 3) - 36;
-    	}
-    
     /** Maps -32768 ... +32767 to -168 ... +167 */ 
     inline int16_t scaleAudio(int16_t val)
     	{
     	return ((val >> 5) * 21) >> 7;
     	}
-	
-    /** Maps -32768 ... +32767 to -244 ... +171 */ 
-    inline int16_t scaleAudioBiased(int16_t val)
-    	{
-    	return (((val >> 4) * 13) >> 7) - 36;
-    	}
 
-The main problem with these functions is that, though the math is not complex (it's as simple as I can make it), it can be complex enough to be too slow for Mozzi if you're doing lots of other stuff to generate the audio.  You have two other options:
+This might still be too slow for Mozzi if you're doing lots of other stuff to generate the audio.  You have two other options:
 
 - Just output in the range -128 ... +127.  This is quieter though.
 
@@ -446,6 +432,84 @@ The main problem with these functions is that, though the math is not complex (i
         	}
         	
  Obviously if the musician turns the knob up too much, this will produce values outside the -244 ... +243 range and clip.  But that's to be expected.
+ 
+### CV via Audio Out
+
+Filtered PWM on GRAINS is designed for audio rates, not CV, but you can get away with it.  First off, note that CV is similarly distorted above about +175 just like audio as discussed above.  To maximize the CV range, your best option is to scale your CV to between -244 and +175.  Here are two functions which will map into that range and are pretty fast.
+
+    /** Maps -128 ... +127 to -244 ... +170 */ 
+    inline int16_t scaleAudioSmallBiased(int16_t val)
+    	{
+    	return ((val * 13) >> 3) - 36;
+    	}
+	
+    /** Maps -32768 ... +32767 to -244 ... +171 */ 
+    inline int16_t scaleAudioBiased(int16_t val)
+    	{
+    	return (((val >> 4) * 13) >> 7) - 36;
+    	}
+
+
+GRAINS's Audio Out is strongly affected by the impedance of the item its connected to.  This particularly causes problems for CV when the CV output is meant to be volt per octave for pitches.   For example, let's say that you are using Mozzi to output CV values from 0...5V corresponding to notes.  Depending on the oscillator you attach this CV to, the oscillator may pull significant amperage from Audio Out, resulting in it scaling down its voltage.  Instead of outputting 3.2 volts you might instead output 3.1 volts.  This would be fine (you could write a table to adjust for it) except that many oscillators are different.  For example, the 555 oscillator has a built-in op-amp and doesn't cause this much.  But the VCO module has significant issues.  Several of my GRAINS modules require tables depending on the particular device the output goes into.  If you run the output through a buffered mult, you won't have many problems.
+
+Below are some tables you can use to provide accurate Pitch CV depending on the oscillator you're plugged into.  
+
+    // VALUES FOR 555
+        uint16_t positions[48] = 
+        {  
+        // C    C#   D    D#   E    F    F#   G    G#   A     A#   B
+           0,   13,  22,  30,  38,  47,  55,  64,  72,  81,  89,  98,    // Octave 1
+           107, 116, 124, 133, 141, 150, 159, 167, 176, 184, 193, 202,   // Octave 2
+           210, 219, 227, 236, 244, 253, 262, 270, 279, 287, 296, 304,   // Octave 3
+           313, 321, 330, 338, 346, 355, 363, 372, 380, 388, 399, 399    // Octave 4
+           // 555 has 47 notes
+        };
+        
+    // VALUES FOR VCO
+        uint16_t positions[48] = 
+        {  
+        // C    C#   D    D#   E    F    F#   G    G#   A     A#   B
+           0,   14,  24,  33,  42,  51,  60,  69,  78,  88,  97,  106,   // Octave 1
+           115, 124, 134, 143, 152, 161, 171, 180, 189, 198, 208, 217,   // Octave 2
+           226, 235, 244, 254, 263, 272, 281, 290, 299, 308, 318, 327,   // Octave 3
+           350, 359, 368, 377, 385, 394, 394, 394, 394, 394, 394, 394    // Octave 4
+           // VCO has only 42 notes
+        };
+        
+    // VALUES FOR uBUFFER
+        uint16_t positions[48] = 
+        {  
+        // C    C#   D    D#   E    F    F#   G    G#   A     A#   B
+           0,   13,  21,  29,  38,  46,  55,  63,  72,  80,  90,  97,    // Octave 1
+           106, 114, 123, 141, 139, 148, 156, 165, 173, 182, 190, 199,   // Octave 2
+           208, 216, 225, 233, 242, 250, 259, 267, 276, 284, 293, 301,   // Octave 3
+           309, 318, 326, 335, 343, 351, 359, 368, 376, 384, 392, 392    // Octave 4
+           // uBuffer has 47 notes
+        };
+        
+    // VALUES FOR 4BUFFER
+        uint16_t positions[48] = 
+        {  
+        // C    C#   D    D#   E    F    F#   G    G#   A     A#   B
+           0,   13,  21,  29,  38,  46,  55,  63,  72,  80,  89,  98,    // Octave 1
+           107, 115, 124, 142, 140, 149, 157, 166, 174, 183, 191, 200,   // Octave 2
+           209, 217, 226, 234, 243, 251, 260, 268, 277, 285, 294, 302,   // Octave 3
+           311, 320, 328, 337, 345, 353, 361, 370, 378, 386, 394, 394    // Octave 4
+           // 4Buffer has 47 notes
+        };
+        
+    // VALUES FOR 2OSCD
+        uint16_t positions[48] = 
+        {  
+        // C    C#   D    D#   E    F    F#   G    G#   A     A#   B
+           0,   13,  22,  30,  39,  47,  56,  64,  73,  82,  90,  99,    // Octave 1
+           107, 116, 125, 133, 142, 151, 159, 168, 176, 185, 194, 202,   // Octave 2
+           211, 220, 228, 237, 245, 254, 262, 271, 280, 288, 297, 306,   // Octave 3
+           314, 323, 331, 340, 348, 356, 365, 373, 382, 390, 403, 403    // Octave 4
+           // 2OSCD has 47 notes
+        };
+        
+
 
 ### Outputting a Trigger
 
@@ -509,7 +573,7 @@ The Arduino can do serial in two ways. First, it has a single UART (hardware to 
 
 The other option is software serial.  There are several software serial packages available for the Arduino, and they are all bad.  Notably *writing* MIDI is very bad because it holds up everything while it's writing -- including incoming MIDI data to the software serial, which will then get dropped on the floor before we can read it.
 
-The fastest software serial option that works for GRAINS is NeoSWSerial.  You can find it in any of my MIDI packages, such as PARA-M.  If you're making a MIDI-based oscillator, you'd read on DIGITAL OUT (GATE OUT), which is by far your best pin option.  It's all set up with my MIDI parser like this:
+The fastest software serial option that works for GRAINS is NeoSWSerial.  You can find it in any of my MIDI firmware packages, such as PARA.  If you're making a MIDI-based oscillator, you'd read on DIGITAL OUT (GATE OUT), which is by far your best pin option.  It's all set up with my MIDI parser like this:
 
     #include "NeoSWSerial.h"
     #include "parsemidi.c"
