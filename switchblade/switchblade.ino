@@ -55,7 +55,7 @@
 /// DIGITAL OUT (D) [Unused]
 ///
 /// POT 1           Input Attenuation
-///                 [Set Switch to IN3.  Note GRAINS bug]
+///                 [Set Switch to IN1.  Note GRAINS bug]
 ///
 /// POT 2           Fully Inverted <-------- Fully Attenuated --------> Normal
 ///                 [If you're not using Attenuvert CV, set the switch to MAN]

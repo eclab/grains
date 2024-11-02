@@ -51,6 +51,16 @@ When you have stopped recording, VS will save your internal recording to the EEP
 
 When a note is played, the recorded wave mix is played back.  When a note is played, the GATE OUT is raised, and when a note stops being played, the GATE OUT is lowered.
 
+## Looping Option
+
+If you uncomment a certain #define in the code,  you can get VS to loop its vector envelope while you play it. This will only work if the loop was recorded to its maximum length: if you recorded to something shorter, it won't loop.
+
+
+## Using VS With the AE Modular JOYSTICK
+
+VS works perfectly with JOYSTICK.  Just attach JOYSTICK's CV X to GRAINS IN 1, and CV Y to IN 2. Make sure that POT 1 is set to IN 1 and POT 2 is set to IN 2.  Then you'll need to trim the pots to get the range right.  I find that setting POT 1 (and 2) to a little before the 3 o'clock position is the right position.  You can test by setting VS to FREE mode and see if each of the JOYSTICK's corners correspond to a pure sound.
+
+
 
 ## MIDI Channel
 

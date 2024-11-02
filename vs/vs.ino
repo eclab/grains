@@ -28,9 +28,9 @@
 /// The amplitude of the four waves is defined as:
 ///
 /// AMPLITUDE OF WAVE 1 = (1-x) * (1-y)
-/// AMPLITUDE OF WAVE 2 = x * y
+/// AMPLITUDE OF WAVE 2 = x * y					[opposite corner from WAVE 1]
 /// AMPLITUDE OF WAVE 3 = (1-x) * y
-/// AMPLITUDE OF WAVE 4 = x * (1-y)
+/// AMPLITUDE OF WAVE 4 = x * (1-y)				[opposite corner from WAVE 3]
 ///
 /// In short: each wave has a corner in the square where it is the only sound.  Wave 1 is solo
 /// in the corner (x=0, y=0), Wave 2 in the corner (x=1, y=1), wave 3 in (x=0, y=1), and wave 4
@@ -63,8 +63,6 @@
 /// When a note is played, the GATE OUT is raised, and when a note is released, the GATE OUT is lowered.  
 /// Recording stops when (1) the time has elapsed or (2) the note is released or (3) the mode is 
 /// changed back to PLAY or FREE.
-
-
 ///
 /// When you have stopped recording, VS will save your internal recording to the EEPROM so that it's
 /// available even after you reboot.
@@ -72,6 +70,24 @@
 /// PLAY MODE: when a note is played, the recorded wave mix is played back.  When a note is played,
 /// the GATE OUT is raised, and when a note stops being played, the GATE OUT is lowered.
 
+
+/// LOOPING OPTION
+///
+/// If you uncomment the #define below, you can get VS to loop its vector envelope while you play it.
+/// This will only work if the loop was recorded to its maximum length: if you recorded to something
+/// shorter, it won't loop.
+
+//  #define LOOP
+
+
+
+/// USING VS WITH THE AE MODULAR JOYSTICK
+///
+/// VS works perfectly with JOYSTICK.  Just attach JOYSTICK's CV X to GRAINS IN 1, and CV Y to IN 2.
+/// Make sure that POT 1 is set to IN 1 and POT 2 is set to IN 2.  Then you'll need to trim the pots
+/// to get the range right.  I find that setting POT 1 (and 2) to a little before the 3 o'clock position
+/// is the right position.  You can test by setting VS to FREE mode and see if each of the JOYSTICK's
+/// corners correspond to a pure sound.
 
 /// CHANNEL
 ///
@@ -265,7 +281,7 @@ uint8_t data[1024];			// this will push us to the edge...
 void store() 
 	{ 
 	// stretch first
-	if (len >= 2 && len != 1024)
+	if (len >= 2 && len < 1024)
 		{
 		for(uint16_t i = len; i < 1024; i++)
 			{
@@ -337,7 +353,11 @@ void updateControl()
     	else if (gate)
     		{
     		count += 2;
+#ifdef LOOP    		
+    		if (count > 1022) count = 0;
+#else
     		if (count > 1022) count = 1022;
+#endif
     		updateWeights(data[count], data[count+1]);
     		}
     	else	// gate up
