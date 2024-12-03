@@ -82,7 +82,11 @@ Major Triad
 
 Minor Triad
 
-Augmented Triad
+Major 6
+
+Minor 6
+
+<!--Augmented Triad-->
 
 Dominant 7
 
@@ -92,7 +96,7 @@ Minor 7
 
 Diminished 7
 
-Minor-Major 7
+<!--Minor-Major 7-->
 
 
 ## Adjusting Tuning and Tracking
