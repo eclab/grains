@@ -1,4 +1,4 @@
-# GRAINS on AE Modular
+# Developing for GRAINS on AE Modular
 
 This is a set of notes on programming GRAINS that might be useful to you if you're working on a GRAINS project.
 

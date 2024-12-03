@@ -14,9 +14,12 @@ Other GRAINS firmware repositories:
 
 There are two **special directories**:
 
-* **INFO**.  This contains useful documentation on GRAINS, MIDI, and other topics you might like to read. 
-
-* **MIDI**.  This contains MIDI library code useful for developers.  It's not a GRAINS firmware application. 
+* **INFO**.  This contains useful documentation you might like to read.
+	* [Developing for GRAINS on AE Modular](info/DevelopingForGrains.md) A collection of tips for GRAINS software developers. 
+	* [Modular MIDI Convensions for Musicians](info/ModularMIDIConventionsForMusicians.md) An introduction to the Modular MIDI conventions (IMDI on AE) for interested musicians.
+	* [Modular MIDI Convensions for Developers](info/ModularMIDIConventionsForDevelopers.md) The Modular MIDI conventions for software developers
+	
+* [**MIDI**](midi/README.md).  This contains MIDI library code useful for developers.  It's not a GRAINS firmware application. 
 
 
 ### Firmware Summary
@@ -40,7 +43,7 @@ There are two **special directories**:
 
 ## NEW: Trajectory
 
-A vector synthesizer similar to VS: but with four fixed waves (Sine, Saw, Square, Noise, with optional silence).  The point of Trajectory is that these waves can be arranged to have many fewer aliasing issues than the waves in VS.
+A vector synthesizer similar to VS: but with four fixed waves (Sine, Saw, Square, Noise, with optional silence).  This is much more limited than VS, but the advantage is that these waves can be arranged to have many fewer aliasing issues than the waves in VS.
 
 Status: Working.  Also works great with AE's JOYSTICK.
 

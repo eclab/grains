@@ -210,7 +210,7 @@ const uint8_t scales[NUM_SCALES][NUM_NOTES] =
 	/// OTHER SCALES
 //    C  Db D  Eb E  F  Gb G  Ab A  Bb B
 	{ 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0 },		// Blues Minor
-	{ 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0 },		// Pentatonic
+	{ 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0 },		// Pentatonic
 	{ 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0 },		// Minor Pentatonic
 	{ 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0 },		// Japanese Pentatonic
 	{ 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0 },		// Whole Tone
