@@ -106,6 +106,54 @@
 
 
 
+/// USING THE PARSER IN GRAINS
+///
+/// Once you have a parser set up, you use it by calling parseMidi(...), which will in turn ultimately call your
+/// callback functions to let you know when MIDI messages arrive.  But when do you call parseMidi()?
+///
+/// This is done by reading from your serial port.  But what serial port?  GRAINS has two ways of receiving MIDI over serial ports:
+/// 
+///   - From RX over a software serial library.  At present this is your more viable option.  There are several
+///     serial port libraries but from my testing it is clear that NeoSoftSerial (https://github.com/SlashDevin/NeoSWSerial) 
+///     is the best choice.  You can also get this library through the Arduino library manager.  And several
+///     of my GRAINS projects (such as para-m) include the two files NeoSWSerial.h and NeoSWSerial.c, though they have
+///     slightly modified them to add an additional parameter which, as it turns out, I don't use anyway.  So there
+///     you go.
+///
+///     To use NeoSWSerial you'd say:
+///
+///         NeoSWSerial softSerial(receivePin, transmitPin);
+///			softSerial.begin(31250);
+///
+///     Then in updateControl() you'd say:
+///
+///         uint8_t val = softSerial.available();
+///        	for(uint8_t i = 0; i < val; i++) {
+///        		parseMidi(&myParser, softSerial.read());
+///        		}
+///
+///     The most reliable pin for receiving is CV_GATE_OUT (8).  I strongly suggest that.  If you are not transmitting
+///     MIDI, set transmitPin to 255.
+///
+///
+///   - From Hardware RX.  At present this is tied to the USB port, so you can only get MIDI data over USB.
+///     I suggest using this in conjunction with the Dave.java program and a MIDI loopback to route data from
+///     a DAW (say) into the loopback, then into Dave.java, then finally over USB to GRAINS.  (In future versions
+///     of GRAINS, Hardware RX will be exposed as a separate pin so you could access it directly.  But not now.)
+///
+///     To do this, you'd set up serial as:
+///
+///        Serial.begin(31250);
+///    
+///     Then in updateControl() you'd say:
+///
+///     uint8_t val = Serial.available();
+///    	for(uint8_t i = 0; i < val; i++) {
+///    		parseMidi(&myParser, Serial.read());
+///    		}
+
+
+
 
 // Don't mess with these constants
 #define NO_CHANNEL 16                               // Used when we do NOT have an associated channel

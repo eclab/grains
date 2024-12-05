@@ -52,6 +52,52 @@
 /// one of the two parsers; or just set one parser to reject all non-voiced messages.
 
 
+/// USING THE EMITTER IN GRAINS
+///
+/// Once you have a parser set up, you implement emitMidi(...) to emit bytes out your serial port.  
+/// But what serial port?  GRAINS has two ways of sending MIDI over serial ports:
+/// 
+///   - From RX over a software serial library.  At present this is your more viable option.  There are several
+///     serial port libraries but from my testing it is clear that NeoSoftSerial (https://github.com/SlashDevin/NeoSWSerial) 
+///     is the best choice.  You can also get this library through the Arduino library manager.  And several
+///     of my GRAINS projects (such as para-m) include the two files NeoSWSerial.h and NeoSWSerial.c, though they have
+///     slightly modified them to add an additional parameter which, as it turns out, I don't use anyway.  So there
+///     you go.
+///
+///     To use NeoSWSerial you'd say:
+///
+///         NeoSWSerial softSerial(receivePin, transmitPin);
+///			softSerial.begin(31250);
+///
+///     Then you'd implement emitMidi something like this:
+///    
+///    		void emitMidi(struct midiEmitter* emitter, unsigned char byte) {
+///    			softSerial.write(byte);
+///    		    }
+///
+///     The most reliable pin for emitting is CV_GATE_OUT (8).  I strongly suggest that.  If you are not also receiving
+///     MIDI, set receivePin to 255.  Remember to change the pin mode of CV_GATE_OUT to OUTPUT.
+///
+///     If you are attempting to receive AND send -- to create a MIDI with Soft Thru or whatnot -- it'll be hard.  This is
+///     because software serial writing turns off the interrupts for a while, and during that time incoming MIDI will be lost.
+///     I have not found it to be reliable.  You might have more luck reading from hardware RX and emitting to software serial.
+///
+///     You can in theory also write to CV_IN3 (A3) and to CV_AUDIO_IN (A4).  Remember to set their pin modes to OUTPUT.
+///
+///   - From Hardware TX.  At present this is tied to the USB port, so you can only send MIDI data out over USB.
+///     I suggest using this in conjunction with the Dave.java program and a MIDI loopback to route data GRAINS to
+///     Dave.java, then to the MIDI loopback, then to a DAW (say).  (In future versions
+///     of GRAINS, Hardware TX will be exposed as a separate pin so you could access it directly.  But not now.)
+///
+///     To do this, you'd set up serial as:
+///
+///        Serial.begin(31250);
+///    
+///     Then you'd implement emitMidi something like this:
+///    
+///    		void emitMidi(struct midiEmitter* emitter, unsigned char byte) {
+///    			Serial.write(byte);
+///    		    }
 
 
 
