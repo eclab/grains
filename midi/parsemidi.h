@@ -125,7 +125,7 @@
 ///         NeoSWSerial softSerial(receivePin, transmitPin);
 ///					// If you're using my modified implementation, there are three arguments:
 ///					// NeoSWSerial softSerial(receivePin, transmitPin, secondTransmitPin);
-///					// ignore this and pass in 255 for secondTransmitPin.
+///					// Ignore this and pass in 255 for secondTransmitPin.
 ///			softSerial.begin(31250);
 ///
 ///     Then in updateControl() you'd say:
@@ -136,7 +136,7 @@
 ///        		}
 ///
 ///     The most reliable pin for receiving is CV_GATE_OUT (8).  I strongly suggest that.  If you are not transmitting
-///     MIDI, set transmitPin to 255.  Remember to change the pin mode of CV_GATE_OUT to INPUT.
+///     MIDI, set transmitPin to 5 (an unused but valid pin).  Remember to change the pin mode of CV_GATE_OUT to INPUT.
 ///
 ///
 ///   - From Hardware RX.  At present this is tied to the USB port, so you can only get MIDI data over USB.

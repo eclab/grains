@@ -69,7 +69,7 @@
 ///         NeoSWSerial softSerial(receivePin, transmitPin);
 ///					// If you're using my modified implementation, there are three arguments:
 ///					// NeoSWSerial softSerial(receivePin, transmitPin, secondTransmitPin);
-///					// ignore this and pass in 255 for secondTransmitPin.
+///					// Ignore this and pass in 255 for secondTransmitPin.
 ///			softSerial.begin(31250);
 ///
 ///     Then you'd implement emitMidi something like this:
@@ -79,7 +79,7 @@
 ///    		    }
 ///
 ///     The most reliable pin for emitting is CV_GATE_OUT (8).  I strongly suggest that.  If you are not also receiving
-///     MIDI, set receivePin to 255.  Remember to change the pin mode of CV_GATE_OUT to OUTPUT.
+///     MIDI, set receivePin to 5 (an unused but valid pin).  Remember to change the pin mode of CV_GATE_OUT to OUTPUT.
 ///
 ///     If you are attempting to receive AND send -- to create a MIDI with Soft Thru or whatnot -- it'll be hard.  This is
 ///     because software serial writing turns off the interrupts for a while, and during that time incoming MIDI will be lost.
