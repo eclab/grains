@@ -67,6 +67,9 @@
 ///     To use NeoSWSerial you'd say:
 ///
 ///         NeoSWSerial softSerial(receivePin, transmitPin);
+///					// If you're using my modified implementation, there are three arguments:
+///					// NeoSWSerial softSerial(receivePin, transmitPin, secondTransmitPin);
+///					// ignore this and pass in 255 for secondTransmitPin.
 ///			softSerial.begin(31250);
 ///
 ///     Then you'd implement emitMidi something like this:
