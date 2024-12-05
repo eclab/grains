@@ -5,6 +5,8 @@
 /// Version 0.4:        "Tweaked RPN/NRPN"
 
 
+//// See emitmodular.h for instructions on how to use these utility functions.
+
 
 #include "emitmodular.h"
 

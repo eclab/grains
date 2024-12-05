@@ -5,6 +5,8 @@
 /// Version 0.4:        "Tweaked RPN/NRPN"
 
 
+//// See parsemidi.h for instructions on how to use the MIDI Parser.
+
 #include "parsemidi.h"
 #include <stdio.h>
 
@@ -1084,3 +1086,4 @@ unsigned char getParserCurrentMIDIChannel(struct midiParser* parser)
     {
     return parser->currentChannel;
     }
+

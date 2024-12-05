@@ -1,27 +1,102 @@
-# MIDI
+# Lightweight MIDI Library
 
-This is not a GRAINS project, though it is used in several projects.  It is a low-footprint
-MIDI emitting and parsing library meant for small microprocessors, and contains additional
-features for the Modular MIDI conventions.  It's currently under development.
+Sean Luke  
+December 1, 2024
+
+This is not a GRAINS project, though it is used in several projects.  It is a low-footprint MIDI emitting and parsing library meant for small microprocessors, and contains additional features for the Modular MIDI conventions.  It's currently under development.
 
 For more info on Modular MIDI, see [Modular MIDI Conventions for Developers](https://github.com/eclab/grains/blob/main/info/ModularMIDIConventionsForDevelopers.md).
 
-### emitmidi.c and emitmidi.h
-Utility code for emitting MIDI
+The library can be used to (1) emit MIDI (2) parse MIDI or (3) do both.  
 
-### parsemidi.c and parsemidi.h
-Code for allocating, setting up, and using MIDI parsers for incoming MIDI
 
-### miditypes.h
-Minor code shared in common by parsemidi.h and emitmidi.h
+## Parsing MIDI
 
-### testmidi.c
-Test code for emitmidi.c and parsemidi.c
+### Files
+Include the following files in your project:
 
-### parsemodular.c and parsemodular.h
-Utility code to make it easier to determine which parameter is which for modular synth modules
+- parsemidi.h
+- parsemidi.c
+- miditypes.h
 
-### emitmodular.c and emitmodular.h
-Utility code to make it easy to emit MIDI to other modules
+### Usage
 
-At present there is no test code for parse/emitmodular.c/h, which could be full of bugs for all I knew.
+Modify the miditypes.h file so that its signed and unsigned 16-bit integer type sizes are correct.  By default it has types set up for the ATmega 328P chip family (Arduino series).
+
+Next, you'll need to modify the parsemidi.h file as described in that file, and write callback functions in your project for the midi types you've asked it to parse.
+
+See the parsemidi.h file for instructions on how to build and use a MIDI parser. 
+
+
+## Emitting MIDI
+
+### Files
+Include the following files in your project:
+
+- emitmidi.h
+- emitmidi.c
+- miditypes.h
+
+### Usage
+
+Modify the miditypes.h file so that its signed and unsigned 16-bit integer type sizes are correct.  By default it has types set up for the ATmega 328P chip family (Arduino series).
+
+See the emitmidi.h file for instructions on how to build and use a MIDI emitter.
+
+
+## Parsing Modular MIDI Conventions
+
+### Dependencies
+Set up a MIDI Parser.  See "Parsing MIDI" above.
+
+### Files
+Include the following additional files in your project:
+
+- parsemodular.h
+- parsemodular.c
+
+### Usage
+
+The MIDI parsing facility is just a bunch of utility functions to make things easier for you.  See the parsemodular.h file for instructions on how to use them.
+
+
+## Emitting Modular MIDI Conventions
+
+### Dependencies
+Set up a MIDI Emitter.  See "emitting MIDI" above.
+
+### Files
+Include the following additional files in your project:
+
+- emitmodular.h
+- emitmodular.c
+
+### Usage
+
+The MIDI emitting facility is just a bunch of utility functions to make things easier for you.  See the emitmodular.h file for instructions on how to use them.
+
+
+## Testing the Parser and Emitter
+
+### Files
+Include the following files in your project:
+
+- emitmidi.h
+- emitmidi.c
+- parsemidi.h
+- parsemidi.c
+- miditypes.h
+- testmidi.c
+
+### Usage
+
+Modify the miditypes.h file so that its signed and unsigned 16-bit integer type sizes are correct.  By default it has types set up for the ATmega 328P chip family (Arduino series).
+
+The testmidi.c file has a main().  Compile and run it:
+
+    gcc testmidi.c
+    ./a.out
+
+### Note
+
+At present there is no test code for testing the Modular MIDI conventions emitting and parsing utilities.

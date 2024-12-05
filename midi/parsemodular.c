@@ -4,8 +4,12 @@
 
 /// Version 0.4:        "Tweaked RPN/NRPN"
 
+//// See parsemodular.h for instructions on how to use these utility functions.
+
+
 
 #include "parsemodular.h"
+
 #ifdef __AVR__
 #include <avr/pgmspace.h>
 #endif
@@ -161,7 +165,7 @@ const signed char _CC_DATA[128] =
     };
 
 	
-inline unsigned char getCCData(unsigned char cc) 
+unsigned char getCCData(unsigned char cc) 
 	{ 
 #ifdef __AVR__
 	return pgm_read_byte_near(&_CC_DATA[cc]); 
@@ -252,9 +256,9 @@ void setStandardHighResParameters(struct midiParser* parser)
 	setHighResUsed(parser, 59, 1);				// Modulation B
 	}
 
-void setIDHighResParameters(struct midiParser* parser, uint8_t id, uint8_t setA, uint8_t setB)
+void setIDHighResParameters(struct midiParser* parser, unsigned char id, unsigned char setA, unsigned char setB)
 	{
-	uint8_t a[8] = { 8, 14, 16, 18, 20, 12, 22, 24 };
+	unsigned char a[8] = { 8, 14, 16, 18, 20, 12, 22, 24 };
 	if (setA)
 		{
 		setHighResUsed(parser, a[id], 1);

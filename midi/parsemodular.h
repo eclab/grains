@@ -19,6 +19,10 @@
 /// 2. ID Mapping for NRPN
 /// 3. ID Mapping for Auxiliary Parameters
 /// 4. Default Type Definitions
+///
+/// See https://github.com/eclab/grains/blob/main/info/ModularMIDIConventionsForDevelopers.md
+///     for more information on the Modular MIDI conventions.
+/// See also https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf
 
 
 /// SETTING THINGS UP
