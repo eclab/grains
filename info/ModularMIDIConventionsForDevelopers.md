@@ -113,15 +113,13 @@ Streams of MIDI data are mostly of two kinds:
 
 ### Distributor MIDI Mode Suggestions
 
-MIDI has four "Channel Modes" set by CCs 124 through 127, and which consist of the combinations of OMNI ON vs. OFF and MONO vs. POLY.   Modes 1 and 2 are discouraged in Modular MIDI.
+MIDI has four "Channel Modes" set by CCs 124 through 127, and which consist of the combinations of OMNI ON vs. OFF and MONO vs. POLY. 
 
-- MIDI Mode 1 (OMNI ON, MONO) implies that the distributor is listening in OMNI mode and receiving polyphonic notes, treating them as if they were from a single channel.  We recommend that the distributor do **note distributon** for some range set by the musician. For example, if the range is channels 1...4, then note 1 goes out channel socket 1, note 2 to channel socket 2, note 3 to channel socket 3, note 4 to channel socket 4, and then note 5 to channel socket 1 again, and so on.  Alternatively, the distributor could just send everything out to channel socket 1 and let downstream modules deal with it.
+- MIDI Modes 1 and 2 both imply that the distributor is listening in OMNI mode, and this acts against the basic purpose of Modular MIDI.  We recommend disregarding them here, or routing everything to channel 1.
 
-- MIDI Mode 2 (OMNI ON, POLY) implies that the distributor is listening in OMNI mode and receiving monophonic notes.  Here, the distributor might route everything to channel 1: ideally sending NOTE OFF messages to shut off previously open NOTE ON messages when a new NOTE ON arrives.
+- In MIDI Mode 3 (OMNI OFF, POLY ON) each channel receives its own independent MIDI voice messages, and can potentially play polyphonically.  We recommend that this be the default mode.  For a Distributor, this implies that incoming MIDI voice messages are simply routed out the MIDI THRU socket for the appropriate channel.
 
-- In MIDI Mode 3 (OMNI OFF, POLY) each channel receives its own independent MIDI voice messages, and can potentially play polyphonically.  We recommend that this be the default mode.  For a Distributor, this implies that incoming MIDI voice messages are simply routed out the MIDI THRU socket for the appropriate channel.
-
-- MIDI Mode 4 (OMNI OFF, MONO) can be well supported as described below.
+- MIDI Mode 4 can also be supported as described below.
 
 #### MIDI Mode 4
 
@@ -153,7 +151,7 @@ MPE is meant for the situation where each note (each voice) is usually sent on a
 
 #### Reconciling MPE and Mode 4
 
-The MPE documentation states that "If the Channel ranges all match, then the MIDI Mode 4 device will behave identically whether or not it supports MPE."  This is not correct.  Both Pitch Bend and Channel Pressure can be sent as Zone messages or as individual channel messages, and the MPE documentation says "If an MPE synthesizer receives Pitch Bend (for example) on both a Master and a Member Channel, it must combine the data meaningfully. The same is true for Channel Pressure.".  But Mode 4 is explicit: there is no combination, but rather, they just replace one another.  We suggest if a range is declared to be both an MPE Zone and Mode 4, then Mode 4's behavior takes precedence with respect to Pitch Bend and Channel Aftertouch.
+The MPE documentation states that "If the Channel ranges all match, then the MIDI Mode 4 device will behave identically whether or not it supports MPE."  This is not quite true.  Both Pitch Bend and Channel Pressure can be sent as Zone messages or as individual channel messages, and the MPE documentation says "If an MPE synthesizer receives Pitch Bend (for example) on both a Master and a Member Channel, it must combine the data meaningfully. The same is true for Channel Pressure.".  But Mode 4 is explicit: there is no combination, but rather, they just replace one another.  We suggest if a range is declared to be both an MPE Zone and Mode 4, then Mode 4's behavior takes precedence with respect to Pitch Bend and Channel Aftertouch.
 
 <a name="namespaces"/></a>
 ## Namespaces, IDs, and CC Messages

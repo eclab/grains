@@ -10,6 +10,7 @@ Other GRAINS firmware repositories:
 - Duddex's [GRAINS adaptations](https://github.com/duddex/)
 - Keurslager Kurt's [GRAINS LFO](https://github.com/ZVanMoerkerke/GrainsAE_VC_LFO_Sine)
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
+- Reductionist Earth Catalog's [Experimental GRAINS projects](https://github.com/reductionistearthcatalog/AE-GRAINS-MIDI/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 
 There are two **special directories**:
@@ -21,6 +22,9 @@ There are two **special directories**:
 	
 * [**MIDI**](midi/README.md).  This contains MIDI library code useful for developers.  It's not a GRAINS firmware application. 
 
+### A Note on GRAINS Oscillators
+
+GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered PWM creates a low-level buzz or hum which is not filtered out.  To remove this, I suggest including at the beginning of your song a multi-second stretch of silence.  Then load your song into Audacity, and use the silent region (which will have the hum) as the noise profile for the "Noise Reduction" plugin (I'd use dB=7, Sensitivity=7.0, Smoothing=7).
 
 ### Firmware Summary
 

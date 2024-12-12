@@ -7,7 +7,7 @@
 /// MJQ
 ///
 /// MJQ is a MIDI-CONTROLLED marimba simulator.  In honor of Modern Jazz Quartet, I tried
-/// to get a resonator working, but GRAINS is not fast5 enough.  However there is some natural
+/// to get a resonator working, but GRAINS is not fast enough.  However there is some natural
 /// LFO resonance, enough to *sort of* sound like a vibraphone.
 /// 
 /// MJQ is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.  

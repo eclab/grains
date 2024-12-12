@@ -258,6 +258,7 @@ public class Aria
 
 	public ArrayList<Note> waiting = new ArrayList<>();
 	
+	/*
 	public Note findWaiting(int pitch)
 		{
 		for(int i = waiting.size() - 1; i >= 0; i--)
@@ -271,10 +272,12 @@ public class Aria
 			}
 		return null;
 		}
+	*/
 
 	public int findWaitingPos(int pitch)
 		{
-		for(int i = waiting.size() - 1; i >= 0; i--)
+		// we want to move FORWARD because it's possible that we've just added the same note to the list
+		for(int i = 0; i < waiting.size(); i++)
 			{
 			Note note = waiting.get(i);
 			if (note.pitch == pitch) 
@@ -431,7 +434,7 @@ String stringResult = null;
 				}
 			lastNote = note;
 			}
-		build.append(" },\n");
+		build.append(" END, },\n");
 		stringResult = build.toString();
         System.err.println(stringResult);
         return true;

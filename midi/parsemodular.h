@@ -83,7 +83,6 @@
 ///		setHighResUsed(parser, 31, true);				// MSB 31, LSB 63
 
 
-
 /// PROCESSING A 7-BIT OR 14-BIT CC
 ///
 /// When you receive a 7-bit or 14-bit CC via cc(...) or highResCC(...), you can use certain methods to
