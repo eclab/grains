@@ -68,7 +68,7 @@ An alternative to FORMAT\_7, with three triggers, plus total volume control.  Th
 - **FORMAT\_8** \
 Eight samples and three triggers, plus total volume control.  The last four samples share a trigger, and the three before that share another
 - **FORMAT\_9** \
-Eight samples and three triggers, plus total volume control.  The last four samples share a trigger, and the four before that share another
+Nine samples and three triggers, plus total volume control.  The last four samples share a trigger, and the four before that share another
 - **FORMAT\_10** \
 One sample and one trigger, but the sample produces a chord.
 

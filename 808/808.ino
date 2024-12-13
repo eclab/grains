@@ -169,7 +169,7 @@
 #define FORMAT_7        8               // Seven samples and four triggers: the last four samples share a trigger
 #define FORMAT_7A       9               // An alternative to FORMAT_7, with three triggers.  The last three samples share a trigger, and the next three share another
 #define FORMAT_8        10              // Eight samples and three triggers.  The last four samples share a trigger, and the next three share another
-#define FORMAT_9        11              // Eight samples and three triggers.  The last four samples share a trigger, and the next four share another
+#define FORMAT_9        11              // Nine samples and three triggers.  The last four samples share a trigger, and the next four share another
 #define FORMAT_10       12              // One sample and one trigger, but the sample produces a chord
 
 /// You set the format by changing the following value.  For example, to set to FORMAT_7,
