@@ -42,14 +42,14 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Evolution   |            | Divvy       | Memoir        |       |
 | Oration     |            | Multiple    |               |       |
 | Oration 2   |            | Respite     |               |       |
-|             |            | Iterate     |               |       |
+| Fold        |            | Iterate     |               |       |
 |             |            | Theory      |               |       |
 
-## NEW: Trajectory
+## NEW: Fold
 
-A vector synthesizer similar to VS: but with four fixed waves (Sine, Saw, Square, Noise, with optional silence).  This is much more limited than VS, but the advantage is that these waves can be arranged to have many fewer aliasing issues than the waves in VS.
+A wave folding oscillator.  A sine is pushed through a soft (sine wave type) wave folder, then through a low pass filter.
 
-Status: Working.  Also works great with AE's JOYSTICK.
+Status: Working.
 
 ## 808
 
@@ -340,6 +340,12 @@ Status: Working
 One, Two, or Three digital outputs set up as functions of four, five, or six analog+digital inputs.  You specify the functions in the code (it's set up to make it easy!), including special randomness and logic functions.
 
 Status: Working, but like Pattern, its usefulness may be limited due to noise.
+
+## Trajectory
+
+A vector synthesizer similar to VS: but with four fixed waves (Sine, Saw, Square, Noise, with optional silence).  This is much more limited than VS, but the advantage is that these waves can be arranged to have many fewer aliasing issues than the waves in VS.
+
+Status: Working.  Also works great with AE's JOYSTICK.
 
 ## Voice
 
