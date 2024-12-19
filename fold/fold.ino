@@ -543,7 +543,12 @@ inline float getFrequency(uint8_t pitch, uint8_t tune)
         uint16_t p1 = MEDIAN_OF_THREE(p, pA, pB);
         pB = pA;
         pA = p;
-        pitchCV = (pitchCV * 7 + p1) >> 3;
+        
+// because it's meant more for drones, fold has a stronger leaky integrator here,
+// which is more stable but will cause slow jumps between notes
+
+//        pitchCV = (pitchCV * 7 + p1) >> 3;
+        pitchCV = (pitchCV * 15 + p1) >> 4;
         }
     int16_t finalPitch = pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205 + TRANSPOSE_BITS;
     return FREQUENCY(finalPitch < 0 ? 0 : (finalPitch > 1535 ? 1535 : finalPitch));
