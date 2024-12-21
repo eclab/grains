@@ -57,7 +57,7 @@
 
 
 
-/// This is a table of 8 sine waves over 4096 values.
+/// This is a table of 8 sine waves over 4096 values. Each sine wave is thus 512 long.
 /// The sine waves go -167 ... +167, to match the proper
 /// scaled values for GRAINS.  This allows us to wave fold up to 8 times
 
@@ -501,6 +501,11 @@ void setup()
     startMozzi();
     }
 
+ResonantFilter<LOWPASS,uint16_t> filter;
+uint16_t drive;					// Goes 48...1023, representing the position (x 4) in SIN_4096_168 folding table
+#define FILTER_COUNT (16)		
+uint8_t filterCount = 0;		// How often do we update the filter?  Once every 16 updates, to reduce noise
+
 
 #define MEDIAN_OF_THREE(a,b,c) (((a) <= (b)) ? (((b) <= (c)) ? (b) : (((a) < (c)) ? (c) : (a))) : (((a) <= (c)) ? (a) : (((b) < (c)) ? (c) : (b))))
 uint16_t pitchCV;
@@ -554,21 +559,21 @@ inline float getFrequency(uint8_t pitch, uint8_t tune)
     return FREQUENCY(finalPitch < 0 ? 0 : (finalPitch > 1535 ? 1535 : finalPitch));
     }
 
-ResonantFilter<LOWPASS,uint16_t> filter;
-
-uint16_t drive;
-
-uint8_t filterCount = 0;
-
 void updateControl() 
     {
     float frequency = getFrequency(CV_POT_IN1, CV_AUDIO_IN);
     sine.setFreq(frequency);
 	drive = (drive * 3 + mozziAnalogRead(CV_POT_IN2)) >> 2;
-	drive = ((drive * 61) >> 6) + 48;		// this shifts things to 48...1023, more or less eliminating the initial sine wave growth
+	// If we just let drive go 0...1023, the first bit of drive would be raising the
+	// sine wave from 0 amplitude to maximum amplitude.  Only then would the sine
+	// wave start going above maximum amplitude and thus get folded.  That first bit
+	// is useless to us: at 0, we want the sine wave to just start at maximum amplitude
+	// as a plain old sine wave, and then we start folding it.  So below we map 0...1023 -> 48...1023,
+	// which more or less eliminates the initial sine wave growth stage.
+	drive = ((drive * 61) >> 6) + 48;
     
     // Only do this once in a while
-    if (++filterCount == 16)
+    if (++filterCount == FILTER_COUNT)
     	{
     	filterCount = 0;
     	int16_t filterCutoff = mozziAnalogRead(CV_POT3) << 6;
@@ -587,7 +592,7 @@ int updateAudio()
     // push down to 0...4096
     scaled = scaled >> 4;
     
-    // fold to -167 ... +167
+    // fold to -167 ... +167, then push through filter
     return filter.next(pgm_read_word_near(&SIN_4096_168[scaled]));
     }
 

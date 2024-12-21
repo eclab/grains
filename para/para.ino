@@ -99,7 +99,7 @@
 ///
 /// POT 2           [Unused]
 ///
-/// POT 3           [Unused]
+/// POT 3           Gain
 
 
 PROGMEM const float frequencies[128] =
@@ -653,7 +653,7 @@ void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
 	if (voice == 0)
 		{
 		notes[0] = note;
-		vels[0] = velocity >> 1;
+		vels[0] = velocity >> 1;		// will go 0...64
 		meta1.setFreq(FREQUENCY(note));
 		sine1.setFreq(FREQUENCY(note));
 		}
@@ -828,10 +828,15 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 
 #endif
 
+uint8_t state = 0;
 uint8_t alpha;
+uint8_t gain;
 void updateControl() 
     {
-    alpha = mozziAnalogRead(CV_POT_IN1) >> 2;
+    state++;
+    // gain ranges 0...15
+    if (state & 0) gain = mozziAnalogRead(CV_POT3) >> 6;
+    else alpha = mozziAnalogRead(CV_POT_IN1) >> 2;
         
     uint8_t val = softSerial.available();
 	for(uint8_t i = 0; i < val; i++)
@@ -872,79 +877,51 @@ int updateAudio()
     
     // I'm hoisting these, may be a teeny bit faster in some cases...
 
-#ifdef GATE    
-    if (alpha >= 128)
-    	{
+#ifdef GATE
 		if (on[0])
 			{
-			sum += meta1.next() * vels[0];
+			uint16_t combined = (meta1.next() * alpha) + (sine1.next() * (255 - alpha)) >> 8;
+			sum += combined * (gain == 0 ? 63 : vels[0]);
 			}
 		
 		if (on[1])
 			{
-			sum += meta2.next() * vels[1];
+			uint16_t combined = (meta2.next() * alpha) + (sine2.next() * (255 - alpha)) >> 8;
+			sum += combined * (gain == 0 ? 63 : vels[1]);
 			}
 
 		if (on[2])
 			{
-			sum += meta3.next() * vels[2];
+			uint16_t combined = (meta3.next() * alpha) + (sine3.next() * (255 - alpha)) >> 8;
+			sum += combined * (gain == 0 ? 63 : vels[2]);
 			}
-		}
-	else
-		{
-		if (on[0])
-			{
-			sum += sine1.next() * vels[0];
-			}
-		
-		if (on[1])
-			{
-			sum += sine2.next() * vels[1];
-			}
-
-		if (on[2])
-			{
-			sum += sine3.next() * vels[2];
-			}
-		}
+		// Since vels goes 0...63 this should sum to no more than 
+		// 127 * 63 * 3 = 24003
 #else
-    if (alpha >= 128)
-    	{
 		if (play[0])
 			{
-			sum += meta1.next() * vels[0];
+			uint16_t combined = (meta1.next() * alpha) + (sine1.next() * (255 - alpha)) >> 8;
+			sum += combined * (gain == 0 ? 63 : vels[0]);
 			}
 		
 		if (play[1])
 			{
-			sum += meta2.next() * vels[1];
+			uint16_t combined = (meta2.next() * alpha) + (sine2.next() * (255 - alpha)) >> 8;
+			sum += combined * (gain == 0 ? 63 : vels[1]);
 			}
 
 		if (play[2])
 			{
-			sum += meta3.next() * vels[2];
+			uint16_t combined = (meta3.next() * alpha) + (sine3.next() * (255 - alpha)) >> 8;
+			sum += combined * (gain == 0 ? 63 : vels[2]);
 			}
-		}
-	else
-		{
-		if (play[0])
-			{
-			sum += sine1.next() * vels[0];
-			}
-		
-		if (play[1])
-			{
-			sum += sine2.next() * vels[1];
-			}
-
-		if (play[2])
-			{
-			sum += sine3.next() * vels[2];
-			}
-		}
+		// Since vels goes 0...63 this should sum to no more than 
+		// 127 * 63 * 3 = 24003
 #endif
+	if (gain == 0) return ((sum >> 4) * 15) >> 7;		// this maps 24003  -> 176
+	else return ((sum >> 3) * gain) >> 7;				// this is similar if gain = 7.5, but gain can go up to 15
 
-    return scaleAudioSmall(((sum >> 6) * 15 ) >> 5);
+//    return scaleAudioSmall(((sum >> 6) * 15 ) >> 5);
     }
 
 
