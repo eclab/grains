@@ -50,7 +50,7 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 
 Extends the SEQ16 to include programmable patterns of all kinds, like forward, backward, ping-pong, random patterns, rests, random rests, and so on.  It's like magic.
 
-Status: Working, but doesn't play well with Accent Repeats.  I'll have to see if I can improve that.
+Status: Working, but doesn't play well with Accent Repeats.  I'll have to see if I can improve that.  I might consider doing something similar for TRIQ164 and, if there's really demand for it, SEQ8.
 
 ## 808
 
