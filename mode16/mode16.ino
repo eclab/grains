@@ -86,7 +86,7 @@
 /// RR			If this appears before PLAY, then with 1/2 probability we won't play the note (but still advance).
 /// SKIP		If this appears before PLAY, we skip one step first.  Multiple SKIPs or SSs will skip multiple steps.
 /// SS			If this appears before PLAY, we skip one step first with a 1/2 probability.   Multiple SKIPs or SSs will skip multiple steps.
-/// J1 ... J16	If this appears before PLAY, then we jump to step 1 or 16 and play *that* note instead of the current note.
+/// J1 ... J16	If this appears before PLAY, then we jump to step 1...16 and play *that* note instead of the current note.
 /// JRND		If this appears before PLAY, then we jump to a random step and play *that* note instead of the current note.
 /// JR1 		If this appears before PLAY, then we jump to a random step between 1...8 and play *that* note instead of the current note.
 /// JR9 		If this appears before PLAY, then we jump to a random step between 9...16 and play *that* note instead of the current note.
