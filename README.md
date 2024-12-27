@@ -46,11 +46,11 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 |             |            | Theory      |               |       |
 |             |            | Mode16      |               |       |
 
-## NEW: Mode16
+## NEW: MODE16
 
 Extends the SEQ16 to include programmable patterns of all kinds, like forward, backward, ping-pong, random patterns, rests, random rests, and so on.  It's like magic.
 
-Status: Working.
+Status: Working, but doesn't play well with Accent Repeats.  I'll have to see if I can improve that.
 
 ## 808
 
