@@ -44,10 +44,11 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Oration 2   |            | Respite     |               |       |
 | Fold        |            | Iterate     |               |       |
 |             |            | Theory      |               |       |
+|             |            | Mode16      |               |       |
 
-## NEW: Fold
+## NEW: Mode16
 
-A wave folding oscillator.  A sine is pushed through a soft (sine wave type) wave folder, then through a low pass filter.
+Extends the SEQ16 to include programmable patterns of all kinds, like forward, backward, ping-pong, random patterns, rests, random rests, and so on.  It's like magic.
 
 Status: Working.
 
@@ -164,6 +165,12 @@ Status: Working
 An evolving drone synthesizer using the same additive synthesis technique as Booker.  Requires Mozzi.
 
 Status: Working.  Pretty hissy for same reason as Booker.
+
+## Fold
+
+A wave folding oscillator.  A sine is pushed through a soft (sine wave type) wave folder, then through a low pass filter.
+
+Status: Working.
 
 ## Geiger
 
