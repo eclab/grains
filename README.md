@@ -12,6 +12,7 @@ Other GRAINS firmware repositories:
 - WonkyStuff's [GRAINS projects](https://github.com/wonkystuff/)
 - Reductionist Earth Catalog's [Experimental GRAINS projects](https://github.com/reductionistearthcatalog/AE-GRAINS-MIDI/)
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
+- HAGIWO's various [open source modules](https://note.com/solder_state) including a number that target the Arduino.
 
 There are two **special directories**:
 
