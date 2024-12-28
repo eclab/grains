@@ -1,17 +1,17 @@
 # Mode16
 
 
-Mode16 adds patterns to the SEQ16 sequencer similar to SEQ8's "MODE CV" feature. You can make the sequencer go backwards, go once and end, ping-pong, do random sequences, skip steps, insert rests, and more.
+Mode16 adds patterns to the SEQ16 sequencer similar to SEQ8's "MODE CV" feature. You can make the sequencer go backwards in a loop, run forwards once and then stop, ping-pong, do random sequences, skip steps, insert rests, and more.
 
 SET GRAINS TO GRAINS MODE.
 
 You will need to install the Mozzi Library.  You can do this from the Library Manager in your Arduino IDE.
 
-How does Mode16 perform this magic?  By controlling SEQ16's gate and manually stepping it. Mode16 can make the SEQ16 move to any location, then play its note; or it can make the SEQ16 play a rest.  For example, the make the SEQ16 play location 10, Mode16 will reset SEQ16, then step it 9 times, then step it once to play it.  (Yes coders, this ia O(n^2), not cheap).
+How does Mode16 perform this magic?  By controlling SEQ16's gate and manually stepping it. Mode16 can make the SEQ16 move to any location, then play its note; or it can make the SEQ16 play a rest.  For example, to get the SEQ16 to play the note at location 10, Mode16 will reset SEQ16, then step it 9 times, then step it once to play it.  (Yes coders, this is O(n^2), not cheap).
 
 But during those 9 steps, how does SEQ prevent it from playing?  This is done by filtering the output gate.  You attach the SEQ16's gate out to Mode16, and then Choreogeaphy provides the actual gate.  
 
-Mode16 comes with 12 repeating or one-shot PATTERNS.  You can change them if you are careful. The patterns at present are:
+Mode16 comes with 12 repeating or one-shot PATTERNS, which you set with POT 3.  You can change them if you are careful. The patterns at present are (left to right):
 
 - Play 16 steps, looping
 - Play 16 steps and then end
