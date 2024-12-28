@@ -21,14 +21,16 @@
 ///
 /// - A					[B is ignored]
 /// - A or B			[If either is HIGH, we output HIGH]
+/// - A or ~B			[If A is HIGH or B is NOT HIGH, we output HIGH]
 /// - A and B			[Both must be HIGH to output HIGH]
+/// - A and ~B			[If A is HIGH and B is NOT HIGH, we output HIGH]
 /// - A nequal (xor) B	[If A and B differ we output HIGH]
 
 
 /// PAIRED TWO-INPUT OPTION
 ///
 /// Instead of two inputs, you can configure Tangle to have two PAIRS of inputs, and each
-/// pair is run through a function and sent to one of two OUTPUTS.  There is no invered output.
+/// pair is run through a function and sent to one of two OUTPUTS.  There is no inverted output.
 ///
 /// For example, pair A1 and B1 might be put through "A1 or B1", and sent to output 1,
 /// and pair A2 and B2 likewise are put through "A2 or B2", and sent to output 2.
@@ -39,6 +41,15 @@
 
 
 /// HOW YOU COULD USE TANGLE
+///
+/// 0. As a track mute for TRIQ164.  TRIQ164 has four tracks, but only the first two can be muted by sending
+/// a high signal to input sockets on the module.  But you can mute the third and fourth tracks as follows.
+/// Set Tangle to PAIRED_INPUT configuration.  Take the trigger output of the third track and 
+/// feed it into INPUT A 1 (IN 1).  Take the trigger output of the fourth track and feed it into
+/// INPUT A 2 (IN 3).  Output 1 (Audio Out) is now the revised trigger output for track 3, and
+/// Output 2 (Digital Out) is now the revised trigger output for track 4.  Set the function to 
+/// "A and ~B" (the fifth setting).  Now if you send a high signal to Input B 1 (IN 2) you will 
+/// mute track 3.  And if you send a high signal to Input B 2 (Audio In) you will mute track 4.
 ///
 /// 1. As a buffered mult.  Set the function to just "A", and the input on A gets
 /// routed to buffered outputs 1, 2, and 3.
@@ -104,8 +115,10 @@
 
 #define FUNC_A 0
 #define FUNC_OR 1
-#define FUNC_AND 2
-#define FUNC_XOR 3
+#define FUNC_OR_NOT 2
+#define FUNC_AND 3
+#define FUNC_AND_NOT 4
+#define FUNC_XOR 5
 
 // More maybe later
 #define FUNC_EQUAL 4
@@ -143,15 +156,9 @@ void setup()
 #endif
     }
 
-// Others we could include
-/// - NOT A or B	[Both must be LOW to output HIGH]
-/// - NOT A and B	[If either is LOW, we output HIGH]
-/// - A equal B		[If A and B are the same we output HIGH]
-/// - A and NOT B	[A must be HIGH and B must be LOW to output HIGH]
-
 void loop() 
     {
-	uint8_t function = (analogRead(CV_POT3) >> 8);		// 0...3
+	uint8_t function = (analogRead(CV_POT3) * 6 >> 10);		// 0...5
 
 #ifdef PAIRED_INPUT
 	uint8_t in1 = digitalRead(CV_POT_IN1);
@@ -171,9 +178,17 @@ void loop()
 			out1 = (in1 || in2);
 			out2 = (in3 || in4);
 		break;
+		case FUNC_OR_NOT:
+			out1 = (in1 || (!in2));
+			out2 = (in3 || (!in4));
+		break;
 		case FUNC_AND:
 			out1 = (in1 && in2);
 			out2 = (in3 && in4);
+		break;
+		case FUNC_AND_NOT:
+			out1 = (in1 && (!in2));
+			out2 = (in3 && (!in4));
 		break;
 		case FUNC_XOR:
 			out1 = (in1 != in2);
@@ -197,26 +212,18 @@ void loop()
 		case FUNC_OR:
 			out = (in1 || in2);
 		break;
+		case FUNC_OR_NOT:
+			out = (in1 || (!in2));
+		break;
 		case FUNC_AND:
 			out = (in1 && in2);
+		break;
+		case FUNC_AND_NOT:
+			out = (in1 && (!in2));
 		break;
 		case FUNC_XOR:
 			out = (in1 != in2);
 		break;
-/*
-		case FUNC_EQUAL:
-			out = (in1 == in2);
-		break;
-		case FUNC_NOR:
-			out = !(in1 || in2);
-		break;
-		case FUNC_NAND:
-			out = !(in1 && in2);
-		break;
-		case FUNC_AND_NOT_B:
-			out = (in1 && !in2);
-		break;
-*/
 		}
 		
 	digitalWrite(CV_AUDIO_OUT, out);

@@ -10,10 +10,14 @@ It takes the values of the two inputs, runs them through a function you select v
 
 Given the two inputs A and B, the functions on POT 3 are (left to right):
 
-- A					[B is ignored]
-- A or B			[If either is HIGH, we output HIGH]
-- A and B			[Both must be HIGH to output HIGH]
-- A nequal (xor) B	[If A and B differ we output HIGH]
+Function         | Explanation
+-----------------|-------------------------------------------------
+A                | A is passed through, B is ignored
+A or B           | If either is HIGH, we output HIGH
+A or ~B          | If A is HIGH or B is LOW, we output HIGH
+A and B          | Both A and B must be HIGH to output HIGH
+A and ~B         | If A is HIGH and B is LOW, we output HIGH
+A nequal (xor) B | If A and B differ we output HIGH
 
 
 ## Paired Two-Input Option
@@ -25,6 +29,14 @@ For example, pair A1 and B1 might be put through "A1 or B1", and sent to output 
 
 
 ## How You Could Use Tangle
+
+0. As a track mute for TRIQ164.  TRIQ164 has four tracks, but only the first two can be muted by sending a high signal to input sockets on the module.  But you can mute the third and fourth tracks as follows. 
+
+  1. Set Tangle to the PAIRED_INPUT configuration.  
+  2. Take the trigger output of the third track and feed it into INPUT A 1 (IN 1).  Similarly, take the trigger output of the fourth track and feed it into INPUT A 2 (IN 3).  
+  3. Output 1 (Audio Out) is now the revised trigger output for track 3, and Output 2 (Digital Out) is now the revised trigger output for track 4.  
+  4. Set the function to "A and ~B" (the fifth setting).  
+  5. Now if you send a high signal to INPUT B 1 (IN 2) you will mute track 3.  And if you send a high signal to INPUT B 2 (Audio IN) you will mute track 4.
 
 1. As a buffered mult.  Set the function to just "A", and the input on A gets routed to buffered outputs 1, 2, and 3.
 
