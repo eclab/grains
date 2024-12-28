@@ -36,8 +36,7 @@ Mode16 comes with 12 repeating or one-shot PATTERNS, which you set with POT 3.  
 5. Connect your reset source to Mode16's Reset In (IN 2), set POT 2 to max, and set its switch to IN 2
 6. Connect Mode16's Gate Out (Audio In) to your gate output
 7. Turn POT 3 to select the pattern.
-8. Send Reset to Mode16 (IN 1) to reset SEQ16 rather than directly to the SEQ16.  Similarly, send
-   Clock to Mode16 (IN 2) to clock SEQ16 rather than directly to the SEQ16.
+8. Send Reset to Mode16 (IN 1) to reset SEQ16 rather than directly to the SEQ16.  Similarly, send Clock to Mode16 (IN 2) to clock SEQ16 rather than directly to the SEQ16.
 9. Take the CV from SEQ16 but the Gate from Mode16's Gate Out (Audio In)P.
 
 
@@ -45,7 +44,7 @@ Mode16 comes with 12 repeating or one-shot PATTERNS, which you set with POT 3.  
 
 Mode16 expects a square-wave-ish clock.  During the LOW PART of the square wave, it does all the clocks to forward to the proper step, then on the RISE of the square wave it plays the note. The problem with this approach is that during the low part of the square wave is when the release of your note plays, so if you have anything other than a very short release, you'll hear the other pitches as Mode16 advances to the proper step.  You can adjust things by tweaking the PWM of the square wave you send to Mode16.
 
-Mode16 doesn't work well with Accent Repeats, because they conflict with Mode16's drop in gate, and because SEQ16 determines how fast to play Repeats based on previous pulses (and Mode16 pulses very fast to jump to locations).  You will probably find that the Repeats are not what you expected: I'd set Repeats to 1.
+Mode16 only works partially with Accent Repeats, because they conflict with Mode16's drop in gate, and because SEQ16 determines how fast to play Repeats based on previous pulses (and Mode16 pulses very fast to jump to locations).  Accent Repeats will definitely not work properly after a recent jump (such as going backwards or randomly) or after a recent skip.  They may or may not work properly when going foward normally, and rests don't impact on them.  If you find that Repeats are not what you expected, I'd set Repeats to 1.  I'll try to improve the Accent Repeats situation in the future.
 
 Note that if you set the Pattern Knob to in-between two patterns, it won't work right, constantly getting reset.  So make sure the Pattern Knob is definitely on the pattern you want.
 
