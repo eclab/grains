@@ -44,14 +44,15 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Oration     |            | Multiple    |               |       |
 | Oration 2   |            | Respite     |               |       |
 | Fold        |            | Iterate     |               |       |
-|             |            | Theory      |               |       |
-|             |            | Mode16      |               |       |
+| Ruckus      |            | Theory      |               |       |
+| Crackle     |            | Mode16      |               |       |
 
-## NEW: Mode16
+## NEW: Crackle
 
-Extends the SEQ16 to include programmable patterns of all kinds, like forward, backward, ping-pong, random patterns, rests, random rests, and so on.  It's like magic.
+A generator of random snaps, crackles, and pops, such as you might hear on a record or old radio.  Produces both audio and digital crackles.  See also Ruckus and Geiger.
 
-Status: Working, but doesn't play well with Accent Repeats.  I'll have to see if I can improve that.  I might consider doing something similar for TRIQ164 and, if there's really demand for it, SEQ8.
+Status: Working.
+
 
 ## 808
 
@@ -81,11 +82,11 @@ Status: Working, but GRAINS's severe limits on note output range can hamper thin
 
 A four-track step sequencer with song mode, capable of performing songs of up to 800 trigger patterns, each pattern between 1 and 256 steps long.  You program the patterns in the code, it's set up to be very easy. Each pattern can loop for some N iterations (specified per-pattern), or loop forever.  You can reset, advance to the next pattern, and add swing and randomness in real time.
 
-Status: Working
+Status: Working.
 
 ## Beep
 
-A 9-voice MIDI-controlled sine wave generator with built-in hold, velocity sensitivity, and decay.  Can produce a variety of beeps, bloops, beeps, dings, and pings.
+A 9-voice MIDI-controlled sine wave generator with built-in hold, velocity sensitivity, and decay.  Can produce a variety of beeps, bloops, bleeps, dings, and pings.
 
 Status: Working.  When decays get quiet, they go hissy and buzzy fast thanks to GRAINS's PWM, which can't handle small values well without lots of artifacts.
 
@@ -129,7 +130,7 @@ Status: Working.
 
 A USB Router, Note Distributor, MPE breakout, and MIDI filter.
 
-Status: All current modes are working.  Lots of stuff, like USB MIDI clock, drum triggers, MIDI routing, MPE, note distribution, removing legato from Wonkystuff modules, CC injection from pots, creation of MIDI notes from gate/cv, etc.  There's also instructions for routing MIDI directly from GRAINS into your MB/1 or MASTER I/O via their TRS inputs, if you're daring and willing to accidently fry your MASTER I/O or MB/1.  :-)
+Status: All current modes are working.  Lots of stuff, like USB MIDI clock, drum triggers, MIDI routing, MPE, note distribution, removing legato from Wonkystuff modules, CC injection from pots, creation of MIDI notes from gate/cv, etc.  There's also instructions for routing MIDI directly from GRAINS into your MB/1 or MASTER I/O via their TRS inputs, if you're daring and willing to accidentally fry your MASTER I/O or MB/1.  :-)
 
 ## Divvy
 
@@ -147,19 +148,19 @@ Status: Working.  A bit hissy, but what can you do, it's Mozzi.
 
 An FM sine-based oscillator.  Has algorithms for 2 operators with self-modulation, and for 3 operators in three different configurations.
 
-Status: Working
+Status: Working.
 
 ## DX-M
 
 A MIDI-based version of DX, an FM sine-based oscillator.  Has algorithms for 2 operators with self-modulation, and for 3 operators in three different configurations.
 
-Status: Working
+Status: Working.
 
 ## Elements
 
 A Euclidian trigger sequencer with up to 32 steps and both forward and backward sequences and various other options.
 
-Status: Working
+Status: Working.
 
 ## Evolution
 
@@ -175,9 +176,9 @@ Status: Working.
 
 ## Geiger
 
-A three-output random trigger generator and Bernoulli trigger.  You provide a clock input and the probability that, for each output, the output will generate a trigger for a given clock.  You can make the track outputs independent or exclusive (only and exactly one triggers each clock).
+A three-output random trigger generator and Bernoulli trigger.  You provide a clock input and the probability that, for each output, the output will generate a trigger for a given clock.  You can make the track outputs independent or exclusive (only and exactly one triggers each clock).    See also Crackle and Ruckus.
 
-Status: Working
+Status: Working.
 
 ## Info
 
@@ -195,7 +196,7 @@ Status: Working.
 
 A clone of Mutable Instruments GRIDS.  This is essentially a "TOPOGRAF Light".  It does the same thing but, due to limitations in GRAINS's interface, it has to simplify the parameters.  There are different configurations provided for doing so.  
 
-Status: Working
+Status: Working.
 
 ## LFO
 
@@ -223,6 +224,12 @@ A MIDI-controlled three-voice marimba simulator.  You can control brightness, de
 
 Status: Working.  When decays get quiet, they go hissy and buzzy fast thanks to GRAINS's PWM, which can't handle small values well without lots of artifacts.
 
+## Mode16
+
+Extends the SEQ16 to include programmable patterns of all kinds, like forward, backward, ping-pong, random patterns, rests, random rests, and so on.  It's like magic.
+
+Status: Working, but doesn't play well with Accent Repeats.  I'll have to see if I can improve that.  If there's really demand for it, I might consider doing a similar thing for SEQ8.  I can't do the same tricks for the TRIQ164 because it has individual outs and Grains doesn't have enough sockets: but the TANGLE firmware can give you back the two Mute CVs missing on the TRIQ164.
+
 ## Mono
 
 A MIDI-Controlled monophonic oscillator.  You can choose between Sine and either Saw, Triangle, or Square.  Requires Mozzi.
@@ -245,19 +252,19 @@ Status: Working.  Could use some improvement.
 
 A 1- or 2-in, 4-out multiplexer with a variety of modes.  Meant to allow you to select various outputs with a simple switch or multiplexed input.
 
-Status: Working
+Status: Working.
 
 ## Oration
 
 A new implementation of Talkie which lets you select and speak multiple sentences, or random words within a sentence, from words selected from the entire Talkie vocabulary, not just a small subset.
 
-Status: Working
+Status: Working.
 
 ## Oration 2
 
 A variation of Oration which uses an older version of Talkie, and so can vary pitch and speed independently.  It's also a bit louder: but the sound quality is iffy.  Let me know which one you like better.
 
-Status: Working
+Status: Working.
 
 ## Para
 
@@ -297,13 +304,13 @@ Status: Working, but requires a lookup table to deal with some nonlinearity in t
 
 ## Respite
 
-A fix to make it possible to use 2ENV with fast gate release / raise combinations that often occur with MIDI notes.
+A fix to make it possible to use 2ENV with fast gate release / raise combinations that often occur with MIDI notes.  Supports two simultaneous gate signals.
 
 Status: Working.
 
 ## Ruckus
 
-A filtered and unfiltered white noise generator, plus various forms of Sample and Hold.  Requires Mozzi.
+A filtered and unfiltered white noise generator, plus various forms of Sample and Hold.  Requires Mozzi.  See also Crackle and Geiger.
 
 Status: Working, but I was hoping to do pink noise as well, but am having some hiccups.  Ran into a lot of Mozzi bugs, reported.
 
@@ -311,7 +318,7 @@ Status: Working, but I was hoping to do pink noise as well, but am having some h
 
 An oscilloscope with four switchable analog/digital inputs, an extra digital input, and a little digital function generator.  Uses the Serial Plotter on your laptop's Arduino IDE.
 
-Status: Working
+Status: Working.
 
 ## Sequence
 
@@ -323,25 +330,25 @@ Status: Working.  It's quite fiddly because there are only three knobs, but it's
 
 A random walk generator (free or about a mean), plus sample and hold, plus added fuzz.   Requires Mozzi. 
 
-Status: Working
+Status: Working.
 
 ## Switchblade
 
 A combination fixed-lag smoother (slew), summed attenuverter, and noise-fuzzer.  Requires Mozzi.
 
-Status: Working
+Status: Working.
 
 ## Tangle
 
-A combined digital logic function and buffered mult which can do various things, including trigger merges, inversion, thresholding, gate comparison, and so on.
+A combined digital logic function and buffered mult which can do various things, including trigger merges, inversion, thresholding, gate comparison, and so on.  Tangle can also be used to restore the two missing Mute inputs on TRIQ164.
 
-Status: Working
+Status: Working.
 
 ## Tardy
 
 A short delay for digital signals.  Takes up to 3 inputs and outputs each of them, delayed by a settable amount.  Meant primarily to sync up drum triggers to line up with other things slowed by latency.
 
-Status: Working
+Status: Working.
 
 ## Theory
 
