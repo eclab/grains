@@ -16,7 +16,7 @@ At minimum, the variance sets all crackles to zero volume.  As you turn right, c
 
 ## Note
 
-Crackle is intentionally very slow in responding to pots, in an attempt to cut down a bit on the PWM whine in analog.  It'll take a bit for it to ramp up to your new request.  If you want to speed it up, try setting CONTROL_RATE to 64.
+Crackle is intentionally very slow in responding to pots, in an attempt to cut down a bit on the PWM whine in audio.  It'll take a bit for it to ramp up to your new request.  If you want to speed it up, try setting CONTROL_RATE to 64.
 
 
 

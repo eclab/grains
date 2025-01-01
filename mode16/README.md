@@ -9,7 +9,7 @@ You will need to install the Mozzi Library.  You can do this from the Library Ma
 
 How does Mode16 perform this magic?  By controlling SEQ16's gate and manually stepping it. Mode16 can make the SEQ16 move to any location, then play its note; or it can make the SEQ16 play a rest.  For example, to get the SEQ16 to play the note at location 10, Mode16 will reset SEQ16, then step it 9 times, then step it once to play it.  (Yes coders, this is O(n^2), not cheap).
 
-But during those 9 steps, how does SEQ prevent it from playing?  This is done by filtering the output gate.  You attach the SEQ16's gate out to Mode16, and then Choreogeaphy provides the actual gate.  
+But during those 9 steps, how does MODE16 prevent SEQ16 from playing?  This is done by filtering the output gate.  You attach the SEQ16's gate out to Mode16, and then Choreogeaphy provides the actual gate.  
 
 Mode16 comes with 12 repeating or one-shot PATTERNS, which you set with POT 3.  You can change them if you are careful. The patterns at present are (left to right):
 
