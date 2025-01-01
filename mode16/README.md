@@ -29,6 +29,7 @@ Mode16 comes with 12 repeating or one-shot PATTERNS, which you set with POT 3.  
 
 ## Setting Up
 
+0. Be sure to set Grains to "Grains Mode", not Mozzi.
 1. Connect Mode16's Clock Out (Digital Out or "D") to SEQ16's Clock
 2. Connect Mode16's Reset Out (Audio Out) to SEQ16's Reset
 3. Connect SEQ16's Gate Out to Mode16's Gate In (IN 3)
