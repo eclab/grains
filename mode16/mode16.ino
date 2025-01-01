@@ -44,6 +44,7 @@
 /// 
 /// SETTING UP
 ///
+/// 0. Be sure to set your GRAINS to "GRAINS" mode, not Mozzi
 /// 1. Connect Mode16's Clock Out (Digital Out or "D") to SEQ16's Clock
 /// 2. Connect Mode16's Reset Out (Audio Out) to SEQ16's Reset
 /// 3. Connect SEQ16's Gate Out to Mode16's Gate In (IN 3)
@@ -186,7 +187,7 @@ void setup()
     randomSeed(RANDOM_PIN);                                             // FIXME: We're using randomSeed() and random() when we could be using the faster Mozzi versions
     pinMode(CV_AUDIO_IN, OUTPUT);
     pinMode(CV_AUDIO_OUT, OUTPUT);
-    // Serial.begin(9600);
+    //Serial.begin(9600);
     }
 
 #define NUM_PATTERNS 12
@@ -254,6 +255,7 @@ uint8_t gateForwarding = 0;
 uint8_t oldReset = 0;
 uint8_t reset = 0;
 uint8_t oldClock = 255;
+uint8_t played = false;				// used for double-checks
 #define MAX_CLOCK_TIMER 255			// too long?  ~64ms
 
 
@@ -265,7 +267,7 @@ void setGateForwarding(uint8_t forward)
 		}
     gateForwarding = forward;
     }
-	
+    
 void doReset()
     {
     digitalWrite(CV_AUDIO_OUT, 1);
@@ -328,7 +330,13 @@ void updateStateMachine(uint8_t rising)
 				}
 			case LOOP:
 				{
-				if (!rising)
+				if (!played)							// we reached a loop without a PLAY or REST happening.  That's bad, let's end.
+					{
+					// do nothing, we're done
+					setGateForwarding(0);		// disable forward gate
+					done = 1;
+					}
+				else if (!rising)
 					{
 					setGateForwarding(0);					// disable forward gate
 					patternPos = 0;
@@ -338,6 +346,7 @@ void updateStateMachine(uint8_t rising)
 			break;
 			case PLAY:
 				{
+				played = true;
 				if (rising)
 					{
 					if (restInstead)
@@ -358,6 +367,7 @@ void updateStateMachine(uint8_t rising)
 			break;
 			case REST:
 				{
+				played = true;
 				if (rising)
 					{
 					playRest();
@@ -976,7 +986,7 @@ void updateStateMachine(uint8_t rising)
 #define HIGH 128
 #define LOW  64
 
-uint16_t releaseTime = 0;
+uint16_t releaseTime = 0;						// FIXME: Not doing anything with this right now
 uint16_t patternKnob = 0;
 void loop()
     {
@@ -989,7 +999,8 @@ void loop()
 			{
 			doReset();							// send an output reset
 			patternPos = 0;						// reset pattern position
-			updateStateMachine(false);			// go through the state machine as if we had just fallen
+			played = false;
+			updateStateMachine(0);				// go through the state machine as if we had just fallen
 			}
 		oldReset = 1;
 		}
@@ -1003,9 +1014,11 @@ void loop()
     uint8_t currentPattern = (patternKnob * NUM_PATTERNS) >> 10;
     if (currentPattern != pattern)
 		{
-		doReset();				// send an output reset
-		patternPos = 0;		// reset pattern position
+		doReset();					// send an output reset
+		patternPos = 0;				// reset pattern position
 		pattern = currentPattern;
+		played = false;
+		updateStateMachine(0);		// go through the state machine as if we had just fallen
 		}
 
     // Forward the gate
@@ -1034,11 +1047,11 @@ void loop()
 			}
 		oldClock = 1;
 		uint16_t rc = (c > LOW ? c - LOW : 0); 
-		if (rc > releaseTime) releaseTime = rc;
+		if (rc > releaseTime) releaseTime = rc;					// FIXME: Not doing anything with this right now
 		}
     else if (c < LOW)
 		{
-		releaseTime = 0;
+		releaseTime = 0;										// FIXME: Not doing anything with this right now
 		if (oldClock == 1)
 			{
 			clock = -1;
