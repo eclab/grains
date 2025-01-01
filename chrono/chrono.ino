@@ -139,7 +139,7 @@ void loop()
 
   if (time >= rate + lastTime)		// not super accurate
     	{
-    	lastTime = time;
+    	lastTime = time;						// or should it be rate + lastTime? 
     	digitalWrite(CV_GATE_OUT, 1);
     	triggerCountdown = TRIGGER_COUNTDOWN;
     	}

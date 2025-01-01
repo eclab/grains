@@ -1,6 +1,6 @@
 # Modular MIDI Conventions for Developers
 
-**Document Version 0.8**, October 20, 2024  
+**Document Version 0.9**, December 20, 2024  
 **Modular MIDI Conventions Version 0.5**
 
 - Sean Luke, George Mason University (sean@cs.gmu.edu)
@@ -28,9 +28,9 @@ An accompanying document, **Modular MIDI Conventions for Musicians**, is a more 
 <a name="introduction"/></a>
 ## Introduction
 
-This document describes additions to or restrictions on MIDI intended to help modules inside a modular synthesizer talk to one another over patch cables using MIDI.  It is not meant to replace Gate/CV, only to augment it.
+This document describes additions to or restrictions on MIDI intended to help modules inside a modular synthesizer talk to one another over patch cables using MIDI.  It is not meant to replace Gate/CV, and can work side-by-side with it.
 
-MIDI is primarily designed for large, monolithic devices to control other large, monolithic devices.  It is not designed for a finer-grained control scenario of modules controlling one another, or being all controlled by a DAW or controller, or both.  These conventions attempt to remedy this.
+MIDI was designed for large, monolithic devices to control other large, monolithic devices.  It was not designed for the finer-grained scenario of modules controlling one another, or being all controlled by a DAW or controller.  These conventions try to remedy this.
 
 This document assumes that you are familiar with MIDI, and does not explain MIDI concepts.
 
@@ -40,19 +40,19 @@ This document assumes that you are familiar with MIDI, and does not explain MIDI
 
 Modular MIDI only adds conventions to standard MIDI.  It does not break or significantly deviate from any MIDI standards, and everything below can be implemented as standard non-Sysex MIDI messages.  Here are the major differences:
 
-- **Hardware.**  Modular MIDI runs over a new transport: the cabling between modules in a modular synthesizer.  In AE Modular, it presently runs at 31250 bps over basic TTL serial.  Unlike traditional MIDI, it does not require optoisolation as all the devices share common ground and power.  Hardware MIDI THRU can be achieved through a simple op-amp.
+- **Hardware.**  Modular MIDI runs over a new transport: the cabling between modules in a modular synthesizer.  In AE Modular, it presently runs at 31250 bps over plain TTL serial.  Unlike traditional MIDI, it does not require optoisolation as all the devices share common ground and power.  Hardware MIDI THRU can be achieved with a simple op-amp.
 
-- **CC Parameters.**  Modular MIDI divides the CC space into regions assigned to **IDs**.  Each module listening in on a given channel is given a unique ID, and controls the CC space for that ID.  This is a conflict avoidance mechanism.  It is not a hard-and-fast rule: if a module has complete control over a channel, it can do as it pleases.  Modular MIDI also supports many, but not all, of the common MIDI CC parameters.
+- **CC Parameters.**  Modular MIDI divides the CC space into regions assigned to **IDs**.  Each module listening in on a given channel is given one or more unique IDs, and controls the CC space for its ID.  This is a conflict avoidance mechanism.  It is not a hard-and-fast rule: if a module has complete control over a channel, it can do as it pleases.  Modular MIDI also supports many, but not all, of the standard MIDI CC parameters.
 
 - **NRPN Parameters.**  Modular MIDI by convention also divides the NRPN space into regions assigned to **IDs**.
 
-- **Auxiliary Parameters.**  Modular MIDI reserves CCs 3 and 35 for *Auxiliary Parameters* (a Modular MIDI specific concept). This is nothing more than a poor-man's NRPN, a way to extend the CC space.  There are 128 Auxiliary Parameters. You set the parameter with CC 3, and then you set its value with CC 35.
+- **Auxiliary Parameters.**  Modular MIDI reserves CCs 3 and 35 for what it calls *Auxiliary Parameters*. This is nothing more than a poor-man's NRPN, a way to extend the CC space.  There are 128 Auxiliary Parameters. You set the parameter with CC 3, and then you set its value with CC 35.
 
-- **Modulation CCs and Injection.**  Modular MIDI allows module A to receive MIDI and pass it on to module B, but to also *inject* MIDI messages into the stream sent to B in order to modulate it.  Messages may also be removed from the stream, or replaced.  The most common parameters to inject are eight general CCs called *Modulation CCs*, meant to make it easy for a modulation module to modulate a target module (such as an ADSR modulating a Filter).
+- **Modulation CCs and Injection.**  Modular MIDI allows module A to receive MIDI and pass it on to module B, but to also simultaneously *inject* MIDI messages into the stream sent to B in order for A to modulate B itself.  Messages may also be removed from the stream, or replaced.  The most common parameters to inject are eight general CCs called *Modulation CCs*, meant to make it easy for a modulation module to modulate a target module (such as an ADSR modulating a Filter).
 
 - **Patch Manipulation.**  Standard MIDI has Program Change and Bank Select to load new patches.  Modular MIDI extends this with a few new directives (as Auxiliary Parameters): *Program Save*, *Current Program Save*, and *Current Program Revert*.  Modular MIDI also has a proposed redefinition of the Bank Select MSB as *Module Select*, allowing one to specify *which* module (by ID) should have its patches loaded, saved, reverted, etc.
 
-- **MIDI Polyphonic Expression (MPE) and MIDI Mode 4**  Modular MIDI can be made compatible with MIDI Mode 4 trivially, and largely compatible with MPE with some work.
+- **MIDI Polyphonic Expression (MPE) and MIDI Mode 4**  Modular MIDI can be made compatible with MIDI Mode 4 trivially, and is largely compatible with MPE with some work.
  
 <a name="topology"/></a>
 ## Topology and Data Format
@@ -71,9 +71,9 @@ Within a modular system, all modules should send MIDI at the same speed.  This s
 
 ### How Modules are Connected
 
-We presume that in most cases, a modular setup would have a **distributor module**, which receives external MIDI, breaks it up it per-channel, and outputs messages for each channel via per channel AE modular sockets.  Non-voiced data (like clock) are ideally copied to every channel socket.  Attached to each socket is a chain of one more **receiever modules** meant to respond to messages on that channel.  These receiver modules typically are set up to be OMNI.  A distributor module should also just output *all* its incoming MIDI via a general-purpose **THRU**.
+We presume that in most cases, a modular setup would have a **distributor module**, which receives external MIDI, breaks it up it per-channel, and outputs messages for each channel via per channel AE modular sockets.  Non-voiced data (like clock) is ideally copied to every channel socket.  Attached to each socket is a chain of one more **receiever modules** meant to respond to messages on that channel.  These receiver modules typically are set up to be OMNI.  A distributor module should also output *all* its incoming MIDI via a general-purpose **THRU**.
 
-* Every receiver module should have at least one (and usually only one) **IN** socket from which it receives MIDI data.  It is suggested that the distributor also have an **IN** socket, to receive data instead of its external MIDI socket, in a switchable manner.
+* Every receiver module should have at least one (and usually only one) **IN** socket from which it receives MIDI data.  It is recommended that the distributor also have an **IN** socket, to receive data instead of its external MIDI socket, in a switchable manner.
 
 * Generally a receiver should have at least one **THRU** socket where the data from the **IN** socket is passed through unmolested.  This should be done by simply buffering the IN signal via an op-amp and re-broadcasting it out THRU. Buffering would have essentially no latency.  THRU allows multiple modules to easily be chained together to listen to the same channel.
 
@@ -85,55 +85,57 @@ We presume that in most cases, a modular setup would have a **distributor module
 
 * It would be unusual -- and almost always an error -- to have a cycle in the MIDI connections.  That is, you are unlikely to see a situation where module A is connected to B, which is connected to C, which is then connected to A again.
 
-* It is certainly possible for a MIDI receiver to emit MIDI directly.  For example, if you had a Sequencer Module, it might emit its own stream of MIDI to control downstream modules; and it could do this while being itself controlled by MIDI as well!
+* It is certainly possible for a MIDI receiver to emit MIDI directly.  For example, if you had a Sequencer Module, it might emit its own stream of MIDI to control downstream modules; and it could do this while being itself controlled by MIDI as well.
  
-* It is possible for a device to perform **MIDI Merge** -- to take MIDI data from multiple sources, via multiple **IN** sockets, and merge the data to send out one (or more) **Software THRU**.  This is not forbidden but is a very rare need, and it potentially causes MIDI cycles, which are bad, if the musician is not careful.
+* It is possible for a device to perform **MIDI Merge** -- to take MIDI data from multiple sources, via multiple **IN** sockets, and merge the data to send out one (or more) **Software THRU**.  This is not forbidden but is a rare need, and it can cause MIDI cycles, which are bad, if the musician is not careful.
 
-* These conventions do not consider the implications of a module sending MIDI data *out of the modular system*: you're on your own there.  Note that if your modular MIDI format sends data at a higher speed than 31250, then you will have to deal with slowing, and possibly buffering, the data to send it out.
+* These conventions do not consider the implications of a module sending MIDI data *out of the modular system*: you're on your own there.  Note that if an internal modular MIDI format sends data at a higher speed than 31250, then you will have to deal with slowing, and possibly buffering, the data to send it out.
 
-So in short: a distributor module receives MIDI data from your controller or DAW or groovebox, and distributes it to chains of MIDI receivers.  Many receivers are meant to respond to only one channel (though they are set to OMNI).  Some polyphonic receivers may be designed to respond to multiple channels.  Certain MIDI receivers may themselves **inject** MIDI into the stream they have received, sending the mixture of the original MIDI and the injected messages out a Software Thru to downstream receivers.  Other modules could well emit their own stream of MIDI to receivers. 
+In short: a distributor module receives MIDI data from your controller or DAW or groovebox, and distributes it to chains of MIDI receivers.  Many receivers are meant to respond to only one channel (though they are set to OMNI).  Some polyphonic receivers may be designed to respond to multiple channels.  Certain MIDI receivers may themselves **inject** MIDI into the stream they have received, sending the mixture of the original MIDI and the injected messages out a Software Thru to downstream receivers.  Other modules could well emit their own stream of MIDI to receivers. 
 
 ### MIDI Data Streams and Voices
 
-In most cases, each channel represents a single *voice*, that is, a single note for a monophonic synthesizer.  Certain channels might play multiple notes -- for example a drum module might play several drum, each a different note on the same channel.
+In most cases, each channel represents a single *voice*, that is, a single note for a monophonic synthesizer.  In some cases multiple notes may play on the same channel -- for example a drum module might play several drums, each a different note on the same channel.
 
 This structure allows for MPE, for polyphony, for MIDI Mode 4, and for **multitimbral synthesizers**.
 
 Streams of MIDI data are mostly of two kinds:
 
-- Most data streams consists of voiced messages from only a single channel, plus unvoiced messages.  A stream of this kind is meant to control a **voice chain**, which is a group of modules that all listen to that stream, and work together to form a single *voice*.  For example, a MIDI oscillator, MIDI envelope, and MIDI filter might all listen to this stream to play a single note, that is, they act like a **monophonic synthesizer.**  This is likely the most common situation.  Indeed it's likely common for a voice chain to just consist of a *single* MIDI module, such as the wonkystuff mco/1, working with various non-MIDI modules (filters, envelopes, VCAs).  Since all voiced messages in these data streams are of the same channel, it is reasonable for these modules to simply respond to OMNI.
+- Most data streams consists of voiced messages from only a single channel, plus unvoiced messages.  A stream of this kind is meant to control a **voice chain**, which is a group of modules that all listen to that stream, and work together to form a single *voice*.  For example, a MIDI oscillator, MIDI envelope, and MIDI filter might all listen to this stream to play a single note, that is, they act like a **monophonic synthesizer.**  Since all voiced messages in these data streams are of the same channel, it is reasonable for these modules to simply respond to OMNI.  It's likely common for a voice chain to just consist of a *single* MIDI module, such as the wonkystuff mco/1, working with various non-MIDI modules (filters, envelopes, VCAs).
 
-  Some voice chains are intended to handle multiple notes, not a single one.  The most common scenario is drum synthesizers or drum sample players, where different notes indicate different drums, possibly playing at the same time though on the same channel.
+  Some voice chains are intended to handle multiple notes, not a single one.  The most common scenario is drum synthesizers or drum sample players, where different notes indicate different drums, possibly playing at the same time but on the same channel.
   	
-- Some data streams consists of all messages, and are not filtered by channel.  A stream of this kind typically goes to a **polyphonic module**, which has been set up to listen to one or more channels and play several voices as in response to notes on those channels.  Polyphonic modules can do what they like with this data: they could respond polyphonically to multiple notes on the same channel; or to one note per channel; or whatever they liked.
+- Some data streams consists of all messages, and are not filtered by channel.  A stream of this kind typically goes to a **polyphonic module**, which has been set up to listen to one or more channels and to play several voices as in response to notes on those channels.  Polyphonic modules can do what they like with this data: they could respond polyphonically to multiple notes on the same channel, or to one note per channed.
 
-  It is also reasonable for a polyphonic module to have multiple **IN** sockets, each responding to MIDI data on a single channel, but different channels per socket.  This is essentially like having multiple single voice modules in one package.
+  It is also reasonable for a polyphonic module to have multiple **IN** sockets, each responding to MIDI data on a single (different) channel.  This is essentially like having multiple single voice modules in one package.
   
-  One very common scenario would be polyphonic notes arriving on a single channel.  It's reasonable to create a MIDI Distributor module which breaks those notes up and sends them to different outputs for separate downstream voice chains.
-
 ### Distributor MIDI Mode Suggestions
 
 MIDI has four "Channel Modes" set by CCs 124 through 127, and which consist of the combinations of OMNI ON vs. OFF and MONO vs. POLY. 
 
-- MIDI Modes 1 and 2 both imply that the distributor is listening in OMNI mode, and this acts against the basic purpose of Modular MIDI.  We recommend disregarding them here, or routing everything to channel 1.
+- MIDI Modes 1 and 2 both imply that the distributor is listening in OMNI mode, and this acts against the basic purpose of Modular MIDI.  We recommend ignoring MIDI Modes 1 and 2, or routing everything to channel 1 when Modes 1 and 2 are requested.
 
 - In MIDI Mode 3 (OMNI OFF, POLY ON) each channel receives its own independent MIDI voice messages, and can potentially play polyphonically.  We recommend that this be the default mode.  For a Distributor, this implies that incoming MIDI voice messages are simply routed out the MIDI THRU socket for the appropriate channel.
+
+  It'd be very common scenario for polyphonic notes to arrive on a single channel.  One option would be for the MIDI Distributor to break those notes up and send them to different outputs for separate downstream voice chains.
 
 - MIDI Mode 4 can also be supported as described below.
 
 #### MIDI Mode 4
 
-MIDI Mode 4 (OMNI OFF, MONO ON) is a special and relatively obscure mode which, as it so happens, is also a very good match for external input to Modular MIDI.  MIDI Mode 4 largely exists on guitar controllers and similar controllers.
+MIDI Mode 4 (OMNI OFF, MONO ON) is a special and relatively obscure mode which, as it so happens, is also a very good match for external input to Modular MIDI.  MIDI Mode 4 largely exists on guitar controllers and the like.
  
-In MIDI Mode 4, you can instruct an instrument to listen to a range of channels N ... N + M, and treat each one as a separate voice.  If a note arrives on a channel in the range, it immediately replaces any note currently on that channel: thus at most one note can be playing on a given channel at a time.  Furthermore there is a "Global Channel" (channel N - 1, or channel 16 if N = 1), and any data which arrives on that channel is immediately rebroadcasted in parallel to all channels N ... N + M.  If this sounds suspiciously like MPE, it should!
+In MIDI Mode 4, you can instruct an instrument to listen to a range of channels N ... N + M, and treat each one as a separate voice.  If a note arrives on a channel in the range, it immediately replaces any note currently on that channel: thus at most one note can be playing on a given channel at a time.  Furthermore there is a "Global Channel" (channel N - 1, or channel 16 if N = 1), and any data which arrives on that channel is immediately rebroadcasted in parallel to all channels N ... N + M.  
 
-Unlike MPE, which has elaborate rules, MIDI Mode 4 is very simple: the above is about all there is to it.  MIDI Mode 4 is set up for the range N ... N + M by sending two specific CC messages to channel N.  A distributor module can respond to MIDI Mode 4 straightforwardly:
+If this sounds suspiciously like MPE, it should!  But unlike MPE, which has elaborate rules, MIDI Mode 4 is very simple: the above is about all there is to it.  MIDI Mode 4 is set up for the range N ... N + M by sending two specific CC messages to channel N.  
 
-- When the appropriate setup request CCs arrive, the distributor assigns channel N-1 to be a "Global Channel" which is automatically rerouted to channels N ... N+M.  Otherwise, channels N ... N+M are unchanged!
+A distributor module can respond to MIDI Mode 4 straightforwardly:
+
+- When the appropriate setup request CCs arrive, the distributor assigns channel N-1 to be the "Global Channel" which is automatically rerouted to channels N ... N+M.  Otherwise, channels N ... N+M are unchanged.
 
 - There can be multiple ranges, and they can accidentally overlap.  To disambiguate, we suggest: if a request arrives to set up N ... N + M, and in this range there was already a "Global Channel" X, its special Global Channel status is revoked.
 
-- CC messages 124 ... 127 ought not be passed through to the per-THRU channel sockets.  However as they also imply an ALL NOTES OFF, then perhaps an ALL NOTES OFF could be passed through instead.
+- CC messages 124 ... 127 ought not be passed through to the per-THRU channel sockets.  However as they also imply an ALL NOTES OFF, then perhaps an ALL NOTES OFF could be passed on instead.
 
 - The distributor might keep track, for non-Global channels declared as MIDI Mode 4, of which notes are outstanding.  When a new note arrives, the distributor could send a NOTE OFF to the appropriate channel THRU to guarantee that the old note has been removed.
 
@@ -143,7 +145,7 @@ The channel-per-voice approach described can be made compatible with MIDI Polyph
 
 MPE is meant for the situation where each note (each voice) is usually sent on a separate channel.  This is mostly compatible with the distributor modules as described so far.  However there are a few considerations:
 
-- The use of MPE on its two "Zones" should not preclude the use of non-MPE functionality of the remaining channels.
+- The use of MPE on its two "Zones" should not preclude the use of non-MPE functionality on the remaining channels.
 
 - Each MPE Zone has a "Master Channel" for voiced messages intended for every channel (every voice) in the Zone.  MPE calls these "Zone Messages".  Care must be taken as to how to merge Zone messages with per-channel messages.  For example, Pitch Bend at the Zone level might be added to pitch bend at the channel level; or one might supercede the other.  In many cases, messages on the Master Channel should simply be injected into each of the individual channels: for example the Sustain Pedal message, which might possibly only be found on the Master Channel.  It is also permitted, though discouraged, for note messages to be sent to a Master Channel.  A distributor would have to determine how to play these notes, such as redistributing them to existing zone channels.
 	
@@ -151,7 +153,7 @@ MPE is meant for the situation where each note (each voice) is usually sent on a
 
 #### Reconciling MPE and Mode 4
 
-The MPE documentation states that "If the Channel ranges all match, then the MIDI Mode 4 device will behave identically whether or not it supports MPE."  This is not quite true.  Both Pitch Bend and Channel Pressure can be sent as Zone messages or as individual channel messages, and the MPE documentation says "If an MPE synthesizer receives Pitch Bend (for example) on both a Master and a Member Channel, it must combine the data meaningfully. The same is true for Channel Pressure.".  But Mode 4 is explicit: there is no combination, but rather, they just replace one another.  We suggest if a range is declared to be both an MPE Zone and Mode 4, then Mode 4's behavior takes precedence with respect to Pitch Bend and Channel Aftertouch.
+The MPE documentation states that "If the Channel ranges all match, then the MIDI Mode 4 device will behave identically whether or not it supports MPE."  This is not quite true.  Both Pitch Bend and Channel Pressure can be sent as Zone messages or as individual channel messages, and the MPE documentation says "If an MPE synthesizer receives Pitch Bend (for example) on both a Master and a Member Channel, it must combine the data meaningfully. The same is true for Channel Pressure".  But Mode 4 is explicit: there is no combination, but rather, they just replace one another.  We suggest if a range is declared to be both an MPE Zone and Mode 4, then Mode 4's behavior takes precedence with respect to Pitch Bend and Channel Aftertouch.
 
 <a name="namespaces"/></a>
 ## Namespaces, IDs, and CC Messages
@@ -198,12 +200,14 @@ A module which does not employ CCs or NRPN at all does not need to use IDs at al
 MIDI defines 128 CC parameters.  These fall into three levels:
 
 - Some parameters have fixed functions, or ones so broadly established and accepted that we should not change them (and we don't).
-- Some parameters have established functions but these functions are not used much or have been lost to time; but they appear in the list of CC parameters in DAWs: we change some of these for our purposes but try to align ID regions with them to some degree for the convenience of the musician. 
+
+- Some parameters have established functions but these functions are not used much or have been lost to time; but they appear in the list of CC parameters in DAWs: we change some of these for our purposes but try to intelligently align ID regions with them for the convenience of the musician. 
+
 - Many parameters are unassigned.  We assign these ourselves below, or we leave them "open".
 
-The first 64 CC parameters traditionally can be used in two different ways.  First, the CCs can just be used as plain (7-bit) parameters.  Second, a CC from 0...31 can be paired with the equivalent CC from 32...63 to form a **14-bit MSB/LSB CC pair** which allows one to set parameter values with high-resolution 14 bits rather than low-resolution 7 bits.  The second 64 CC parameters can only be used as plain (7-bit) parameters.  Note that (unfortunately) relatively few controller devices and DAWS support 14-bit CCs. 
+The first 64 CC parameters traditionally can be used in two different ways.  First, the CCs can just be used as plain (7-bit) parameters.  Second, a CC from 0...31 can be paired with the equivalent CC from 32...63 to form a **14-bit MSB/LSB CC pair** which allows one to set parameter values with high-resolution 14 bits rather than low-resolution 7 bits.  The second 64 CC parameters can only be used as plain (7-bit) parameters.  Unfortunately relatively few controller devices and DAWs support 14-bit CCs. 
 
-We have partitioned much of the unallocated CC space into eight regions of 9 CC parameters each.  Each region corresponds to an ID.  (1 through 8).  The 9 CC parameters belonging to an ID are known as parameters "a" through "i".  Obviously different IDs will have different CCs allocated to their "a" through "i" parameters.  A module of a given ID may assume that it is the *only* module in a voice chain which responds to its 9 allocated CC parameters (or that any other module responding to them does not conflict with it).
+We have partitioned much of the unallocated CC space into eight regions of 9 CC parameters each.  Each region corresponds to an ID (1 through 8).  The 9 CC parameters belonging to an ID are known as parameters "a" through "i".  Different IDs will have different CCs allocated to their "a" through "i" parameters.  A module of a given ID may assume that it is the *only* module in a voice chain which responds to its 9 allocated CC parameters (or that any other module responding to them does not conflict with it).
 
 If the module wishes it, parameters "a" and "i" may be joined to form a single 14-bit CC parameter called "a".  Similarly, parameters "b" and "h" may be joined to form the 14-bit CC parameter called "b".
 
@@ -347,15 +351,34 @@ CC    | Function                | Related Traditional Name
 
 - **Modulation c ... g**. These are **Modulation CCs**, discussed later.
 
+#### ID CC Summary
+
+The following table shows the CC parameters associated with the parameters "a" through "i" for each ID 1 through 8.
+
+ID | Parameter a | b   | c   | d   | e   | f   | g   | h   |  i  |
+---|-------------|-----|-----|-----|-----|-----|-----|-----|-----|
+1  |           8 |   9 |  65 |  66 |  67 |  69 | 112 |  41 |  40 |
+2  |          14 |  15 |  70 |  71 |  72 |  73 |  75 |  47 |  46 |
+3  |          16 |  17 |  76 |  77 |  78 |  79 |  80 |  49 |  48 |
+4  |          18 |  19 |  81 |  82 |  83 |  84 |  85 |  51 |  50 |
+5  |          20 |  21 |  86 |  87 |  88 |  89 |  90 |  53 |  52 |
+6  |          12 |  13 |  91 |  92 |  93 |  94 |  95 |  45 |  44 |
+7  |          22 |  23 | 102 | 103 | 104 | 105 | 106 |  55 |  54 |
+8  |          24 |  25 | 107 | 108 | 109 | 110 | 111 |  57 |  56 |
+
+If a module needs a 14-bit CC, it may sacrifice parameter "i", and merge "i" with "a" to form the 14-bit CC (now called "a").
+
+If a module needs a second 14-bit CC, it may additionally sacrifice parameter "h", and merge "h" with "b" to form the 14-bit CC (now called "b").
+
 ### Auxiliary Parameters, RPN, and NRPN
 
-We have two ways to provide additional parameters beyond CCs: RPN/NRPN, and so-called Auxiliary Parameters.  RPN/NRPN are standard MIDI.  Auxiliary Parameters are not.
+We offer two ways to provide additional parameters beyond CCs: RPN/NRPN, and so-called Auxiliary Parameters.  RPN/NRPN are standard MIDI.  Auxiliary Parameters are not.
 
 We begin with Auxiliary Parameters.  These are sent with CCs 3 (the MSB) and 35 (the LSB). Both the MSB and LSB must be sent, and the MSB must be sent first.  The MSB holds the function or parameter in question, and the LSB holds its value.  They are described in the table below:
 
 Auxiliary MSB  | Function                      
 ---------------|-------------------------------
-0              | Program Save           
+0              | Program Save (LSB = Program 0...127)          
 1              | Current Program Save (LSB = 0), Current Program Revert (LSB = 1), Reserved (LSB > 1)
 2-14           | Reserved
 15             | Reset ID (LSB = 0), Change ID (LSB = 1...15), Reserved (LSB > 15)
@@ -371,6 +394,8 @@ Auxiliary MSB  | Function
 
 - **Program Save, Current Program Save, Current Program Revert**.  These functions save and revert the current program (patch) of the modules.  See the section on Program Change and Program Save below for more information.
 
+- **Reset and Change ID**.  It may be convenient to program a module's ID over MIDI, but we cannot require that the module respond to sysex.  Instead, a module may respond to *Reset ID* to reset its ID to its default state, and to *Change ID* to change the ID to a new ID.  Only one module should be listening when this message is sent.  If a module responds to multiple IDs, it should change its first ID in response to this message.
+ 
 - **Parameters for IDs** These provide the first 16 parameters for IDs 9 through 15, which do not have parmeter space allocated to them in CC.  They are the parameters "a" through "p".  This region is largely intended as an optional spillover for additional IDs, and is not expected to be used very much.
 
 - **Reserved** These parameters are reserved.  Do not use or reassign them.

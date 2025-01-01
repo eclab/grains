@@ -48,7 +48,7 @@
 #define CV_POT_IN2    A1  
 #define CV_POT3       A0  // Delay Amount
 #define CV_IN3        A3  // Input 2
-#define CV_AUDIO_IN   A4  // Output 3
+#define CV_AUDIO_IN   A4  // Output 2
 #define CV_AUDIO_OUT  11  // Output 1
 #define CV_GATE_OUT   8   // Input 1
 #define RANDOM_PIN    A5

@@ -2,7 +2,7 @@
 
 ### A Tutorial.
 
-**Document Version 0.7**, September 25, 2024  
+**Document Version 0.9**, December 20, 2024  
 **Modular MIDI Conventions Version 0.5**
 
 Sean Luke, George Mason University (sean@cs.gmu.edu)
@@ -28,7 +28,7 @@ This **tutorial** is set up in **stages**.  You'd only need to read up to the le
 [Stage 3. Sending Parameters](#stage3) Dealing with the mess that is MIDI CC.  Also using RPN and NRPN.  And Auxiliary Parameters.  
 [Stage 4. Modules that Control other Modules](#stage4)  Sequencers and such.  
 [Stage 5. Polyphonic Modules](#stage5)  Options for sophisticated modules.  
-[Stage 6. Saving and Loading Patches](#stage6)  Uploading and downloading.  
+[Stage 6. Saving and Loading Patches, and Changing IDs](#stage6)  Uploading and downloading, utility stuff.
 
 [Tables Appendix](#tables).  All the nitty-gritty at the end.  
 
@@ -342,9 +342,9 @@ There are four major ways that a polyphonic module can work with Modular MIDI.
 - It might take over a whole MPE Zone (multiple channels) and respond to all the notes played polyphonically on that Zone.  You could connect it with multiple cables, but it'd be more convenient to connect a single cable to the Distribution Module's MIDI THRU and manually set up which channels are in the Zone.  And again, it can now do whatever it likes with the channels on that Zone.
 
 <a name="stage6"/></a>
-## Stage 6.  Saving and Loading Patches 
+## Stage 6.  Saving and Loading Patches, and Changing IDs
 
-Your module might support loading and saving patches.
+Your module might support loading and saving patches, or updating its ID.
 
 Loading a patch is done in the usual MIDI way: via two Bank Select CC messages in order (CC 0 and CC 32), followed by a Program Change command.  The Bank Select CCs select your bank (the bank number is [CC0 value] x 128 + [CC 32 value]), and the Program Change selects which patch in the bank (0..127).
 
@@ -352,9 +352,14 @@ Modular MIDI also supports **Program Save**.  This is a special Auxiliary Parame
 
 Modular MIDI further supports **Current Program Save**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 0.  It instructs the module to save its current parameters to the patch slot it is presently using (or last saved to or loaded from).  
 
-Finally, Modular MIDI supports **Current Program Revert**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 1.  It instructs the module to reload its current parameters from the patch slot it is presently using (or last saved to or loaded from).  
+Modular MIDI supports **Current Program Revert**.  This is an Auxiliary Parameter, CC 3 = 1, and CC 35 = 1.  It instructs the module to reload its current parameters from the patch slot it is presently using (or last saved to or loaded from).  
 
-It's entirely up to your module as to whether it supports one or more of these commands.  See the **[Saving and Loading Table](#savingandloadingtable)** for information on these three commands.
+A module can respond to a request to **Reset its ID** back to its default value.  This is an Auxiliary Parameter, CC 3 = 16, and CC 35 = 0. 
+
+A module respond to a request to **Change its ID**.  This is an Auxiliary Parameter, CC 3 = 16, and CC 35 = the ID number in question. 
+
+It's entirely up to your module as to whether it supports one or more of these commands.  See the **[Auxiliary Functions Table](#auxiliaryfunctionstable)** for information on these commands.
+
 
 
 <a name="tables"/></a>
@@ -510,8 +515,8 @@ NRPN Region  | Function
 3840-4095    | 256 Parameters for ID 15
 
 
-<a name="savingandloadingtable"/></a>
-### Saving and Loading Table
+<a name="auxiliaryfunctionstable"/></a>
+### Auxiliary Functions Table
 
 Certain Auxiliary Parameters do special tasks if your module supports it. Send CC 3 first, then CC 35. You may wish to set the Bank (using CC 0 and CC 32 as usual) prior to Program Save.
 
@@ -520,8 +525,7 @@ CC 3 Value     | CC 35 Value    | Auxiliary Parameter
 0              | Program Number | Program Save       
 1              | 0              | Current Program Save
 1              | 1              | Current Program Revert
-
-
-
+15             | 0              | Reset ID to Default Value
+15             | New ID Value   | Change ID to New Value
 
 
