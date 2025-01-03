@@ -23,6 +23,10 @@ You specify the five waveform files by filename in the code, as well as the numb
 
 You could also use the waveform files in the VS repository.
 
+## The Filter
+
+The filter is available for 1, 2, or 3 waves.  5 waves plus the filter is too much computationally.
+
 ## Adjusting Tuning and Tracking
 
 Grains's Inputs track 1.3V/octave, not 1V/octave: we'll need to scale them to track properly.  To do this, you can adjust the Pitch CV Scaling on Pot 1.  This GRAINS program is set up to play the C three octaves below Middle C when it receives 0V.  You should be able to use Pot 1 to scale the pitch such that high Cs play in tune as well.  Once you have things tracking well, you can then use the Pitch Tune (Audio In) to tune 0V to some other note.  Note that as GRAINS resistors warm up, the scaling will change and you will need to adjust the tracking again, at least until they are fully warmed up.

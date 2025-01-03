@@ -43,8 +43,11 @@
 /// that is, AKWF_1, AKWF_2, and AKWF_3.  The others will not be used (but you still have to give them).
 /// You specify the number here:
 
-#define NUM_WAVES 5
+#define NUM_WAVES 3
 
+/// ABOUT THE FILTER
+/// 
+/// The filter is available for 1, 2, or 3 waves.  5 waves plus the filter is too much computationally.
 
 /// ADJUSTING TUNING AND TRACKING
 ///
@@ -181,7 +184,7 @@ PROGMEM const float frequencies[1024+512] = {
     };
 
 #define FREQUENCY(pitch) pgm_read_float_near(&frequencies[pitch])
-#define CONTROL_RATE 100
+#define CONTROL_RATE 128					// this used to be 100 but Mozzi 2.0.1 forbids it
 
 #include <MozziGuts.h>
 #include <Oscil.h>
@@ -288,6 +291,7 @@ void setup()
     {
     startMozzi();
     initializeFrequency(CV_POT_IN1, CV_AUDIO_IN);
+	Serial.begin(115200);
     }
 
 
@@ -324,10 +328,23 @@ void updateControl()
     alpha = pos >> 2;                                  // 0...255
 #elif (NUM_WAVES == 3)
     sampleNum = pos >> 9;                              // 0...1
-    alpha = (pos - (sampleNum ? 512 : 0));     // 0...255
+    if (sampleNum == 0)
+    	{
+    	alpha = pos >> 1;								// 0 .. 255 for 0...511
+    	}
+    else
+    	{
+    	alpha = (pos - 512) >> 1;						// 0 .. 255 for 512 ... 1023
+    	}
+    Serial.print("a:");
+    Serial.print(sampleNum);
+    Serial.print(",");
+    Serial.print("b:");
+    Serial.println(alpha);
+    Serial.println(pos);
 #else
     sampleNum = pos >> 8;                              // 0...3
-    alpha = (pos - (sampleNum << 8));                  // 0...255
+    alpha = pos - (sampleNum * 256);
 #endif
 
     uint16_t filt = mozziAnalogRead(CV_POT3);
@@ -335,12 +352,20 @@ void updateControl()
     filter.setCutoffFreqAndResonance(filt >> 2, 0);
     }
     
+/*
 // Scale from -32768...+32767 to -240 ... +240
 inline int16_t scaleAudio(int16_t val)
   {
   if (val == 0) return 0;
   return ((val >> 4) * 15) >> 7;
   }
+*/
+
+/** Maps -32768 ... +32767 to -168 ... +167 */ 
+inline int16_t scaleAudio(int16_t val)
+	{
+	return ((val >> 5) * 21) >> 7;
+	}
 
 int updateAudio()    
     {
@@ -363,7 +388,7 @@ int updateAudio()
 #elif (NUM_WAVES == 3)
     return  scaleAudio(filter.next((samples[sampleNum] * (255 - alpha) + samples[sampleNum + 1] * alpha) >> 9) << 9);
 #else
-    return scaleAudio(filter.next((samples[sampleNum] * (int16_t)(255 - alpha) + samples[sampleNum + 1] * (int16_t)alpha) >> 9) << 9);
+    return scaleAudio(/*filter.next*/((samples[sampleNum] * (255 - alpha) + samples[sampleNum + 1] * alpha) >> 9) << 9);
 #endif
     }
 

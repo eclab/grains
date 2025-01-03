@@ -156,7 +156,7 @@ PROGMEM const float frequencies[1024+512] = {
 
 
 #define FREQUENCY(pitch) pgm_read_float_near(&frequencies[pitch])
-#define CONTROL_RATE 80                        // More than this and we're gonna get clicks probably
+#define CONTROL_RATE 64 		// this used to be 80 but Mozzi 2.0.1 forbids it.  However Booker runs at 128...
 
 #include <MozziGuts.h>
 #include <Oscil.h>

@@ -206,7 +206,7 @@ PROGMEM const float frequencies[1024+512] = {
 
 
 #define FREQUENCY(pitch) pgm_read_float_near(&frequencies[pitch])
-#define CONTROL_RATE 200
+#define CONTROL_RATE 256		// this used to be 200 but Mozzi 2.0.1 forbids it
 
 #include <MozziGuts.h>
 #include <Oscil.h>

@@ -80,6 +80,30 @@
 // That takes up 89% of memory.  If you want more samples, they have to be SHORT.
 
 
+#define SAMPLE_1        "d110/AcouPiano1.h"             
+#define SAMPLE_2        "blank2.h"
+#define SAMPLE_3        "blank3.h"             
+#define SAMPLE_4        "blank5.h"
+#define SAMPLE_5        "blank4.h"
+#define SAMPLE_6        "blank6.h"
+#define SAMPLE_7        "blank7.h"          
+#define SAMPLE_8        "blank8.h"
+#define SAMPLE_9        "blank9.h"
+
+
+/*
+#define SAMPLE_1        "tr808/CL.h"             
+#define SAMPLE_2        "linn/congal.h"
+#define SAMPLE_3        "linn/conga.h"             
+#define SAMPLE_4        "linn/congah.h"
+#define SAMPLE_5        "linn/congahh.h"
+#define SAMPLE_6        "blank6.h"
+#define SAMPLE_7        "blank7.h"          
+#define SAMPLE_8        "blank8.h"
+#define SAMPLE_9        "blank9.h"
+*/
+
+/*
 #define SAMPLE_1        "tr808/BD5000.h"             
 #define SAMPLE_2        "tr808/CP.h"
 #define SAMPLE_3        "tr808/RS.h"             
@@ -89,6 +113,7 @@
 #define SAMPLE_7        "tr808/HC00.h"          
 #define SAMPLE_8        "tr808/CB.h"
 #define SAMPLE_9        "tr808/MA.h"
+*/
 
 /*
              #define SAMPLE_1        "blank1.h"
@@ -175,7 +200,8 @@
 /// You set the format by changing the following value.  For example, to set to FORMAT_7,
 /// you would change below to   #define FORMAT FORMAT_7
 
-#define FORMAT FORMAT_0
+//#define FORMAT FORMAT_0
+#define FORMAT FORMAT_5
 
 
 /// The CONTROL_RATE value below indicates how often per second Mozzi checks for incoming
@@ -192,13 +218,13 @@
 ///    keep the audio going.
 ///
 /// A value of 256 seems to be pretty good except for formats 5A and 7, which can't handle that
-/// speed.  I keep them down to 200.  But you might drop down into the sloppy range (64 to 128)
+/// speed.  I keep them down to 128.  But you might drop down into the sloppy range (64 to 128)
 /// if it bothers you.
 
 #if ((FORMAT == FORMAT_5A) || (FORMAT == FORMAT_7))
-#define CONTROL_RATE 200
+#define CONTROL_RATE 128					// this used to be 200 but Mozzi 2.0.1 forbids it. 
 #else
-#define CONTROL_RATE 200
+#define CONTROL_RATE 256					// this used to be 200 but Mozzi 2.0.1 forbids it. 
 #endif
 
 
