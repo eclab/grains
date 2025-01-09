@@ -9,10 +9,9 @@
 /// 808
 ///
 /// 808 is a drum sampler with up to 9 voices and up to 5 triggers.  In some cases you
-/// choose which voices sound for a given trigger.  It's comes with an assortment of low-rent,
-/// noisy 8-bit drum samples.  drum sampler with low-rent, noisy 8-bit drum samples presently
-/// taken from a TR-808.  808 is meant to run on the AE Modular GRAINS, but it could be 
-/// adapted to any Arduino.
+/// choose which voices sound for a given trigger.   808 comes with an assortment of 8-bit 
+/// u-Law TR-808, TR-909, and LinnDrum drum samples.  808 is meant to run on the AE Modular 
+/// GRAINS, but it could be adapted to any Arduino.
 ///
 /// SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 ///
@@ -37,6 +36,14 @@
 ///
 /// A note about pitch: Mozzi's sampler facility is very primitive, and changes in pitch 
 /// will have a lot of aliasing and other artifacts.
+///
+///
+/// DRUM SAMPLES
+///
+/// The drum sample libraries come from various open content libraries, and I have included 
+/// the original sound files as well.  Also, Roger Linn has kindly given me permission to use 
+/// the LinnDrum samples.
+///
 ///
 /// MEMORY ALLOCATION
 /// 808 provides about 26000 bytes of memory for your samples.  The total byte length of
