@@ -35,15 +35,14 @@
 ///
 /// 1. As a track mute for TRIQ164.  TRIQ164 has four tracks, but only the first two can be muted by sending
 /// a high signal to input sockets on the module.  But you can mute the third and fourth tracks as follows.
-/// Set Tangle to PAIRED_INPUT configuration.  Take the trigger output of the third track and 
+/// Take the trigger output of the third track and 
 /// feed it into INPUT A 1 (IN 1).  Take the trigger output of the fourth track and feed it into
 /// INPUT A 2 (IN 3).  Output 1 (Audio Out) is now the revised trigger output for track 3, and
 /// Output 2 (Digital Out) is now the revised trigger output for track 4.  Set the function to 
 /// "A and !B" (the fifth setting).  Now if you send a high signal to Input B 1 (IN 2) you will 
 /// mute track 3.  And if you send a high signal to Input B 2 (Audio In) you will mute track 4.
 ///
-/// 2. As an inverter.  Set the function to just "A", and the input on A gets inverted
-/// and set out the inverted output.
+/// 2. As an inverter.  Set the function to "not A", and the input on A gets inverted.
 ///
 /// 3. As a trigger merge.  Set the function to "A or B", and the inputs on A and B both
 /// get sent out to the output.  I use this to reset the SEQ16 while still
@@ -51,11 +50,11 @@
 /// Output 1 goes to RESET on SEQ16.  My manual reset goes into A on TANGLE.
 ///
 /// 4. As a threshold.  You can test for when an analog CV is over a value, and only output
-/// high when that happens.  To do this, you set the function to "A" and change POT2 to your
+/// high when that happens.  To do this, you set the function to "A" and change POT1 to your
 /// desired threshold (the maximum threshold, about 5V, is at the 2'oclock position, the minimum
 /// is far left).  
 ///
-/// 5. As a gate difference tester.  Set the function to "A xor B".  We output HIGH when 
+/// 5. As a gate difference tester.  Set the function to "A not equal B".  We output HIGH when 
 /// either A or B are high, but if both are high, we output LOW to cut them off.  
 ///
 /// 6. As a tester for when two gates are high at the same time.  Set to "A and B".  You could
