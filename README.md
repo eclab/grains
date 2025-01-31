@@ -348,7 +348,7 @@ Status: Working.
 
 ## Tangle
 
-A combined digital logic function and buffered mult which can do various things, including trigger merges, inversion, thresholding, gate comparison, and so on.  Tangle can also be used to restore the two missing Mute inputs on TRIQ164.
+A combined digital logic function, merge, and inverter which can do various things, including trigger merges, inversion, thresholding, gate comparison, and so on.  Tangle can also be used to restore the two missing Mute inputs on TRIQ164.
 
 Status: Working.
 
