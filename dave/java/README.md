@@ -2,8 +2,8 @@ This directory contains the source code for the Dave application for your laptop
 
 You're probably looking for binaries.  They are here:
 
-* [Dave.app.zip](http://cs.gmu.edu/~eclab/projects/dave/Dave.app.zip) for MacOS
-* [dave.jar](http://cs.gmu.edu/~eclab/projects/dave/dave.jar) for Windows and Linux.
+* [Dave.app.zip](http://cs.gmu.edu/~eclab/projects/grains/dave/Dave.app.zip) for MacOS
+* [dave.jar](http://cs.gmu.edu/~eclab/projects/grains/dave/dave.jar) for Windows and Linux.
 
 To install and run these binaries, follow the same instructions as those found for [Edisyn](https://github.com/eclab/edisyn).  Notably, Windows and Linux users will have to install java.
 

@@ -31,6 +31,19 @@ There are two **special directories**:
 	
 * [**MIDI**](midi/README.md).  This contains MIDI library code useful for developers.  It's not a GRAINS firmware application. 
 
+### Install Mozzi 1.1.2 (not 2.0)
+
+Many of the firmware programs here, and GRAINS programs elsewhere, require Mozzi 1.1.2.  Mozzi has recently updated to version 2.0, which is not compatible with 1.1.2 code.  But the Mozzi page is not particularly helpful about how to install 1.1.2 any more.
+
+The easiest way to install 1.1.2 is from within the Arduino IDE.
+
+1. Select the menu item **Tools -> Manage Libraries...**
+2. Search for "Mozzi".
+3. In the **Select Version** dropdown menu, select **1.1.2**  1.1.1 should also work.
+4. Press **Install**.
+
+If you need the original source code and can't extract 1.1.2 from the 2.0 mess on Github, here is a [zipped archive of Mozzi 1.1.1](http://cs.gmu.edu/~eclab/projects/grains/mozzi.1.1.1.zip) (I don't have 1.1.2, but they're close).
+
 ### A Note on GRAINS Oscillators
 
 GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered PWM creates a low-level buzz or hum which is not filtered out.  To remove this, I suggest including at the beginning of your song a multi-second stretch of silence.  Then load your song into Audacity, and use the silent region (which will have the hum) as the noise profile for the "Noise Reduction" plugin (I'd use dB=7, Sensitivity=7.0, Smoothing=7).
