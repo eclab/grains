@@ -33,16 +33,19 @@ There are two **special directories**:
 
 ### Install Mozzi 1.1.2 (not 2.0)
 
-Many of the firmware programs here, and GRAINS programs elsewhere, require Mozzi 1.1.2.  Mozzi has recently updated to version 2.0, which is not compatible with 1.1.2 code.  But the Mozzi page is not particularly helpful about how to install 1.1.2 any more.
+Many of the firmware programs here, and GRAINS programs elsewhere, require Mozzi 1.1.2.  Mozzi has recently updated to version 2.0, which is not compatible with 1.1.2 code.  
 
 The easiest way to install 1.1.2 is from within the Arduino IDE.
 
 1. Select the menu item **Tools -> Manage Libraries...**
 2. Search for "Mozzi".
-3. In the **Select Version** dropdown menu, select **1.1.2**  1.1.1 should also work.
+3. In Mozzi's **Select Version** dropdown menu, select **1.1.2**.
 4. Press **Install**.
 
-If you need the original source code and can't extract 1.1.2 from the 2.0 mess on Github, here is a [zipped archive of Mozzi 1.1.1](http://cs.gmu.edu/~eclab/projects/grains/mozzi.1.1.1.zip) (I don't have 1.1.2, but they're close).
+If you want the original 1.1.2 source code, you can get it on [Mozzi's Github Releases page](https://github.com/sensorium/Mozzi/tags).   Also if you grab Mozzi via git, 1.1.2 is the branch called ["Mozzi_1"](https://github.com/sensorium/Mozzi/tree/Mozzi_1).
+
+I'll gradually look into updating to 2.0 if it proves useful.
+
 
 ### A Note on GRAINS Oscillators
 
