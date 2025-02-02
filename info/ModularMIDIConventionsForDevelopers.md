@@ -71,7 +71,7 @@ Within a modular system, all modules should send MIDI at the same speed.  This s
 
 ### How Modules are Connected
 
-We presume that in most cases, a modular setup would have a **distributor module**, which receives external MIDI, breaks it up it per-channel, and outputs messages for each channel via per channel AE modular sockets.  Non-voiced data (like clock) is ideally copied to every channel socket.  Attached to each socket is a chain of one more **receiever modules** meant to respond to messages on that channel.  These receiver modules typically are set up to be OMNI.  A distributor module should also output *all* its incoming MIDI via a general-purpose **THRU**.
+We presume that in most cases, a modular setup would have a **distributor module**, which receives external MIDI, breaks it up it per-channel, and outputs messages for each channel via per channel AE modular sockets.  Non-voiced data (like clock) is ideally copied to every channel socket.  Attached to each socket is a chain of one more **receiever modules** meant to respond to messages on that channel.  These receiver modules typically are set up to be OMNI.  A distributor module should also output *all* its incoming MIDI via a general-purpose **THRU**.  The distributor module is not necessarily the only module which emits MIDI.
 
 * Every receiver module should have at least one (and usually only one) **IN** socket from which it receives MIDI data.  It is recommended that the distributor also have an **IN** socket, to receive data instead of its external MIDI socket, in a switchable manner.
 
