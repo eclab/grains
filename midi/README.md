@@ -44,38 +44,6 @@ Modify the miditypes.h file so that its signed and unsigned 16-bit integer type 
 See the emitmidi.h file for instructions on how to build and use a MIDI emitter.
 
 
-## Parsing Modular MIDI Conventions
-
-### Dependencies
-Set up a MIDI Parser.  See "Parsing MIDI" above.
-
-### Files
-Include the following additional files in your project:
-
-- parsemodular.h
-- parsemodular.c
-
-### Usage
-
-The MIDI parsing facility is just a bunch of utility functions to make things easier for you.  See the parsemodular.h file for instructions on how to use them.
-
-
-## Emitting Modular MIDI Conventions
-
-### Dependencies
-Set up a MIDI Emitter.  See "emitting MIDI" above.
-
-### Files
-Include the following additional files in your project:
-
-- emitmodular.h
-- emitmodular.c
-
-### Usage
-
-The MIDI emitting facility is just a bunch of utility functions to make things easier for you.  See the emitmodular.h file for instructions on how to use them.
-
-
 ## Testing the Parser and Emitter
 
 ### Files
@@ -100,3 +68,40 @@ The testmidi.c file has a main().  Compile and run it:
 ### Note
 
 At present there is no test code for testing the Modular MIDI conventions emitting and parsing utilities.
+
+## Parsing Modular MIDI Conventions
+
+The [Modular MIDI Conventions](https://github.com/eclab/grains/blob/main/info/ModularMIDIConventionsForDevelopers.md) are a set of conventions for implementing MIDI *between* modules in a modular synthesizer.  If you don't care about that, this section is not relevant to you.
+
+### Dependencies
+Set up a MIDI Parser.  See "Parsing MIDI" above.
+
+### Files
+Include the following additional files in your project:
+
+- parsemodular.h
+- parsemodular.c
+
+### Usage
+
+The MIDI parsing facility is just a bunch of utility functions to make things easier for you.  See the parsemodular.h file for instructions on how to use them.
+
+
+## Emitting Modular MIDI Conventions
+
+The [Modular MIDI Conventions](https://github.com/eclab/grains/blob/main/info/ModularMIDIConventionsForDevelopers.md) are a set of conventions for implementing MIDI *between* modules in a modular synthesizer.  If you don't care about that, this section is not relevant to you.
+
+### Dependencies
+Set up a MIDI Emitter.  See "emitting MIDI" above.
+
+### Files
+Include the following additional files in your project:
+
+- emitmodular.h
+- emitmodular.c
+
+### Usage
+
+The MIDI emitting facility is just a bunch of utility functions to make things easier for you.  See the emitmodular.h file for instructions on how to use them.
+
+

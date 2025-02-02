@@ -57,7 +57,7 @@
 /// Once you have a parser set up, you implement emitMidi(...) to emit bytes out your serial port.  
 /// But what serial port?  GRAINS has two ways of sending MIDI over serial ports:
 /// 
-///   - From RX over a software serial library.  At present this is your more viable option.  There are several
+///   - From TX over a software serial library.  At present this is your more viable option.  There are several
 ///     serial port libraries but from my testing it is clear that NeoSoftSerial (https://github.com/SlashDevin/NeoSWSerial) 
 ///     is the best choice.  You can also get this library through the Arduino library manager.  And several
 ///     of my GRAINS projects (such as para-m) include the two files NeoSWSerial.h and NeoSWSerial.c, though they have
