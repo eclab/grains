@@ -71,7 +71,7 @@ Within a modular system, all modules should send MIDI at the same speed.  This s
 
 ### How Modules are Connected
 
-We presume that in most cases, a modular setup would have a **distributor module**, which receives external MIDI, breaks it up it per-channel, and outputs messages for each channel via per channel AE modular sockets.  Non-voiced data (like clock) is ideally copied to every channel socket.  Attached to each socket is a chain of one more **receiever modules** meant to respond to messages on that channel.  These receiver modules typically are set up to be OMNI.  A distributor module should also output *all* its incoming MIDI via a general-purpose **THRU**.  The distributor module is not necessarily the only module which emits MIDI.
+We presume that in most cases, a modular setup would have a **distributor module**, which receives external MIDI, breaks it up it per-channel, and outputs messages for each channel via per channel AE modular sockets.  Non-voiced data (like clock) is ideally copied to every channel socket.  Attached to each socket is a chain of one more **receiever modules** meant to respond to messages on that channel.  These receiver modules typically are set up to be OMNI.  A distributor module should also output *all* its incoming MIDI via a general-purpose **THRU**.  The distributor module is not necessarily the only module which emits MIDI, either passed through a **THRU** or generated independently.
 
 * Every receiver module should have at least one (and usually only one) **IN** socket from which it receives MIDI data.  It is recommended that the distributor also have an **IN** socket, to receive data instead of its external MIDI socket, in a switchable manner.
 
@@ -113,11 +113,11 @@ Streams of MIDI data are mostly of two kinds:
 
 MIDI has four "Channel Modes" set by CCs 124 through 127, and which consist of the combinations of OMNI ON vs. OFF and MONO vs. POLY. 
 
-- MIDI Modes 1 and 2 both imply that the distributor is listening in OMNI mode, and this acts against the basic purpose of Modular MIDI.  We recommend ignoring MIDI Modes 1 and 2, or routing everything to channel 1 when Modes 1 and 2 are requested.
+- MIDI Modes 1 and 2 both imply that the distributor is listening in OMNI mode, and this acts against the basic purpose of Modular MIDI.  We recommend ignoring MIDI Modes 1 and 2, or routing everything to channel 1 when Modes 1 or 2 are requested.
 
-- In MIDI Mode 3 (OMNI OFF, POLY ON) each channel receives its own independent MIDI voice messages, and can potentially play polyphonically.  We recommend that this be the default mode.  For a Distributor, this implies that incoming MIDI voice messages are simply routed out the MIDI THRU socket for the appropriate channel.
+- In MIDI Mode 3 (OMNI OFF, POLY ON) each channel receives its own independent MIDI voice messages, and can potentially play polyphonically. For a Distributor, this implies that incoming MIDI voice messages are simply routed out the MIDI THRU socket for the appropriate channel. Though MIDI Mode 4 is more appropriate for the Modular MIDI Conventions, we recommend MIDI Mode 3 be the default mode as it will be by far the most common mode used by external controllers and devices.  
 
-  It'd be very common scenario for polyphonic notes to arrive on a single channel.  One option would be for the MIDI Distributor to break those notes up and send them to different outputs for separate downstream voice chains.
+  It'd be very common scenario for polyphonic notes to arrive on a single channel in MIDI Mode 4.  One option would be for the MIDI Distributor to break those notes up and send them to different outputs for separate downstream voice chains.
 
 - MIDI Mode 4 can also be supported as described below.
 
@@ -151,7 +151,7 @@ MPE is meant for the situation where each note (each voice) is usually sent on a
 	
 - An MPE zone has a fixed number of channels, and thus normally a fixed number of notes.  What if the musician plays more than that number of notes at a time?  MPE will **spill** those notes to channels it is already using for other notes.  Most receiver modules cannot play more than one note.  The distributor *could* handle this situation for them, by sending a preemptive NOTE OFF message to turn off the old note; but this is not appropriate if the receiver module is a sophisticated polyphonic module which can play multiple notes.  Thus either this behavior should be switchable, or the distributor should allow the individual receivers to deal with it themselves.
 
-#### Reconciling MPE and Mode 4
+#### Reconciling MPE and MIDI Mode 4
 
 The MPE documentation states that "If the Channel ranges all match, then the MIDI Mode 4 device will behave identically whether or not it supports MPE."  This is not quite true.  Both Pitch Bend and Channel Pressure can be sent as Zone messages or as individual channel messages, and the MPE documentation says "If an MPE synthesizer receives Pitch Bend (for example) on both a Master and a Member Channel, it must combine the data meaningfully. The same is true for Channel Pressure".  But Mode 4 is explicit: there is no combination, but rather, they just replace one another.  We suggest if a range is declared to be both an MPE Zone and Mode 4, then Mode 4's behavior takes precedence with respect to Pitch Bend and Channel Aftertouch.
 
