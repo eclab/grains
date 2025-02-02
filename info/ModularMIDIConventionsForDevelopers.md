@@ -57,7 +57,7 @@ Modular MIDI only adds conventions to standard MIDI.  It does not break or signi
 <a name="topology"/></a>
 ## Topology and Data Format
 
-There are no requirements placed on hardware transport or speed, except that a given modular platform should standardize on one approach.  We provide the example below illustrating usage on the AE Modular system.  We then make topological and organizational recommendations.
+There are no requirements placed on hardware transport or speed, except that a given modular platform should standardize on one approach, and that the speed is recommended to be greater than or equal to 31250 BPS.  We provide the example below illustrating usage on the AE Modular system.  We then make topological and organizational recommendations.
 
 ### Example Transport Hardware: AE Modular
 
