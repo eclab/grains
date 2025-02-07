@@ -53,27 +53,27 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 
 ### Firmware Summary
 
-| Oscillators | MIDI Osc   | Digital Mod | CV Modulation | Other |
-|:------------|:-----------|:------------|:--------------|:------|
-| DX          | DX-M       | Tangle      | Multiplex     | Dave  |
-| Pluck       | Pluck-M    | Tardy       | Sequence      | Bit   |
-| Booker      | Booker-M   | Chrono      | LFO           | Scope |
-| Droplets    | VS         | Pattern     | Arp           |       |
-| AKWF        | Mono       | Elements    | Quant         |       |
-| 808         | Para       | Lattice     | ADSR          |       |
-| Voice       | MJQ        | Beats       | Multilevel    |       |
-| Chordal     | Beep       | Geiger      | Stochastic    |       |
-| Byte        | Trajectory | Pulses      | Switchblade   |       |
-| Evolution   |            | Divvy       | Memoir        |       |
-| Oration     |            | Multiple    |               |       |
-| Oration 2   |            | Respite     |               |       |
-| Fold        |            | Iterate     |               |       |
-| Ruckus      |            | Theory      |               |       |
-| Crackle     |            | Mode16      |               |       |
+| Oscillators | MIDI Osc   | Digital Mod | CV Modulation | Other  |
+|:------------|:-----------|:------------|:--------------|:-------|
+| DX          | DX-M       | Tangle      | Multiplex     | Dave   |
+| Pluck       | Pluck-M    | Tardy       | Sequence      | Bit    |
+| Booker      | Booker-M   | Chrono      | LFO           | Scope  |
+| Droplets    | VS         | Pattern     | Arp           | Mode16 |
+| AKWF        | Mono       | Elements    | Quant         |        |
+| 808         | Para       | Lattice     | ADSR          |        |
+| Voice       | MJQ        | Beats       | Multilevel    |        |
+| Chordal     | Beep       | Geiger      | Stochastic    |        |
+| Byte        | Trajectory | Pulses      | Switchblade   |        |
+| Evolution   |            | Divvy       | Memoir        |        |
+| Oration     |            | Multiple    |               |        |
+| Oration 2   |            | Respite     |               |        |
+| Fold        |            | Iterate     |               |        |
+| Ruckus      |            | Theory      |               |        |
+| Crackle     |            |             |               |        |
 
 ## NEW: Crackle
 
-A generator of random snaps, crackles, and pops, such as you might hear on a record or old radio.  Produces both audio and digital crackles.  See also Ruckus and Geiger.
+A generator of random snaps, crackles, and pops, such as you might hear on a record or old radio.  Produces both analog and digital crackles.  See also Ruckus and Geiger.
 
 Status: Working.
 
