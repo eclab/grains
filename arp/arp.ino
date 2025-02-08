@@ -341,12 +341,13 @@ uint16_t style;
 uint8_t lastS = 0;
 uint8_t lastC = 0;
 
-int8_t chordMap[7 * 2 + 2];
+#define MAX_CHORD_MAP_SIZE (7 * 2 + 3)
+int8_t chordMap[MAX_CHORD_MAP_SIZE];
 uint8_t chordMapLen = 0;
 
 void buildMap()
 	{
-	for(uint8_t i = 0; i < 7 * 2 + 1; i++)
+	for(uint8_t i = 0; i < MAX_CHORD_MAP_SIZE; i++)
 		{
 		chordMap[i] = -1;
 		}
@@ -426,7 +427,7 @@ void updateControl()
 			{
 			reset = false;
 			}
-		else if (r > 150 && !reset)
+		else if (r > 200 && !reset)
 			{
 			reset = true;
 			doReset();
@@ -439,7 +440,7 @@ void updateControl()
 			clock = false;
 			digitalWrite(CV_GATE_OUT, 0);
 			}
-		else if (c > 150 && !clock)
+		else if (c > 200 && !clock)
 			{
 			clock = true;
 			go();
