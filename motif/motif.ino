@@ -4,12 +4,12 @@
 // Released under the Apache 2.0 License
 
 
-/// ARP
+/// MOTIF
 ///
-/// Arp is a random arpeggio generator.  Arp is meant to run on the 
+/// Motif is a random short melody generator.  Motif is meant to run on the 
 /// AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
-/// Think of Arp as TOPOGRAF for notes.  You are selecting a random arpeggio from a three-
+/// Think of Motif as TOPOGRAF for notes.  You are selecting a random short melody from a three-
 /// dimensional space.  The three parameters in question are the base PATTERN, the pattern VARIANCE,
 /// and DETERMINISTIC RANDOM NOISE.  
 ///
@@ -38,10 +38,10 @@
 ///
 /// CLOCK OUT OPTION
 ///
-/// Mozzi isn't very fast in responding to new notes.  For example, if you connect an LFO to ARP's clock,
+/// Mozzi isn't very fast in responding to new notes.  For example, if you connect an LFO to Motif's clock,
 /// and also connect to an envelope with a fast attack to change the filter, you'll find that the filter
 /// starts to open before Mozzi has changed the note.  If the attack is a bit slower it'll sound fine.
-/// But if you want a fast envelope, you need a way for ARP to tell the envelope that it has changed the
+/// But if you want a fast envelope, you need a way for Motif to tell the envelope that it has changed the
 /// pitch.  To do this, you can uncomment (remove the // in front of) the following #define:
 
 // #define CLOCK_OUT
