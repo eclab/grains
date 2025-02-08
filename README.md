@@ -58,7 +58,7 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | DX          | DX-M       | Tangle      | Multiplex     | Dave   |
 | Pluck       | Pluck-M    | Tardy       | Sequence      | Bit    |
 | Booker      | Booker-M   | Chrono      | LFO           | Scope  |
-| Droplets    | VS         | Pattern     | Arp           | Mode16 |
+| Droplets    | VS         | Pattern     | Motif         | Mode16 |
 | AKWF        | Mono       | Elements    | Quant         |        |
 | 808         | Para       | Lattice     | ADSR          |        |
 | Voice       | MJQ        | Beats       | Multilevel    |        |
@@ -95,12 +95,6 @@ Status: Working.
 A wavetable synthesizer over your choice of waveforms from the [Adventure Kid Waveform](https://www.adventurekid.se/akrt/waveforms/) (AKWF) collection, plus a low-pass filter.  Requires Mozzi.
 
 Status: Working.  The waveforms are pretty aliased (not AdventureKid's fault, Mozzi's fault), and so sound pretty crummy at different positions.
-
-## Arp
-
-A 16-note random melody generator.  Think of it as Topograf / Lattice for notes rather than drums.  Requires Mozzi.
-
-Status: Working, but GRAINS's severe limits on note output range can hamper things.
 
 ## Beats
 
@@ -259,6 +253,14 @@ Status: Working, but doesn't play well with Accent Repeats.  I'll have to see if
 A MIDI-Controlled monophonic oscillator.  You can choose between Sine and either Saw, Triangle, or Square.  Requires Mozzi.
 
 Status: Working.  But every once in a while I'll get a MIDI error due to the use of software serial.  This likely isn't fixable until we move to a hardware UART if/when TW decides to come out with Grains V2 (no, I have no information on that).
+
+## Motif
+
+A 16-note random melody generator.  Think of it as Topograf / Lattice for notes rather than drums.  Requires Mozzi.
+
+Note: Motif used to be called Arp.  But it's been renamed.
+
+Status: Working, but GRAINS's severe limits on note output range can hamper things.
 
 ## Multilevel
 
