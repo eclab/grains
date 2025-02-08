@@ -65,15 +65,17 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Chordal     | Beep       | Geiger      | Stochastic    |        |
 | Byte        | Trajectory | Pulses      | Switchblade   |        |
 | Evolution   |            | Divvy       | Memoir        |        |
-| Oration     |            | Multiple    |               |        |
+| Oration     |            | Multiple    | Arp           |        |
 | Oration 2   |            | Respite     |               |        |
 | Fold        |            | Iterate     |               |        |
 | Ruckus      |            | Theory      |               |        |
 | Crackle     |            |             |               |        |
 
-## NEW: Crackle
+## NEW: Arp
 
-A generator of random snaps, crackles, and pops, such as you might hear on a record or old radio.  Produces both analog and digital crackles.  See also Ruckus and Geiger.
+An arpeggiator with various chords and standard arpeggiation patterns.  Requires Mozzi.  
+
+Note: a previous firmware program called Arp (not an arpeggiator) has been renamed to Motif so this one could be properly named.
 
 Status: Working.
 
@@ -141,6 +143,12 @@ Status: Working.  Some of the waves are buzzy in certain locations, but we don't
 ## Chrono
 
 A master clock with a tappable tempo.  Very simple.  Saves the tempo and reloads it when you power cycle.
+
+Status: Working.
+
+## Crackle
+
+A generator of random snaps, crackles, and pops, such as you might hear on a record or old radio.  Produces both analog and digital crackles.  See also Ruckus and Geiger.
 
 Status: Working.
 
