@@ -1,7 +1,5 @@
 # Tangle
 
-TANGLE
-
 TANGLE is a combined digital logic function, merge, and inverter.   You can use it to combine two digital signals, or to take two inputs and see to it that they both go to a single output (such as multiple ways to reset the SEQ16).
 
 SET GRAINS TO GRAINS MODE.  (If you want MOZZI mode, change CV\_AUDIO\_OUT to 9)
@@ -15,15 +13,15 @@ Given two inputs A and B, the functions on POT 3 are (left to right) output as:
 Function         | Explanation
 -----------------|-------------------------------------------
 A                | A is passed through, B is ignored
-not A            | A is inverted, B is ignored
-A or B           | If either is HIGH, we output HIGH
-not (A or B)     | If either is HIGH, we output LOW
+not A            | A is passed through inverted, B is ignored
+A or B           | If either A or B is HIGH, we output HIGH
+not (A or B)     | If either A or B is HIGH, we output LOW
 A or not B       | If A is HIGH or B is LOW, we output HIGH
-A and B          | Both A and B must be HIGH to output HIGH
-not (A and B)    | Both A and B must be HIGH to output LOW
+A and B          | If A and B are both HIGH, we output HIGH
+not (A and B)    | If A and B are both HIGH, we output LoW
 A and not B      | If A is HIGH and B is LOW, we output HIGH
-A equal B        | If A and B are the same we output HIGH
-A not equal B    | If A and B differ we output HIGH (xor)
+A equal B        | If A and B are the same, we output HIGH
+A not equal B    | If A and B differ, we output HIGH (xor)
 
 ## How You Could Use Tangle
 

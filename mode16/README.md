@@ -9,7 +9,7 @@ You will need to install the Mozzi Library.  You can do this from the Library Ma
 
 How does Mode16 perform this magic?  By controlling SEQ16's gate and manually stepping it. Mode16 can make the SEQ16 move to any location, then play its note; or it can make the SEQ16 play a rest.  For example, to get the SEQ16 to play the note at location 10, Mode16 will reset SEQ16, then step it 9 times, then step it once to play it.  (Yes coders, this is O(n^2), not cheap).
 
-But during those 9 steps, how does MODE16 prevent SEQ16 from playing?  This is done by filtering the output gate.  You attach the SEQ16's gate out to Mode16, and then Choreogeaphy provides the actual gate.  
+But during those 9 steps, how does MODE16 prevent SEQ16 from playing?  This is done by filtering out the output gate.  You attach the SEQ16's gate out to Mode16, and then Mode16 provides the actual gate.  
 
 Mode16 comes with 12 repeating or one-shot PATTERNS, which you set with POT 3.  You can change them if you are careful. The patterns at present are (left to right):
 
@@ -24,7 +24,7 @@ Mode16 comes with 12 repeating or one-shot PATTERNS, which you set with POT 3.  
 - Play the first 8 notes with interspersed rests, then the back 8 (without rests) twice, looping
 - Play 16 steps with 1/2 probability random dropouts, looping
 - Play a random note, or a rest, looping
-- Fun Little Pattern, looping
+- Play 16 steps, looping, with swing
 
 
 ## Setting Up
@@ -38,14 +38,14 @@ Mode16 comes with 12 repeating or one-shot PATTERNS, which you set with POT 3.  
 6. Connect Mode16's Gate Out (Audio In) to your gate output
 7. Turn POT 3 to select the pattern.
 8. Send Reset to Mode16 (IN 1) to reset SEQ16 rather than directly to the SEQ16.  Similarly, send Clock to Mode16 (IN 2) to clock SEQ16 rather than directly to the SEQ16.
-9. Take the CV from SEQ16 but the Gate from Mode16's Gate Out (Audio In)P.
+9. Take the CV from SEQ16 but the Gate from Mode16's Gate Out (Audio In).
 
 
 ## Gotchas
 
 Mode16 expects a square-wave-ish clock.  During the LOW PART of the square wave, it does all the clocks to forward to the proper step, then on the RISE of the square wave it plays the note. The problem with this approach is that during the low part of the square wave is when the release of your note plays, so if you have anything other than a very short release, you'll hear the other pitches as Mode16 advances to the proper step.  You can adjust things by tweaking the PWM of the square wave you send to Mode16.
 
-Mode16 only works partially with Accent Repeats, because they conflict with Mode16's drop in gate, and because SEQ16 determines how fast to play Repeats based on previous pulses (and Mode16 pulses very fast to jump to locations).  Accent Repeats will definitely not work properly after a recent jump (such as going backwards or randomly) or after a recent skip.  They may or may not work properly when going foward normally, and rests don't impact on them.  If you find that Repeats are not what you expected, I'd set Repeats to 1.  I'll try to improve the Accent Repeats situation in the future.
+Mode16 only works partially with Accent Repeats, because they conflict with Mode16's drop in gate, and because SEQ16 determines how fast to play Repeats based on previous pulses (and Mode16 pulses very fast to jump to locations).  Accent Repeats will definitely not work properly after a recent jump (such as going backwards or randomly) or after a recent skip.  They may or may not work properly when going foward normally.  Rests may slow them down.  If you find that Repeats are not what you expected, I'd set Repeats to 1.  I'll try to improve the Accent Repeats situation in the future.
 
 Note that if you set the Pattern Knob to in-between two patterns, it won't work right, constantly getting reset.  So make sure the Pattern Knob is definitely on the pattern you want.
 

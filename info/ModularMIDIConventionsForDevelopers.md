@@ -251,7 +251,7 @@ CC MSB / LSB    | MSB Function / LSB Function    | Related Traditional Name
 
 #### Explanation
 
-- **(Open)** These CCs may be used by the module for any purpose, with the strong warning that other modules may likewise have chosen to do so. 
+- **(Open)** These CCs may be used by the module for any purpose, with the strong warning that other modules may likewise have chosen to do so for a different purpose. 
 
 - **Bank Select, Mod Wheel, Data Entry, and Expression Controller**.  These are standard CCs with well established functions, and are available to all modules. **Bank Select** is discussed in more detail later.  **Data Entry** is only used as part of RPN and NRPN.  Do not use it otherwise.  See RPN/NRPN in a section below.
 
@@ -328,18 +328,18 @@ CC    | Function                | Related Traditional Name
 119   | (Open)                  |
 120   | All Sound Off           |
 121   | Reset All Controllers   |
-122   | (Reserved)              |
+122   | (Reserved) Treat as All Notes Off |
 123   | All Notes Off           |
-124   | (Reserved)              |
-125   | (Reserved)              |
-126   | (Reserved)              |
-127   | (Reserved)              |
+124   | (Reserved) Treat as All Notes Off |
+125   | (Reserved) Treat as All Notes Off |
+126   | (Reserved) Treat as All Notes Off |
+127   | (Reserved) Treat as All Notes Off |
 
 #### Explanation
 
-- **(Open)** These CCs may be used by the module for any purpose, with the strong warning that other modules may likewise have chosen to do so. 
+- **(Open)** These CCs may be used by the module for any purpose, with the strong warning that other modules may likewise have chosen to do so for a different purpose. 
 
-- **(Reserved)** These CCs have well established functions that are not used by this specification.  Do not use or reassign them.  We note that many of the reserved parameters deal with setting MIDI Modes (mono, poly, omni).  These are obsolete and not relevant here: but these parameters unfortunately cannot be reused.  (Turning MIDI Mode 4 on and off should probably be handled at the distributor level, not internally between modules).
+- **(Reserved)** These CCs have well established functions that are not used by this specification.  Do not use or reassign them.  We note that many of the reserved parameters deal with setting MIDI Modes (mono, poly, omni).  These are obsolete and not relevant here: but these parameters unfortunately cannot be reused.  (Turning MIDI Mode 4 on and off should probably be handled at the distributor level, not internally between modules).  The MIDI specification states that these CCs should also trigger an All Notes Off.
 
 - **Sustain Pedal, Legato Switch, MPE Timbre, All Sound Off, Reset All Controllers, All Notes Off**.  These are standard CCs with well established functions.
 

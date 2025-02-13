@@ -21,8 +21,8 @@
 /// play a rest.  For example, the make the SEQ16 play location 10, Mode16 will reset SEQ16,
 /// then step it 9 times, then step it once to play it.  (Yes coders, this ia O(n^2), not cheap).
 ///
-/// But during those 9 steps, how does SEQ prevent it from playing?  This is done by filtering the
-/// output gate.  You attach the SEQ16's gate out to Mode16, and then Choreogeaphy provides the
+/// But during those 9 steps, how does Mode16 prevent SEQ16 from playing?  This is done by filtering
+/// out the output gate.  You attach the SEQ16's gate out to Mode16, and then Mode16 provides the
 /// actual gate.  
 ///
 /// Mode16 comes with 12 repeating or one-shot PATTERNS.  You can change them if you are careful.
@@ -39,7 +39,7 @@
 /// Rests: Play the first 8 notes with interspersed rests, then the back 8 (without rests) twice, looping
 /// Play 16 steps with 1/2 probability random dropouts, looping
 /// Play a random note, or a rest, looping
-/// Fun Little Pattern, looping
+/// Play 16 steps, looping, with swing
 ///
 /// 
 /// SETTING UP
@@ -54,7 +54,7 @@
 /// 7. Turn POT 3 to select the pattern.
 /// 8. Send Reset to Mode16 (IN 1) to reset SEQ16 rather than directly to the SEQ16.  Similarly, send
 ///    Clock to Mode16 (IN 2) to clock SEQ16 rather than directly to the SEQ16.
-/// 9. Take the CV from SEQ16 but the Gate from Mode16's Gate Out (Audio In)P.
+/// 9. Take the CV from SEQ16 but the Gate from Mode16's Gate Out (Audio In).
 ///
 ///
 /// GOTCHAS
@@ -69,8 +69,8 @@
 /// Mode16 only works partially with Accent Repeats, because they conflict with Mode16's drop in gate, and because
 /// SEQ16 determines how fast to play Repeats based on previous pulses (and Mode16 pulses very fast to jump to
 /// locations).  Accent Repeats will definitely not work properly after a recent jump (such as going backwards or
-/// randomly) or after a recent skip.  They may or may not work properly when going foward normally, and rests
-/// don't impact on them.  If you find that Repeats are not what you expected, I'd set Repeats to 1.  I'll try to
+/// randomly) or after a recent skip.  They may or may not work properly when going foward normally.  Rests may
+/// slow them down.  If you find that Repeats are not what you expected, I'd set Repeats to 1.  I'll try to
 /// improve the Accent Repeats situation in the future.
 ///
 /// Note that if you set the Pattern Knob to in-between two patterns, it won't work right, constantly getting 
@@ -236,11 +236,17 @@ uint8_t patterns[NUM_PATTERNS][MAX_PATTERN_LENGTH]
 	// Either a random rest, or a random note, looping
 	{ JRND, RR, PLAY, LOOP },
 	 
+	// Play 16 steps, looping, with swing
+    { PLAY, REST, PLAY, PLAY, REST, PLAY, PLAY, REST, PLAY, PLAY, REST, PLAY, 
+      PLAY, REST, PLAY, PLAY, REST, PLAY, PLAY, REST, PLAY, PLAY, REST, PLAY, J1, LOOP },
+	
+/*
 	// Fun Little Pattern, looping
 	{ PLAY, PLAY, J1, PLAY, PLAY, J1, PLAY, PLAY, PLAY, J2, PLAY, J1,
 	  PLAY, PLAY, PLAY, PLAY, PLAY, J4, PLAY, J3, PLAY, J2, PLAY, J9,
 	  PLAY, PLAY, J9, PLAY, PLAY, J9, PLAY, PLAY, PLAY, J10, PLAY, J9,
 	  PLAY, PLAY, PLAY, PLAY, PLAY, J12, PLAY, J11, PLAY, J10, PLAY, J1, LOOP },
+*/
 	};
 
 
