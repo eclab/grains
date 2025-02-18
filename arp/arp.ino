@@ -90,16 +90,16 @@
 /// of a semitone.   Most oscillators can be tuned to deal with this.
 /// But GRAINS oscillators have to be manually adjusted.  So for example, if you're attaching 
 /// this program to a GRAINS oscillator like DX, you might want to change the TRANPOSE_BITS
-/// to about -6.
+/// to about -6 on the GRAINS oscillator.
 ///
 /// Mozzi's output is capable of a range of betwen 42 and 48 notes (betwen 3.5 and 4 octaves).  
 /// This is also the quantizer's range: values above that will just get quantized to the 
 /// top note.
 ///
-/// One of the issues in using this quantizer is that GRAINS does not have a buffer:
-/// the voltage its output will produce is strongly affected by the amperage being pulled
+/// One of the issues in using this firmware is that
+/// the voltage GRAINS's output will produce is strongly affected by the amperage being pulled
 /// by the oscillator it's plugged into, and different AE oscillators pull different amounts.
-/// VCO is particularly bad here -- it pulls a lot of voltage, thus scaling down Quant's output
+/// VCO is particularly bad here -- it pulls a lot of voltage, thus scaling down GRAINS's output
 /// so it's no longer v/oct.  555 is much better (its inputs are buffered).  And you can
 /// generally fix matters by plugging GRAINS into a buffered mult, and then attaching
 /// the buffered mult to your oscillator.  But even the buffered mults differ a bit!
