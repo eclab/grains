@@ -8,7 +8,8 @@
 ///
 /// LFO is a warpable LFO.  You have a choice of Tri, Sine, or Pulse, all with adjustable GAIN
 /// and adjustable SHAPE. When the LFO completes its period, a TRIGGER is emitted on
-/// digital out -- you could use this to sync things to the LFO for example.
+/// digital out -- you could use this to sync things to the LFO for example.  You can also
+/// configure the LFO code to do sample and hold on its waves.
 ///
 /// SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 ///
@@ -20,10 +21,54 @@
 /// The LFO has adjustable RATE of course.  There are three ranges in which you can adjust
 /// the rate: Short, Medium, and Long.  Within a range you can adjust the rate with the RATE
 /// knob or CV.
-
+///
 /// Note that the Pulse wave is fairly rounded, kinda like a moderate exponential attack and 
 /// decay of an envelope.  This is because of the filter built into AUDIO_OUT.  If you're 
 /// looking for a sharper Pulse wave, consider the PULSES GRAINS firmware instead.
+///
+/// Pot 3 controls both the TYPE of the LFO wave (Tri, Sine, Pulse) and the RANGE (Short, Medium, Long).
+/// Thus there are 9 options in total.  You will probably find MEDIUM to be the most useful range.
+/// 
+/// The LFO can also be RESET with a trigger to IN 3.
+///
+/// Note that the LFO can only reach about, oh, 4V due to limitations in GRAINS.
+///
+/// Looking for a RANDOM, NOISY, or RANDOM SAMPLE AND HOLD LFO?  Try my GRAINS firmware STOCHASTIC.
+///
+/// Looking for multiple complex pulse wave LFOs?  Try my GRAINS firmware PULSES.
+
+
+
+/// TRACK AND HOLD
+///
+/// The LFO also has a built-in TRACK AND HOLD.  If you send a gate to DIGITAL OUT, it will
+/// sample the current LFO value and only output that value as long as the gate is high.  When
+/// the gate drops, the LFO will resume as normal.
+///
+/// How the LFO behaves during Track and Hold depends on the BACKGROUND #define.  Normally,
+/// as long as the gate is high, the LFO is essentially frozen, so when the gate is dropped,
+/// the LFO begins right where it left off.  This is the default behavior.  An alternative behavior
+/// is for the LFO to continue to run in the background while the gate is high, but the output 
+/// is held fixed during that time.  Thus when the gate is dropped, the LFO will continue wherever 
+/// it currently is located, causing a discontinuity.  If you want this alternative behavior, 
+/// uncomment the following #define:
+
+//	#define BACKGROUND
+
+
+
+/// SAMPLE AND HOLD
+///
+/// Track and Hold can be converted to a SAMPLE AND HOLD.  Here, every time you send a TRIGGER
+/// to DIGITAL OUT, the LFO will sample its current wave value and only output that until you send
+/// the next trigger.  Note that SAMPLE_AND_HOLD automatically turns on BACKGROUND.  To turn on
+/// Sample and hold, uncommend the following #define:
+
+//  #define SAMPLE_AND_HOLD
+
+/// Note that this is *not* a Random Sample and Hold.  It's just doing sample and hold on the
+/// underlying LFO wave.  For a random sample and hold, try my firmware STOCHASTIC.
+
 
 
 /// CENTERING
@@ -46,16 +91,6 @@
 
 // #define GAIN
 
-/// Pot 3 controls both the TYPE of the LFO wave (Tri, Sine, Pulse) and the RANGE (Short, Medium, Long).
-/// Thus there are 9 options in total.  You will probably find MEDIUM to be the most useful range.
-/// 
-/// The LFO can also be RESET with a trigger.  
-///
-/// Note that the LFO can only reach about, oh, 4V due to limitations in GRAINS.
-///
-/// Looking for a RANDOM, NOISY, or SAMPLE AND HOLD LFO?  Try my GRAINS firmware STOCHASTIC.
-///
-/// Looking for multiple complex pulse wave LFOs?  Try my GRAINS firmware PULSES.
 
 
 /// GRAINS BUG
@@ -75,7 +110,7 @@
 /// IN 3            Reset
 /// AUDIO IN (A)    Gain
 /// AUDIO OUT       Output
-/// DIGITAL OUT (D) Period Completion Trigger
+/// DIGITAL OUT (D) Track and Hold / Sample and Hold Trigger
 ///
 /// POT 1           Shape / PWM
 ///					[If not using the CV, set switch to MAN, else set to IN2 and put pot at roughly 2'oclock]
@@ -88,6 +123,11 @@
 /// POT 3           Type (Short Saw/Tri/Ramp, Short Sine, Short Pulse, Medium Saw/Tri/Ramp, Medium Sine, Medium Pulse, Long Saw/Tri/Ramp, Long Sine, Long Pulse)
         
 
+
+// Sample and hold always does background
+#ifdef SAMPLE_AND_HOLD
+#define BACKGROUND
+#endif
 
 #define CONTROL_RATE 128
 
@@ -642,12 +682,22 @@ float invwarp;
 float invwarprem;
 
 
+#define PASS_THROUGH 0
+#define SAMPLE 1
+#define USE 2
+
+static uint8_t sample = PASS_THROUGH;
+
 void setup() 
     {
-    Serial.begin(250000);
     startMozzi();
-    digitalWrite(CV_GATE_OUT, 0);		// so we match the digitalState
-    }
+	pinMode(CV_GATE_OUT, INPUT);
+#ifdef SAMPLE_AND_HOLD
+	sample = SAMPLE;
+#else
+	sample = PASS_THROUGH;
+#endif
+	}
 
 // this is gonna be costly, it has to go to 32 bit
 // And it has a division...
@@ -726,6 +776,8 @@ inline uint8_t countdown()
 			}
 		}
 	}
+	
+static uint8_t trigger = 0;
 
 static uint8_t types[9] = { 0, 1, 2, 0, 1, 2, 0, 1, 2 };
 static uint8_t lengths[9] = { 0, 0, 0, 1, 1, 1, 2, 2, 2 };
@@ -740,6 +792,22 @@ void updateControl()
 	type = types[pot3];
 	uint8_t oldLength = length;
 	length = lengths[pot3];
+
+	uint8_t triggerIn = digitalRead(CV_GATE_OUT);
+	if (!trigger && triggerIn)
+		{
+		trigger = 1;
+		sample = SAMPLE;
+		}
+	else if (!triggerIn)
+		{
+		trigger = 0;
+#ifdef SAMPLE_AND_HOLD		
+		sample = USE;
+#else
+		sample = PASS_THROUGH;
+#endif
+		}
 
 	if (length != oldLength || mozziAnalogRead(CV_IN3) > 512) reset();		// also reset if we're making a big change to speed
     }
@@ -763,45 +831,50 @@ inline int16_t adjust(int16_t val)
 #endif
 	}
 
-uint8_t triggerCountdown;
+uint16_t output = 0;
+
+//uint8_t triggerCountdown;
 int updateAudio()    
     {
-    // drop trigger
-	  if (triggerCountdown > 0)
-    	{
-    	if (triggerCountdown == 1)
-    		{
-			digitalWrite(CV_GATE_OUT, 0);
-    		}
-    	triggerCountdown--;
-    	}
-
     // So this is gonna be slow.  May be an issue in terms of total LFO rate...
+    
+#ifndef BACKGROUND
+	if (sample == USE)
+		{
+		return output;
+		}
+#endif
     
     uint8_t increment = countdown();
     position += increment;
     if (position >= 1024) position -= 1024;
     uint16_t warped = computeWarp(position);
 
-	// set trigger if need be
-	if (position == 0)
-		{
-		digitalWrite(CV_GATE_OUT, 1);
-		triggerCountdown = 255;
-		}
-	
+	int16_t result;
     if (type==0)		// Sine
     	{
-    	return adjust(_COSINE(warped));
+    	result = adjust(_COSINE(warped));
     	}
     else if (type == 1)			// Saw/Tri/Ramp
     	{
-    	return adjust(_TRIANGLE(warped));
+    	result = adjust(_TRIANGLE(warped));
     	}
-    else //if (type == 2)			// Square
+    else 	// if (type == 2)			// Square
     	{
-    	return adjust(_PULSE(warped));
+    	result = adjust(_PULSE(warped));
     	}
+    	
+    if (sample == SAMPLE) 
+    	{
+    	output = result;
+    	sample = USE;
+    	}
+    else if (sample == PASS_THROUGH)
+    	{
+    	output = result;
+    	}
+    
+    return output;
     }
 
 void loop() 
