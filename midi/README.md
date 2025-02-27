@@ -65,9 +65,6 @@ The testmidi.c file has a main().  Compile and run it:
     gcc testmidi.c
     ./a.out
 
-### Note
-
-At present there is no test code for testing the Modular MIDI conventions emitting and parsing utilities.
 
 ## Parsing Modular MIDI Conventions
 
@@ -105,3 +102,6 @@ Include the following additional files in your project:
 The MIDI emitting facility is just a bunch of utility functions to make things easier for you.  See the emitmodular.h file for instructions on how to use them.
 
 
+## Note
+
+At present there is no test code for testing the Modular MIDI conventions emitting and parsing utilities.
