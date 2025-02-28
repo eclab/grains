@@ -29,17 +29,17 @@
 /// The patterns at present are:
 ///
 /// Play 16 steps, looping
-/// Play 16 steps and then end
 /// Play 16 steps, play them again, and then end
 /// Play 16 steps backwards, looping
 /// Ping-Pong, looping
+/// Random walk, looping
 /// Random notes, looping
 /// Play the first 8 notes, then 8 random notes from back 8, looping
 /// AABA: Play the first 8 notes twice, then the second 8, then the first 8 again, looping
 /// Rests: Play the first 8 notes with interspersed rests, then the back 8 (without rests) twice, looping
 /// Play 16 steps with 1/2 probability random dropouts, looping
 /// Play a random note, or a rest, looping
-/// Play 16 steps, looping, with swing
+/// Play 16 steps with swing, looping
 ///
 /// 
 /// SETTING UP
@@ -88,8 +88,9 @@
 /// PLAY		Play the current step and advance it.
 /// REST		Don't play anything, don't advance.  Just wait.
 /// RR			If this appears before PLAY, then with 1/2 probability we won't play the note (but still advance).
-/// SKIP		If this appears before PLAY, we skip one step first.  Multiple SKIPs or SSs will skip multiple steps.
-/// SS			If this appears before PLAY, we skip one step first with a 1/2 probability.   Multiple SKIPs or SSs will skip multiple steps.
+/// SKIP		If this appears before PLAY, we skip one step first.  Multiple SKIPs or SSs or RSs will skip multiple steps.
+/// SS			If this appears before PLAY, we skip one step first with a 1/2 probability.   Multiple SKIPs or SSs or RSs will skip multiple steps.
+/// RS			If this appears before PLAY, we skip two steps BACKWARD with a 1/2 probability.  This is used for random walks.  Multiple SKIPs or SSs or RSs will skip multiple steps.
 /// J1 ... J16	If this appears before PLAY, then we jump to step 1...16 and play *that* note instead of the current note.
 /// JRND		If this appears before PLAY, then we jump to a random step and play *that* note instead of the current note.
 /// JR1 		If this appears before PLAY, then we jump to a random step between 1...8 and play *that* note instead of the current note.
@@ -171,7 +172,7 @@
 #define JHI14 55 
 #define JHI15 56 
 #define JHI16 57		// Set high bound for next JRND to 16
-
+#define RS 58			// If appearing before PLAY, randomly stay where you are or back up two steps
 
 #define CV_POT_IN1    A2    // Clock In
 #define CV_POT_IN2    A1    // Reset In
@@ -187,7 +188,7 @@ void setup()
     randomSeed(RANDOM_PIN);                                             // FIXME: We're using randomSeed() and random() when we could be using the faster Mozzi versions
     pinMode(CV_AUDIO_IN, OUTPUT);
     pinMode(CV_AUDIO_OUT, OUTPUT);
-    //Serial.begin(9600);
+    //Serial.begin(115200);
     }
 
 #define NUM_PATTERNS 12
@@ -197,9 +198,6 @@ uint8_t patterns[NUM_PATTERNS][MAX_PATTERN_LENGTH]
     {
     // Play 16 steps, looping
     { PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, J1, LOOP },
-	
-	// Play 16 steps and then end
-	{ PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, END },
 	
 	// Play 16 steps, play them again, and then end
 	{ PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, PLAY, J1, 
@@ -214,6 +212,9 @@ uint8_t patterns[NUM_PATTERNS][MAX_PATTERN_LENGTH]
 	  J16, PLAY, J15, PLAY, J14, PLAY, J13, PLAY, J12, PLAY, J11, PLAY, J10, PLAY, J9, PLAY,
 	  J8, PLAY, J7, PLAY, J6, PLAY, J5, PLAY, J4, PLAY, J3, PLAY, J2, PLAY, J1, PLAY, J1, LOOP },
 
+	// Play with a random walk, looping
+	{ PLAY, RS, LOOP },
+	
 	// Entirely random, looping
 	{ JRND, PLAY, LOOP },
 	
@@ -276,14 +277,16 @@ void setGateForwarding(uint8_t forward)
     
 void doReset()
     {
+    setGateForwarding(false);
     digitalWrite(CV_AUDIO_OUT, 1);
     delayMicroseconds(TRIGGER_LENGTH);
     digitalWrite(CV_AUDIO_OUT, 0);
-    delayMicroseconds(TRIGGER_LENGTH);
+//    delayMicroseconds(TRIGGER_LENGTH);
     }
 
 void doClocks(uint8_t clocks)
     {
+    setGateForwarding(false);
     for(uint8_t i = 0 ; i < clocks; i++)
 		{
 		digitalWrite(CV_GATE_OUT, 1);
@@ -295,6 +298,7 @@ void doClocks(uint8_t clocks)
 	
 void playNote()
     {
+    //Serial.println("Play");
     setGateForwarding(true);
     digitalWrite(CV_AUDIO_IN, 1);
     digitalWrite(CV_GATE_OUT, 1);
@@ -312,14 +316,15 @@ void playRest()
 	
 void updateStateMachine(uint8_t rising)
     {
-    if (rising)
+    if (rising == 1)
 		{
 		setGateForwarding(true);
 		}
-    else
-		{
+    else 
+    	{
 		setGateForwarding(false);
-		digitalWrite(CV_AUDIO_IN, 0);		
+		digitalWrite(CV_AUDIO_IN, 0);
+		//Serial.println("Off");
 		}
 		
     uint8_t done = 0;
@@ -424,6 +429,8 @@ void updateStateMachine(uint8_t rising)
 				if (!rising)
 					{
 					doReset();
+					// If we don't clock at least one, SEQ16 gets confused.  So we clock 16 times
+					doClocks(16);
 					patternPos++;
 					}
 				else done = 1;
@@ -601,7 +608,11 @@ void updateStateMachine(uint8_t rising)
 					doReset();
 					if (low > high) { uint8_t temp = low; low = high; high = temp; } 		// swap
 							
-					doClocks(random(high - low + 1) + low);
+					uint8_t numClocks = random(high - low + 1) + low;
+					// If we don't clock at least one, SEQ16 gets confused.  So we clock 16 times for 0
+					if (numClocks == 0) numClocks = 16;
+					
+					doClocks(numClocks);
 					patternPos++;
 
 					// reset
@@ -616,7 +627,11 @@ void updateStateMachine(uint8_t rising)
 				if (!rising)
 					{
 					doReset();
-					doClocks(random(8));
+					uint8_t numClocks = random(8);
+					// If we don't clock at least one, SEQ16 gets confused.  So we clock 16 times for 0
+					if (numClocks == 0) numClocks = 16;
+					
+					doClocks(numClocks);
 					patternPos++;
 					}
 				else done = 1;
@@ -627,7 +642,11 @@ void updateStateMachine(uint8_t rising)
 				if (!rising)
 					{
 					doReset();
-					doClocks(random(8) + 8);
+					uint8_t numClocks = random(8) + 8;
+					// If we don't clock at least one, SEQ16 gets confused.  So we clock 16 times for 0
+					if (numClocks == 0) numClocks = 16;
+					
+					doClocks(numClocks);
 					patternPos++;
 					}
 				else done = 1;
@@ -984,6 +1003,21 @@ void updateStateMachine(uint8_t rising)
 				else done = 1;
 				}
 			break;
+
+			case RS:
+				{
+				if (!rising)
+					{
+					if (random(2)) 
+						{
+						doClocks(14);		// go backwards two steps
+						}
+					patternPos++;
+					}
+				else done = 1;
+				}
+			break;
+			
 			}
 		}
     }
@@ -1004,6 +1038,9 @@ void loop()
 		if (!oldReset)	// we just went high, RESET
 			{
 			doReset();							// send an output reset
+			// If we don't clock at least one, SEQ16 gets confused.  So we clock 16 times for 0
+			doClocks(16);	
+							
 			patternPos = 0;						// reset pattern position
 			played = false;
 			updateStateMachine(0);				// go through the state machine as if we had just fallen
@@ -1021,6 +1058,9 @@ void loop()
     if (currentPattern != pattern)
 		{
 		doReset();					// send an output reset
+			// If we don't clock at least one, SEQ16 gets confused.  So we clock 16 times for 0
+			doClocks(16);	
+							
 		patternPos = 0;				// reset pattern position
 		pattern = currentPattern;
 		played = false;
