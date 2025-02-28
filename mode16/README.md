@@ -14,10 +14,10 @@ But during those 9 steps, how does MODE16 prevent SEQ16 from playing?  This is d
 Mode16 comes with 12 repeating or one-shot PATTERNS, which you set with POT 3.  You can change them if you are careful. The patterns at present are (left to right):
 
 - Play 16 steps, looping
-- Play 16 steps and then end
 - Play 16 steps, play them again, and then end
 - Play 16 steps backwards, looping
 - Ping-Pong, looping
+- Random walk, looping
 - Random notes, looping
 - Play the first 8 notes, then 8 random notes from back 8, looping
 - AABA: Play the first 8 notes twice, then the second 8, then the first 8 again, looping
@@ -61,8 +61,9 @@ LOOP		     | Go back to the start of the pattern.
 PLAY		     | Play the current step and advance it.
 REST		     | Don't play anything, don't advance.  Just wait.
 RR			     | If this appears before PLAY, then with 1/2 probability we won't play the note (but still advance).
-SKIP		     | If this appears before PLAY, we skip one step first.  Multiple SKIPs or SSs will skip multiple steps.
-SS			     | If this appears before PLAY, we skip one step first with a 1/2 probability.   Multiple SKIPs or SSs will skip multiple steps.
+SKIP		     | If this appears before PLAY, we skip one step first. Multiple SKIPs or SSs or RSs will skip multiple steps.
+SS			     | If this appears before PLAY, we skip one step first with a 1/2 probability.   Multiple SKIPs or SSs or RSs will skip multiple steps.
+RS			     | If this appears before PLAY, we skip one step first with a 1/2 probability, else we skip one step BACKWARD with a 1/2 probability.  Multiple SKIPs or SSs or RSs will skip multiple steps.
 J1 ... J16	  | If this appears before PLAY, then we jump to step 1...16 and play *that* note instead of the current note.
 JRND		     | If this appears before PLAY, then we jump to a random step and play *that* note instead of the current note.
 JR1 		     | If this appears before PLAY, then we jump to a random step between 1...8 and play *that* note instead of the current note.
