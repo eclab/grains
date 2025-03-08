@@ -66,6 +66,25 @@ The testmidi.c file has a main().  Compile and run it:
     ./a.out
 
 
+## MIDI Utilities
+
+### Files
+Include the following files in your project:
+
+- utilities.h
+- utilities.c
+
+### Usage
+
+These are utility functions that may be of use to you.  They include:
+
+* Pitch bend calculations
+* Conversions from pitch to frequency with all integer math
+* Note distribution tools
+
+**Note that the utilities are at present ENTIRELY UNTESTED.**
+
+
 ## Parsing Modular MIDI Conventions
 
 The [Modular MIDI Conventions](https://github.com/eclab/grains/blob/main/info/ModularMIDIConventionsForDevelopers.md) are a set of conventions for implementing MIDI *between* modules in a modular synthesizer.  If you don't care about that, this section is not relevant to you.
