@@ -17,5 +17,5 @@ Then do this:
 	[Install python 3, then...]
 	python3 convert.py foo.raw foo.h foo 16384
 
-If you don't understand the naming scheme for these files, see the document "TR808.txt" in the wav directory.
+If you don't understand the naming scheme for these files, see the document "LinnDrum.txt" in the wav directory.
 

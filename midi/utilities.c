@@ -23,7 +23,7 @@ const UNSIGNED_16_BIT_INT FREQ_0_32[33] =
 #ifdef __AVR__
 const PROGMEM UNSIGNED_16_BIT_INT FREQ_32_64[33] = 
 #else		// __AVR__
-const UNSIGNED_16_BIT_INT FREQ_0_32[33] =
+const UNSIGNED_16_BIT_INT FREQ_32_64[33] =
 #endif		// __AVR__
 	{
 	6644, 7039, 7458, 7902, 8372, 8869, 9397, 9956, 10548, 11175, 11839,
@@ -36,7 +36,7 @@ const UNSIGNED_16_BIT_INT FREQ_0_32[33] =
 #ifdef __AVR__
 const PROGMEM UNSIGNED_16_BIT_INT FREQ_64_96[33] = 
 #else		// __AVR__
-const UNSIGNED_16_BIT_INT FREQ_0_32[33] =
+const UNSIGNED_16_BIT_INT FREQ_64_96[33] =
 #endif		// __AVR__
 	{
 	5274, 5587, 5919, 6271, 6644, 7039, 7458, 7902, 8372, 8869, 9397,
@@ -49,7 +49,7 @@ const UNSIGNED_16_BIT_INT FREQ_0_32[33] =
 #ifdef __AVR__
 const PROGMEM UNSIGNED_16_BIT_INT FREQ_96_128[33] = 
 #else		// __AVR__
-const UNSIGNED_16_BIT_INT FREQ_0_32[33] =
+const UNSIGNED_16_BIT_INT FREQ_96_128[33] =
 #endif		// __AVR__
 	{
 	8372, 8869, 9397, 9956, 10548, 11175, 
@@ -58,7 +58,10 @@ const UNSIGNED_16_BIT_INT FREQ_0_32[33] =
 	37589, 39824, 42192, 44701, 47359, 50175, 53159
 	};
 
-inline UNSIGNED_16_BIT_INT getFrequencyData(UNSIGNED_16_BIT_INT* table, unsigned char pitch) 
+
+
+
+inline const UNSIGNED_16_BIT_INT getFrequencyData(const UNSIGNED_16_BIT_INT* table, unsigned char pitch) 
 	{ 
 #ifdef __AVR__
 	return pgm_read_word_near(&table[pitch]); 
@@ -68,34 +71,92 @@ inline UNSIGNED_16_BIT_INT getFrequencyData(UNSIGNED_16_BIT_INT* table, unsigned
 	}
 
 
-inline UNSIGNED_32_BIT_INT inter(unsigned char pitch, unsigned char divisions, UNSIGNED_16_BIT_INT* table)
+// interpolates between value #pitch and value #(pitch+1) in the table, using divisions/128
+inline UNSIGNED_32_BIT_INT inter(unsigned char pitch, unsigned char divisions, const UNSIGNED_16_BIT_INT* table)
 	{
 	return getFrequencyData(table, pitch) * (UNSIGNED_32_BIT_INT)(127 - divisions) + getFrequencyData(table, pitch + 1) * (UNSIGNED_32_BIT_INT)divisions;
 	}
 
 
-// Given a MIDI Note plus some number of 1/256 divisions of a semitone
+// Given a MIDI Note (0...127) returns the frequency of the note * 1024
+// If you want the frequency as an integer, take this value >> 10
+UNSIGNED_32_BIT_INT midiNoteFreq(unsigned char midiNote)
+	{
+	if (midiNote < 32)
+		{
+		return getFrequencyData(FREQ_0_32, midiNote);
+		}
+	else if (midiNote < 64)
+		{
+		return getFrequencyData(FREQ_32_64, midiNote - 32);
+		}
+	else if (midiNote < 96)
+		{
+		return getFrequencyData(FREQ_64_96, midiNote - 64);
+		}
+	else // if (midiNote < 128)
+		{
+		return getFrequencyData(FREQ_96_128, midiNote - 96);
+		}
+	}
+
+
+// Given a MIDI Note (0...127) plus some number of 1/256 divisions of a semitone
 // Returns the frequency of the note * 1024
 // If you want the frequency as an integer, take this value >> 10
 UNSIGNED_32_BIT_INT midiFreq(unsigned char midiNote, unsigned char divisions)
 	{
-	if (note < 32)
+	if (midiNote < 32)
 		{
-		return inter(midiNote, cents, FREQ_0_32) >> 8;
+		return inter(midiNote, divisions, FREQ_0_32) >> 8;
 		}
-	else if (note < 64)
+	else if (midiNote < 64)
 		{
-		return inter(midiNote - 32, cents, FREQ_32_64) >> 5;
+		return inter(midiNote - 32, divisions, FREQ_32_64) >> 5;
 		}
-	else if (note < 96)
+	else if (midiNote < 96)
 		{
-		return inter(midiNote - 64, cents, FREQ_64_96) >> 2;
+		return inter(midiNote - 64, divisions, FREQ_64_96) >> 2;
 		}
-	else if (note < 128)
+	else // if (midiNote < 128)
 		{
-		return inter(midiNote - 96, cents, FREQ_96_128);
+		return inter(midiNote - 96, divisions, FREQ_96_128);
 		}
 	}
+#endif
+
+
+#ifdef BASIC_PITCH_FREQUENCY_UTILITIES
+
+#ifdef __AVR__
+const PROGMEM UNSIGNED_16_BIT_INT BASE_FREQ[128] = 
+#else		// __AVR__
+const UNSIGNED_16_BIT_INT BASE_FREQ[128] =
+#endif		// __AVR__
+{
+32, 34, 36, 38, 41, 43, 46, 48, 51, 54, 58, 61, 65, 69, 73, 77, 82,
+87, 92, 97, 103, 109, 116, 123, 130, 138, 146, 155, 164, 174, 184,
+195, 207, 219, 233, 246, 261, 277, 293, 311, 329, 349, 369, 391, 415,
+439, 466, 493, 523, 554, 587, 622, 659, 698, 739, 783, 830, 879, 932,
+987, 1046, 1108, 1174, 1244, 1318, 1396, 1479, 1567, 1661, 1759,
+1864, 1975, 2093, 2217, 2349, 2489, 2637, 2793, 2959, 3135, 3322,
+3519, 3729, 3951, 4186, 4434, 4698, 4978, 5274, 5587, 5919, 6271,
+6644, 7039, 7458, 7902, 8372, 8869, 9397, 9956, 10548, 11175, 11839,
+12543, 13289, 14079, 14917, 15804, 16744, 17739, 18794, 19912, 21096,
+22350, 23679, 25087, 26579, 28159, 29834, 31608, 33488, 35479, 37589,
+39824, 42192, 44701, 47359, 50175
+};
+
+// Given a MIDI Note (0...127) returns the frequency of the note * 4
+UNSIGNED_16_BIT_INT midiNoteFreq16(unsigned char midiNote)
+	{
+#ifdef __AVR__
+	return pgm_read_word_near(&BASE_FREQ[midiNote]); 
+#else		//  __AVR__
+	return BASE_FREQ[midiNote];
+#endif		// __AVR__
+	}
+
 #endif
 
 
@@ -111,23 +172,23 @@ UNSIGNED_16_BIT_INT div12(UNSIGNED_16_BIT_INT dividend)
 // and the divisions (1/256 semitone) above the new note corresponding to the
 // change in pitch if the Pitch Bend corresponds to 1 octave up and 1 octave down.
 // These two values can then be passed to midiFreq to get a current frequency
-void bend12(unsigned char note, UNSIGNED_16_BIT_INT amount, unsigned char* newNote, unsigned char* divisions)
+void bend12(unsigned char midiNote, SIGNED_16_BIT_INT bendAmount, unsigned char* newNote, unsigned char* divisions)
 	{
-	if (amount >= 0)
+	if (bendAmount >= 0)
 		{
-		unsigned char dNote = (unsigned char)div12(amount);
-		UNSIGNED_16_BIT_INT residual = (amount - dNote * 12);
-		*newNote = dNote + note;
+		unsigned char dNote = (unsigned char)div12((UNSIGNED_16_BIT_INT)bendAmount);
+		UNSIGNED_16_BIT_INT residual = (bendAmount - dNote * 12);
+		*newNote = dNote + midiNote;
 		*divisions = (unsigned char)((residual * 384) >> 10);
 		}
 	else
 		{
-		amount = -amount;
-		unsigned char dNote = (unsigned char)div12(amount);
-		UNSIGNED_16_BIT_INT residual = (amount - dNote * 12);
+		bendAmount = -bendAmount;
+		unsigned char dNote = (unsigned char)div12((UNSIGNED_16_BIT_INT)bendAmount);
+		UNSIGNED_16_BIT_INT residual = (bendAmount - dNote * 12);
 		if (residual == 0)
 			{
-			signed char n = note - (signed char)dNote;
+			signed char n = midiNote - (signed char)dNote;
 			if (n <= 0)
 				{
 				*newNote = 0;
@@ -149,6 +210,15 @@ void bend12(unsigned char note, UNSIGNED_16_BIT_INT amount, unsigned char* newNo
 
 //////// NOTE DISTRIBUTION
 
+
+/// The crucial feature is how the note distributor's heap works.  The heap is large enough
+/// to contain a stack growing up from 0 of all the ALLOCATED CHANNELS, then at least one
+/// DISTRIBUTOR_NO_CHANNEL as a buffer space between, and then a stack growing down from n-1
+/// of all the UNALLOCATED CHANNELS.  Since the total number of channels is 16, with one buffer
+/// space at least, we only need 17 bytes.  When we remove a channel from one or the other stack
+/// it shrinks and the buffer space in-between grows.  And when we add a channel the buffer space
+/// shrinks, but the two stacks can never touch.  Initially all the channels are in the UNALLOCATED
+/// CHANNELS stack.
 
 // Initializes a Note Distributor over the range from minChannel to maxChannel inclusive
 void initializeDistributor(struct noteDistributor* distributor, unsigned char minChannel, unsigned char maxChannel)
@@ -316,6 +386,19 @@ unsigned char isChannelInRange(struct noteDistributor* distributor, unsigned cha
 	{
 	return (channel >= distributor->minChannel && channel <= distributor->maxChannel);
 	}
+	
+unsigned char oldestChannel(struct noteDistributor* distributor, unsigned char allocated)
+	{
+	if (allocated)
+		{
+		return distributor->heap[0];
+		}
+	else
+		{
+		return distributor->heap[16];
+		}
+	}
+
 	
 // Returns the note associated with a given channel.
 // If there is no such note, returns DISTRIBUTOR_NO_NOTE.
