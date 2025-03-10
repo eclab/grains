@@ -80,7 +80,7 @@ These are utility functions that may be of use to you.  They include:
 
 * Pitch bend calculations
 * Conversions from pitch to frequency with all integer math
-* Note distribution tools
+* Note distribution and voice allocation tools
 
 **Note that the utilities are at present ENTIRELY UNTESTED.**
 
