@@ -302,7 +302,8 @@ uint8_t getPitch(uint8_t pos, uint8_t scale)
 // output CV
 int16_t pitchOut;
 
-// Trigger indicators.  These are either 0 (not triggered), 1 (triggered last time and this time), or 2 (triggered this time)
+// Trigger indicators.  These are either 0 (not triggered), 1 (triggered last time and this time), 2 (triggered this time),
+// or 3 (triggered and acknowledged, and now should be ignored).
 // Someone has to be a 1 in order for us to consider all four to have been fairly triggered
 uint8_t a = 0;
 uint8_t b = 0;
