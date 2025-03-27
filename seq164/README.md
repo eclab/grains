@@ -61,9 +61,9 @@ The scale or chord is chosen by POT 3.  They are at present (left to right):
     Chromatic
     Major Triad + Major 2nd + Major 6th
     Major Triad + Major 2nd + Major 7th
-    Minor Triad + Major 2nd + Minor 6th
+    Minor Triad + Major 2nd + Major 6th
     Minor Triad + Major 2nd + Minor 7th
-    Minor Triad + Major 2nd + Minor 6th + Minor 7th
+    Minor Triad + Major 2nd + Major 6th + Minor 7th
     Fully Diminished 7th
 
 
@@ -97,6 +97,14 @@ them to trigger inputs 1 and 2, you'd get notes 1, 2, and 3 and that's it.  If y
 them to inputs 2 and 3 you'd get notes 2, 4, and 6.  If you attached them to inputs 3 and 4 you'd
 get inputs 4, 8, and 12.
 
+
+
+## Gates Vs. Triggers
+
+SEQ164's Digital Out outputs a trigger.  If you wanted it to output a gate, you'd need to specify
+the gate length.  You could do this by changing a specific #define in the code to a longer value (nothing
+longer than 255).  I believe a value of X should correspond to a gate length of approximately 
+X/64 seconds.
 
 
 ## Output Pitch Range and Resolution

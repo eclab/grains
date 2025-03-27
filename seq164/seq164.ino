@@ -66,9 +66,9 @@
 /// Chromatic
 /// Major Triad + Major 2nd + Major 6th
 /// Major Triad + Major 2nd + Major 7th
-/// Minor Triad + Major 2nd + Minor 6th
+/// Minor Triad + Major 2nd + Major 6th
 /// Minor Triad + Major 2nd + Minor 7th
-/// Minor Triad + Major 2nd + Minor 6th + Minor 7th
+/// Minor Triad + Major 2nd + Major 6th + Minor 7th
 /// Fully Diminished 7th
 ///
 ///
@@ -103,6 +103,15 @@
 /// get inputs 4, 8, and 12.
 /// 
 ///
+/// GATES VS TRIGGERS
+///
+/// SEQ164's Digital Out outputs a trigger.  If you wanted it to output a gate, you'd need to specify
+/// the gate length.  You could do this by changing the following #define to a longer value (nothing
+/// longer than 255).  I believe a value of X should correspond to a gate length of approximately 
+/// X/64 seconds.
+
+#define TRIGGER_LENGTH 1
+
 /// OUTPUT PITCH RANGE AND RESOLUTION
 /// 
 /// Mozzi cannot go down to 0V.  Its minimum is a little more, transposing up by about a half
@@ -400,7 +409,7 @@ int updateAudio()
     	if (countdown2 == 0)
     		{
     		digitalWrite(CV_GATE_OUT, 1);
-       	 	countdown = 1;						// looks like we don't need a countdown at all for the trigger
+       	 	countdown = TRIGGER_LENGTH;
        	 	}
        	 }
     return pitchOut - 244;
