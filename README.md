@@ -59,7 +59,7 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Pluck       | Pluck-M    | Tardy       | Sequence      | Bit    |
 | Booker      | Booker-M   | Chrono      | LFO           | Scope  |
 | Droplets    | VS         | Pattern     | Motif         | Mode16 |
-| AKWF        | Mono       | Elements    | Quant         |        |
+| AKWF        | Mono       | Elements    | Quant         | Seq164 |
 | 808         | Para       | Lattice     | ADSR          |        |
 | Voice       | MJQ        | Beats       | Multilevel    |        |
 | Chordal     | Beep       | Geiger      | Stochastic    |        |
@@ -71,13 +71,11 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Ruckus      |            | Theory      |               |        |
 | Crackle     |            |             |               |        |
 
-## NEW: Arp
+## Seq164
 
-An arpeggiator with various chords and standard arpeggiation patterns.  Requires Mozzi.  
+Enables TRIQ164 to work as a quantized note sequencer.  You select a scale or chord, then choose up to 15 different notes, plus rests, and assign them to the various 16 steps.  It's magic!
 
-Note: a previous firmware program called Arp (not an arpeggiator) has been renamed to Motif so this one could be properly named.
-
-Status: Working.
+Status: Working. But you'll probably find programming TRIQ164 this way to be annoying.  I'd use this more as a random-button-pressing happy accident generator.
 
 
 ## 808
@@ -97,6 +95,14 @@ Status: Working.
 A wavetable synthesizer over your choice of waveforms from the [Adventure Kid Waveform](https://www.adventurekid.se/akrt/waveforms/) (AKWF) collection, plus a low-pass filter.  Requires Mozzi.
 
 Status: Working.  The waveforms are pretty aliased (not AdventureKid's fault, Mozzi's fault), and so sound pretty crummy at different positions.
+
+## Arp
+
+An arpeggiator with various chords and standard arpeggiation patterns.  Requires Mozzi.  
+
+Note: a previous firmware program called Arp (not an arpeggiator) has been renamed to Motif so this one could be properly named.
+
+Status: Working.
 
 ## Beats
 
@@ -254,7 +260,7 @@ Status: Working.  When decays get quiet, they go hissy and buzzy fast thanks to 
 
 Extends the SEQ16 to include programmable patterns of all kinds, like forward, backward, ping-pong, random patterns, rests, random rests, and so on.  It's like magic.
 
-Status: Working, but doesn't play well with Accent Repeats.  I'll have to see if I can improve that.  If there's really demand for it, I might consider doing a similar thing for SEQ8.  I can't do the same tricks for the TRIQ164 because it has individual outs and Grains doesn't have enough sockets: but the TANGLE firmware can give you back the two Mute CVs missing on the TRIQ164.
+Status: Working, but doesn't play well with Accent Repeats.  I'll have to see if I can improve that.  If there's really demand for it, I might consider doing a similar thing for SEQ8.  I can't do the same tricks for the TRIQ164 because it has individual outs and Grains doesn't have enough sockets.  But check out my Seq164 firmware, which can convert TRIQ164 into a note sequencer.  And also the TANGLE firmware can give you back the two Mute CVs missing on the TRIQ164.
 
 ## Mono
 
