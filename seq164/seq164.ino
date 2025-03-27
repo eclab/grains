@@ -89,6 +89,20 @@
 /// and (theoretically) missed triggers. 
 ///
 ///
+/// MIXING AND MATCHING
+///
+/// You don't need to use all four tracks of TRIQ164 for melody.  You could use, for example, just 3
+/// (providing 7 different notes) and reserve the fourth track for its usual drum duties.  If you
+/// attached the 3 tracks to trigger inputs 1, 2, and 3 on GRAINS you'd get notes 1...7.  That's the
+/// most useful configuration.  But if you attached them to inputs 2, 3, and 4 you'd get notes 
+/// 2, 4, 6, 8, 10, 12, and 14, which would be odd but perhaps interesting.  
+///
+/// Similarly you could just use 2 tracks for melody.  If you attached
+/// them to trigger inputs 1 and 2, you'd get notes 1, 2, and 3 and that's it.  If you attached
+/// them to inputs 2 and 3 you'd get notes 2, 4, and 6.  If you attached them to inputs 3 and 4 you'd
+/// get inputs 4, 8, and 12.
+/// 
+///
 /// OUTPUT PITCH RANGE AND RESOLUTION
 /// 
 /// Mozzi cannot go down to 0V.  Its minimum is a little more, transposing up by about a half
