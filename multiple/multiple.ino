@@ -6,7 +6,7 @@
 
 /// MULTIPLE
 ///
-/// Multiple is a two-track step multiplier.  Multiple is meant to 
+/// Multiple is a two-track clock multiplier.  Multiple is meant to 
 /// run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
 /// Multiple takes a clock input and attempts to produce a multiple of it.  It

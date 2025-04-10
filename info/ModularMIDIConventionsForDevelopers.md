@@ -123,21 +123,17 @@ MIDI has four "Channel Modes" set by CCs 124 through 127, and which consist of t
 
 #### MIDI Mode 4
 
-MIDI Mode 4 (OMNI OFF, MONO ON) is a special and relatively obscure mode which, as it so happens, is also a very good match for external input to Modular MIDI.  MIDI Mode 4 largely exists on guitar controllers and the like.
+MIDI Mode 4 (OMNI OFF, MONO ON) is a special and relatively obscure mode which, as it so happens, is also a very good match for external input to Modular MIDI.  MIDI Mode 4 largely exists on guitar controllers, and so it is sometimes known as "Guitar Mode".
  
-In MIDI Mode 4, you can instruct an instrument to listen to a range of channels N ... N + M, and treat each one as a separate voice.  If a note arrives on a channel in the range, it immediately replaces any note currently on that channel: thus at most one note can be playing on a given channel at a time.  Furthermore there is a "Global Channel" (channel N - 1, or channel 16 if N = 1), and any data which arrives on that channel is immediately rebroadcasted in parallel to all channels N ... N + M.  
+In MIDI Mode 4, you can instruct an instrument to listen to a range of channels N ... N + M - 1, and treat each one as a separate voice.  If a note arrives on a channel in the range, it immediately replaces any note currently on that channel: thus at most one note can be playing on a given channel at a time. 
 
-If this sounds suspiciously like MPE, it should!  But unlike MPE, which has elaborate rules, MIDI Mode 4 is very simple: the above is about all there is to it.  MIDI Mode 4 is set up for the range N ... N + M by sending two specific CC messages to channel N.  
+If this sounds suspiciously like MPE, it should!  But unlike MPE, which has elaborate rules, MIDI Mode 4 is very simple: the above is about all there is to it.  MIDI Mode 4 is set up for the range N ... N + M - 1 by sending two specific CC messages to channel N.  
 
 A distributor module can respond to MIDI Mode 4 straightforwardly:
 
-- When the appropriate setup request CCs arrive, the distributor assigns channel N-1 to be the "Global Channel" which is automatically rerouted to channels N ... N+M.  Otherwise, channels N ... N+M are unchanged.
-
-- There can be multiple ranges, and they can accidentally overlap.  To disambiguate, we suggest: if a request arrives to set up N ... N + M, and in this range there was already a "Global Channel" X, its special Global Channel status is revoked.
-
 - CC messages 124 ... 127 ought not be passed through to the per-THRU channel sockets.  However as they also imply an ALL NOTES OFF, then perhaps an ALL NOTES OFF could be passed on instead.
 
-- The distributor might keep track, for non-Global channels declared as MIDI Mode 4, of which notes are outstanding.  When a new note arrives, the distributor could send a NOTE OFF to the appropriate channel THRU to guarantee that the old note has been removed.
+- The distributor might keep track, for channels declared as MIDI Mode 4, of which notes are outstanding.  When a new note arrives, the distributor could send a NOTE OFF to the appropriate channel THRU to guarantee that the old note has been removed.
 
 ### Distributor MPE Suggestions
 
@@ -153,7 +149,9 @@ MPE is meant for the situation where each note (each voice) is usually sent on a
 
 #### Reconciling MPE and MIDI Mode 4
 
-The MPE documentation states that "If the Channel ranges all match, then the MIDI Mode 4 device will behave identically whether or not it supports MPE."  This is not quite true.  Both Pitch Bend and Channel Pressure can be sent as Zone messages or as individual channel messages, and the MPE documentation says "If an MPE synthesizer receives Pitch Bend (for example) on both a Master and a Member Channel, it must combine the data meaningfully. The same is true for Channel Pressure".  But Mode 4 is explicit: there is no combination, but rather, they just replace one another.  We suggest if a range is declared to be both an MPE Zone and Mode 4, then Mode 4's behavior takes precedence with respect to Pitch Bend and Channel Aftertouch.
+The MPE documentation states that "If the Channel ranges all match, then the MIDI Mode 4 device will behave identically whether or not it supports MPE."  This is not quite true.  Both Pitch Bend and Channel Pressure can be sent as Zone messages or as individual channel messages, and the MPE documentation says "If an MPE synthesizer receives Pitch Bend (for example) on both a Master and a Member Channel, it must combine the data meaningfully. The same is true for Channel Pressure".  But Mode 4 doesn't have a Master channnel.  Instead, MPE suggests that if Mode 4 is used along with MPE, a Master channel will be created at N-1 as a pseudo-low zone.  It is not stated whether high zones are then permitted.
+
+This is a mess.  We would recommend not allowing Mode 4 and MPE to coexist.  Mode 4 should override MPE.
 
 <a name="namespaces"/></a>
 ## Namespaces, IDs, and CC Messages

@@ -1,6 +1,6 @@
 # Multiple
 
-Multiple is a two-track step multiplier.  Multiple is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.  Multiple was written by Sean Luke [sean@cs.gmu.edu]
+Multiple is a two-track clock multiplier.  Multiple is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.  Multiple was written by Sean Luke [sean@cs.gmu.edu]
 
 Set your Grains to **GRAINS MODE**.  (If you want MOZZI mode, change CV_AUDIO_OUT to 9)
 

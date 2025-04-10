@@ -1,6 +1,6 @@
 # Divvy
 
-Divvy is a two-track beat divider with pulsewidth. Divvy is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.  Divvy was written by Sean Luke [sean@cs.gmu.edu]
+Divvy is a two-track clock divider with pulsewidth. Divvy is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.  Divvy was written by Sean Luke [sean@cs.gmu.edu]
 
 Set your Grains to **GRAINS MODE**.  (If you want MOZZI mode, change CV_AUDIO_OUT to 9)
 

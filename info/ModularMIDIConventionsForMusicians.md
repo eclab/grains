@@ -194,9 +194,9 @@ If your MIDI Distributor supports MPE, you'll need to set up the **MPE Zone** on
 
 ### Four oscillators playing different notes, using MIDI Mode 4 (OMNI OFF, MONO)
 
-MIDI Mode 4 is like a simplified version of MPE: you can define a range of channels similar to a "Zone", each channel only plays one note at a time, and there is a "global channel" like MPE's master channel.  MIDI Mode 4 is really mostly supported by guitar controllers, not keyboard controllers or DAWs.
+MIDI Mode 4 is like a simplified version of MPE: you can define a range of channels similar to a "Zone", each channel only plays one note at a time.  MIDI Mode 4 is really mostly supported by guitar controllers, not keyboard controllers or DAWs.
 
-If your MIDI Distributor supports MIDI Mode 4 on some range of channels, you'll need to set up the range from your DAW or controller.  Let's say you've set up Mode 4 on Channels 5 through 8.  This will automatically also assign Channel 4 as the global channel.  Now just hook up outputs 5 through 8 on the Distributor to your four oscillators.
+If your MIDI Distributor supports MIDI Mode 4 on some range of channels, you'll need to set up the range from your DAW or controller.  Let's say you've set up Mode 4 on Channels 5 through 8. Now just hook up outputs 5 through 8 on the Distributor to your four oscillators.
 
 
 ### Mixing and matching
@@ -204,6 +204,8 @@ If your MIDI Distributor supports MIDI Mode 4 on some range of channels, you'll 
 All this can be mixed and matched -- after all, you have 16 channels.  You could set up MPE on the sockets for channels 1 through 5, set up a different oscillator on the socket for channel 6, and up two "playing together" oscillators on the socket for channel 7, say.
 
 And so on!  You have a lot of flexibility.
+
+However combining Mode 4 with MPE is complicated, and we do not recommend it.
 
 
 <a name="stage3"/></a>

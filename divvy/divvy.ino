@@ -6,7 +6,7 @@
 
 /// DIVVY
 ///
-/// Divvy is a two-track beat divider with pulsewidth.  Divvy is meant to 
+/// Divvy is a two-track clock divider with pulsewidth.  Divvy is meant to 
 /// run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
 /// Divvy takes a clock input and produces a division of it.
