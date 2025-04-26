@@ -49,7 +49,7 @@ I'll gradually look into updating to 2.0 if it proves useful.
 
 ### A Note on GRAINS Oscillators
 
-GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered PWM creates a low-level buzz or hum which is not filtered out.  To remove this, I suggest including at the beginning of your song a multi-second stretch of silence.  Then load your song into Audacity, and use the silent region (which will have the hum) as the noise profile for the "Noise Reduction" plugin (I'd use dB=7, Sensitivity=7.0, Smoothing=7).
+GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered PWM creates a low-level buzz or hum which is not filtered out well.  To remove this, I suggest including at the beginning of your song a multi-second stretch of silence.  Then load your song into Audacity, and use the silent region (which will have the hum) as the noise profile for the "Noise Reduction" plugin (I'd use dB=7, Sensitivity=7.0, Smoothing=7).
 
 ### Firmware Summary
 
@@ -71,7 +71,7 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Ruckus      |            | Theory      |               |        |
 | Crackle     |            |             |               |        |
 
-## Seq164
+## NEW: Seq164
 
 Enables TRIQ164 to work as a quantized note sequencer.  You select a scale or chord, then choose up to 15 different notes, plus rests, and assign them to the various 16 steps.  It's magic!
 
