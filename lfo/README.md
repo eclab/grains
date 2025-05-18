@@ -16,7 +16,7 @@ The LFO can also be RESET with a trigger to IN 3.
 
 Note that the LFO can only reach about, oh, 4V due to limitations in GRAINS.
 
-Looking for a RANDOM, NOISY, or RANDOM SAMPLE AND HOLD LFO?  Try my GRAINS firmware STOCHASTIC.
+Looking for a RANDOM, NOISY, or RANDOM SAMPLE AND HOLD LFO?  Try my GRAINS firmware STOCHASTIC or RUCKUS.
 
 Looking for multiple complex pulse wave LFOs?  Try my GRAINS firmware PULSES.
 
@@ -32,7 +32,7 @@ How the LFO behaves during Track and Hold depends on the BACKGROUND #define.  No
 
 ## Sample and Hold
 
-Track and Hold can be converted to a SAMPLE AND HOLD.  Here, every time you send a TRIGGER to DIGITAL OUT, the LFO will sample its current wave value and only output that until you send the next trigger.  Note that SAMPLE_AND_HOLD automatically turns on BACKGROUND.  To turn on Sample and hold, uncomment a specific #define in the code.
+Track and Hold can be converted to a SAMPLE AND HOLD.  Here, every time you send a TRIGGER to DIGITAL OUT, the LFO will sample its current wave value and only output that until you send the next trigger.  Note that SAMPLE AND HOLD automatically turns on BACKGROUND (see Track And Hold above).  To turn on Sample and Hold, uncomment a specific #define in the code.
 
 Note that this is *not* a Random Sample and Hold.  It's just doing sample and hold on the underlying LFO wave.  For a random sample and hold, try my firmware STOCHASTIC.
 
@@ -50,9 +50,7 @@ The first option is the default.  If you'd like it centered, there's an option i
 
 ## Gain
 
-Gain is provided on Audio IN.  By default, of course, that is 0.  So by default we disable
-gain entirely.  If you'd like to control the LFO gain via CV on Audio In, there is an
-option for that in the code.
+Gain is by default full volume, but you can instead provide a gain value via Audio In. This is useful for ramping up the LFO with an envelope, for example. Normally this is turned off, but you can turn it on by uncommenting a #define in the code.
 
 
 
@@ -71,7 +69,7 @@ Rate CV
 #### IN 3
 Reset
 #### AUDIO IN (A)
-Gain
+Gain (if USE_GAIN is turned on)
 #### AUDIO OUT
 Output
 #### DIGITAL OUT (D) 
