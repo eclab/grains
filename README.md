@@ -49,7 +49,7 @@ I'll gradually look into updating to 2.0 if it proves useful.
 
 ### A Note on GRAINS Oscillators
 
-GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered PWM creates a low-level buzz or hum which is not filtered out well.  To remove this, I suggest including at the beginning of your song a multi-second stretch of silence.  Then load your song into Audacity, and use the silent region (which will have the hum) as the noise profile for the "Noise Reduction" plugin (I'd use dB=7, Sensitivity=7.0, Smoothing=7).
+GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered PWM creates a low-level buzz or hum which is not filtered out well.  To remove this, I suggest including at the beginning of your song a multi-second stretch of silence (where the GRAINS is buzzing).  Then load your song into Audacity, and use the silent region (which will have the hum) as the noise profile for the "Noise Reduction" plugin (I'd use dB=7, Sensitivity=7.0, Smoothing=7).
 
 ### Firmware Summary
 

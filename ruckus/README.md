@@ -8,9 +8,9 @@ Ruckus can make:
 
 - Pure white noise
 - Pure pulse noise
-- Pulse noise pushed through a resonant 12db lowpass filter with adjustable cutoff
-- Pulse noise pushed through a resonant 12db high pass filter with adjustable cutoff
-- Pulse noise pushed through a resonant 12db bandpass filter with adjustable cutoff
+- White noise pushed through a resonant 12db lowpass filter with adjustable cutoff
+- White noise pushed through a resonant 12db high pass filter with adjustable cutoff
+- White noise pushed through a resonant 12db bandpass filter with adjustable cutoff
 - Sample and Hold of random values (optionally smoothed)
 - Sample and Hold of input CV (optionally smoothed)
 - Track and Hold of input CV (optionally smoothed)
