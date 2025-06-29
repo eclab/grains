@@ -755,8 +755,9 @@ inline uint16_t getPitchPos(uint8_t pitch, uint8_t tune)
     //pitchCV = (pitchCV + p1) >> 1;
 
     int16_t finalPitch = pitchCV + (tuneCV >> 1) + TRANSPOSE_SEMITONES * 17 + TRANSPOSE_OCTAVES * 205 + TRANSPOSE_BITS;
-    return FREQUENCY(finalPitch < 0 ? 0 : (finalPitch > 1535 ? 1535 : finalPitch));
-    }
+    //return FREQUENCY(finalPitch < 0 ? 0 : (finalPitch > 1535 ? 1535 : finalPitch));
+    return finalPitch;
+	}
     
     
 #define GET_NOISE(pos) pgm_read_byte_near(&NOISE[pos])

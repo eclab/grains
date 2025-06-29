@@ -66,12 +66,10 @@
 /// Mode16 advances to the proper step.  You can adjust things by tweaking the PWM of the square
 /// wave you send to Mode16.
 ///
-/// Mode16 only works partially with Accent Repeats, because they conflict with Mode16's drop in gate, and because
-/// SEQ16 determines how fast to play Repeats based on previous pulses (and Mode16 pulses very fast to jump to
-/// locations).  Accent Repeats will definitely not work properly after a recent jump (such as going backwards or
-/// randomly) or after a recent skip.  They may or may not work properly when going foward normally.  Rests may
-/// slow them down.  If you find that Repeats are not what you expected, I'd set Repeats to 1.  I'll try to
-/// improve the Accent Repeats situation in the future.
+/// Mode16 is incompatible with Accent Repeats, because they conflict with Mode16's because SEQ16 determines how fast 
+/// to play them (even a single Repeat) based on the speed of previous pulses, and Mode16 pulses very fast to move
+/// to different locations.  So Mode16 has special code to ignore Accent Repeats and treat them as a single standard
+/// gate.
 ///
 /// Note that if you set the Pattern Knob to in-between two patterns, it won't work right, constantly getting 
 /// reset.  So make sure the Pattern Knob is definitely on the pattern you want.
@@ -252,6 +250,8 @@ uint8_t patterns[NUM_PATTERNS][MAX_PATTERN_LENGTH]
 
 
 #define TRIGGER_LENGTH 200			// 1/5 of a millisecond is about the fastest SEQ16 can go
+#define PLAY_LENGTH (TRIGGER_LENGTH)
+
 
 uint8_t low = 1;
 uint8_t high = 16;
@@ -263,25 +263,28 @@ uint8_t oldReset = 0;
 uint8_t reset = 0;
 uint8_t oldClock = 255;
 uint8_t played = false;				// used for double-checks
+uint8_t gateLock = false;
 #define MAX_CLOCK_TIMER 255			// too long?  ~64ms
 
+#define UKNOWN_GATE_OUT 2
 
 void setGateForwarding(uint8_t forward)
     {
+    gateOut = UKNOWN_GATE_OUT;
     if (forward == 0 && gateForwarding != 0)
 		{
-		digitalWrite(CV_AUDIO_IN, 0);		// clear any gate
+		digitalWrite(CV_AUDIO_IN, 0);				// Lower Gate just in case
 		}
     gateForwarding = forward;
+    gateLock = false;
     }
     
 void doReset()
     {
     setGateForwarding(false);
-    digitalWrite(CV_AUDIO_OUT, 1);
+    digitalWrite(CV_AUDIO_OUT, 1);					// Send Reset
     delayMicroseconds(TRIGGER_LENGTH);
-    digitalWrite(CV_AUDIO_OUT, 0);
-//    delayMicroseconds(TRIGGER_LENGTH);
+    digitalWrite(CV_AUDIO_OUT, 0);					// End Reset
     }
 
 void doClocks(uint8_t clocks)
@@ -289,9 +292,9 @@ void doClocks(uint8_t clocks)
     setGateForwarding(false);
     for(uint8_t i = 0 ; i < clocks; i++)
 		{
-		digitalWrite(CV_GATE_OUT, 1);
+		digitalWrite(CV_GATE_OUT, 1);				// Send Clock
 		delayMicroseconds(TRIGGER_LENGTH);
-		digitalWrite(CV_GATE_OUT, 0);
+		digitalWrite(CV_GATE_OUT, 0);				// End Clock
 		delayMicroseconds(TRIGGER_LENGTH);
 		}
     }
@@ -300,17 +303,17 @@ void playNote()
     {
     //Serial.println("Play");
     setGateForwarding(true);
-    digitalWrite(CV_AUDIO_IN, 1);
-    digitalWrite(CV_GATE_OUT, 1);
-    delayMicroseconds(TRIGGER_LENGTH);
-    digitalWrite(CV_GATE_OUT, 0);
+    digitalWrite(CV_AUDIO_IN, 1);					 // Raise Gate
+    digitalWrite(CV_GATE_OUT, 1);					 // Send Clock
+    delayMicroseconds(PLAY_LENGTH);
+    digitalWrite(CV_GATE_OUT, 0);					 // End Clock
     delayMicroseconds(TRIGGER_LENGTH);
     }
 	
 void playRest()
     {
     setGateForwarding(false);
-    digitalWrite(CV_AUDIO_IN, 0);
+    digitalWrite(CV_AUDIO_IN, 0);					 // Lower Gate
     }
 	
 	
@@ -323,7 +326,7 @@ void updateStateMachine(uint8_t rising)
     else 
     	{
 		setGateForwarding(false);
-		digitalWrite(CV_AUDIO_IN, 0);
+		digitalWrite(CV_AUDIO_IN, 0);				// Lower Gate
 		//Serial.println("Off");
 		}
 		
@@ -1026,7 +1029,9 @@ void updateStateMachine(uint8_t rising)
 #define HIGH 128
 #define LOW  64
 
-uint16_t releaseTime = 0;						// FIXME: Not doing anything with this right now
+uint8_t oldGate = 0;
+uint8_t gateOut = 0;
+
 uint16_t patternKnob = 0;
 void loop()
     {
@@ -1067,55 +1072,63 @@ void loop()
 		updateStateMachine(0);		// go through the state machine as if we had just fallen
 		}
 
-    // Forward the gate
+
+    uint16_t gate = analogRead(CV_IN3);			// Gate In from SEQ16
+
+    // Forward the gate until our external clock goes down
     if (gateForwarding)
     	{
-    	uint16_t g = analogRead(CV_IN3);
-    	if (g > 256)
+    	if (gate > 256 && !gateLock)
 			{
-			digitalWrite(CV_AUDIO_IN, 1);
-			}
-    	else if (g < 128)
+			if (gateOut != 1)
+				{
+				digitalWrite(CV_AUDIO_IN, 1);			// Raise Gate
+				gateOut = 1;
+				}
+			} 
+		/*
+    	else if (gate < 128)
 			{
-			digitalWrite(CV_AUDIO_IN, 0);
+			if (gateOut != 0)
+				{
+				digitalWrite(CV_AUDIO_IN, 0);			// Lower Gate
+				gateOut = 0;
+				}
 			}
+		gateLock = true;
+		*/
     	}
-    
-    // Get Clock in
-    int8_t clock = 0;
-    uint16_t c = analogRead(CV_POT_IN1);
-
-    if (c > HIGH)
+	else 
 		{
-		if (oldClock == 0)	// we just went high
+		if (gateOut != 0)
 			{
-			clock = 1;
+			digitalWrite(CV_AUDIO_IN, 0);				// Lower Gate
+			gateOut = 0;
+			}
+		}
+
+    // Get Clock in
+    uint16_t clock = analogRead(CV_POT_IN1);
+
+    if (clock > HIGH)
+		{
+		if (oldClock == 0)			// we just went high
+			{
+			updateStateMachine(1);
 			}
 		oldClock = 1;
-		uint16_t rc = (c > LOW ? c - LOW : 0); 
-		if (rc > releaseTime) releaseTime = rc;					// FIXME: Not doing anything with this right now
 		}
-    else if (c < LOW)
+    else if (clock < LOW)
 		{
-		releaseTime = 0;										// FIXME: Not doing anything with this right now
-		if (oldClock == 1)
+		if (oldClock == 1)			// we just went low
 			{
-			clock = -1;
+			// First, lower the gate if our external clock has gone down
+			digitalWrite(CV_AUDIO_IN, 0);
+			gateLock = false;
+			// now update state  machine
+			updateStateMachine(0);
 			}
 		oldClock = 0;
-		}
-
-    if (clock == -1)	// clock dropped
-		{
-		updateStateMachine(0);
-		}
-    else if (clock == 1)	// clock raised
-		{
-		updateStateMachine(1);
-		}
-	else
-		{
-		// do nothing
 		}
     }
     

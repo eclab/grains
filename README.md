@@ -340,7 +340,7 @@ Status: Working.  If you want more LFO waves, see the LFO firmware.
 
 A Note Quantizer.  Requires Mozzi.
 
-Status: Working, but requires a lookup table to deal with some nonlinearity in the pitch output of GRAINS. The table is tuned for my GRAINS: let me know if it's working for yours as well.
+Status: Working, but requires a lookup table to deal with some nonlinearity in the pitch output of GRAINS.
 
 ## Respite
 

@@ -39,11 +39,17 @@
 
 void resetEmitter(struct midiEmitter* emitter)
     {
+#ifdef ALLOW_EMIT_RUNNING_STATUS
     emitter->lastStatus = INVALID;
+#endif
+#ifdef ALLOW_EMIT_HIGH_RES_CC
     emitter->lastHighResParameter = INVALID;
     emitter->lastHighResMSB = INVALID;
+#endif
+#ifdef ALLOW_EMIT_RPN_NRPN
     emitter->lastNRPNMSB = INVALID;
     emitter->lastNRPN = INVALID_BIG;
+#endif
     }
 
 void initializeEmitter(struct midiEmitter* emitter, unsigned char tag)
@@ -55,6 +61,7 @@ void initializeEmitter(struct midiEmitter* emitter, unsigned char tag)
 // this is just called internally as a wrapper around emitMidi
 void doEmit(struct midiEmitter* emitter, unsigned char byte)
     {
+#ifdef ALLOW_EMIT_RUNNING_STATUS
     if (emitter->lastStatus == byte)    // already emitted it as the last status byte, ignore for running status
         return;
     // should we save the status byte for running status?
@@ -143,7 +150,7 @@ void emitPC(struct midiEmitter* emitter, unsigned char program, unsigned char ch
     }
 
 // program goes 0 ... 127, channel goes 0 ... 15
-void emitPCAndBank(struct midiEmitter* emitter, unsigned char program, unsigned bankMSB, unsigned bankLSB, unsigned char channel)       
+void emitBankAndPC(struct midiEmitter* emitter, unsigned char program, unsigned bankMSB, unsigned bankLSB, unsigned char channel)       
     {
     emitCC(emitter, 0, bankMSB, channel);
     emitCC(emitter, 32, bankLSB, channel);
@@ -151,6 +158,7 @@ void emitPCAndBank(struct midiEmitter* emitter, unsigned char program, unsigned 
     doEmit(emitter, program & 127);
     }
 
+#ifdef ALLOW_EMIT_RPN_NRPN
 // parameter goes 0...16383, value goes 0...16383, rpn is true or false, channel goes 0...15
 void emitNRPN(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel)
     {
@@ -185,9 +193,20 @@ void emitNRPN(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGN
     emitter->lastHighResMSB = INVALID;
     }
 
+// parameter goes 0...16383, rpn is true or false, channel goes 0...15
+void emitNRPNIncrement(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, unsigned char rpn, unsigned char channel)
+	{
+	return emitNRPNIncrementBy(emitter, parameter, 0, rpn, channel);
+	}
+
+// parameter goes 0...16383, rpn is true or false, channel goes 0...15
+void emitNRPNDecrement(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, unsigned char rpn, unsigned char channel)
+	{
+	return emitNRPNDecrementBy(emitter, parameter, 0, rpn, channel);
+	}
 
 // parameter goes 0...16383, value goes 0...127, rpn is true or false, channel goes 0...15
-void emitNRPNIncrement(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel)
+void emitNRPNIncrementBy(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel)
     {
     if (rpn) parameter += 16384;
     // Do we resubmit the parameter?
@@ -214,7 +233,7 @@ void emitNRPNIncrement(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT paramete
     }
 
 // parameter goes 0...16383, value goes 0...127, rpn is true or false, channel goes 0...15
-void emitNRPNDecrement(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel)
+void emitNRPNDecrementBy(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel)
     {
     if (rpn) parameter += 16384;
     // Do we resubmit the parameter?
@@ -239,8 +258,9 @@ void emitNRPNDecrement(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT paramete
     emitter->lastNRPNMSB = INVALID;
     emitter->lastHighResMSB = INVALID;
     }
+#endif
 
-
+#ifdef ALLOW_EMIT_HIGH_RES_CC
 void emitHighResCC(struct midiEmitter* emitter, unsigned char parameter, UNSIGNED_16_BIT_INT value, unsigned char channel)   
     {
     unsigned char msb = (value >> 7) & 127;
@@ -256,7 +276,7 @@ void emitHighResCC(struct midiEmitter* emitter, unsigned char parameter, UNSIGNE
         
     emitCC(emitter, parameter + 32, value & 127, channel);          // lsb
     }
-
+#endif
 
 // buffer does not include 0xF0 at start nor 0xF7 at end
 void emitSysex(struct midiEmitter* emitter, unsigned char* buffer, unsigned char len)

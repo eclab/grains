@@ -294,7 +294,7 @@ int main(int argc, char* argv[])
     expectedBankMSB = 41;
     expectedBankLSB = 72;
     expectedProgram = 24;
-    emitPCAndBank(&emit, 24, 41, 72, 1);
+    emitBankAndPC(&emit, 24, 41, 72, 1);
         
     expectedBankMSB = 41;
     expectedBankLSB = 72;
@@ -420,25 +420,25 @@ int main(int argc, char* argv[])
     expectedValue = 62;
     expectedRPN = 0;
     expectedStatus = STATUS_NRPN_INCREMENT;
-    emitNRPNIncrement(&emit, 1234, 62, 0, 1);
+    emitNRPNIncrementBy(&emit, 1234, 62, 0, 1);
 
     expectedParameter = 1234;
     expectedValue = 63;
     expectedRPN = 0;
     expectedStatus = STATUS_NRPN_INCREMENT;
-    emitNRPNIncrement(&emit, 1234, 63, 0, 1);
+    emitNRPNIncrementBy(&emit, 1234, 63, 0, 1);
 
     expectedParameter = 1234;
     expectedValue = 64;
     expectedRPN = 0;
     expectedStatus = STATUS_NRPN_DECREMENT;
-    emitNRPNDecrement(&emit, 1234, 64, 0, 1);
+    emitNRPNDecrementBy(&emit, 1234, 64, 0, 1);
 
     expectedParameter = 1234;
     expectedValue = 65;
     expectedRPN = 0;
     expectedStatus = STATUS_NRPN_DECREMENT;
-    emitNRPNDecrement(&emit, 1234, 65, 0, 1);
+    emitNRPNDecrementBy(&emit, 1234, 65, 0, 1);
 
     expectedParameter = 1234;
     expectedValue = 5678;
@@ -584,7 +584,7 @@ int main(int argc, char* argv[])
     expectedBankMSB = 42;
     expectedBankLSB = 65;
     expectedProgram = 23;
-    emitPCAndBank(&emit, 23, 42, 65, 7);
+    emitBankAndPC(&emit, 23, 42, 65, 7);
 
     expectedValue = -1234;
     emitBend(&emit, -1234, 8);

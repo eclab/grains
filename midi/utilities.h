@@ -54,7 +54,21 @@ UNSIGNED_16_BIT_INT midiNoteFreq16(unsigned char midiNote);
 
 /// PITCH BEND
 
-// Given a base MIDI note (0...127) and a MIDI bend amount(-8196...8195), provides a new note
+// Converts an RPN bend range of semitones and cents into N * 1/256 of a semitone
+// RPN Bend Range is provided by RPN 0.  Its MSB is the range in semitones, and its LSB is the range in cents
+UNSIGNED_16_BIT_INT bendRange(unsigned char rangeSemitones, unsigned char rangeCents);
+
+// Given a bend range in N * 1/256 of a semitone, scales a MIDI pitch bend amount (-8192 ... +8191) 
+// into M * 1/256 semitones (+/-)
+SIGNED_16_BIT_INT bendPitch(SIGNED_16_BIT_INT bendAmount, UNSIGNED_16_BIT_INT bendRange);
+
+// Given a bend pitch in M * 1/256 semitones, and a MIDI note, returns the actual pitch in midi notes and range in N * 1/256 of a semitone, scales a pitch bend amount (-8192 ... +8191) 
+// into M * 1/256 semitones.  Does not use 32-bit math, so bends outside MIDI pitch range will be bounded.
+void bendFull(unsigned char midiNote, SIGNED_16_BIT_INT bendPitch, unsigned char* newNote, unsigned char* divisions);
+
+
+
+// Given a base MIDI note (0...127) and a MIDI pitch bend amount(-8192...8191), provides a new note
 // and the divisions (1/256 semitone) above the new note corresponding to the
 // change in pitch if the Pitch Bend range is 1 octave up and 1 octave down.
 // These two values can then be passed to midiFreq to get a current frequency

@@ -52,7 +52,6 @@ This is a final three-operator algorithm, with MODUATOR 2 modulating MODULATOR 1
 
 The index of modulation of MODULATOR 1 can be scaled DOWN with Pot 2.  But the index of modulation of MODULATOR 2 goes full blast (we don't have enough pots) in algorithms 2, 3, and 4.  You can at least reduce it with another #define in the code.
 
-
 ## Adjusting Tuning and Tracking
 
 Grains's Inputs track 1.3V/octave, not 1V/octave: we'll need to scale them to track properly.   To do this, you can adjust the Pitch CV Scaling on Pot 1.  This GRAINS program is set up to play  the C three octaves below Middle C when it receives 0V.  You should be able to use Pot 1 to scale  the pitch such that high Cs play in tune as well.  Note that as GRAINS resistors  warm up, the scaling will change and you will need to adjust the tracking again, at least until  they are fully warmed up.

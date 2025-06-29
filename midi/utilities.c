@@ -7,6 +7,13 @@
 #ifdef PITCH_FREQUENCY_UTILITIES
 /// Piecewise Linear Interpolation Approach, all integer math
 
+	// "A 440" frequency is MIDI pitch 69. 
+	// So frequency is 2^((pitch - 69) / 12) * 440
+	// This is 2^(pitch/12 - 69/12) * 440
+	// This is 2^(pitch/12) * 2^(-69/12) * 440
+	// This is 2^(pitch/12) * 8.1757989156
+
+/// This table comes from 2^(x/12) * 8.1757989156 * 1024, for values x=0...32
 #ifdef __AVR__
 const PROGMEM UNSIGNED_16_BIT_INT FREQ_0_32[33] =
 #else		// __AVR__
@@ -19,7 +26,8 @@ const UNSIGNED_16_BIT_INT FREQ_0_32[33] =
 	47359, 50175, 53152
 	};
   
-// 8 times more
+/// This table comes from 2^(x/12) * 8.1757989156 * 1024 / 8, for values x=32...64
+/// We divide by 8 to maximize usage of 16-bit integers
 #ifdef __AVR__
 const PROGMEM UNSIGNED_16_BIT_INT FREQ_32_64[33] = 
 #else		// __AVR__
@@ -32,7 +40,8 @@ const UNSIGNED_16_BIT_INT FREQ_32_64[33] =
 	39824, 42192
 	};
 
-// 8 times more
+/// This table comes from 2^(x/12) * 8.1757989156 * 1024 / 64, for values x=64...96
+/// We divide by 64 to maximize usage of 16-bit integers
 #ifdef __AVR__
 const PROGMEM UNSIGNED_16_BIT_INT FREQ_64_96[33] = 
 #else		// __AVR__
@@ -45,7 +54,8 @@ const UNSIGNED_16_BIT_INT FREQ_64_96[33] =
 	31608, 33488
 	};
 
-// 4 times more
+/// This table comes from 2^(x/12) * 8.1757989156 * 1024 / 256, for values x=96...128
+/// We divide by 256 to maximize usage of 16-bit integers
 #ifdef __AVR__
 const PROGMEM UNSIGNED_16_BIT_INT FREQ_96_128[33] = 
 #else		// __AVR__
@@ -57,8 +67,6 @@ const UNSIGNED_16_BIT_INT FREQ_96_128[33] =
 	21096, 22350, 23679, 25087, 26579, 28159, 29834, 31608, 33488, 35479, 
 	37589, 39824, 42192, 44701, 47359, 50175, 53159
 	};
-
-
 
 
 inline const UNSIGNED_16_BIT_INT getFrequencyData(const UNSIGNED_16_BIT_INT* table, unsigned char pitch) 
@@ -128,6 +136,8 @@ UNSIGNED_32_BIT_INT midiFreq(unsigned char midiNote, unsigned char divisions)
 
 #ifdef BASIC_PITCH_FREQUENCY_UTILITIES
 
+
+/// This table comes from 2^(x/12) * 8.1757989156 * 4, for values x=0...127
 #ifdef __AVR__
 const PROGMEM UNSIGNED_16_BIT_INT BASE_FREQ[128] = 
 #else		// __AVR__
@@ -158,6 +168,51 @@ UNSIGNED_16_BIT_INT midiNoteFreq16(unsigned char midiNote)
 	}
 
 #endif
+
+
+// Converts an RPN bend range of semitones and cents into N * 1/256 of a semitone
+// RPN Bend Range is provided by RPN 0.  Its MSB is the range in semitones, and its LSB is the range in cents
+UNSIGNED_16_BIT_INT bendRange(unsigned char rangeSemitones, unsigned char rangeCents)
+	{
+	return (rangeCents * 64) / 25 + rangeSemitones * 256;
+	}
+
+// Given a bend range in N * 1/256 of a semitone, scales a pitch bend amount (-8192 ... +8191) 
+// into M * 1/256 semitones (+/-)
+SIGNED_16_BIT_INT bendPitch(SIGNED_16_BIT_INT bendAmount, UNSIGNED_16_BIT_INT bendRange)
+	{
+	SIGNED_32_BIT_INT bend = (bendAmount * (SIGNED_32_BIT_INT) bendRange) / 8192;		// >> 13
+	if (bend > 32767) bend = 32767;
+	if (bend < -32768) bend = -32768;
+	return (SIGNED_16_BIT_INT) bend;
+	}
+	
+// Given a bend pitch in M * 1/256 semitones, and a MIDI note, returns the actual pitch in midi notes and range in N * 1/256 of a semitone, scales a pitch bend amount (-8192 ... +8191) 
+// into M * 1/256 semitones.  Does not use 32-bit math, so bends outside MIDI pitch range will be bounded.
+void bendFull(unsigned char midiNote, SIGNED_16_BIT_INT bendPitch, unsigned char* newNote, unsigned char* divisions)
+	{
+	UNSIGNED_16_BIT_INT mn = midiNote * 256;
+	if (bendPitch >= 0)
+		{
+		SIGNED_16_BIT_INT _mn = (SIGNED_16_BIT_INT)(65383 - mn);
+		if (bendPitch >= _mn)
+			{
+			bendPitch = _mn;
+			}
+		}
+	else 
+		{
+		SIGNED_16_BIT_INT _mn = 0 - (SIGNED_16_BIT_INT)mn;
+		if (bendPitch <= _mn)
+			{
+			bendPitch = _mn;
+			}
+		}
+	UNSIGNED_16_BIT_INT bent = (UNSIGNED_16_BIT_INT)(mn + bendPitch);
+	*newNote = bent / 256;
+	*divisions = (bent - *newNote * 256);
+	}
+
 
 
 // divides dividend by 12 and returns the result
@@ -570,5 +625,4 @@ int main(int argc, char* argv[])
 	}
 
 ***/
-
 

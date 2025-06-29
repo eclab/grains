@@ -46,6 +46,8 @@ Output Trigger
 #### POT 1
 Wander / S&H Variance
 
+`Low Variance, Random Walk <----> High Variance <----> Low Variance, About Mean`
+
 [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
 #### POT 2
 Wander / S&H Rate

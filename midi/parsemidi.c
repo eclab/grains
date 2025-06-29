@@ -212,7 +212,7 @@ signed char processCC(struct midiParser* parser, unsigned char param, unsigned c
 #endif 		// ALLOW_ATOMIC_MODULATION_CC
         if (param == 98)        // NRPN LSB
             {
-            // At preset we do not reset the MSB even if we've emitted some NRPN values.  Is this wise?
+            // At present we do not reset the MSB even if we've emitted some NRPN values.  Is this wise?
             if (parser->rpn == 1) setNRPNParamMSB(parser, 0);
             setNRPNParamLSB(parser, val);
             parser -> nrpnValueMSB = 0;
@@ -221,7 +221,7 @@ signed char processCC(struct midiParser* parser, unsigned char param, unsigned c
             }
         else if (param == 99)   // NRPN MSB
             {
-            // At preset we do not reset the LSB even if we've emitted some NRPN values.  Is this wise?
+            // At present we do not reset the LSB even if we've emitted some NRPN values.  Is this wise?
             if (parser->rpn == 1) setNRPNParamLSB(parser, 0);
             setNRPNParamMSB(parser, val);
             parser -> nrpnValueMSB = 0;
@@ -230,7 +230,7 @@ signed char processCC(struct midiParser* parser, unsigned char param, unsigned c
             }
         else if (param == 100)  // RPN LSB
             {
-            // At preset we do not reset the MSB even if we've emitted some NRPN values.  Is this wise?
+            // At present we do not reset the MSB even if we've emitted some NRPN values.  Is this wise?
             if (parser->rpn == 0) setNRPNParamMSB(parser, 0);
             setNRPNParamLSB(parser, val);
             parser -> nrpnValueMSB = 0;
@@ -239,7 +239,7 @@ signed char processCC(struct midiParser* parser, unsigned char param, unsigned c
             }
         else if (param == 101)  // RPN MSB
             {
-            // At preset we do not reset the LSB even if we've emitted some NRPN values.  Is this wise?
+            // At present we do not reset the LSB even if we've emitted some NRPN values.  Is this wise?
             if (parser->rpn == 0) setNRPNParamLSB(parser, 0);
             setNRPNParamMSB(parser, val);
             parser -> nrpnValueMSB = 0;

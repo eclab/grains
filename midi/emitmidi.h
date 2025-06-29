@@ -104,17 +104,29 @@
 
 
 
+// FEATURES TO PERMIT
 
+#define ALLOW_EMIT_HIGH_RES_CC 
+#define ALLOW_EMIT_RPN_NRPN
+#define ALLOW_EMIT_RUNNING_STATUS
+#define ALLOW_EMIT_RPN_NRPN_OMIT_MSB				// unused
+#define ALLOW_EMIT_HIGH_RES_CC_OMIT_MSB				// unused
 
 /// THE EMITTER STRUCTURE
 
 struct midiEmitter									// we can't make this a typedef because it breaks Arduino's compilation
     {
+#ifdef ALLOW_EMIT_RPN_NRPN
     UNSIGNED_16_BIT_INT lastNRPN;                   // Last NRPN/RPN Parameter sent.  RPN parameters are + 16384
     unsigned char lastNRPNMSB;                      // Last NRPN/RPN MSB value sent.
+#endif
+#ifdef ALLOW_EMIT_HIGH_RES_CC
     unsigned char lastHighResParameter;             // Last High-Res (14-bit) CC Parameter sent.  Though we could maintain ALL parameters, we'll only maintain the last one for sanity
     unsigned char lastHighResMSB;                   // Last High-Res (14-bit) CC MSB value sent.  Though we could maintain ALL parameters, we'll only maintain the last one for sanity
+#endif
+#ifdef ALLOW_EMIT_RUNNING_STATUS
     unsigned char lastStatus;                       // The last status byte the emitter emitted
+#endif
     unsigned char tag;                              // The emitter's tag.  Use this however you like.
     };
 
@@ -160,7 +172,7 @@ void emitBend(struct midiEmitter* emitter, SIGNED_16_BIT_INT value, unsigned cha
 void emitPC(struct midiEmitter* emitter, unsigned char program, unsigned char channel);
 
 // program goes 0 ... 127, bankMSB and bankLSB both go 0 ... 127, channel goes 0...15 for 1...16
-void emitPCAndBank(struct midiEmitter* emitter, unsigned char program, unsigned bankMSB, unsigned bankLSB, unsigned char channel);       
+void emitBankAndPC(struct midiEmitter* emitter, unsigned char program, unsigned bankMSB, unsigned bankLSB, unsigned char channel);       
 
 // If you support High-Res (14-bit) CC, you should not use this function to send to the MSB or LSB of
 // high-res CCs.  Instead, use emitHighResCC(...).
@@ -169,21 +181,33 @@ void emitPCAndBank(struct midiEmitter* emitter, unsigned char program, unsigned 
 // parameter goes 0...127, value goes 0..127, channel goes 0...15 for 1...16
 void emitCC(struct midiEmitter* emitter, unsigned char parameter, unsigned char value, unsigned char channel);
 
+#ifdef ALLOW_EMIT_HIGH_RES_CC
 // If you support NRPN or RPN, you should not use this function to send to parameter 6.
 // parameter goes 0...32, value goes 0...16383, channel goes 0...15 for 1...16
 void emitHighResCC(struct midiEmitter* emitter, unsigned char parameter, UNSIGNED_16_BIT_INT value, unsigned char channel);
+#endif
 
+#ifdef ALLOW_EMIT_RPN_NRPN
 // Works for either NRPN or RPN
 // parameter goes 0...16383, value goes 0...16383, rpn is true (!0) or false (0), channel goes 0...15 for 1...16
 void emitNRPN(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel);
 
 // Works for either NRPN or RPN
-// parameter goes 0...16383, value goes 0...16383, rpn is true (!0) or false (0), channel goes 0...15 for 1...16
-void emitNRPNIncrement(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel);
+// parameter goes 0...16383, rpn is true (!0) or false (0), channel goes 0...15 for 1...16
+void emitNRPNIncrement(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, unsigned char rpn, unsigned char channel);
+
+// Works for either NRPN or RPN
+// parameter goes 0...16383, rpn is true (!0) or false (0), channel goes 0...15 for 1...16
+void emitNRPNDecrement(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, unsigned char rpn, unsigned char channel);
 
 // Works for either NRPN or RPN
 // parameter goes 0...16383, value goes 0...16383, rpn is true (!0) or false (0), channel goes 0...15 for 1...16
-void emitNRPNDecrement(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel);
+void emitNRPNIncrementBy(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel);
+
+// Works for either NRPN or RPN
+// parameter goes 0...16383, value goes 0...16383, rpn is true (!0) or false (0), channel goes 0...15 for 1...16
+void emitNRPNDecrementBy(struct midiEmitter* emitter, UNSIGNED_16_BIT_INT parameter, UNSIGNED_16_BIT_INT value, unsigned char rpn, unsigned char channel);
+#endif
 
 // buffer does not include 0xF0 at start nor 0xF7 at end
 void emitSysex(struct midiEmitter* emitter, unsigned char* buffer, unsigned char len);
