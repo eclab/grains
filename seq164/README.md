@@ -78,7 +78,7 @@ badly in this way.
 ## Latency
 
 Seq164 is a little pokey.  It needs about 1/128 of a second to determine that all the triggers
-have arrived from TRIQ164 and it can buid the note.  Then it takes about 1/80 of a second to
+have arrived from TRIQ164 and it can build the note.  Then it takes about 1/80 of a second to
 get GRAINS to output the right note pitch before it can issue its trigger output on Digital Out.
 This is the nature of the GRAINS hardware.  To improve on this latency would start creating clicks
 and (theoretically) missed triggers. 
