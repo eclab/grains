@@ -93,7 +93,7 @@
 /// to about -6 on the GRAINS oscillator.
 ///
 /// Mozzi's output is capable of a range of betwen 42 and 48 notes (betwen 3.5 and 4 octaves).  
-/// This is also the quantizer's range: values above that will just get quantized to the 
+/// This is also Arp's range: values above that will just get bound to the 
 /// top note.
 ///
 /// One of the issues in using this firmware is that

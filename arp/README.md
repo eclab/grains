@@ -70,9 +70,9 @@ Grains is odd in that the input to IN1 isn't necessarily 1V/oct.  You'll have to
 
 Mozzi cannot go down to 0V.  Its minimum is a little more, transposing up by about a half of a semitone.   Most oscillators can be tuned to deal with this. But GRAINS oscillators have to be manually adjusted.  So for example, if you're attaching  this program to a GRAINS oscillator like DX, you might want to change the TRANPOSE\_BITS to about -6.
 
-Mozzi's output is capable of a range of betwen 42 and 48 notes (betwen 3.5 and 4 octaves).   This is also the quantizer's range: values above that will just get quantized to the top note.
+Mozzi's output is capable of a range of betwen 42 and 48 notes (betwen 3.5 and 4 octaves).   This is also Arp's range: values above that will just get bound to the top note.
 
-One of the issues in using this quantizer is that GRAINS does not have a buffered: the voltage its output will produce is strongly affected by the amperage being pulled by the oscillator it's plugged into, and different AE oscillators pull different amounts. VCO is particularly bad here -- it pulls a lot of voltage, thus scaling down Quant's output so it's no longer v/oct.  555 is much better (its inputs are buffered).  And you can generally fix matters by plugging GRAINS into a buffered mult, and then attaching the buffered mult to your oscillator.  But even the buffered mults differ a bit!
+One of the issues in using Arp is that GRAINS does not have a buffered: the voltage its output will produce is strongly affected by the amperage being pulled by the oscillator it's plugged into, and different AE oscillators pull different amounts. VCO is particularly bad here -- it pulls a lot of voltage, thus scaling down Arp's output so it's no longer v/oct.  555 is much better (its inputs are buffered).  And you can generally fix matters by plugging GRAINS into a buffered mult, and then attaching the buffered mult to your oscillator.  But even the buffered mults differ a bit!
 
 I have made a few tables to match different scenarios:
 
