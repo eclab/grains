@@ -23,6 +23,31 @@ GRAINS's output is naturally discretized to 488 steps.  That's the finest-grain 
 Looking for a more traditional sample and hold, random sample and hold, and track and hold?  Try RUCKUS.
 
 
+## How Stochastic Works
+STOCHASTIC outputs a CV VALUE via Audio Out.
+Every N milliseconds (a RATE that you choose), STOCHASTIC picks a new TARGET CV VALUE -- 
+this is a value between 0 and 5V. Then over the next N milliseconds, STOCHASTIC changes 
+the CV VALUE until it matches that target value.  There are two ways that it can change 
+the CV VALUE:
+
+- Gradually and linearly until it reaches the target.  This is "WANDERING"
+
+- Immediately and staying there.  This is "S&H"
+
+STOCHASTIC picks its next TARGET CV VALUE in one of three ways:
+
+- It selects a voltage from a distribution centered at 2.5V, with a certain VARIANCE.
+      This produces the ABOUT MEAN effect.
+     
+- It selects a voltage from a distribution centered at the CURRENT TARGET CV VALUE,
+      with a certain VARIANCE.  This produces a RANDOM WALK effect.
+
+- If the variance is very high, it doesn't matter which of these is chosen: it'd 
+	      just be a completely random TARGET CV VALUE.
+
+Before it outputs its current CV VALUE, STOCHASTIC will add to it some degree of 
+random FUZZ (noise).  
+
 
 ## Grains Bug
 

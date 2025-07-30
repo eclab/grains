@@ -1,6 +1,6 @@
 # Para
 
-Para is a MIDI-driven 3-voice Paraphonic synthesizer with a mixed square/saw/triangle and sine waves.
+Para is a MIDI-driven 3-voice Paraphonic oscillator with a mixed square/saw/triangle and sine waves.
 Para is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 
 Para can select between square and sine, saw and sine, or triangle and sine.  You select

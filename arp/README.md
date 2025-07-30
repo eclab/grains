@@ -2,7 +2,7 @@
 
 Arp is an arpeggiator.  Arp is meant to run on the AE Modular GRAINS, but it could be  adapted to any Arduino.
 
-To use Arp, you specify the CHORD to arpeggiate and the STYLE with which to arpeggiate it.You can also optionally specify an INVERSION of the chord to shift the arpeggio.
+To use Arp, you specify the CHORD to arpeggiate and the STYLE with which to arpeggiate it. You can also optionally specify an INVERSION of the chord to shift the arpeggio.
 
 Whenever you provide a CLOCK, the arpeggio will output as CV the next note in the STYLE. The CV will be transposed to match the scale of the current input PITCH you have provided. (the PITCH is thus the root note of scale).  You can RESET the style back to 0 at any point.
 

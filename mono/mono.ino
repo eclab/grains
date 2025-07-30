@@ -6,7 +6,7 @@
 
 /// MONO
 ///
-/// Mono is a MIDI-driven Monophonic synthesizer with a mixed square/saw/triangle and sine waves.
+/// Mono is a MIDI-driven Monophonic oscillator with a mixed square/saw/triangle and sine waves.
 /// Mono is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 ///
 /// Mono can mix between square and sine, saw and sine, or triangle and sine.  You select
