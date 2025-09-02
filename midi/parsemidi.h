@@ -284,8 +284,8 @@ struct midiParser					// we can't make this a typedef because it breaks Arduino'
 #ifdef ALLOW_NOTES
 // note goes 0 ... 127, velocity goes 0 ... 127
 // IMPORTANT: noteOn will never have a velocity of 0
-extern void noteOn(struct midiParser* parser, unsigned char note, unsigned char velocity);
-extern void noteOff(struct midiParser* parser, unsigned char note, unsigned char velocity);
+extern void noteOn(struct midiParser* parser, unsigned char pitch, unsigned char velocity);
+extern void noteOff(struct midiParser* parser, unsigned char pitch, unsigned char velocity);
 #endif   // ALLOW_NOTES
 
 #ifdef ALLOW_CLOCK
@@ -351,7 +351,7 @@ extern void aftertouch(struct midiParser* parser, unsigned char value);
 
 #ifdef ALLOW_POLY_AT
 // note goes 0 ... 127, value goes 0 ... 127
-extern void polyAftertouch(struct midiParser* parser, unsigned char note, unsigned char value);
+extern void polyAftertouch(struct midiParser* parser, unsigned char pitch, unsigned char value);
 #endif   // ALLOW_POLY_AT
 
 #ifdef ALLOW_SONG_POSITION_POINTER

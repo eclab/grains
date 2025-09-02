@@ -77,6 +77,7 @@ void doEmit(struct midiEmitter* emitter, unsigned char byte)
             }
         }
     emitMidi(emitter, byte);
+#endif
     }
 
 void emitNoteOn(struct midiEmitter* emitter, unsigned char pitch, unsigned char velocity, unsigned char channel)

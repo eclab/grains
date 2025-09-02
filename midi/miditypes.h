@@ -16,10 +16,10 @@
 
 // You may need to customize these for your platform
 
-#define UNSIGNED_16_BIT_INT             unsigned short                          // UNSIGNED_16_BIT_INT
-#define SIGNED_16_BIT_INT               signed short                            // SIGNED_16_BIT_INT
-#define UNSIGNED_32_BIT_INT             unsigned int                          // UNSIGNED_16_BIT_INT
-#define SIGNED_32_BIT_INT               signed int                            // SIGNED_16_BIT_INT
+#define UNSIGNED_16_BIT_INT unsigned short                          // UNSIGNED_16_BIT_INT
+#define SIGNED_16_BIT_INT signed short                            // SIGNED_16_BIT_INT
+#define UNSIGNED_32_BIT_INT unsigned int                          // UNSIGNED_16_BIT_INT
+#define SIGNED_32_BIT_INT signed int                            // SIGNED_16_BIT_INT
 
 // Don't fool with this, making it larger than 254 will break things
 #define MAX_SYSTEM_EXCLUSIVE_BUFFER_SIZE 254

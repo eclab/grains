@@ -367,10 +367,12 @@ If you need a faster random() function, Mozzi has an xorshift library which will
 
 xorshift is still 32-bit.  If you just need a really fast 8-bit random number generator, you might use [this simple one](https://github.com/edrosten/8bit_rng/blob/master/rng-4294967294.cc).  
 
-In some situations you might need a **deterministic** random number sequence, that is one that is always repeatable.  Here is a table of 8192 random numbers.
+In some situations you might need a **deterministic** random number sequence, that is one that is always repeatable.  Here is a table of 8192 random numbers.  Use NOISE(index) to get a byte at a given index.  See discussion of PROGMEM later in this document.
 
+    #define NOISE(index) ((uint8_t)pgm_read_byte_near(&noise[index]))
+    
     // this is literally just a deterministic random number table
-    const PROGMEM uint8_t NOISE[8192]  = 
+    const PROGMEM uint8_t noise[8192]  = 
     	{
     0xF1, 0xD2, 0xAC, 0x49, 0x3C, 0xC9, 0xF2, 0xA2, 0x09, 0x18, 0x98, 0x22, 0x64, 0xEA, 0xEA, 0x49, 0x3A, 0x7B, 0x56, 0xA5, 0x18, 0x9D, 0xBD, 0x38, 0xFE, 0x6D, 0x21, 0xE8, 0x4B, 0x33, 0xBC, 0xA2,
     0x06, 0xFB, 0x41, 0xB6, 0xBA, 0xAC, 0x6E, 0x2C, 0x1E, 0x9D, 0xFB, 0x96, 0x6D, 0x9D, 0xDA, 0xE1, 0x6C, 0x04, 0xD4, 0xEC, 0x7E, 0x3C, 0xC1, 0x69, 0xE8, 0x74, 0x38, 0x8A, 0x2E, 0x1B, 0x72, 0xE6,

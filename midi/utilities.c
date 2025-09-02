@@ -1,6 +1,10 @@
 #include "utilities.h"
 #include "miditypes.h"
 
+#ifdef __AVR__
+#include <avr/pgmspace.h>
+#endif
+
 //////// PITCH AND FREQUENCY
 
 
@@ -301,7 +305,11 @@ unsigned char removeAllocated(struct noteDistributor* distributor, unsigned char
 	{
 	for(unsigned char i = 0; i < 16; i++)
 		{
-		if (distributor->heap[i] == channel) // found it
+		if (distributor->heap[i] == DISTRIBUTOR_NO_CHANNEL)  // uh oh
+			{
+			return DISTRIBUTOR_NO_CHANNEL;
+			}
+		else if (distributor->heap[i] == channel) // found it
 			{
 			for(unsigned char j = i; j < 16; j++)
 				{
@@ -314,7 +322,7 @@ unsigned char removeAllocated(struct noteDistributor* distributor, unsigned char
 			return channel;
 			}
 		}
-	return DISTRIBUTOR_NO_CHANNEL;
+	return DISTRIBUTOR_NO_CHANNEL;		// won't happen
 	}
 
 // Removes the oldest allocated channel and returns it
@@ -322,7 +330,7 @@ unsigned char removeOldestAllocated(struct noteDistributor* distributor)
 	{
 	unsigned char channel = distributor->heap[0];
 	if (channel == DISTRIBUTOR_NO_CHANNEL) return channel;
-	for(unsigned char i = 0; i < 16; i--)
+	for(unsigned char i = 0; i < 16; i++)
 		{
 		distributor->heap[i] = distributor->heap[i + 1];
 		if (distributor->heap[i] == DISTRIBUTOR_NO_CHANNEL) // all done
@@ -333,7 +341,8 @@ unsigned char removeOldestAllocated(struct noteDistributor* distributor)
 	return channel;
 	}
 	
-// Removes the oldest unallocated channel and returns it
+// Removes the oldest unallocated channel and returns it.
+// If all channels are allocated, returns DISTRIBUTOR_NO_CHANNEL.
 unsigned char removeOldestUnallocated(struct noteDistributor* distributor)
 	{
 	unsigned char channel = distributor->heap[16];
@@ -352,7 +361,7 @@ unsigned char removeOldestUnallocated(struct noteDistributor* distributor)
 // Inserts the channel at the front of the allocated channels
 void insertAllocated(struct noteDistributor* distributor, unsigned char channel)
 	{
-	for(unsigned char i = 0; i < 16; i--)
+	for(unsigned char i = 0; i < 16; i++)
 		{
 		if (distributor->heap[i] == DISTRIBUTOR_NO_CHANNEL) // all done
 			{
@@ -380,7 +389,7 @@ void insertUnallocated(struct noteDistributor* distributor, unsigned char channe
 unsigned char allocateChannel(struct noteDistributor* distributor, unsigned char note)
 	{
 	unsigned char channel = removeOldestUnallocated(distributor);
-	if (channel == DISTRIBUTOR_NO_CHANNEL)  // all allocated
+	if (channel == DISTRIBUTOR_NO_CHANNEL)  // all are allocated
 		{
 		return DISTRIBUTOR_NO_CHANNEL;
 		}
@@ -478,12 +487,13 @@ unsigned char deallocateChannel(struct noteDistributor* distributor, unsigned ch
 		{
 		return DISTRIBUTOR_NO_CHANNEL;
 		}
-		
+	distributor->channelNotes[channel] = DISTRIBUTOR_NO_NOTE;
 	channel = removeAllocated(distributor, channel);
 	if (channel == DISTRIBUTOR_NO_CHANNEL)				// uh, should not happen
 		{
 		return DISTRIBUTOR_NO_CHANNEL;
 		}
+	insertUnallocated(distributor, channel);
 	return channel;
 	}
 
