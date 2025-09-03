@@ -22,13 +22,15 @@ Other GRAINS firmware repositories:
 - Ginkosynthese's original [GRAINS examples](https://www.ginkosynthese.com/grains-codes)
 - HAGIWO's various [open source modules](https://note.com/solder_state) including a number that target the Arduino.
 
-There are two **special directories**:
+There are three **special directories**:
 
 * **INFO**.  This contains useful documentation you might like to read.
 	* [Developing for GRAINS on AE Modular](info/DevelopingForGrains.md) A collection of tips for GRAINS software developers. 
 	* [Modular MIDI Convensions for Musicians](info/ModularMIDIConventionsForMusicians.md) An introduction to the Modular MIDI conventions (IMDI on AE) for interested musicians.
 	* [Modular MIDI Convensions for Developers](info/ModularMIDIConventionsForDevelopers.md) The Modular MIDI conventions for software developers
-	
+
+* [**V2**](v2/README.md).  This contains MIDI and other projects which run on my GRAINS V2 Prototype, or also on an Arduino Nano Every or possibly other Arduino. They're particularly useful at extending the capabilities of the [IMDI HEART](https://www.tangiblewaves.com/store/p218/IMDI_HEART.html) module.	
+
 * [**MIDI**](midi/README.md).  This contains MIDI library code useful for developers.  It's not a GRAINS firmware application. 
 
 ### Install Mozzi 1.1.2 (not 2.0)
