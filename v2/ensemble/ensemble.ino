@@ -107,7 +107,7 @@
 // (each output has its own channel.  In this case, NUM_VOICES dictates how many outputs
 // (and thus channels) we have.
 
-#define MULTI_OUTPUT
+// #define MULTI_OUTPUT
 
 
 // HARD_SERIAL
@@ -124,7 +124,7 @@
 // This indicates that my GRAINS V2 prototype is being used.  Since I'm presently the only person
 // who ones a GRAINS V2, you probably comment this out!
 
-// #define GRAINS_V2
+#define GRAINS_V2
 
 
 // SOFT_SERIAL

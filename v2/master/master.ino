@@ -15,9 +15,11 @@
 // up on the MASTER CHANNEL, in which they are interpreted as affecting all the zone channels together.  But Modular MIDI
 // on the AE system doesn't think about a Master Channel, so it has no way to route the Master's messages to the zone channels.
 //
+// If you need to route the Master's messages to zones, that's what Master is for.
 // The most common scenario is to route CC or PC to all your polyphonic oscillators or other voice modules.
 //
-// If you need to route the Master's messages to zones, that's what Master is for.
+// You'll need to set up some constants to define the MPE Zone in question.
+//
 //
 // CONFIGURATION
 //
@@ -31,6 +33,7 @@
 //
 // 2. GRAINS V2.  This doesn't exist yet: I have a prototype but it may never go into production.
 //    You will connect to the RX and TX ports.   Uncomment GRAINS_V2.  And set HARD_SERIAL to    Serial
+//    Additionally, pressing the TOP BUTTON will send both an ALL NOTES OFF and an ALL SOUNDS OFF to all Zone channels.
 //
 // The arrangement is as follows.  We will modify the IMDI HEART so that it routes to its 16 outputs data coming
 // from the IMDI input instead of from MIDI or USB.  To do this, we set ICN=NONE.  [It should be ICN=IMDI, but there
