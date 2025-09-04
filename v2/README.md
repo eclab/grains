@@ -14,7 +14,7 @@ This subdirectory contains instructions for how to set up an Arduino Nano Every 
 
 ## Ensemble
 
-A polyphonic note distributor, which takes polyphonic notes coming in on a single MIDI channel and distributes them to several other channels.  **Only Tested for GRAINS V2 + IMDI HEART.**  Configurations:
+A polyphonic note distributor, which takes polyphonic notes coming in on a single MIDI channel and distributes them to several other channels.  
 
 * GRAINS V2 + IMDI HEART (up to 16 voices)
 * GRAINS + IMDI HEART (very flakey, only for fooling around)
