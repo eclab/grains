@@ -107,7 +107,7 @@
 // (each output has its own channel.  In this case, NUM_VOICES dictates how many outputs
 // (and thus channels) we have.
 
-// #define MULTI_OUTPUT
+#define MULTI_OUTPUT
 
 
 // HARD_SERIAL
@@ -124,7 +124,7 @@
 // This indicates that my GRAINS V2 prototype is being used.  Since I'm presently the only person
 // who ones a GRAINS V2, you probably comment this out!
 
-#define GRAINS_V2
+// #define GRAINS_V2
 
 
 // SOFT_SERIAL
@@ -220,13 +220,14 @@ struct midiEmitter* emitters[3];
 
 extern void noteOn(struct midiParser* parser, unsigned char note, unsigned char velocity)
 	{
+  Serial.println(note);
 	uint8_t channel = allocateChannel(&distributor, note);
 	if (channel == DISTRIBUTOR_NO_CHANNEL)
 		{
 		channel = oldestChannel(&distributor, true);
-		emitNoteOffVel(emitters[channel - 1], stealChannel(&distributor, note), velocity, channel);
+		emitNoteOffVel(emitters[channel], stealChannel(&distributor, note), velocity, channel);
 		}
-	emitNoteOn(emitters[channel - 1], note, velocity, channel);
+	emitNoteOn(emitters[channel], note, velocity, channel);
 	}
 	
 extern void noteOff(struct midiParser* parser, unsigned char note, unsigned char velocity)
@@ -234,7 +235,7 @@ extern void noteOff(struct midiParser* parser, unsigned char note, unsigned char
 	uint8_t channel = deallocateChannel(&distributor, note);
 	if (channel != DISTRIBUTOR_NO_CHANNEL)
 		{
-		emitNoteOffVel(emitters[channel - 1], note, velocity, channel);
+		emitNoteOffVel(emitters[channel], note, velocity, channel);
 		}
 	}
 
@@ -243,7 +244,7 @@ extern void polyAftertouch(struct midiParser* parser, unsigned char note, unsign
 	uint8_t channel = getChannel(&distributor, note);
 	if (channel != DISTRIBUTOR_NO_CHANNEL)
 		{
-		emitAftertouch(emitters[channel - 1], value, channel);
+		emitAftertouch(emitters[channel], value, channel);
 		}
 	}
 	
@@ -377,6 +378,7 @@ extern void sysex(struct midiParser* parser, unsigned char* buffer, unsigned cha
 	
 void setup()
 	{
+    Serial.begin(115200);
 	Serial1.begin(31250);
 	Serial2.begin(31250);
 	Serial3.begin(31250);

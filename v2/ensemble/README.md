@@ -73,6 +73,9 @@ Here are some configurations.  Note that I am have only tested #1.
    Set things up as in #1 above.  Your RX socket will be AUDIO IN ("A") and your TX socket
    will be DIGITAL OUT ("B").  No buttons or LEDs for you.
 
+   For this configuration, you need to move the NeoSWSerial.cpp and NeoSWSerial.h files to
+   the same directory as the Ensemble.ino file.  They're presently in the "library" directory.
+
 You could probably get other Arduinos working, such as an Arduino Uno in the case of #1,
 or an Arduino Mega in the case of #1 or #2.
 
