@@ -102,13 +102,23 @@ void bend12(unsigned char midiNote, SIGNED_16_BIT_INT bendAmount, unsigned char*
 /// want to steal the channel that was allocated the FURTHEST BACK IN TIME.  Be sure
 /// to send a NOTE OFF to the note whose channel you just stole.
 ///
+/// It is possible that the musician may somehow play the same note multiple times
+/// simultaneously.  This code does not permit this because it would require too much
+/// memory: if the same note is played twice at the same time, the earlier note will
+/// be dealloacated before the new note is allocated.
+///
+/// You can have multiple distributors.
+///
 /// In general you can perform note distribution with the distributor as follows: 
 
 // Given an incoming message:
 // 	If the message is a VOICE MESSAGE
 // 		If the message is a NOTE ON
 // 			channel <- allocateChannel(message note)
-// 			if (channel is NO CHANNEL)					// all channels allocated
+// 			if (channel is CHANNEL ALREADY ALLOCATED)
+// 			    channel <- getChannel(note)
+// 				Send a NOTE OFF to note on channel
+// 			else if (channel is NO CHANNEL)					// all channels allocated
 //				channel <- oldestChannel(true)
 // 				oldNote <- stealChannel(message note)	// will steal oldest channel
 // 				Send a NOTE OFF to oldNote on channel
@@ -121,13 +131,11 @@ void bend12(unsigned char midiNote, SIGNED_16_BIT_INT bendAmount, unsigned char*
 // 			channel <- getChannel(message note)
 //			if (channel != NO CHANNEL)					// otherwise what's going on?
 // 				Send a CHANNEL AFTERTOUCH or a POLYPHONIC AFTERTOUCH to the channel
-// 		Else if the message is a CC, PC, or CHANNEL AFTERTOUCH
+// 		Else if the message is a CC, PC, BEND, or CHANNEL AFTERTOUCH
 // 			for i = minChannel() to maxChannel() inclusive
 // 				Send the message to channel i
 // 	Else
 // 		Send the message
-
-/// You can have multiple distributors.
 
 /// You can use this same code to do POLYPHONIC VOICE ALLOCATION.  Let's say you have some
 /// N <= 16 voices and you want to allocate them to incoming notes arriving on a channel.  Just treat
@@ -135,7 +143,7 @@ void bend12(unsigned char midiNote, SIGNED_16_BIT_INT bendAmount, unsigned char*
 /// modified as follows:
 
 // Given an incoming message:
-//  If the message is a CC, PC, or non-VOICE message
+//  If the message is a CC, PC, BEND, or non-VOICE message
 //		Process message
 // 	Else if the message is a CHANNEL AFTERTOUCH message
 // 		for all voices
@@ -143,7 +151,10 @@ void bend12(unsigned char midiNote, SIGNED_16_BIT_INT bendAmount, unsigned char*
 //  Else if the message is a VOICE MESSAGE
 // 		If the message is a NOTE ON
 // 			voice <- allocateChannel(message note)
-// 			if (voice is NO CHANNEL)			// all channels allocated
+// 			if (voice is CHANNEL ALREADY ALLOCATED)
+// 			    voice <- getChannel(note)
+//				Release note on voice if necessary
+// 			else if (voice is NO CHANNEL)			// all channels allocated
 //				voice <- oldestChannel(true)
 // 				oldNote <- stealChannel(message note)	// will steal oldest channel
 //				Release oldNote on voice if necessary
@@ -161,6 +172,7 @@ void bend12(unsigned char midiNote, SIGNED_16_BIT_INT bendAmount, unsigned char*
 
 
 #define DISTRIBUTOR_NO_CHANNEL (255)
+#define DISTRIBUTOR_CHANNEL_ALREADY_ALLOCATED (254)
 #define DISTRIBUTOR_NO_NOTE (255)
 
 /// The note distribution structure.  This uses up 35 bytes even if you don't have a full channel range
@@ -199,6 +211,9 @@ extern unsigned char oldestChannel(struct noteDistributor* distributor, unsigned
 
 // Allocates an unallocated channel for note and returns the channel.  
 // If there are no unallocated channels, returns DISTRIBUTOR_NO_CHANNEL
+// If there already is a channel allocated for the given note, then returns
+// DISTRIBUTOR_CHANNEL_ALREADY_ALLOCATED.  In this case you can retrieve the
+// channel by calling getChannel(distributor, note);
 extern unsigned char allocateChannel(struct noteDistributor* distributor, unsigned char note);
 	
 // Deallocates the channel associated with a given note and returns it.

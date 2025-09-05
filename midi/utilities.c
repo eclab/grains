@@ -386,8 +386,16 @@ void insertUnallocated(struct noteDistributor* distributor, unsigned char channe
 
 // Allocates an unallocated channel for note and returns the channel.  
 // If there are no unallocated channels, returns DISTRIBUTOR_NO_CHANNEL
+// If there already is a channel allocated for the given note, then returns
+// DISTRIBUTOR_CHANNEL_ALREADY_ALLOCATED.  In this case you can retrieve the
+// channel by calling getChannel(distributor, note);
 unsigned char allocateChannel(struct noteDistributor* distributor, unsigned char note)
 	{
+	if (getChannel(distributor, note) != DISTRIBUTOR_NO_CHANNEL)
+		{
+		return DISTRIBUTOR_CHANNEL_ALREADY_ALLOCATED;
+		}
+		
 	unsigned char channel = removeOldestUnallocated(distributor);
 	if (channel == DISTRIBUTOR_NO_CHANNEL)  // all are allocated
 		{
