@@ -220,7 +220,6 @@ struct midiEmitter* emitters[3];
 
 extern void noteOn(struct midiParser* parser, unsigned char note, unsigned char velocity)
 	{
-  Serial.println(note);
 	uint8_t channel = allocateChannel(&distributor, note);
 	if (channel == DISTRIBUTOR_NO_CHANNEL)
 		{
