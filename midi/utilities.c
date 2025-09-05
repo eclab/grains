@@ -176,6 +176,7 @@ UNSIGNED_16_BIT_INT midiNoteFreq16(unsigned char midiNote)
 
 // Converts an RPN bend range of semitones and cents into N * 1/256 of a semitone
 // RPN Bend Range is provided by RPN 0.  Its MSB is the range in semitones, and its LSB is the range in cents
+// Requires one integer division (by 25) at present.
 UNSIGNED_16_BIT_INT bendRange(unsigned char rangeSemitones, unsigned char rangeCents)
 	{
 	return (rangeCents * 64) / 25 + rangeSemitones * 256;
