@@ -1087,3 +1087,40 @@ unsigned char getParserCurrentMIDIChannel(struct midiParser* parser)
     return parser->currentChannel;
     }
 
+
+
+
+
+
+// Initializes or reinitializes a midiRecognizer, setting its initial channel to SYNC_ERROR
+void initializeRecognizer(struct midiRecognizer* recognizer)
+	{
+	recognizer->channel = SYNC_ERROR;
+	}
+
+// Reads a byte and determines the current channel for the message that this byte is part of.
+// Returns one of:
+// 0 ... 15                    	MIDI Channel (representing channels 1 ... 16) for voiced messages such as NOTE ON, CC, etc.
+// NO_CHANNEL					Indicates that this byte is part of an unvoiced message such as START, STOP, CLOCK, SYSEX, etc.
+// SYNC_ERROR					Returned when we cannot determine the message.  This only happens if a recognizer was
+//								initially fed out-of-sync MIDI data, and will continue until a status byte appears to set
+//								the channel properly.
+unsigned char recognizeChannel(struct midiRecognizer* recognizer, unsigned char c)
+	{
+	if (c >= NOTE_OFF)	// It's a status byte
+		{
+		if (c < SYSTEM_EXCLUSIVE)
+			{
+			recognizer->channel = c & 0x0F;
+			}
+		else if (c < CLOCK_PULSE)
+			{
+			recognizer->channel = NO_CHANNEL;
+			}
+		else	// it's stuff like CLOCK_PULSE which can appear in the *middle* of another message
+			{
+			return NO_CHANNEL;			// but don't change
+			}
+		}
+	return recognizer->channel;
+	}

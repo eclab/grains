@@ -11,6 +11,26 @@
 #include "miditypes.h"
 
 
+////// MIDI PARSING LIBRARY
+
+/// This library consists of two useful objects you can create and use to parse or otherwise understand
+/// incoming MIDI Data.
+///
+/// 1. A MIDI PARSER.  This object parses MIDI data into MIDI messages and calls callback messages you
+///    have created to handle these messages.  You can construct multiple separate parsers.  Parsers can
+///    be associated with a single channel and instructed to ignore messages in other channels.  There
+///    is considerable flexibility in setting up parsers and what they parse.
+///
+/// 2. A MIDI CHANNEL RECOGNIZER.  This object reads incoming MIDI data and ascertains the channel of
+///    the message to which the latest byte is a member.  You can use this to distribute the byte data
+///    to separate per-channel parsers, or to separate multiplexed outputs.
+
+
+
+
+
+
+
 ////// MIDI PARSER
 
 /// This parser can parse MIDI note data of all kinds, including 14-bit and 7-bit CC, NRPN, and RPN,
@@ -446,5 +466,69 @@ unsigned char getMPEMasterChannel(struct midiParser* parser);
 // Note that CC 6 and 38 (Data Entry) will be ignored here if you have turned on RPN/NRPN, which use them instead.
 void setHighResUsed(struct midiParser* parser, unsigned char parameter, unsigned char on);
 #endif	// defined(ALLOW_HIGH_RES_CC)
+
+
+
+
+
+
+
+
+
+
+
+////// MIDI CHANNEL RECOGNIZER
+
+/// This is a simple object you can attach to an incoming MIDI data stream and determine the channel of
+/// current bytes passing through.  You could use this to distribute those bytes to external streams without
+/// the overhead of parsing the data.  Or you could use a recognizer to determine which parser to hand the data to
+/// if you need separate parsers per-channel.  
+///
+/// To use the recognizer properly:
+///
+/// 1. Create and initialize a recognizer
+/// 2. Use one and only one recognizer for each stream (don't share streams with the same recognizer)
+/// 3. Hand every single data byte received by the stream to its recognizer for analysis.
+///
+/// 
+/// For example:
+///
+/// struct midiRecognizer recognizer;
+///
+/// void setup() { 
+///    initializeRecognizer(&recognizer);  
+///    Serial.begin(32150); 
+///    }
+///
+/// void loop() {
+///    if (Serial.available()) {
+///        unsigned char c = Serial.read();
+///        unsigned char channel = recognizeChannel(&recognizer, c);
+///        // do something with c based on the channel
+///        }
+///    }
+///
+
+// Don't fool with this constant
+#define SYNC_ERROR 17							// Returned when bytes are provided for which we cannot determine the channel
+
+// Don't fool with this.  Just use the functions below.
+struct midiRecognizer					// we can't make this a typedef because it breaks Arduino's compilation
+    {
+    unsigned char channel;
+    };
+
+// Initializes or reinitializes a midiRecognizer, setting its initial channel to SYNC_ERROR
+void initializeRecognizer(struct midiRecognizer* recognizer);
+
+// Reads a byte and determines the current channel for the message that this byte is part of.
+// Returns one of:
+// 0 ... 15                    	MIDI Channel (representing channels 1 ... 16) for voiced messages such as NOTE ON, CC, etc.
+// NO_CHANNEL					Indicates that this byte is part of an unvoiced message such as START, STOP, CLOCK, SYSEX, etc.
+// SYNC_ERROR					Returned when we cannot determine the message.  This only happens if a recognizer was
+//								initially fed out-of-sync MIDI data, and will continue until a status byte appears to set
+//								the channel properly.
+unsigned char recognizeChannel(struct midiRecognizer* recognizer, unsigned char c);
+
 
 #endif
