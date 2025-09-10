@@ -25,7 +25,7 @@ The hookup to a typical DAW is:
 - DAVE <-USB-> Dave Java Program <---> MIDI Loopback Device <---> DAW
   (Though Logic on the Mac doesn't need a Loopback.  Ableton does)
 
-See the Dave java program [README file](https://github.com/eclab/grains/dave/java/README.md) for more information.
+See the Dave java program [README file](https://github.com/eclab/grains/blob/main/dave/java/README.md) for more information.
 
 ## Hacking the TRS Jacks 
 
