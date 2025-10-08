@@ -10,31 +10,6 @@
 #include "parsemidi.h"
 #include <stdio.h>
 
-// MIDI Status Byte Types
-#define NOTE_OFF 0x80
-#define NOTE_ON 0x90
-#define POLY_AT 0xA0
-#define CC 0xB0
-#define PC 0xC0
-#define AT 0xD0
-#define BEND 0xE0
-#define SYSTEM_EXCLUSIVE 0xF0
-#define MIDI_TIME_CODE_QUARTER_FRAME 0xF1
-#define SONG_POSITION_POINTER 0xF2
-#define SONG_SELECT 0xF3
-#define UNDEFINED_F4 0xF4                               // Ignore this
-#define UNDEFINED_F5 0xF5                               // Ignore this
-#define TUNE_REQUEST 0xF6
-#define END_OF_SYSEX 0xF7
-#define CLOCK_PULSE 0xF8
-#define UNDEFINED_F9 0xF9                               // Ignore this
-#define CLOCK_START 0xFA
-#define CLOCK_CONTINUE 0xFB
-#define CLOCK_STOP 0xFC
-#define UNDEFINED_FD 0xFD                               // Ignore this
-#define ACTIVE_SENSING 0xFE                             // You probably want to ignore this
-#define SYSTEM_RESET 0xFF                               // You probably want to ignore this
-
 // MIDI Status Byte Categories
 #define STATUS NOTE_OFF                                 // All status bytes are >= STATUS
 #define REALTIME 0xF8                                   // All realtime system bytes are >= REALTIME
@@ -1123,4 +1098,27 @@ unsigned char recognizeChannel(struct midiRecognizer* recognizer, unsigned char 
 			}
 		}
 	return recognizer->channel;
+	}
+
+// Returns TRUE if the given byte is a status byte (as opposed to a data byte)
+unsigned char isStatusByte(unsigned char c)
+	{
+	return c >= NOTE_OFF;
+	}
+
+// Returns the MIDI Message Type of the given status byte.
+// Returns one of;
+// NOTE_OF ... SYSTEM RESET (see "MIDI Message Types" in parsemidi.h)	if the byte is a status byte
+// 0                                                                 	if the byte is a data byte
+unsigned char messageType(unsigned char statusByte)
+	{
+	if (statusByte >= NOTE_OFF)
+		{
+		if (statusByte < SYSTEM_EXCLUSIVE)
+			{
+			return (statusByte & 0xF0);
+			}
+		else return statusByte;
+		}
+	else return 0;
 	}
