@@ -68,11 +68,13 @@ public class DisclosurePanel extends JPanel
         
     public DisclosurePanel(JComponent abridgedComponent, JComponent disclosedComponent, String borderLabel)
         {
+        /*
         // FlatLightLaf doesn't work well here
         if (UIManager.getLookAndFeel() instanceof com.formdev.flatlaf.FlatLightLaf)
         	{
         	disclosureToggle.setBorder(BorderFactory.createEmptyBorder(4,4,4,4));
         	}
+        */
         disclosureToggle.setVerticalAlignment(SwingConstants.TOP);
         disclosureToggle.setContentAreaFilled(false);
         disclosureToggle.setFocusPainted(false);

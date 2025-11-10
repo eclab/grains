@@ -816,6 +816,18 @@ static boolean pleaseDie = false;
 				}
 			});
 		fileMenu.add(aria);
+
+		JMenuItem cascade = new JMenuItem("Convert .mid file to Cascade .txt");
+		cascade.addActionListener(new ActionListener()
+			{
+			public void actionPerformed(ActionEvent e)
+				{
+				new Cascade(serialPanel).doit();
+				}
+			});
+		fileMenu.add(cascade);
+
+
 		menubar.add(fileMenu);
 
 		JMenu actionMenu = new JMenu("Action");
