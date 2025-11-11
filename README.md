@@ -55,30 +55,29 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 
 ### Firmware Summary
 
-| Oscillators | MIDI Osc   | Digital Mod | CV Modulation | Other  |
-|:------------|:-----------|:------------|:--------------|:-------|
-| DX          | DX-M       | Tangle      | Multiplex     | Dave   |
-| Pluck       | Pluck-M    | Tardy       | Sequence      | Bit    |
-| Booker      | Booker-M   | Chrono      | LFO           | Scope  |
-| Droplets    | VS         | Pattern     | Motif         | Mode16 |
-| AKWF        | Mono       | Elements    | Quant         | Seq164 |
-| 808         | Para       | Lattice     | ADSR          |        |
-| Voice       | MJQ        | Beats       | Multilevel    |        |
-| Chordal     | Beep       | Geiger      | Stochastic    |        |
-| Byte        | Trajectory | Pulses      | Switchblade   |        |
-| Evolution   |            | Divvy       | Memoir        |        |
-| Oration     |            | Multiple    | Arp           |        |
-| Oration 2   |            | Respite     |               |        |
-| Fold        |            | Iterate     |               |        |
-| Ruckus      |            | Theory      |               |        |
-| Crackle     |            |             |               |        |
+| Oscillators | MIDI Osc   | Digital Mod | CV Modulation | Other   |
+|:------------|:-----------|:------------|:--------------|:--------|
+| DX          | DX-M       | Tangle      | Multiplex     | Dave    |
+| Pluck       | Pluck-M    | Tardy       | Sequence      | Bit     |
+| Booker      | Booker-M   | Chrono      | LFO           | Scope   |
+| Droplets    | VS         | Pattern     | Motif         | Mode16  |
+| AKWF        | Mono       | Elements    | Quant         | Seq164  |
+| 808         | Para       | Lattice     | ADSR          | Cascade |
+| Voice       | MJQ        | Beats       | Multilevel    |         |
+| Chordal     | Beep       | Geiger      | Stochastic    |         |
+| Byte        | Trajectory | Pulses      | Switchblade   |         |
+| Evolution   |            | Divvy       | Memoir        |         |
+| Oration     |            | Multiple    | Arp           |         |
+| Oration 2   |            | Respite     |               |         |
+| Fold        |            | Iterate     |               |         |
+| Ruckus      |            | Theory      |               |         |
+| Crackle     |            |             |               |         |
 
-## NEW: Seq164
+## NEW: Cascade
 
-Enables TRIQ164 to work as a quantized note sequencer.  You select a scale or chord, then choose up to 15 different notes, plus rests, and assign them to the various 16 steps.  It's magic!
+A MIDI Player which runs on the GRAINS or on an Arduino (such as the Arduino Nano Every running on the BRAEDBOARD).  Can play songs of up to about 6000 MIDI notes on the GRAINS, more on other Arduinos. 
 
-Status: Working. But you'll probably find programming TRIQ164 this way to be annoying.  I'd use this more as a random-button-pressing happy accident generator.
-
+Status: Working
 
 ## 808
 
@@ -361,6 +360,12 @@ Status: Working, but I was hoping to do pink noise as well, but am having some h
 An oscilloscope with four switchable analog/digital inputs, an extra digital input, and a little digital function generator.  Uses the Serial Plotter on your laptop's Arduino IDE.
 
 Status: Working.
+
+## Seq164
+
+Enables TRIQ164 to work as a quantized note sequencer.  You select a scale or chord, then choose up to 15 different notes, plus rests, and assign them to the various 16 steps.  It's magic!
+
+Status: Working. But you'll probably find programming TRIQ164 this way to be annoying.  I'd use this more as a random-button-pressing happy accident generator.
 
 ## Sequence
 

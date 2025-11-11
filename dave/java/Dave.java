@@ -807,6 +807,7 @@ static boolean pleaseDie = false;
 		fileMenu.add(beats);
 		menubar.add(fileMenu);
 
+/*
 		JMenuItem aria = new JMenuItem("Convert .mid file to Aria .txt");
 		aria.addActionListener(new ActionListener()
 			{
@@ -816,8 +817,9 @@ static boolean pleaseDie = false;
 				}
 			});
 		fileMenu.add(aria);
+*/
 
-		JMenuItem cascade = new JMenuItem("Convert .mid file to Cascade .txt");
+		JMenuItem cascade = new JMenuItem("Convert .mid file to Cascade text");
 		cascade.addActionListener(new ActionListener()
 			{
 			public void actionPerformed(ActionEvent e)
