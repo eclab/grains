@@ -9,6 +9,11 @@ Modular MIDI.  You could attach it to a single MIDI module, such as the mco/1 or
 or you can feed it into the IMDI HEART and break the MIDI into multiple channels for
 multiple downstream devices.
 
+#### Bug in IMDI HEART
+
+Cascade is particularly useful in combination with IMDI HEART: you feed Cascade's Modular MIDI into IMDI HEART's "IMDI" input.  To do this, you must change ICN, IRT, and ISY so that IMDI HEART receives its MIDI from its IMDI input.  However the menu options for these three settings is mixed up.  To set these to IMDI, you must instead set them to **NONE**.  (NONE and IMDI are mixed up in the menu).
+
+
 
 ## The song.h File
 
