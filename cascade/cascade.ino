@@ -48,7 +48,7 @@
 ///    // but they can be various bytes in length each.
 ///    PROGMEM const uint8_t data[DATALENGTH] = { ..., ..., ... };
 ///
-/// The <data> array is the bytes for all the MIDI Messages in order.  You can have any messages you like,
+/// The [data] array is the bytes for all the MIDI Messages in order.  You can have any messages you like,
 /// but you are not permitted to insert the single-byte System Realtime messages (such as Clock Pulse)
 /// in the middle of some message, which is normally permitted by MIDI but which is too complex for
 /// Cascade's trivial parser.  Most DAWs don't do it, but it might happen.
@@ -73,7 +73,7 @@
 ///
 /// SOME NOTES ON TIMING AND MUSIC SPEED
 ///
-/// The <timestep> array are timestamps for when the MIDI Messages should appear.  The timestamps are in 
+/// The [timestep] array are timestamps for when the MIDI Messages should appear.  The timestamps are in 
 /// TICKS, where there are a certain number of ticks per beat.  At present this value is is 192, which
 /// is common; but your DAW may output something else.  In the "song.h" file you also define BPM, 
 /// which is the beats permit (the speed) of your song.  Commonly BPM might be 120.  Cascade converts 

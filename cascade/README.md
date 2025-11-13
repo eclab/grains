@@ -67,7 +67,7 @@ If you need a sequencer which can output to MIDI files, try Seq, my sequencer.
 
 ## Some Notes on Timing and Music Speed
 
-The <timestep> array are timestamps for when the MIDI Messages should appear.  The timestamps are in 
+The **timestep** array are timestamps for when the MIDI Messages should appear.  The timestamps are in 
 TICKS, where there are a certain number of ticks per beat.  At present this value is is 192, which
 is common; but your DAW may output something else.  In the "song.h" file you also define BPM, 
 which is the beats permit (the speed) of your song.  Commonly BPM might be 120.  Cascade converts 
