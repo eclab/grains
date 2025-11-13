@@ -99,7 +99,7 @@
 /// SOME NOTES ON MEMORY
 ///
 /// Cascade can represent timestamps with either 16-bit integers or 32-bit integers.  With 16-bit 
-/// integers, a typical MIDI message drops from (roughly) 8 bytes to 6 bytes, giving you more memory
+/// integers, a typical MIDI message drops from (roughly) 7 bytes to 5 bytes, giving you more memory
 /// in which to store your song.  But this means that your maximum timstamp must be no larger than 
 /// 65535 ticks.  If it exceeds this, you have to move to 32-bit integer timestamps.
 ///
