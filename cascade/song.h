@@ -18,6 +18,13 @@
 // The song was produced using Seq driving the AE
 // modular, and then Seq output to a MIDI file which
 // I ran through Dave to produce this final file.
+//
+// The song has two arpeggios, each of two voices
+// each, in channels 1 and 3 respectively, plus a one
+// voice melody in channel 2 and a bass in channel 4.
+// I am playing the arpgeggios using MJQ, which is one of
+// the polyphonic synth firmware I wrote for GRAINS.  MJQ
+// can produce three voices at a time.
 
 
 // Set this to your desired speed in Beats Per Minute
