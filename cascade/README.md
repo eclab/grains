@@ -107,7 +107,7 @@ By default Cascade is set up to run on the Nano Every.  You can easily set up a 
 run on your BRAEDBOARD, and it's cheap to buy.  For instructions on setup, see here:  
 https://github.com/eclab/grains/tree/main/v2/info
 
-The Nano Every uses Serial1 as it MIDI output.
+Cascade on the Nano Every uses Serial1 as it MIDI output.
 
 Alternatively you can use Cascade on a GRAINS, where DIGITAL OUT (D) is the MIDI Output. 
 To do this you need to change two things:
@@ -121,7 +121,7 @@ This sets up Cascade to use Software Serial.  Be warned that this may drop a byt
 or there but it should work okay.  
 
 BTW if you have a Grains V2 (and presently I am the only person in the world outside of
-Tangible Waves, so that's unlikely) you could use it as well.  Serial1 is the MIDI output.
+Tangible Waves, so that's unlikely) you could use it as well.  Serial is the MIDI output.
 In this case, you'd instead uncomment the following #define:
 
     // #define GRAINS_V2 
