@@ -74,9 +74,9 @@
 /// SOME NOTES ON TIMING AND MUSIC SPEED
 ///
 /// The [timestep] array are timestamps for when the MIDI Messages should appear.  The timestamps are in 
-/// TICKS, where there are a certain number of ticks per beat.  At present this value is is 192, which
+/// TICKS, where there are a certain number of ticks per beat.  At present this value is 192, which
 /// is common; but your DAW may output something else.  In the "song.h" file you also define BPM, 
-/// which is the beats permit (the speed) of your song.  Commonly BPM might be 120.  Cascade converts 
+/// which is the beats per minute (the speed) of your song.  Commonly BPM might be 120.  Cascade converts 
 /// time (in ms) into ticks with the following equation:
 ///
 ///    	return (time * BPM) / (60000 / TICKS_PER_BEAT);
