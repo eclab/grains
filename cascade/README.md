@@ -84,7 +84,7 @@ That value is 35791394 milliseconds, or about 35791 seconds, or 596 minutes, or 
 before Cascade overflows in its time computation and things go haywire.  If you increase your BPM 
 significantly, the number of hours will drop correspondingly.
 
-Also remember that MIDI runs at 3125 bytes per second.  A typical MIDI message is 3 byes long,
+Also remember that MIDI runs at 3125 bytes per second.  A typical MIDI message is 3 bytes long,
 so you can at most have 1000 messages per second.  A note needs a note-on and a note-off message,
 so this means you can play about 500 notes per second.  If you increase your BPM dramatically,
 or have very heavy MIDI traffic, you may force cascade to output more notes than it is capable.
