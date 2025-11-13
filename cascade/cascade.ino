@@ -163,7 +163,6 @@
 
 
 
-#include "emitmidi.c"
 #ifdef USE_SOFT_SERIAL
 #include "NeoSWSerial.h"
 #endif
