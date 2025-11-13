@@ -46,6 +46,10 @@ but you are not permitted to insert the single-byte System Realtime messages (su
 in the middle of some message, which is normally permitted by MIDI but which is too complex for
 Cascade's trivial parser.  Most DAWs don't do it, but it might happen.
 
+Cascade comes with a "song.h" file which is my submission to AETHERWAVES vol 7.  It's too big to fit on
+GRAINS, but works well on the Arduino Nano Every.
+
+
 
 ## Using Dave and Seq
 
