@@ -256,14 +256,16 @@ void allNotesOff()
 		writeByte(0);
 		}
 
+/*
 	// Not many modules implement ALL NOTES OFF.  So we have to do it manually for every note, which is quite slow.  :-(
 	// But we'll assume that these modules are OMNI so we can just write to channel 1
 	for(uint8_t i = 0; i < 128; i++)
 		{
-		writeByte(0x90);
+		writeByte(0x80);
 		writeByte(i);
-		writeByte(0);
+		writeByte(0x40);
 		}
+*/
 	}
 
 // Emits the message STARTING at position p.
@@ -346,4 +348,7 @@ void setup()
 	Serial1.begin(MIDI_RATE);
 #endif
 	pinMode(CV_GATE_OUT, OUTPUT);		// just in case?
+	
+	// If we reset, get rid of notes
+    allNotesOff();
     }
