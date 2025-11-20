@@ -79,6 +79,24 @@ A MIDI Player which runs on the GRAINS or on an Arduino (such as the Arduino Nan
 
 Status: Working
 
+## NEW: Spectacle (V2)
+
+A Lightshow using the LEDs on the Grains V2.
+
+Status: Working.  Only works on the Grains V2 (which at present only I own -- ask Robert to sell them!)
+
+## NEW: Ensemble (V2)
+
+Extends the IMDI HEART to be a true MIDI note distributor, capable of distributing a single channel of polyphonic notes to up to 16 separate channels, and thus enabling true MIDI polyphony on AE.  On the Arduino Nano Every on the AE Modular BRAEDBOARD, can also distribute a channel to 3 other IMDI outputs.
+
+Status: Working.  Works on Arduinos, such as the Arduino Nano Every on the AE Modular BRAEDBOARD.  Also works on Grains V2 (which at present only I own -- ask Robert to sell them!)
+
+## NEW: Master (V2)
+
+Extends the IMDI HEART to make AE more compatible with MPE. Copies incoming MIDI data on the MPE Master Channel to all other MPE Channels, thus more or less converting MPE to MIDI Mode 4. 
+
+Status: Working.  Works on Arduinos, such as the Arduino Nano Every on the AE Modular BRAEDBOARD.  Also works on Grains V2 (which at present only I own -- ask Robert to sell them!)
+
 ## 808
 
 A drum sampler for up to 9 samples and up to 5 triggers.  Comes with several 8-bit drum samples, including, yes, ones from the TR-808.  You can provide your own samples, and there are a variety of configurations.  Allows 8-bit raw and u-Law samples.  Requires Mozzi.
