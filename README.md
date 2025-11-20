@@ -51,27 +51,27 @@ I'll gradually look into updating to 2.0 if it proves useful.
 
 ### A Note on GRAINS Oscillators
 
-GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered PWM creates a low-level buzz or hum which is not filtered out well.  To remove this, I suggest including at the beginning of your song a multi-second stretch of silence (where the GRAINS is buzzing).  Then load your song into Audacity, and use the silent region (which will have the hum) as the noise profile for the "Noise Reduction" plugin (I'd use dB=7, Sensitivity=7.0, Smoothing=7).
+GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered PWM creates a low-level buzz or hum which is not filtered out well.  To remove this, I suggest including at the beginning of your song a multi-second stretch of silence (where the GRAINS is buzzing).  Then load your song into Audacity, and use the silent region (which will have the hum) as the noise profile for the "Noise Reduction" plugin (I'd use dB=7, Sensitivity=7.0, Smoothing=7).  After reducing the noise, you can cut out the silent region.
 
 ### Firmware Summary
 
-| Oscillators | MIDI Osc   | Digital Mod | CV Modulation | Other   |
-|:------------|:-----------|:------------|:--------------|:--------|
-| DX          | DX-M       | Tangle      | Multiplex     | Dave    |
-| Pluck       | Pluck-M    | Tardy       | Sequence      | Bit     |
-| Booker      | Booker-M   | Chrono      | LFO           | Scope   |
-| Droplets    | VS         | Pattern     | Motif         | Mode16  |
-| AKWF        | Mono       | Elements    | Quant         | Seq164  |
-| 808         | Para       | Lattice     | ADSR          | Cascade |
-| Voice       | MJQ        | Beats       | Multilevel    |         |
-| Chordal     | Beep       | Geiger      | Stochastic    |         |
-| Byte        | Trajectory | Pulses      | Switchblade   |         |
-| Evolution   |            | Divvy       | Memoir        |         |
-| Oration     |            | Multiple    | Arp           |         |
-| Oration 2   |            | Respite     |               |         |
-| Fold        |            | Iterate     |               |         |
-| Ruckus      |            | Theory      |               |         |
-| Crackle     |            |             |               |         |
+| Oscillators | MIDI Oscillators | Digital Modulation | CV Modulation | Effects | Module Extenders | MIDI Tools    | Utility        |
+|:------------|:-----------------|:-------------------|:--------------|:--------|:-----------------|:--------------|:---------------|
+| DX          | DX-M             | Tangle             | Multiplex     | Bit     | Mode16           | Dave          | Scope          |
+| Pluck       | Pluck-M          | Tardy              | Sequence      |         | Seq164           | Ensemble(V2)  | Spectacle(V2)  |
+| Booker      | Booker-M         | Chrono             | LFO           |         |                  | Master(V2)    |                |
+| Droplets    | VS               | Pattern            | Motif         |         |                  | Cascade       |                |
+| AKWF        | Mono             | Elements           | Quant         |         |                  |               |                |
+| 808         | Para             | Lattice            | ADSR          |         |                  |               |                |
+| Voice       | MJQ              | Beats              | Multilevel    |         |                  |               |                |
+| Chordal     | Beep             | Geiger             | Stochastic    |         |                  |               |                |
+| Byte        | Trajectory       | Pulses             | Switchblade   |         |                  |               |                |
+| Evolution   |                  | Divvy              | Memoir        |         |                  |               |                |
+| Oration     |                  | Multiple           | Arp           |         |                  |               |                |
+| Oration 2   |                  | Respite            |               |         |                  |               |                |
+| Fold        |                  | Iterate            |               |         |                  |               |                |
+| Ruckus      |                  | Theory             |               |         |                  |               |                |
+| Crackle     |                  |                    |               |         |                  |               |                |
 
 ## NEW: Cascade
 
