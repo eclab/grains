@@ -55,23 +55,23 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 
 ### Firmware Summary
 
-| Oscillators | MIDI Osc   | Digital Mod | CV Modulation | Other   |
-|:------------|:-----------|:------------|:--------------|:--------|
-| DX          | DX-M       | Tangle      | Multiplex     | Dave    |
-| Pluck       | Pluck-M    | Tardy       | Sequence      | Bit     |
-| Booker      | Booker-M   | Chrono      | LFO           | Scope   |
-| Droplets    | VS         | Pattern     | Motif         | Mode16  |
-| AKWF        | Mono       | Elements    | Quant         | Seq164  |
-| 808         | Para       | Lattice     | ADSR          | Cascade |
-| Voice       | MJQ        | Beats       | Multilevel    |         |
-| Chordal     | Beep       | Geiger      | Stochastic    |         |
-| Byte        | Trajectory | Pulses      | Switchblade   |         |
-| Evolution   |            | Divvy       | Memoir        |         |
-| Oration     |            | Multiple    | Arp           |         |
-| Oration 2   |            | Respite     |               |         |
-| Fold        |            | Iterate     |               |         |
-| Ruckus      |            | Theory      |               |         |
-| Crackle     |            |             |               |         |
+| Oscillators | MIDI Oscillators | Digital Modulation | CV Modulation | Effects | Module Extenders | MIDI Tools    | Utility        |
+|:------------|:-----------------|:-------------------|:--------------|:--------|:-----------------|:--------------|:---------------|
+| DX          | DX-M             | Tangle             | Multiplex     | Bit     | Mode16           | Dave          | Scope          |
+| Pluck       | Pluck-M          | Tardy              | Sequence      |         | Seq164           | Ensemble (V2) | Spectacle (V2) |
+| Booker      | Booker-M         | Chrono             | LFO           |         |                  | Master (V2)   |                |
+| Droplets    | VS               | Pattern            | Motif         |         |                  | Cascade       |                |
+| AKWF        | Mono             | Elements           | Quant         |         |                  |               |                |
+| 808         | Para             | Lattice            | ADSR          |         |                  |               |                |
+| Voice       | MJQ              | Beats              | Multilevel    |         |                  |               |                |
+| Chordal     | Beep             | Geiger             | Stochastic    |         |                  |               |                |
+| Byte        | Trajectory       | Pulses             | Switchblade   |         |                  |               |                |
+| Evolution   |                  | Divvy              | Memoir        |         |                  |               |                |
+| Oration     |                  | Multiple           | Arp           |         |                  |               |                |
+| Oration 2   |                  | Respite            |               |         |                  |               |                |
+| Fold        |                  | Iterate            |               |         |                  |               |                |
+| Ruckus      |                  | Theory             |               |         |                  |               |                |
+| Crackle     |                  |                    |               |         |                  |               |                |
 
 ## NEW: Cascade
 
