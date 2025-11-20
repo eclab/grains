@@ -58,8 +58,8 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Oscillators | MIDI Oscillators | Digital Modulation | CV Modulation | Effects | Module Extenders | MIDI Tools    | Utility        |
 |:------------|:-----------------|:-------------------|:--------------|:--------|:-----------------|:--------------|:---------------|
 | DX          | DX-M             | Tangle             | Multiplex     | Bit     | Mode16           | Dave          | Scope          |
-| Pluck       | Pluck-M          | Tardy              | Sequence      |         | Seq164           | Ensemble (V2) | Spectacle (V2) |
-| Booker      | Booker-M         | Chrono             | LFO           |         |                  | Master (V2)   |                |
+| Pluck       | Pluck-M          | Tardy              | Sequence      |         | Seq164           | Ensemble(V2)  | Spectacle(V2)  |
+| Booker      | Booker-M         | Chrono             | LFO           |         |                  | Master(V2)    |                |
 | Droplets    | VS               | Pattern            | Motif         |         |                  | Cascade       |                |
 | AKWF        | Mono             | Elements           | Quant         |         |                  |               |                |
 | 808         | Para             | Lattice            | ADSR          |         |                  |               |                |
