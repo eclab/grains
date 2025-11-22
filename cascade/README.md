@@ -9,11 +9,16 @@ Modular MIDI.  You could attach it to a single MIDI module, such as the mco/1 or
 or you can feed it into the IMDI HEART and break the MIDI into multiple channels for
 multiple downstream devices.
 
-#### Bug in IMDI HEART
 
-Cascade is particularly useful in combination with IMDI HEART: you feed Cascade's Modular MIDI into IMDI HEART's "IMDI" input.  To do this, you must change ICN, IRT, and ISY so that IMDI HEART receives its MIDI from its IMDI input.  However the menu options for these three settings is mixed up.  To set these to IMDI, you must instead set them to **NONE**.  (NONE and IMDI are mixed up in the menu).
+## Attaching to IMDI HEART
 
+Cascade is particularly useful in combination with IMDI HEART: you feed Cascade's Modular MIDI into IMDI HEART's "IMDI" input.  To do this, you must change ICN, IRT, and ISY so that IMDI HEART receives its MIDI from its IMDI input. 
 
+However the menu options for the ICN, IRT, and ISY settings are mixed up.  To set these to IMDI, you must instead set them to **NONE**.  (NONE and IMDI are mixed up in the menu).
+
+## Attaching to mb/1
+
+With care, you can also route Cascade's output into the mb/1 to be divided up into its 16 outputs.  To do this, you need to feed it directly into the mb/1's TRS MIDI jack.  This isn't for the faint of heart.  See the [documentation for connecting to the TRS MIDI Jack in the Dave firwmare pages](https://github.com/eclab/grains/blob/main/dave/docs/TRS.md).  I won't be held responsible or damage to your mb/1 if this goes awry.  But it works.
 
 ## The song.h File
 
