@@ -54,11 +54,11 @@ However using the THRU on the MCO/1, MCC/4, etc., or any output from the MB/1 is
 
 In short, this is the likely situation for SINKS and 5V SOURCES:
 
-|                   | GRAINS Digital Out | MCO/1, MCC/4, etc. | Any MB/1 Output  |
-| ----------------- | ------------------ | ------------------ | ---------------- |
-| **MASTER I/O 5V** | 1320 Ohms: Safe    | 420 Ohms: Unsafe   | 320 Ohms: Unsafe |
-| **BRAEDBOARD 5V** | 1320 Ohms: Safe    | 420 Ohms: Unsafe   | 320 Ohms: Unsafe |
-| **4ATT/CV 5V**    | 2220 Ohms: Safe    | 1200 Ohms: Safe?   | 1100 Ohms: Safe? |
+|                   | GRAINS Digital Out | [Arduino Nano Every on BRAEDBOARD](https://github.com/eclab/grains/tree/main/v2/info) | MCO/1, MCC/4, etc. | Any MB/1 Output  |
+| ----------------- | ------------------ | ------------------ |------------------ | ---------------- |
+| **MASTER I/O 5V** | 1320 Ohms: Safe    | Safe ? only with inline 1K resistor | 420 Ohms: Unsafe   | 320 Ohms: Unsafe |
+| **BRAEDBOARD 5V** | 1320 Ohms: Safe    | Safe ? only with inline 1K resistor | 420 Ohms: Unsafe   | 320 Ohms: Unsafe |
+| **4ATT/CV 5V**    | 2220 Ohms: Safe    | Safe ? only with inline 1K resistor | 1200 Ohms: Safe?   | 1100 Ohms: Safe? |
 
 
 The MIDI schematic has a diode for reverse polarity if you mix things up (but don't do that).  I have swapped the two wires several times with no ill effects, fingers crossed.
