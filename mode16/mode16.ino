@@ -18,8 +18,8 @@
 ///
 /// How does Mode16 perform this magic?  By controlling SEQ16's gate and manually stepping it.
 /// Mode16 can make the SEQ16 move to any location, then play its note; or it can make the SEQ16
-/// play a rest.  For example, the make the SEQ16 play location 10, Mode16 will reset SEQ16,
-/// then step it 9 times, then step it once to play it.  (Yes coders, this ia O(n^2), not cheap).
+/// play a rest.  For example, to make the SEQ16 play location 10, Mode16 will reset SEQ16,
+/// then step it 9 times, then step it once to play it.  (Yes coders, this is O(n^2), not cheap).
 ///
 /// But during those 9 steps, how does Mode16 prevent SEQ16 from playing?  This is done by filtering
 /// out the output gate.  You attach the SEQ16's gate out to Mode16, and then Mode16 provides the
