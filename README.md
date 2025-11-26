@@ -71,7 +71,13 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Oration 2   |                  | Respite            |               |         |                  |               |                |
 | Fold        |                  | Iterate            |               |         |                  |               |                |
 | Ruckus      |                  | Theory             |               |         |                  |               |                |
-| Crackle     |                  |                    |               |         |                  |               |                |
+| Crackle     |                  | Tempo              |               |         |                  |               |                |
+
+## NEW: Tempo
+
+A master clock.  Tempo is a trigger clock settable either by dialing in a BPM or by providing a tap tempo.  It can output triggers straight, in various amounts of swing, or with various amounts of humanization randomness.
+
+Status: Working, but at present Tempo only goes up to 255 BPM.
 
 ## NEW: Cascade
 
