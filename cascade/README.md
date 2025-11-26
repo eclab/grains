@@ -42,7 +42,7 @@ to the file "cascade.ino".  This file should look like this:
    
     #define DATALENGTH ...				// This is the length of the data array below.  
 
-    // This array holds the bytestream of MIDI Messages.  There are exactlyt TIMELENGTH messages in total,
+    // This array holds the bytestream of MIDI Messages.  There are exactly TIMELENGTH messages in total,
     // but they can be various bytes in length each.
     PROGMEM const uint8_t data[DATALENGTH] = { ..., ..., ... };
 
@@ -53,6 +53,8 @@ Cascade's trivial parser.  Most DAWs don't do it, but it might happen.
 
 Cascade comes with a "song.h" file which is my submission to AETHERWAVES vol 7.  It's too big to fit on
 GRAINS, but works well on the Arduino Nano Every.
+
+***Holy Cow!*** I hear you say.  ***That's a lot of work!***  Nope, it's easy: we've made a tool for you...
 
 
 

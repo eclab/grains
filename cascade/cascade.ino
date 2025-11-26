@@ -60,7 +60,7 @@
 ///    
 ///    #define DATALENGTH ...				// This is the length of the data array below.  
 ///
-///    // This array holds the bytestream of MIDI Messages.  There are exactlyt TIMELENGTH messages in total,
+///    // This array holds the bytestream of MIDI Messages.  There are exactly TIMELENGTH messages in total,
 ///    // but they can be various bytes in length each.
 ///    PROGMEM const uint8_t data[DATALENGTH] = { ..., ..., ... };
 ///
@@ -72,6 +72,8 @@
 /// Cascade comes with a "song.h" file which is my submission to AETHERWAVES vol 7.  It's too big to fit
 /// on GRAINS, but works well on the Arduino Nano Every.
 /// 
+/// HOLY COW! I hear you say. THAT'S A LOT OF WORK! Nope, it's easy: we've made a tool for you...
+///
 ///
 /// USING DAVE AND SEQ
 /// 
@@ -344,8 +346,9 @@ void loop()
     	{
     	// we're running
     	}
-    	
-	if (getMIDITicks(startTime) >= getTime(timePos)) 	// Do we need to emit a message?
+    
+    uint32_t midiTicks = getMIDITicks(startTime);
+	while (dataPos < DATALENGTH && timePos < TIMELENGTH && midiTicks >= getTime(timePos)) 	// Do we need to emit a message?
 		{
 		timePos++;	
 		dataPos = emit(dataPos);

@@ -54,5 +54,5 @@ Coarse BPM
 #### POT 2
 Fine BPM
 #### POT 3
-Swing / Noise added to Beat 
+Swing / Noise added to Beat  
 [No Swing--> Increasing Swing ---> No Noise ---> Increasing Noise]
