@@ -69,7 +69,7 @@ wiring you could also feed into a MASTER I/O with some caveats and disclaimers.
 ### USB DISTRIBUTOR MODE
 This mode takes MIDI input over USB and outputs to DIGITAL OUT, but redistributes Channel 1.
 to several other channels For example, the first note goes to channel 2, the second note goes
-to channel 3, and so on.  The number of voices (up to 15) is set by the #define NUM_VOICES below.  
+to channel 3, and so on.  The number of voices (up to 15) is set by the \#define NUM_VOICES below.  
 This is useful in combination when fed into with a WonkyStuff MB/1, with careful wiring:
 it would allow you to have a polyphonic synthesizer controlled by a normal
 MIDI Controller.
@@ -85,7 +85,7 @@ MIDI Controller.
 This mode takes MIDI input over USB and and outputs directly to DIGITAL OUT.  It assumes that we
 are doing MPE with a ZONE LOW, where Channel 1 is the MPE Master channel, and the individual
 channels start at 2.  The number of voices (hence channels except the Master channel) is set by the
-#define NUM_VOICES below.  This is useful in combination when fed into with a WonkyStuff MB/1, 
+\#define NUM_VOICES below.  This is useful in combination when fed into with a WonkyStuff MB/1, 
 with careful wiring to create an MPE-controlled polysynth.
 
 - DIGITAL OUT outputs MIDI from USB, with channels modified as described
