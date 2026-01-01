@@ -71,37 +71,14 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Oration 2   |                  | Respite            |               |         |                  |               |                |
 | Fold        |                  | Iterate            |               |         |                  |               |                |
 | Ruckus      |                  | Theory             |               |         |                  |               |                |
-| Crackle     |                  | Tempo              |               |         |                  |               |                |
+| Crackle     |                  |                    |               |         |                  |               |                |
+| Super       |                  |                    |               |         |                  |               |                |
 
-## NEW: Tempo
+## NEW: Super
 
-A master clock.  Tempo is a trigger clock settable either by dialing in a BPM or by providing a tap tempo.  It can output triggers straight, in various amounts of swing, or with various amounts of humanization randomness.
-
-Status: Working, but at present Tempo only goes up to 255 BPM.
-
-## NEW: Cascade
-
-A MIDI Player which runs on the GRAINS or on an Arduino (such as the Arduino Nano Every running on the BRAEDBOARD).  Can play songs of up to about 6000 MIDI notes on the GRAINS, more on other Arduinos. 
+The worst supersaw you've ever heard.  Really just three detuned sawtooth, square, or triangle waves.  Requires Mozzi.
 
 Status: Working
-
-## NEW: Spectacle (V2)
-
-A Lightshow using the LEDs on the Grains V2.
-
-Status: Working.  Only works on the Grains V2 (which at present only I own -- ask Robert to sell them!)
-
-## NEW: Ensemble (V2)
-
-Extends the IMDI HEART to be a true MIDI note distributor, capable of distributing a single channel of polyphonic notes to up to 16 separate channels, and thus enabling true MIDI polyphony on AE.  On the Arduino Nano Every on the AE Modular BRAEDBOARD, can also distribute a channel to 3 other IMDI outputs.
-
-Status: Working.  Works on Arduinos, such as the Arduino Nano Every on the AE Modular BRAEDBOARD.  Also works on Grains V2 (which at present only I own -- ask Robert to sell them!)
-
-## NEW: Master (V2)
-
-Extends the IMDI HEART to make AE more compatible with MPE. Copies incoming MIDI data on the MPE Master Channel to all other MPE Channels, thus more or less converting MPE to MIDI Mode 4. 
-
-Status: Working.  Works on Arduinos, such as the Arduino Nano Every on the AE Modular BRAEDBOARD.  Also works on Grains V2 (which at present only I own -- ask Robert to sell them!)
 
 ## 808
 
@@ -165,6 +142,12 @@ A ByteBeat emitter in the style of AlgoDrone or ByteBeat-Xfade.  You can choose 
 
 Status: Working.  Maybe at some point I'll figure out how to hack Mozzi to allow real pitch control.
 
+## Cascade
+
+A MIDI Player which runs on the GRAINS or on an Arduino (such as the Arduino Nano Every running on the BRAEDBOARD).  Can play songs of up to about 6000 MIDI notes on the GRAINS, more on other Arduinos. 
+
+Status: Working
+
 ## Chordal
 
 A chording oscillator which can cross-fade between sine and either square, saw, or triangle (selectable in code).  Requires Mozzi.
@@ -219,6 +202,12 @@ A Euclidian trigger sequencer with up to 32 steps and both forward and backward 
 
 Status: Working.
 
+## Ensemble (Arduino and V2 Only)
+
+Extends the IMDI HEART to be a true MIDI note distributor, capable of distributing a single channel of polyphonic notes to up to 16 separate channels, and thus enabling true MIDI polyphony on AE.  On the Arduino Nano Every on the AE Modular BRAEDBOARD, can also distribute a channel to 3 other IMDI outputs.
+
+Status: Working.  Works on Arduinos, such as the Arduino Nano Every on the AE Modular BRAEDBOARD.  Also works on Grains V2 (which at present only I own -- ask Robert to sell them!)
+
 ## Evolution
 
 An evolving drone synthesizer using the same additive synthesis technique as Booker.  Requires Mozzi.
@@ -260,6 +249,14 @@ Status: Working.
 A warpable LFO with pulse (with pulse width), warpable saw/tri/ramp, and warpable sine waves, with a wide range of rates.  Can be reset, and outputs a sync trigger.  Requires Mozzi.
 
 Status: Working.  However GRAINS can only reach about 4V, so it goes about 0-4V or so.  LFO's pulse waves are by necessity pretty rounded: if you want sharp pulse waves, see PULSES instead. 
+
+
+## Master (Arduino and V2 Only)
+
+Extends the IMDI HEART to make AE more compatible with MPE. Copies incoming MIDI data on the MPE Master Channel to all other MPE Channels, thus more or less converting MPE to MIDI Mode 4. 
+
+Status: Working.  Works on Arduinos, such as the Arduino Nano Every on the AE Modular BRAEDBOARD.  Also works on Grains V2 (which at present only I own -- ask Robert to sell them!)
+
 
 ## Memoir
 
@@ -396,6 +393,12 @@ Status: Working. But you'll probably find programming TRIQ164 this way to be ann
 A step sequencer with 8 patterns, each of which can have up to 16 steps (8 is typical), including rests.  You can select the gate length, increment through patterns or select them manually, and edit all the steps entirely from the knobs on the GRAINS.  
 
 Status: Working.  It's quite fiddly because there are only three knobs, but it's doable.  16 steps is particularly fiddly, perhaps not worth the effort.  But 8 works great.
+
+## Spectacle (V2 Only)
+
+A Lightshow using the LEDs on the Grains V2.
+
+Status: Working.  Only works on the Grains V2 (which at present only I own -- ask Robert to sell them!)
 
 ## Stochastic
 
