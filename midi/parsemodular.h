@@ -22,7 +22,7 @@
 ///
 /// See https://github.com/eclab/grains/blob/main/info/ModularMIDIConventionsForDevelopers.md
 ///     for more information on the Modular MIDI conventions.
-/// See also https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf
+/// See also https://people.cs.gmu.edu/~sean/papers/modulelevelmidi.pdf
 
 
 /// SETTING THINGS UP

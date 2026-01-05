@@ -10,7 +10,7 @@ Sean Luke, George Mason University (sean@cs.gmu.edu)
 ### Other Resources
 
 [Modular MIDI Conventions for Developers](ModularMIDIConventionsForDevelopers.md).  Much more terse.   
-[Module-Level MIDI](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf).  An academic paper which introduces and describes the conventions.  
+[Module-Level MIDI](https://people.cs.gmu.edu/~sean/papers/modulelevelmidi.pdf).  An academic paper which introduces and describes the conventions.  
 [Lightweight C MIDI Library](../midi). Designed for small processors, like Arduino.  Contains a Modular MIDI conventions sublibrary.  
 [wonkystuff's Early Introductory Whitepaper](https://wonkystuff.net/midi-a-new-signal-type-for-ae/). This was written before the Modular MIDI conventions were set out but it still might be useful.  
 [tangible waves's IMDI Page](https://www.tangiblewaves.com/imdi.html).  IMDI is tangible waves's brand name for the Modular MIDI conventions.
@@ -55,7 +55,7 @@ Attached to the mb/1's per-channel sockets were modules which responded to MIDI.
 
 The mco/1 had a "MIDI IN" port from which it received MIDI messages from the mb/1, and a "MIDI THRU" port which passed on those messages to other modules.  For example, this allowed two detuned oscillators to respond to the same note.
 
-In fall of 2023, Tuffen, Mathias Brüssel (of tangible waves), and Sean Luke (George Mason University) began work in a standardized set of MIDI conventions to extend this model to more complex scenarios.  This eventually led to a paper, **["Module-Level MIDI"](https://cs.gmu.edu/~sean/papers/modulelevelmidi.pdf)**, presented at the Sound and Music Computing (SMC) conference in Summer of 2024.  Those conventions led to the ones you are reading here.
+In fall of 2023, Tuffen, Mathias Brüssel (of tangible waves), and Sean Luke (George Mason University) began work in a standardized set of MIDI conventions to extend this model to more complex scenarios.  This eventually led to a paper, **["Module-Level MIDI"](https://people.cs.gmu.edu/~sean/papers/modulelevelmidi.pdf)**, presented at the Sound and Music Computing (SMC) conference in Summer of 2024.  Those conventions led to the ones you are reading here.
 
 ### Why MIDI?
 
