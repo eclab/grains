@@ -32,7 +32,7 @@ other projects.
 
 
 ## Configurations
-Here are some configurations.  Note that I am have only tested #1.
+Here are some configurations.  Note that I have only tested #1.
 
 1. **GRAINS V2 PROTOTYPE OR NANO OR NANO EVERY IN COMBINATION WITH AN IMDI HEART.**
    I presently own a prototype GRAINS V2 from Tangible Waves, but
