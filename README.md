@@ -68,9 +68,9 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Byte        | Trajectory       | Pulses             | Switchblade   |         |                  |               |                |
 | Evolution   |                  | Divvy              | Memoir        |         |                  |               |                |
 | Oration     |                  | Multiple           | Arp           |         |                  |               |                |
-| Oration 2   |                  |                    |               |         |                  |               |                |
-| Fold        |                  | Iterate            |               |         |                  |               |                |
-| Ruckus      |                  | Theory             |               |         |                  |               |                |
+| Oration 2   |                  | Iterate            |               |         |                  |               |                |
+| Fold        |                  | Theory             |               |         |                  |               |                |
+| Ruckus      |                  |                    |               |         |                  |               |                |
 | Crackle     |                  |                    |               |         |                  |               |                |
 | Super       |                  |                    |               |         |                  |               |                |
 
