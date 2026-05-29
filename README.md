@@ -59,8 +59,8 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 |:------------|:-----------------|:-------------------|:--------------|:--------|:-----------------|:--------------|:---------------|
 | DX          | DX-M             | Tangle             | Multiplex     | Bit     | Mode16           | Dave          | Scope          |
 | Pluck       | Pluck-M          | Tardy              | Sequence      |         | Seq164           | Ensemble(V2)  | Spectacle(V2)  |
-| Booker      | Booker-M         | Chrono             | LFO           |         | Hata             | Master(V2)    |                |
-| Droplets    | VS               | Pattern            | Motif         |         |                  | Cascade       |                |
+| Booker      | Booker-M         | Chrono             | LFO           |         | Respite          | Master(V2)    |                |
+| Droplets    | VS               | Pattern            | Motif         |         | Hata             | Cascade       |                |
 | AKWF        | Mono             | Elements           | Quant         |         |                  |               |                |
 | 808         | Para             | Lattice            | ADSR          |         |                  |               |                |
 | Voice       | MJQ              | Beats              | Multilevel    |         |                  |               |                |
@@ -68,9 +68,9 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Byte        | Trajectory       | Pulses             | Switchblade   |         |                  |               |                |
 | Evolution   |                  | Divvy              | Memoir        |         |                  |               |                |
 | Oration     |                  | Multiple           | Arp           |         |                  |               |                |
-| Oration 2   |                  | Respite            |               |         |                  |               |                |
-| Fold        |                  | Iterate            |               |         |                  |               |                |
-| Ruckus      |                  | Theory             |               |         |                  |               |                |
+| Oration 2   |                  | Iterate            |               |         |                  |               |                |
+| Fold        |                  | Theory             |               |         |                  |               |                |
+| Ruckus      |                  |                    |               |         |                  |               |                |
 | Crackle     |                  |                    |               |         |                  |               |                |
 | Super       |                  |                    |               |         |                  |               |                |
 
