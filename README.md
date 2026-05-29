@@ -59,7 +59,7 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 |:------------|:-----------------|:-------------------|:--------------|:--------|:-----------------|:--------------|:---------------|
 | DX          | DX-M             | Tangle             | Multiplex     | Bit     | Mode16           | Dave          | Scope          |
 | Pluck       | Pluck-M          | Tardy              | Sequence      |         | Seq164           | Ensemble(V2)  | Spectacle(V2)  |
-| Booker      | Booker-M         | Chrono             | LFO           |         |                  | Master(V2)    |                |
+| Booker      | Booker-M         | Chrono             | LFO           |         | Hata             | Master(V2)    |                |
 | Droplets    | VS               | Pattern            | Motif         |         |                  | Cascade       |                |
 | AKWF        | Mono             | Elements           | Quant         |         |                  |               |                |
 | 808         | Para             | Lattice            | ADSR          |         |                  |               |                |
@@ -74,9 +74,9 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Crackle     |                  |                    |               |         |                  |               |                |
 | Super       |                  |                    |               |         |                  |               |                |
 
-## NEW: Super
+## NEW: Hata
 
-The worst supersaw you've ever heard.  Really just three detuned sawtooth, square, or triangle waves.  Requires Mozzi.
+Enables the Triq164 to drive the Wonkystuff Playa, plus allows one knob to control a Playa CC parameter or to choose from among a set of possible drumsets.
 
 Status: Working
 
@@ -405,6 +405,12 @@ Status: Working.  Only works on the Grains V2 (which at present only I own -- as
 A random walk generator (free or about a mean), plus sample and hold, plus added fuzz.   Requires Mozzi. 
 
 Status: Working.
+
+## Super
+
+The worst supersaw you've ever heard.  Really just three detuned sawtooth, square, or triangle waves.  Requires Mozzi.
+
+Status: Working
 
 ## Switchblade
 

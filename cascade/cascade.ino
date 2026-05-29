@@ -43,8 +43,8 @@
 /// To load MIDI into Cascade, you create a file called "song.h" and place it right next
 /// to the file "cascade.ino".  This file should look like this:
 ///
-///    #define BPM ...						// This is your speed in beat per minute.  It should be an integer > 0, such as 120.
-///    #define TIMELENGTH ...				// This is the length the timestep array below.
+///    #define BPM ...						// This is your speed in beats per minute.  It should be an integer > 0, such as 120.
+///    #define TIMELENGTH ...		  // This is the length of the timestep array below.
 ///    #define LONGTYPE						// This line might not exist.  If it exists, then TIMETYPE is 32-bit.  If not, 16-bit.
 ///
 ///    // This little macro sets our integer type for the timestep array.

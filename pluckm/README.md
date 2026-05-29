@@ -1,6 +1,6 @@
 # Pluck-M
 
-Pluck is a Karplus-Strong string plucking thing.  It's the MIDI version of PLUCK.  You pluck a string by providing a PITCH and then triggering the TRIGGER.  Pluck maintains up to 4 voices of strings being plucked at  one time.  No two plucks will sound exactly alike, nor will they have the same decay nor volume.
+Pluck is a Karplus-Strong string plucking thing.  It's the MIDI version of PLUCK.  You pluck a string by providing a PITCH and then triggering the TRIGGER.  Pluck maintains up to 4 voices of strings being plucked at one time.  No two plucks will sound exactly alike, nor will they have the same decay nor volume.
 
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 

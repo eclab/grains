@@ -33,9 +33,10 @@
 
 ////// MIDI PARSER
 
-/// This parser can parse MIDI note data of all kinds, including 14-bit and 7-bit CC, NRPN, and RPN,
-/// as well as all kinds of non-note data, including combined PC/BankSelect messages, and also 
-/// including system exclusive messages up to 254 bytes in length not including the F0 and F7.
+/// This parser can parse MIDI note data of all kinds, as well as all kinds of non-note data, including 
+/// combined PC/Bank Select messages, as well as 14-bit and 7-bit CC, NRPN, and RPN; and also 
+/// non-voice data, including system exclusive messages up to 254 bytes in length (not including 
+/// the F0 and F7).
 ///
 /// Each parser is a struct containing state data.  A single parser is designed to parse data for
 /// a specific channel, or all data (OMNI).  You can also set up a parser to listen to a channel in an

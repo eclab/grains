@@ -538,7 +538,6 @@ Oscil <SAW_MAX_8192_AT_16384_512_NUM_CELLS, AUDIO_RATE> csaw8192(SAW_MAX_8192_AT
 MetaOscil<SAW_MAX_136_AT_16384_512_NUM_CELLS, AUDIO_RATE, 22> meta1 {&saw136, &saw143, &saw151, &saw160, &saw170, &saw182, &saw195, &saw210, &saw227, &saw248, &saw273, &saw303, &saw341, &saw390, &saw455, &saw546, &saw682, &saw910, &saw1365, &saw2730, &saw4096, &saw8192};
 MetaOscil<SAW_MAX_136_AT_16384_512_NUM_CELLS, AUDIO_RATE, 22> meta2 {&asaw136, &asaw143, &asaw151, &asaw160, &asaw170, &asaw182, &asaw195, &asaw210, &asaw227, &asaw248, &asaw273, &asaw303, &asaw341, &asaw390, &asaw455, &asaw546, &asaw682, &asaw910, &asaw1365, &asaw2730, &asaw4096, &asaw8192};
 MetaOscil<SAW_MAX_136_AT_16384_512_NUM_CELLS, AUDIO_RATE, 22> meta3 {&bsaw136, &bsaw143, &bsaw151, &bsaw160, &bsaw170, &bsaw182, &bsaw195, &bsaw210, &bsaw227, &bsaw248, &bsaw273, &bsaw303, &bsaw341, &bsaw390, &bsaw455, &bsaw546, &bsaw682, &bsaw910, &bsaw1365, &bsaw2730, &bsaw4096, &bsaw8192};
-MetaOscil<SAW_MAX_136_AT_16384_512_NUM_CELLS, AUDIO_RATE, 22> meta4 {&csaw136, &csaw143, &csaw151, &csaw160, &csaw170, &csaw182, &csaw195, &csaw210, &csaw227, &csaw248, &csaw273, &csaw303, &csaw341, &csaw390, &csaw455, &csaw546, &csaw682, &csaw910, &csaw1365, &csaw2730, &csaw4096, &csaw8192};
 #endif
 
 #ifdef USE_TRI
@@ -795,19 +794,16 @@ void setup()
     meta1.setCutoffFreqs(68, 72, 76, 81, 86, 92, 98, 106, 115, 126, 138, 154, 174, 199, 234, 282, 356, 481, 744, 1638, 2730, 8192);
     meta2.setCutoffFreqs(68, 72, 76, 81, 86, 92, 98, 106, 115, 126, 138, 154, 174, 199, 234, 282, 356, 481, 744, 1638, 2730, 8192);
     meta3.setCutoffFreqs(68, 72, 76, 81, 86, 92, 98, 106, 115, 126, 138, 154, 174, 199, 234, 282, 356, 481, 744, 1638, 2730, 8192);
-    //meta4.setCutoffFreqs(68, 72, 76, 81, 86, 92, 98, 106, 115, 126, 138, 154, 174, 199, 234, 282, 356, 481, 744, 1638, 2730, 8192);
 #endif
 #ifdef USE_SAW
     meta1.setCutoffFreqs(136, 143, 151, 160, 170, 182, 195, 210, 227, 248, 273, 303, 341, 390, 455, 546, 682, 910, 1365, 2730, 4096, 8192);
     meta2.setCutoffFreqs(136, 143, 151, 160, 170, 182, 195, 210, 227, 248, 273, 303, 341, 390, 455, 546, 682, 910, 1365, 2730, 4096, 8192);
     meta3.setCutoffFreqs(136, 143, 151, 160, 170, 182, 195, 210, 227, 248, 273, 303, 341, 390, 455, 546, 682, 910, 1365, 2730, 4096, 8192);
-   // meta4.setCutoffFreqs(136, 143, 151, 160, 170, 182, 195, 210, 227, 248, 273, 303, 341, 390, 455, 546, 682, 910, 1365, 2730, 4096, 8192);
 #endif
 #ifdef USE_TRI
     meta1.setCutoffFreqs(103, 109, 115, 122, 130, 138, 148, 160, 174, 190, 210, 234, 264, 303, 356, 431, 546, 744, 1170, 1638, 2730, 8192);
     meta2.setCutoffFreqs(103, 109, 115, 122, 130, 138, 148, 160, 174, 190, 210, 234, 264, 303, 356, 431, 546, 744, 1170, 1638, 2730, 8192);
     meta3.setCutoffFreqs(103, 109, 115, 122, 130, 138, 148, 160, 174, 190, 210, 234, 264, 303, 356, 431, 546, 744, 1170, 1638, 2730, 8192);
-    //meta4.setCutoffFreqs(103, 109, 115, 122, 130, 138, 148, 160, 174, 190, 210, 234, 264, 303, 356, 431, 546, 744, 1170, 1638, 2730, 8192);
 #endif
     startMozzi();
 
@@ -864,7 +860,7 @@ inline float getFrequency(uint8_t pitch, uint8_t tune)
     return FREQUENCY(finalPitch < 0 ? 0 : (finalPitch > 1535 ? 1535 : finalPitch));
     }
 
-uint8_t alpha;		// Range 0 ... 7
+uint8_t alpha;		// Range 0 ... 5
 
 void updateControl() 
     {
