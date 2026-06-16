@@ -61,7 +61,7 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Pluck       | Pluck-M          | Tardy              | Sequence      |         | Seq164           | Ensemble(V2)  |
 | Booker      | Booker-M         | Chrono             | LFO           |         | Respite          | Master(V2)    |
 | Droplets    | VS               | Pattern            | Motif         |         | Hata             | Cascade       |
-| AKWF        | Mono             | Elements           | Quant         |         |                  | Scope         |
+| AKWF        | Mono             | Elements           | Quant         |         | CVCO             | Scope         |
 | 808         | Para             | Lattice            | ADSR          |         |                  | Spectacle(V2) |
 | Voice       | MJQ              | Beats              | Multilevel    |         |                  |               |
 | Chordal     | Beep             | Geiger             | Stochastic    |         |                  |               |
@@ -73,6 +73,12 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Ruckus      |                  | Theory             |               |         |                  |               |
 | Crackle     |                  |                    |               |         |                  |               |
 | Super       |                  |                    |               |         |                  |               |
+
+## NEW: CVCO
+
+Enables SEQ16, SEQ8, etc., to drive the Wonkystuff MCO/1 and MCO/1b, plus makes it possible for you to change all the MCO/1 and MCO/1b CC and other parameters.
+
+Status: Working, but fiddly
 
 ## NEW: Hata
 
