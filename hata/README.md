@@ -20,7 +20,7 @@ You can also set POT 3 to do any ONE of the following:
 
 You specify the effect of POT 3 with various #defines in the code.  You can also change the 8 combo presets: they are a simple array in the code.
 
-Hata uses SoftSerial to do MIDI because GRAINS does not expose its serial port.  SoftSerial is a bit flaky, but it works.  If you have a GRAINS V2 (note: I think at present I'm the only person in the world outside Tangible Waves which has one, so you probably don't have one) then you can use hardware serial, and there is an option to use that instead with a #define.  If you're using an ordinary Nano or Nano Every, it'd not be hard to set it up with hardware serial as well (see https://github.com/eclab/grains/tree/main/v2/info and let me know you're attempting it, and I can tweak things in the code for you).
+Hata uses SoftSerial to do MIDI because GRAINS does not expose its serial port.  SoftSerial is a bit flaky, but it works.  If you have a GRAINS V2 (note: I think at present I'm the only person in the world outside Tangible Waves who has one, so you probably don't have one) then you can use hardware serial, and there is an option to use that instead with a #define.  If you're using an ordinary Nano or Nano Every, it'd not be hard to set it up with hardware serial as well (see https://github.com/eclab/grains/tree/main/v2/info and let me know you're attempting it, and I can tweak things in the code for you).
 
 ## Note
 
