@@ -32,24 +32,6 @@ and also play a MIDDLE C (MIDI 60).
 
 
 
-CONFIGURATION
-
-IN 1            Trigger Input 1
-IN 2            Trigger Input 2
-IN 3            Trigger Input 3
-AUDIO IN (A)    Trigger Input 4
-AUDIO OUT       [UNUSED]
-DIGITAL OUT (D) MIDI Out to Playa (on Grains)
-
-POT 1           [UNUSED] Set to maximum value and turn on IN1
-POT 2           [UNUSED] Set to maximum value and turn on IN2
-POT 3           Sets parameter as described earlier.
-
-Serial RX		MIDI Out to Playa (on Grains V2)        
-
-
-
-
 ## Configuration
 This is the default configuration
 
