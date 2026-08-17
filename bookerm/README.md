@@ -76,9 +76,9 @@ Overall Volume CV
 #### IN 2
 Leslie Volume CV
 #### IN 3
-Gate Out
-#### AUDIO IN (A)
 [Unused]
+#### AUDIO IN (A)
+Gate Out
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 

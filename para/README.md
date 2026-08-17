@@ -11,7 +11,7 @@ SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 You will need to install the Mozzi Library.  You can do this from the Library Manager
 in your Arduino IDE.
 
-Para also sends a Gate via IN 3 whenever all of its notes have been released and one
+Para also sends a Gate via AUDIO IN whenever all of its notes have been released and one
 new one has been started.  This means it won't send a gate if you release only one note,
 then play a new one, while other notes are held down.  Various grooveboxes (such as the
 Polyend Tracker) behave like this when playing all new notes suddenly, so you need to put
@@ -59,9 +59,9 @@ Saw/Square/Tri Vs Sine CV
 #### IN 2
 [Unused]
 #### IN 3
-Gate Out
-#### AUDIO IN (A)
 [Unused]
+#### AUDIO IN (A)
+Gate Out
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 

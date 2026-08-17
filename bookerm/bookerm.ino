@@ -307,8 +307,8 @@ int8_t drawBarAmplitudes[9] =
 #define CV_POT_IN1    A2    // Overall Volume
 #define CV_POT_IN2    A1    // Leslie Volume
 #define CV_POT3       A0    // Organ Selection
-#define CV_IN3        A3    // Gate Out
-#define CV_AUDIO_IN   A4    // Poly Chain Out
+#define CV_IN3        A3    // Unused
+#define CV_AUDIO_IN   A4    // Gate Out
 #define CV_AUDIO_OUT  9     // Out
 #define CV_GATE_OUT   8     // MIDI In
 
@@ -316,7 +316,7 @@ int8_t drawBarAmplitudes[9] =
 #define MIDI_RATE 31250
 #define BLANK_SERIAL	  5		// Blank Serial Pin
 #define PIN_UNUSED 255
-NeoSWSerial softSerial(CV_GATE_OUT, CV_AUDIO_IN, PIN_UNUSED);
+NeoSWSerial softSerial(CV_GATE_OUT, BLANK_SERIAL, PIN_UNUSED);
 midiParser parse;
 midiEmitter emit;
 
@@ -333,7 +333,7 @@ void cc(midiParser* parser, unsigned char parameter, unsigned char value)
 		{
 		on = 0;		
 		// everyone is off, lower gate
-		digitalWrite(CV_IN3, 0);
+		digitalWrite(CV_AUDIO_IN, 0);
 		gate = 0;
 		}
 #ifdef POLY_CHAINING
@@ -375,7 +375,7 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 		on = 0;
 		timer = 0;
 		gate = 0;
-		digitalWrite(CV_IN3, 0);
+		digitalWrite(CV_AUDIO_IN, 0);
 		}
 #ifdef POLY_CHAINING
 	else
@@ -392,8 +392,7 @@ void emitMidi(struct midiEmitter* emitter, unsigned char byte)
 
 void setup()
     {
-    Serial.begin(9600);
-    pinMode(CV_IN3, OUTPUT);
+    // Serial.begin(9600);
     pinMode(CV_AUDIO_IN, OUTPUT);
     startMozzi();
     // Fire up the leslie
@@ -432,7 +431,7 @@ void updateControl()
     	{
     	if (timer == 1)
     		{
-    		if (gate) digitalWrite(CV_IN3, 1);
+    		if (gate) digitalWrite(CV_AUDIO_IN, 1);
     		}
     	timer--;
     	}

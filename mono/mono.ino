@@ -80,8 +80,8 @@
 ///
 /// IN 1            Saw/Square/Tri Vs Sine Ratio CV
 /// IN 2            [Unused]
-/// IN 3            Gate Out
-/// AUDIO IN (A)    [Unused]  
+/// IN 3            [Unused]
+/// AUDIO IN (A)    Gate Out 
 /// AUDIO OUT       Out
 /// DIGITAL OUT (D) MIDI In
 ///
@@ -127,7 +127,7 @@ PROGMEM const float frequencies[128] =
 #define CV_POT_IN2    A1    // Mix                                                                      // Pitch Tune
 #define CV_POT3       A0    // Chord
 #define CV_IN3        A3    // [Unused]
-#define CV_AUDIO_IN   A4    // Pitch Tune                                                       // [Unused]
+#define CV_AUDIO_IN   A4    // [Unused]
 #define CV_AUDIO_OUT  9     // Out
 #define CV_GATE_OUT   8     // [Unused]
 #define RANDOM_PIN    A5
@@ -475,7 +475,7 @@ void setup()
 #endif
     startMozzi();
 
-	pinMode(CV_IN3, OUTPUT);
+	pinMode(CV_AUDIO_IN, OUTPUT);
 	/// Setup MIDI
 	initializeParser(&parse, CHANNEL, 0, 1);
 	softSerial.begin(MIDI_RATE);
@@ -497,7 +497,7 @@ void cc(midiParser* parser, unsigned char parameter, unsigned char value)
 		{
 		on = 0;		
 		// everyone is off, lower gate
-		digitalWrite(CV_IN3, 0);
+		digitalWrite(CV_AUDIO_IN, 0);
 		gate = 0;
 		}
 	}
@@ -514,12 +514,12 @@ void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
 	if (gate)
 		{
 		timer = 2;
-		digitalWrite(CV_IN3, 0);
+		digitalWrite(CV_AUDIO_IN, 0);
 		gate = 0;
 		}
 	else
 		{
-		digitalWrite(CV_IN3, 1);
+		digitalWrite(CV_AUDIO_IN, 1);
 		gate = 1;		
 		timer = 0;
 		}
@@ -533,7 +533,7 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 		on = 0;
 		timer = 0;
 		gate = 0;
-		digitalWrite(CV_IN3, 0);
+		digitalWrite(CV_AUDIO_IN, 0);
 		}
 	}
 
@@ -548,7 +548,7 @@ void updateControl()
     	{
     	if (timer == 1)
     		{
-    		digitalWrite(CV_IN3, 1);
+    		digitalWrite(CV_AUDIO_IN, 1);
     		gate = 1;
     		}
     	timer--;

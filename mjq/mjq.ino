@@ -50,8 +50,8 @@
 ///					Note Off
 ///						Ignored.  Notes play until they are finished.
 ///					
-/// CC				All Notes Off		CC 123		[Resets all notes, lowers Gate]
-///					All Sounds Off		CC 120		[Resets all notes, lowers Gate]
+/// CC				All Notes Off		CC 123		[Resets all notes, lowers internal Gate]
+///					All Sounds Off		CC 120		[Resets all notes, lowers internal Gate]
 
 
 

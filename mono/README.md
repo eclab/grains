@@ -13,7 +13,7 @@ SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 You will need to install the Mozzi Library.  You can do this from the Library Manager
 in your Arduino IDE.
 
-Mono also sends a Gate via IN 3 whenever a note has been played, and drops it when the note
+Mono also sends a Gate via AUDIO IN whenever a note has been played, and drops it when the note
 has been released.  If you play a new note prior to the old one being released, it will also 
 drop the gate and wait tiny bit before raising it for the new note to prevent legato.
 
@@ -57,9 +57,9 @@ Saw/Square/Tri Vs Sine CV
 #### IN 2
 [Unused]
 #### IN 3
-Gate Out
-#### AUDIO IN (A)
 [Unused]
+#### AUDIO IN (A)
+Gate Out
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 

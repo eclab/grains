@@ -87,9 +87,9 @@ X CV
 #### IN 2
 Y CV
 #### IN 3
-Gate Out
-#### AUDIO IN (A)
 [Unused]
+#### AUDIO IN (A)
+Gate Out
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 

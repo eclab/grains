@@ -17,7 +17,7 @@
 /// You will need to install the Mozzi Library.  You can do this from the Library Manager
 /// in your Arduino IDE.
 
-/// Para also sends a Gate via IN 3 whenever all of its notes have been released and one
+/// Para also sends a Gate via AUDIO IN whenever all of its notes have been released and one
 /// new one has been started.  This means it won't send a gate if you release only one note,
 /// then play a new one, while other notes are held down.  Various grooveboxes (such as the
 /// Polyend Tracker) behave like this when playing all new notes suddenly, so you need to put
@@ -89,8 +89,8 @@
 ///
 /// IN 1            Saw/Square/Tri Vs Sine CV
 /// IN 2            [Unused]
-/// IN 3            Gate Out
-/// AUDIO IN (A)    [Unused]  
+/// IN 3            [Unused]
+/// AUDIO IN (A)    Gate Out  
 /// AUDIO OUT       Out
 /// DIGITAL OUT (D) MIDI In
 ///
@@ -587,7 +587,7 @@ void setup()
     startMozzi();
     //Serial.begin(115200);
 
-	pinMode(CV_IN3, OUTPUT);
+	pinMode(CV_AUDIO_IN, OUTPUT);
 
 	/// Setup MIDI
 #ifdef MULTI	
@@ -622,7 +622,7 @@ void cc(midiParser* parser, unsigned char parameter, unsigned char value)
 			}
 		
 		// everyone is off, lower gate
-		digitalWrite(CV_IN3, 0);
+		digitalWrite(CV_AUDIO_IN, 0);
 		gate = 0;
 		}
 	}
@@ -639,7 +639,7 @@ void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
 
 	if (!gate)
 		{
-		digitalWrite(CV_IN3, 1);
+		digitalWrite(CV_AUDIO_IN, 1);
 		gate = 1;
 		}
 	
@@ -698,7 +698,7 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 		}
 	
 	// everyone is off, lower gate
-	digitalWrite(CV_IN3, 0);
+	digitalWrite(CV_AUDIO_IN, 0);
 	gate = 0;
 	}
 
@@ -715,7 +715,7 @@ void cc(midiParser* parser, unsigned char parameter, unsigned char value)
 			}
 		
 		// everyone is off, lower gate
-		digitalWrite(CV_IN3, 0);
+		digitalWrite(CV_AUDIO_IN, 0);
 		gate = 0;
 		}
 	}
@@ -728,7 +728,7 @@ void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
 
 	if (!gate)
 		{
-		digitalWrite(CV_IN3, 1);
+		digitalWrite(CV_AUDIO_IN, 1);
 		gate = 1;
 		}
 	
@@ -822,7 +822,7 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 		}
 	
 	// everyone is off, lower gate
-	digitalWrite(CV_IN3, 0);
+	digitalWrite(CV_AUDIO_IN, 0);
 	gate = 0;
 	}
 

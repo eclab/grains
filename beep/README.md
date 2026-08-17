@@ -42,9 +42,9 @@ Decay CV
 #### IN 2
 Hold CV
 #### IN 3
-Gate Out
-#### AUDIO IN (A)
 [Unused]
+#### AUDIO IN (A)
+Gate Out
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 

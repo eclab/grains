@@ -24,12 +24,12 @@
 /// DIFFERENCES FROM DX
 ///
 /// Because DX must take Pitch as a CV, it has to use IN1/POT1 doing it.  DX-M doesn't do this: it takes
-/// data via MIDI on DIGITAL OUT.  As a result it can output Gate Out on IN3, and reserve IN1/POT1 for
+/// data via MIDI on DIGITAL OUT.  As a result it can output Gate Out on AUDIO_IN, and reserve IN1/POT1 for
 /// something more useful.  So expect the socket and pot configurations to be different from DX.
 
 /// GATE OUT
 ///
-/// DX-M receives MIDI data, including Note On and Off onset.  It sends this data as a GATE out IN3.
+/// DX-M receives MIDI data, including Note On and Off onset.  It sends this data as a GATE out AUDIO_IN.
 
 /// CHANNEL
 ///
@@ -94,14 +94,14 @@
 /// This is the basic setup.  However the modulator can also be optionally SELF MODULATED, that is, it
 /// modulates itself.  You specify the INDEX OF SELF MODULATION with IN1/Pot1.  Because this is often done with
 /// an envelope, you'll need a way to temper its maximum value.  This is done by setting the INDEX OF SELF
-/// MODULATION SCALING on AUDIO IN.   
+/// MODULATION SCALING on IN3.   
 ///
 ///
 /// ALGORITHM 2.  This is a three-operator algorithm, with TWO MODULATORS simultaneously modulating the same
 /// CARRIER.  Again, the CARRIER makes the final sound.  
 /// Each modulator has a RELATIVE PITCH to the carrier, one of 0.5, 1.0, 2.0, 3.0, ... 15.0.  
 /// Modulator 1's relative pitch is selectable on POT 3.  Modulator 2's relative pitch is selectable on
-/// AUDIO IN.  Again, each modulator also has an INDEX OF MODULATION (the "amplitude" of the operator in
+/// IN3.  Again, each modulator also has an INDEX OF MODULATION (the "amplitude" of the operator in
 /// Yamaha speak) which determines how much affect the modulator has on the carrier.  For Modulator 1, this
 /// is set with POT2/IN2.  For Modulator 2, this is set with POT1/IN1. 
 ///
@@ -109,7 +109,7 @@
 /// ALGORITHM 3.  This is another three-operator algorithm, with ONE MODULATOR simultaneously modulating
 /// TWO CARRIERS.  Each CARRIER makes a final sound -- they are summed.  Carrier 1's pitch is specified
 /// in MIDI.  Carrier 2's pitch is specified
-/// RELATIVE to Carrier on AUDIO IN, smoothly going from Carrier 1's pitch to two octaves above.  The
+/// RELATIVE to Carrier on IN3, smoothly going from Carrier 1's pitch to two octaves above.  The
 /// modulator also has a RELATIVE PITCH to the carrier, one of 0.5, 1.0, 2.0, 3.0, ... 15.0, selectable 
 /// on POT 3.  For each carrier, the modulator also has an INDEX OF MODULATION (the "amplitude" of the 
 /// operator in Yamaha speak) which determines how much affect the modulator has on the carrier.  The
@@ -120,7 +120,7 @@
 /// MODULATOR 1 is modulating the CARRIER.  The CARRIER makes the final sound.  
 /// Each modulator has a RELATIVE PITCH to the carrier, one of 
 /// 0.5, 1.0, 2.0, 3.0, ... 15.0.  For MODUATOR 1, this is selectable on POT 3.  For MODULATOR 2, this is
-/// selectable on AUDIO IN.  Each modulator also has an INDEX OF MODULATION (the "amplitude" of the 
+/// selectable on IN3.  Each modulator also has an INDEX OF MODULATION (the "amplitude" of the 
 /// operator in Yamaha speak) which determines how much affect the modulator has on its downstream
 /// modulator or carrier.  The index of modulation for MODULATOR 1 is set with POT2/IN2.  The index of
 /// modulation for MODULATOR 2 is set with POT1/IN1.
@@ -153,8 +153,8 @@
 ///
 /// IN 1            Index of Self Modulation CV
 /// IN 2            Index of Modulation CV
-/// IN 3            Gate Out
-/// AUDIO IN (A)    [Unused]
+/// IN 3            [Unused]
+/// AUDIO IN (A)    Gate Out
 /// AUDIO OUT       Out
 /// DIGITAL OUT (D) MIDI In
 ///
@@ -169,8 +169,8 @@
 ///
 /// IN 1            Index of Modulation CV, Modulator 2 to Carrier
 /// IN 2            Index of Modulation CV, Modulator 1 to Carrier
-/// IN 3            Gate Out
-/// AUDIO IN (A)    Modulator 2 Relative Pitch			[One of 0.5, 1, 2, 3 ... 15]  [There is no Tune CV]
+/// IN 3            Modulator 2 Relative Pitch      [One of 0.5, 1, 2, 3 ... 15]  [There is no Tune CV]
+/// AUDIO IN (A)    Gate Out
 /// AUDIO OUT       Out
 /// DIGITAL OUT (D) MIDI In
 ///
@@ -185,8 +185,8 @@
 ///
 /// IN 1            Index of Modulation CV, Modulator to Carrier 2
 /// IN 2            Index of Modulation CV, Modulator to Carrier 1
-/// IN 3            Gate Out
-/// AUDIO IN (A)    Carrier 2 Relative Pitch	[Same octave as, to 2 octaves above, Carrier 1] [There is no Tune CV]
+/// IN 3            Carrier 2 Relative Pitch  [Same octave as, to 2 octaves above, Carrier 1] [There is no Tune CV]
+/// AUDIO IN (A)    Gate Out
 /// AUDIO OUT       Out
 /// DIGITAL OUT (D) MIDI In
 ///
@@ -202,8 +202,8 @@
 ///
 /// IN 1            Index of Modulation, Modulator 2 to Modulator 1
 /// IN 2            Index of Modulation, Modulator 1 to Carrier
-/// IN 3            Gate Out
-/// AUDIO IN (A)    Modulator 2 Relative Pitch			[One of 0.5, 1, 2, 3 ... 15]  [There is no Tune CV]
+/// IN 3            Modulator 2 Relative Pitch      [One of 0.5, 1, 2, 3 ... 15]  [There is no Tune CV]
+/// AUDIO IN (A)    Gate Out
 /// AUDIO OUT       Out
 /// DIGITAL OUT (D) MIDI In
 ///
@@ -294,7 +294,7 @@ float frequency;
 
 void setup() 
     {
-    pinMode(CV_IN3, OUTPUT);
+    pinMode(CV_AUDIO_IN, OUTPUT);
     startMozzi();
 	frequency = FREQUENCY(60);		// Middle C
 
@@ -309,14 +309,14 @@ void cc(midiParser* parser, unsigned char parameter, unsigned char value)
 		{
 		on = 0;		
 		// everyone is off, lower gate
-		digitalWrite(CV_IN3, 0);
+		digitalWrite(CV_AUDIO_IN, 0);
 		gate = 0;
 		}
 	}
 	
 void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
 	{
-    audioIn = mozziAnalogRead(CV_AUDIO_IN);
+    audioIn = mozziAnalogRead(CV_IN3);
 	pot3 = mozziAnalogRead(CV_POT3);
 	frequency = FREQUENCY(note);
 	
@@ -331,12 +331,12 @@ void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
 	if (gate)
 		{
 		timer = 2;
-		digitalWrite(CV_IN3, 0);
+		digitalWrite(CV_AUDIO_IN, 0);
 		gate = 0;
 		}
 	else
 		{
-		digitalWrite(CV_IN3, 0);
+		digitalWrite(CV_AUDIO_IN, 0);
 		gate = 0;		
 		timer = 1;
 		}
@@ -349,7 +349,7 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 		on = 0;
 		timer = 0;
 		gate = 0;
-		digitalWrite(CV_IN3, 0);
+		digitalWrite(CV_AUDIO_IN, 0);
 #ifdef RESPONDS_TO_NOTE_OFF
 		_velocity = 0;
 #endif
@@ -399,7 +399,7 @@ void updateOperatorFrequencies()
 void updateControl() 
     {
 	pot3 = mozziAnalogRead(CV_POT3);
-    audioIn = mozziAnalogRead(CV_AUDIO_IN);
+    audioIn = mozziAnalogRead(CV_IN3);
 	uint16_t pot2 = mozziAnalogRead(CV_POT_IN2);
 	uint16_t pot1 = mozziAnalogRead(CV_POT_IN1);
 
@@ -407,7 +407,7 @@ void updateControl()
     	{
     	if (timer == 1)
     		{
-    		digitalWrite(CV_IN3, 1);
+    		digitalWrite(CV_AUDIO_IN, 1);
     		gate = 1;
     		}
     	timer--;

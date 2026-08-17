@@ -52,8 +52,8 @@
 ///
 /// IN 1            Decay CV
 /// IN 2            Hold CV
-/// IN 3            Gate Out
-/// AUDIO IN (A)    [Unused]
+/// IN 3            [Unused]
+/// AUDIO IN (A)    Gate Out
 /// AUDIO OUT       Out
 /// DIGITAL OUT (D)	MIDI In
 ///
@@ -780,7 +780,7 @@ void reset()
 		}
 	numVoicesOn = 0;
 	voice = 0;
-	digitalWrite(CV_IN3, 0);
+	digitalWrite(CV_AUDIO_IN, 0);
 	}
 	
 
@@ -790,7 +790,7 @@ void reset()
 #define MIDI_RATE 31250
 #define BLANK_SERIAL	  5		// Blank Serial Pin
 #define PIN_UNUSED 255
-NeoSWSerial softSerial(CV_GATE_OUT, CV_AUDIO_IN, PIN_UNUSED);
+NeoSWSerial softSerial(CV_GATE_OUT, PIN_UNUSED, PIN_UNUSED);
 midiParser parse;
 
 void noteOn(midiParser* parser, unsigned char note, unsigned char velocity)
@@ -811,7 +811,7 @@ if (insensitive) velocity = 127;
 	voice++;
 	if (voice >= VOICES) voice = 0;
 	if (numVoicesOn < VOICES) numVoicesOn++;
-	digitalWrite(CV_IN3, 1);
+	digitalWrite(CV_AUDIO_IN, 1);
 	}
 
 void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
@@ -827,7 +827,7 @@ void noteOff(midiParser* parser, unsigned char note, unsigned char velocity)
 				if (numVoicesOn > 0) 
 					{
 					numVoicesOn--;
-					digitalWrite(CV_IN3, 0);
+					digitalWrite(CV_AUDIO_IN, 0);
 					}
 				return;
 				}
@@ -848,7 +848,7 @@ void setup()
     startMozzi();
 	initializeParser(&parse, CHANNEL, 0, 1);
 	softSerial.begin(MIDI_RATE);
-	pinMode(CV_IN3, OUTPUT);
+	pinMode(CV_AUDIO_IN, OUTPUT);
 	reset();
     }
 
@@ -924,5 +924,3 @@ int updateAudio()
         }
     return ((val >> 8) * volume) >> 8;
     }
-
-

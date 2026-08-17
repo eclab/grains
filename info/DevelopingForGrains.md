@@ -703,7 +703,7 @@ There is a bug in all of the analog inputs: they seem to have a reference voltag
 
 - IN 2.  This is just like IN1 (with its own POT2), and with the same bug.
 
-- IN 3.  This is a pure CV input.  It's filtered a bit.  It maxes out (1023) at about 4V.
+- IN 3.  This is a pure CV input.  It's filtered a bit.  It maxes out (1023) at about 4V.  There is a bug with IN3: if you bring IN3 high (as in digitalWrite(CV_IN3, 1)), it will produce an audible pop in the Audio Out.  So if you need to raise a gate while also producing a sound, use Audio In for the gate, not IN 3.
 
 - Pot 3.  This is the input from potentiometer 3.  Pot 3 and IN 3 have nothing to do with each other.  
 

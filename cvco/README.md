@@ -12,8 +12,7 @@ This allows you to drive the mco/1 and mco/1b from a SEQ16 or other step
 sequencer, or any other gate/cv source. This performs essentially the same 
 task as the Wonkystuff CVMx in this regard.
 
-2. It maps certain incoming CV sources and pots to a variety of settings
-to a variety of CC or other MIDI settings.  The settings depend on which
+2. It maps certain incoming CV sources and pots to a variety CC or other MIDI settings.  The settings depend on which
 module you have.  Your module options are:
 
          A. The original mco/1

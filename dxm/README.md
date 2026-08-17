@@ -87,9 +87,9 @@ Index of Self Modulation CV
 #### IN 2
 Index of Modulation CV
 #### IN 3
-Gate Out
-#### AUDIO IN (A)
 [Unused]
+#### AUDIO IN (A)
+Gate Out
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 
@@ -109,9 +109,9 @@ Index of Modulation CV, Modulator 2 to Carrier
 #### IN 2
 Index of Modulation CV, Modulator 1 to Carrier
 #### IN 3
-Gate Out
-#### AUDIO IN (A)
 Modulator 2 Relative Pitch		[One of 0.5, 1, 2, 3 ... 15]  [There is no Tune CV]
+#### AUDIO IN (A)
+Gate Out
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 
@@ -131,9 +131,9 @@ Index of Modulation CV, Modulator to Carrier 2
 #### IN 2
 Index of Modulation CV, Modulator to Carrier 1
 #### IN 3
-Gate Out
-#### AUDIO IN (A)
 Carrier 2 Relative Pitch		[Same octave as, to two octaves above, Carrier 1] [There is no Tune CV]
+#### AUDIO IN (A)
+Gate Out
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 
@@ -153,9 +153,9 @@ Index of Modulation, Modulator 2 to Modulator 1
 #### IN 2
 Index of Modulation CV, Modulator 1 to Carrier
 #### IN 3
-Gate Out
-#### AUDIO IN (A)
 Modulator 2 Relative Pitch		[One of 0.5, 1, 2, 3 ... 15]  [There is no Tune CV]
+#### AUDIO IN (A)
+Gate Out
 #### AUDIO OUT
 Out
 #### DIGITAL OUT (D) 
