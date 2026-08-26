@@ -65,7 +65,7 @@ Trigger / Gate
 
 [If CV is unused, set the switch to MAN]
 #### POT 2
-12DB Resonance, or Shifrt
+12DB Resonance, or Shift
 
 [If CV is unused, set the switch to MAN]
 #### POT 3

@@ -71,18 +71,12 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Oration 2   |                  | Respite            |               |         |                  |               |
 | Fold        |                  | Iterate            |               |         |                  |               |
 | Ruckus      |                  | Theory             |               |         |                  |               |
-| Crackle     |                  |                    |               |         |                  |               |
+| Crackle     |                  | Offshoot           |               |         |                  |               |
 | Super       |                  |                    |               |         |                  |               |
 
-## NEW: CVCO
+## NEW: Offshoot
 
-Enables SEQ16, SEQ8, etc., to drive the Wonkystuff MCO/1 and MCO/1b, plus makes it possible for you to change all the MCO/1 and MCO/1b CC and other parameters.
-
-Status: Working, but fiddly
-
-## NEW: Hata
-
-Enables the Triq164 to drive the Wonkystuff Playa, plus allows one knob to control a Playa CC parameter or to choose from among a set of possible drumsets.
+A dual Bernoulli gate with a variety of options.  Similar to Mutable Instruments Branches.
 
 Status: Working
 
@@ -172,6 +166,12 @@ A generator of random snaps, crackles, and pops, such as you might hear on a rec
 
 Status: Working.
 
+## CVCO
+
+Enables SEQ16, SEQ8, etc., to drive the Wonkystuff MCO/1 and MCO/1b, plus makes it possible for you to change all the MCO/1 and MCO/1b CC and other parameters.
+
+Status: Working, but fiddly
+
 ## Dave 
 
 A USB Router, Note Distributor, MPE breakout, and MIDI filter.
@@ -231,6 +231,12 @@ Status: Working.
 A three-output random trigger generator and Bernoulli trigger.  You provide a clock input and the probability that, for each output, the output will generate a trigger for a given clock.  You can make the track outputs independent or exclusive (only and exactly one triggers each clock).    See also Crackle and Ruckus.
 
 Status: Working.
+
+## Hata
+
+Enables the Triq164 to drive the Wonkystuff Playa, plus allows one knob to control a Playa CC parameter or to choose from among a set of possible drumsets.
+
+Status: Working
 
 ## Info
 
