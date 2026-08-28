@@ -26,7 +26,7 @@
 /// right the probability decreases to the point where it stays with its previous value
 /// for a long time and ultimately permanently.
 ///
-/// NOTE: triggers/gates sent to Audio Out are sloppy and slow.
+/// NOTE: triggers/gates sent to Audio Out are sloppy and slow.  This affects Input 2 (Audio Out is Ouput 2B).
 ///
 /// FOUR-TRIGGER-GATE / CV OPTION
 ////
