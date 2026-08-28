@@ -30,7 +30,7 @@
 ///
 /// FOUR-TRIGGER-GATE / CV OPTION
 ////
-/// You can chance Offshoot to select among all four outputs from a single input
+/// You can change Offshoot to select among all four outputs from a single input
 /// trigger/gate.  To do this, uncomment (remove the //) from the following #define:
 
 #define FOUR_OUTPUTS 
