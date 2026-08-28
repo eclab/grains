@@ -5,7 +5,7 @@ Offshoot is more or less a copy of [Mutable Instruments Branches](https://pichen
 SET GRAINS TO GRAINS MODE.  (If you want MOZZI mode, change CV\_AUDIO_OUT to 9)
 
 Offshoot has two inputs for triggers or gates (1 and 2).  Each input trigger/gate is randomly routed 
-to one of two outputs (A and B).  Thus trigger/gate4 1 gets routed to either output 1A or 1B,
+to one of two outputs (A and B).  Thus trigger/gate 1 gets routed to either output 1A or 1B,
 and trigger/gate 2 gets routed to either output 2A or 2B.  The probability of routing
 is determined by the PROBABILITY knob (Pot 3).
 
