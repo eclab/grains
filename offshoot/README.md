@@ -18,11 +18,11 @@ whatever it was last time.  Initially this is high, and as you turn the knob to 
 right the probability decreases to the point where it stays with its previous value
 for a long time and ultimately permanently.
 
-NOTE: triggers/gates sent to Audio Out are sloppy and slow.
+NOTE: triggers/gates sent to Audio Out are sloppy and slow.  This affects Input 2 (Audio Out is Ouput 2B).
 
 ## Four-Trigger-Gate / CV Option
 
-You can chance Offshoot to select among all four outputs from a single input
+You can change Offshoot to select among all four outputs from a single input
 trigger/gate.  To do this, uncomment a certain #define as shown in the code.
 
 If you do this, then Pot 2 / CV 2 will be used as a SECOND probability knob, to determine 
