@@ -57,7 +57,7 @@ Output 1A
 #### POT 1
 [Unused.  Set to IN1 and turn knob to approximately 2'oclock]
 #### POT 2
-*Normally:* [Unused.  Set to IN1 and turn knob to approximately 2'oclock]
+*Normally:* [Unused.  Set to IN2 and turn knob to approximately 2'oclock]
 
 *Four-Output option:*  CV for probability of selecting between Outputs 1 and Outputs 2.  If Unused, set to IN2 and turn knob to approximately 2'oclock 
 
