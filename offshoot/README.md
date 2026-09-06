@@ -5,7 +5,7 @@ Offshoot is more or less a copy of [Mutable Instruments Branches](https://pichen
 SET GRAINS TO GRAINS MODE.  (If you want MOZZI mode, change CV\_AUDIO_OUT to 9)
 
 Offshoot has two inputs for triggers or gates (1 and 2).  Each input trigger/gate is randomly routed 
-to one of two outputs (A and B).  Thus trigger/gate4 1 gets routed to either output 1A or 1B,
+to one of two outputs (A and B).  Thus trigger/gate 1 gets routed to either output 1A or 1B,
 and trigger/gate 2 gets routed to either output 2A or 2B.  The probability of routing
 is determined by the PROBABILITY knob (Pot 3).
 
@@ -18,11 +18,11 @@ whatever it was last time.  Initially this is high, and as you turn the knob to 
 right the probability decreases to the point where it stays with its previous value
 for a long time and ultimately permanently.
 
-NOTE: triggers/gates sent to Audio Out are sloppy and slow.
+NOTE: triggers/gates sent to Audio Out are sloppy and slow.  This affects Input 2 (Audio Out is Ouput 2B).
 
 ## Four-Trigger-Gate / CV Option
 
-You can chance Offshoot to select among all four outputs from a single input
+You can change Offshoot to select among all four outputs from a single input
 trigger/gate.  To do this, uncomment a certain #define as shown in the code.
 
 If you do this, then Pot 2 / CV 2 will be used as a SECOND probability knob, to determine 
@@ -57,7 +57,7 @@ Output 1A
 #### POT 1
 [Unused.  Set to IN1 and turn knob to approximately 2'oclock]
 #### POT 2
-*Normally:* [Unused.  Set to IN1 and turn knob to approximately 2'oclock]
+*Normally:* [Unused.  Set to IN2 and turn knob to approximately 2'oclock]
 
 *Four-Output option:*  CV for probability of selecting between Outputs 1 and Outputs 2.  If Unused, set to IN2 and turn knob to approximately 2'oclock 
 

@@ -2,7 +2,7 @@
 
 Crackle produces random pops and crackles like a record player or an old-time radio. Crackle is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 
-Crackle has two outputs: audio and digital.  Audio output generates pops at different volumes, but suffers from GRAINS's low-level PWM whine.  Digital generates clean pops, but they are all at maximum volume and the default value is 0V with the pop at 1V, which means it's not centered for audio and perhaps less useful as a result -- maybe more useful for CV?
+Crackle has two outputs: audio and digital.  Audio output generates pops at different volumes, but suffers from GRAINS's low-level PWM whine.  Digital generates clean pops, but they are all at maximum volume and the default value is 0V with the pop at 5V, which means it's not centered for audio and perhaps less useful as a result -- maybe more useful for CV?
 
 You can control the RATE of crackling, the VARIANCE in crackling volume, and the LENGTH of a crackle.
 

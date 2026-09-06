@@ -21,7 +21,7 @@ If we send another PLAY TRIGGER during playback, playback is restarted.
 
 ## Length of Time 
 
-The length of the recording varies depending on the setting of POT 3 when recording is initiated. POT 3 can be 4, 8, 12, 16, 20, 24, 28, or 32 seconds depending on setting (left to right).  GRAINS has no way of indicating that recording has finished; you either wait it out or send a PLAY TRIGGER.
+The length of the recording varies depending on the setting of POT 3 when recording is initiated. POT 3 can be 4, 8, 12, 16, 20, 24, 28, or 32 seconds depending on setting (left to right).  More seconds means coarser granularity in recording. GRAINS has no way of indicating that recording has finished; you either wait it out or send a PLAY TRIGGER.
 
 Playback is similarly 4 ... 32 seconds depending on the setting of POT 3.  This means that you can record 4 seconds of data and then stretch it over 32 seconds (or record 32 seconds of data and compress it to 4!)
 
