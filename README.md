@@ -68,15 +68,15 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 | Byte        | Trajectory       | Pulses             | Switchblade   |         |                  |               |
 | Evolution   |                  | Divvy              | Memoir        |         |                  |               |
 | Oration     |                  | Multiple           | Arp           |         |                  |               |
-| Oration 2   |                  | Respite            |               |         |                  |               |
+| Oration 2   |                  | Respite            | Slowpoke      |         |                  |               |
 | Fold        |                  | Iterate            |               |         |                  |               |
 | Ruckus      |                  | Theory             |               |         |                  |               |
 | Crackle     |                  | Offshoot           |               |         |                  |               |
 | Super       |                  |                    |               |         |                  |               |
 
-## NEW: Offshoot
+## NEW: Slowpoke
 
-A dual Bernoulli gate with a variety of options.  Similar to Mutable Instruments Branches.
+A very, very, very  slow loopable LFO with random options.
 
 Status: Working
 
@@ -327,6 +327,12 @@ Status: Working.  Could use some improvement.
 A 1- or 2-in, 4-out multiplexer with a variety of modes.  Meant to allow you to select various outputs with a simple switch or multiplexed input.
 
 Status: Working.
+
+## Offshoot
+
+A dual Bernoulli gate with a variety of options.  Similar to Mutable Instruments Branches.
+
+Status: Working
 
 ## Oration
 
