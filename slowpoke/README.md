@@ -60,23 +60,6 @@ to "In 1" (or "In 2"), then the range of the Dial is at maximum at about the
 2 o'clock position on the Dial.  Beyond that it stays at maximum.
 
 
-CONFIGURATION
-
-IN 1            Attack Rate CV
-IN 2            Decay Rate CV
-IN 3            Trigger 1
-AUDIO IN (A)    Trigger 2
-AUDIO OUT       Output
-DIGITAL OUT (D) End
-
-POT 1           Attack Rate  [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
-
-POT 2           Decay Rate  [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
-
-POT 3           Shape:   [Max = 0V, Min = 0V <-------> Max = 4.25V, Min = 0 <--------> Max = 4.25V, Min = 4.25V]
-                Or Random Ramp Rate (if Attack and Decay both Max)
-
-
 ## Configuration
 
 #### IN 1
