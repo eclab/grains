@@ -24,7 +24,7 @@ sets the MAXIMUM value.  When the pot is roughly 40% the highest possible MAXIMU
 is reached.  Between 40% and 60%, the minimum stays at 0 and the maximum stays at the highest value.
 Then beyond 60% the MINIMUM begins to rise from 0 until it too reaches 4.25 volts when the pot is 100%.
 
-If POT 1 and POT 2 are BOTH set to MAXIMUM ("Instantaneous"), then Slowpoke turns into a RANDOM RAMP:
+If POT 1 and POT 2 are BOTH set to far right ("Instantaneous"), then Slowpoke turns into a RANDOM RAMP:
 When you trigger it to start, it will pick a random voltage value and slowly move towards that value.  When
 it reaches the value, it will issue an END trigger.  If you trigger it gain (looping for example), it
 will start at that position and move towards a new random value, and so on.  The rate of the ramp is
