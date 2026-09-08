@@ -14,7 +14,7 @@ Slowpoke will slowly start rising linearly from a MINIMUM value until it reaches
 will slowly drop back down linearly to the MINIUMUM value.  When it reaches the MINIMUM value again, it
 will issue a trigger out to END and stay at the MINIUMUM value.
 
-If you would like a one-shot envelope, you can do this by sending a trigger to TRIGGER.  If you would like a 
+If you would like a one-shot envelope, you can do this by sending a trigger to TRIGGER 1 (or 2).  If you would like a 
 looping envelope, attach the END to one of the TRIGGERs, and send a trigger to the other TRIGGER.
 When the envelope has finished, END will trigger the envelope to start again.  You stop the looping by 
 disconnecting END from the TRIGGER -- the envelope will stop after it finishes its current attack and decay. 
