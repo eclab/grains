@@ -12,7 +12,7 @@ in your Arduino IDE.
 You set the attack and release rates with the POT 1 and POT 2.  Thereafter when it is triggered,
 Slowpoke will slowly start rising linearly from a MINIMUM value until it reaches a MAXIMUM value, then 
 will slowly drop back down linearly to the MINIUMUM value.  When it reaches the MINIMUM value again, it
-issues a trigger out to END and stays at the MINIUMUM value.
+will issue a trigger out to END and stay at the MINIUMUM value.
 
 If you would like a one-shot envelope, you can do this by sending a trigger to TRIGGER.  If you would like a 
 looping envelope, attach the END to one of the TRIGGERs, and send a trigger to the other TRIGGER.
