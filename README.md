@@ -76,7 +76,7 @@ GRAINS output is noisy.  GRAINS uses filtered PWM to output sound, and filtered 
 
 ## NEW: Slowpoke
 
-A very, very, very  slow loopable LFO with random options.
+A very, very, very  slow loopable AR envelope with random options.
 
 Status: Working
 
