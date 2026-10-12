@@ -33,13 +33,6 @@ However Mono has twice as many waves in its memory, so it will sound less aliase
 The choice of wave is determined by changing a #define in the code.
 
 
-## Gate Mode
-
-By default Mono does not stop playing notes when it receives a NOTE OFF -- 
-that is the responsibility of your envelope and VCA (it will send them a gate off).
-However you can change this behavior by uncommenting a #define in the code.
-
-
 ## MIDI Response
 
 - Note On/Off
