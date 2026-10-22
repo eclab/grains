@@ -111,7 +111,7 @@ PROGMEM const float frequencies[128] =
 
 
 #define FREQUENCY(pitch) pgm_read_float_near(&frequencies[pitch])
-#define CONTROL_RATE 256
+#define CONTROL_RATE 128
 
 
 
