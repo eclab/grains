@@ -12,9 +12,9 @@ in your Arduino IDE.
 You set the attack and release rates with the POT 1 and POT 2.  Thereafter when it is triggered,
 Slowpoke will slowly start rising linearly from a MINIMUM value until it reaches a MAXIMUM value, then 
 will slowly drop back down linearly to the MINIUMUM value.  When it reaches the MINIMUM value again, it
-issues a trigger out to END and stays at the MINIUMUM value.
+will issue a trigger out to END and stay at the MINIUMUM value.
 
-If you would like a one-shot envelope, you can do this by sending a trigger to TRIGGER.  If you would like a 
+If you would like a one-shot envelope, you can do this by sending a trigger to TRIGGER 1 (or 2).  If you would like a 
 looping envelope, attach the END to one of the TRIGGERs, and send a trigger to the other TRIGGER.
 When the envelope has finished, END will trigger the envelope to start again.  You stop the looping by 
 disconnecting END from the TRIGGER -- the envelope will stop after it finishes its current attack and decay. 
@@ -24,9 +24,9 @@ sets the MAXIMUM value.  When the pot is roughly 40% the highest possible MAXIMU
 is reached.  Between 40% and 60%, the minimum stays at 0 and the maximum stays at the highest value.
 Then beyond 60% the MINIMUM begins to rise from 0 until it too reaches 4.25 volts when the pot is 100%.
 
-If POT 1 and POT 2 are BOTH set to MAXIMUM ("Instantaneous"), then Slowpoke turns into a RANDOM RAMP:
+If POT 1 and POT 2 are BOTH set to far right ("Instantaneous"), then Slowpoke turns into a RANDOM RAMP:
 When you trigger it to start, it will pick a random voltage value and slowly move towards that value.  When
-it reaches the value, it will issue an END trigger.  If you trigger it gain (looping for example), it
+it reaches the value, it will issue an END trigger.  If you trigger it again (looping for example), it
 will start at that position and move towards a new random value, and so on.  The rate of the ramp is
 now determined by POT 3.
 
@@ -58,23 +58,6 @@ There is a bug in GRAINS that affects Pots (Dials) 1 and 2.  If you set the
 switch to "Man", then the range of the Pot is correct.  But if you set the switch 
 to "In 1" (or "In 2"), then the range of the Dial is at maximum at about the 
 2 o'clock position on the Dial.  Beyond that it stays at maximum.
-
-
-CONFIGURATION
-
-IN 1            Attack Rate CV
-IN 2            Decay Rate CV
-IN 3            Trigger 1
-AUDIO IN (A)    Trigger 2
-AUDIO OUT       Output
-DIGITAL OUT (D) End
-
-POT 1           Attack Rate  [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
-
-POT 2           Decay Rate  [If you're not using the CV, set the switch to MAN.  Note GRAINS bug]
-
-POT 3           Shape:   [Max = 0V, Min = 0V <-------> Max = 4.25V, Min = 0 <--------> Max = 4.25V, Min = 4.25V]
-                Or Random Ramp Rate (if Attack and Decay both Max)
 
 
 ## Configuration
