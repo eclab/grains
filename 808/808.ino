@@ -474,7 +474,7 @@
 ///
 /// The chords are, in order:
 ///
-/// No Chord
+/// No Chord (one note, but perhaps FORMAT_1 would be a better option, cleaner and with more memory)
 /// Intervals: minor 3, Major 3, 4, 5, minor 6, Major 6, minor 7, octave, octave + minor 3, octave + major 3, octave + 5
 /// Triads: minor, minor first inversion, minor second inversion, Major, Major first inversion, Major second inversion
 /// Sevenths: 7, minor 7, Major 7, diminished 7
