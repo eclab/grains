@@ -389,6 +389,7 @@ void resetParser(struct midiParser* parser)
     parser->currentChannel = INVALID;
     parser->status = INVALID;
     parser->data1 = INVALID;
+    parser->incomplete = 0;
 #ifdef ALLOW_SYSTEM_EXCLUSIVE
     parser->systemExclusiveBufferStarted = 0;
     parser->systemExclusiveBufferLen = INVALID;
@@ -428,6 +429,7 @@ void initializeParser(struct midiParser* parser, unsigned char channel, unsigned
     parser->channel = channel;
     parser->tag = tag;
     parser->unvoicedMessages = unvoicedMessages;
+    parser->incomplete = 0;
         
 #ifdef ALLOW_HIGH_RES_CC
     for(unsigned char i = 0; i < 4; i++)
@@ -492,6 +494,15 @@ static inline unsigned char processVoiceMessage(struct midiParser* parser, unsig
 // This handles the first data byte
 static inline signed char processFirstDataByte(struct midiParser* parser, unsigned char c)          // yes, inline
     {
+    // The following are one-data-byte messages so we're complete after processing this data byte
+    if (parser->status == PC ||
+    	parser->status == AT ||
+    	parser->status == MIDI_TIME_CODE_QUARTER_FRAME ||
+    	parser->status == SONG_SELECT)
+    	{
+    	parser->incomplete = 0;
+    	}
+    	
     switch(parser->status)
         {
 #ifdef ALLOW_PC
@@ -569,6 +580,17 @@ static inline signed char processFirstDataByte(struct midiParser* parser, unsign
 // This handles the second data byte
 static inline signed char processSecondDataByte(struct midiParser* parser, unsigned char c)          // yes, inline
     {
+    // The following are two-data-byte messages so we're complete after processing this data byte
+    if (parser->status == NOTE_OFF ||
+    	parser->status == NOTE_ON ||
+    	parser->status == POLY_AT ||
+    	parser->status == CC ||
+    	parser->status == BEND ||
+    	parser->status == SONG_POSITION_POINTER)
+    	{
+    	parser->incomplete = 0;
+    	}
+    	
     switch(parser->status)
         {
 #ifdef ALLOW_NOTES
@@ -667,6 +689,22 @@ static inline signed char processSecondDataByte(struct midiParser* parser, unsig
 // Main MIDI Parser
 signed char parseMidi(struct midiParser* parser, unsigned char c)
     {
+    if (c >= STATUS)				// We might start being incomplete (or complete!)
+    	{
+    	if (c >= CLOCK_PULSE)		// These can appear in the middle of a message, so don't affect completeness
+    		{
+    		// do nothing
+    		}
+    	else if (c == TUNE_REQUEST || c == END_OF_SYSEX)		// Other one-byte messages, signal complete
+    		{
+    		parser->incomplete = 0;		// all done
+    		}
+    	else						// The remainder of messages are multi-byte, so we're now *incomplete*
+    		{
+    		parser->incomplete = 1;
+    		}
+    	}
+    	
 #ifdef ALLOW_SYSTEM_EXCLUSIVE
     if (c >= STATUS && c < REALTIME)
         {
@@ -1044,6 +1082,8 @@ signed char parseMidi(struct midiParser* parser, unsigned char c)
                 }
             else
                 {
+                // assume we're in the middle of a message
+                parser->incomplete = 1;
                 return ERROR_INVALID_DATA_BYTE;
                 }
             break;
@@ -1062,6 +1102,15 @@ unsigned char getParserCurrentMIDIChannel(struct midiParser* parser)
     return parser->currentChannel;
     }
 
+// Returns 1 if the parser is potentially the middle of a message
+// Returns 0 if the parser is in-between messages
+// Note that if the parser is started in the middle of a stream, then
+// messages >= CLOCK_PULSE may improperly return 0 even though the stream
+// is still processing a longer message, and so they should have returned 1.
+unsigned char isParserIncomplete(struct midiParser* parser)
+	{
+	return parser->incomplete;
+	}
 
 
 
@@ -1071,36 +1120,48 @@ unsigned char getParserCurrentMIDIChannel(struct midiParser* parser)
 void initializeRecognizer(struct midiRecognizer* recognizer)
 	{
 	recognizer->channel = SYNC_ERROR;
+	recognizer->status = 0;
+	recognizer->dataCount = 0;
 	}
-
-// Reads a byte and determines the current channel for the message that this byte is part of.
+	
+// Reads the next byte and updates the recognizer.  Returns the current channel for the message that this byte is part of.
 // Returns one of:
 // 0 ... 15                    	MIDI Channel (representing channels 1 ... 16) for voiced messages such as NOTE ON, CC, etc.
 // NO_CHANNEL					Indicates that this byte is part of an unvoiced message such as START, STOP, CLOCK, SYSEX, etc.
 // SYNC_ERROR					Returned when we cannot determine the message.  This only happens if a recognizer was
 //								initially fed out-of-sync MIDI data, and will continue until a status byte appears to set
 //								the channel properly.
-unsigned char recognizeChannel(struct midiRecognizer* recognizer, unsigned char c)
+unsigned char recognizeNextByte(struct midiRecognizer* recognizer, unsigned char c)
 	{
 	if (c >= NOTE_OFF)	// It's a status byte
 		{
-		if (c < SYSTEM_EXCLUSIVE)
+		if (c < SYSTEM_EXCLUSIVE)			// All Voice Messages
 			{
+			recognizer->dataCount = 0;
+			recognizer->status = (c & 0xF0); // strip out channel
 			recognizer->channel = c & 0x0F;
 			}
-		else if (c < CLOCK_PULSE)
+		else if (c < CLOCK_PULSE)			// All non-realtime Messages
 			{
+			recognizer->dataCount = 0;
+			recognizer->status = c;
 			recognizer->channel = NO_CHANNEL;
 			}
-		else	// it's stuff like CLOCK_PULSE which can appear in the *middle* of another message
+		else								// Realtime Messages
 			{
+			// do not change status, channel, or data count, it's a realtime messsage
 			return NO_CHANNEL;			// but don't change
 			}
 		}
+	else								// Data bytes
+		{
+		recognizer->dataCount++;
+		}
+		
 	return recognizer->channel;
 	}
 
-// Returns TRUE if the given byte is a status byte (as opposed to a data byte)
+// Returns 1 if the given byte is a status byte (as opposed to a data byte), else 0
 unsigned char isStatusByte(unsigned char c)
 	{
 	return c >= NOTE_OFF;
@@ -1122,3 +1183,66 @@ unsigned char messageType(unsigned char statusByte)
 		}
 	else return 0;
 	}
+
+
+// Returns 1 if at present we have finished a message (and thus are in-between messages)
+// and so it is safe to insert a message into the stream.  Returns 0 if we are in the
+// middle of building a message.  Note that if we have initialized the recognizer or
+// reset it in the middle of an active stream, we will not be able to determine if we are
+// at a message completion yet, until we have read a full non-realtime message.  Until then
+// this function will return 0.
+unsigned char completedMessage(struct midiRecognizer* recognizer)
+	{
+	if (recognizer->status == SYSTEM_EXCLUSIVE)
+		{
+		// multibyte
+		return 0;		// we never know if it's finished
+		}
+	else if (recognizer->status < PC ||				// Note Off, Note On, Pol AT, CC
+		recognizer->status == BEND ||
+		recognizer->status == SONG_POSITION_POINTER)
+		{
+		// 3 byte
+		return (recognizer->dataCount >= 2);
+		}
+	else if (recognizer->status < TUNE_REQUEST)		// Song Select, Midi Time Code Quarter Frame, PC, AT
+		{
+		// 2 byte
+		return (recognizer->dataCount >= 1);
+		}
+	else if (recognizer->status < CLOCK_PULSE)		// End of Sysex, Tune Request
+		{
+		// 1 byte non-realtime
+		return 1;
+		}
+	else							// Clock Pulse, Start, Continue, Stop, Active Sensing, System Reset
+		{
+		// 1 byte realtime
+		return 0;				// no valid status byte, including realtime status
+		}
+	}
+
+
+// Reads a byte and determines whether the byte should be filtered out of the stream based on rules you specify.  You pass in the byte as c,
+// and what is returned is either 0, meaning the byte should be filtered out, or 1, meaning that it should be retained
+//
+// To filter out bytes belonging to a channel, but retain unvoiced messsages, set removeChannel=channel, retainChannel=NO_CHANNEL, removeUnvoiced=0
+// To filter out bytes belonging to a channel, and remove unvoiced messsages, set removeChannel=channel, retainChannel=NO_CHANNEL, removeUnvoiced=1
+// To filter out bytes NOT belonging to a channel, but retain unvoiced messsages, set removeChannel=NO_CHANNEL, retainChannel=channel, removeUnvoiced=0
+// To filter out bytes NOT belonging to a channel, and remove unvoiced messsages, set removeChannel=NO_CHANNEL, retainChannel=channel, removeUnvoiced=1
+// To filter out ALL unvoiced messages, but retain voiced messages, set removeChannel=NO_CHANNEL, retainChannel=NO_CHANNEL, removeUnvoiced=1
+// To filter out ALL voiced messages, but retain unvoiced messages, set removeChannel=0, retainChannel=0, removeUnvoiced=0
+// To filter out NOTHING, set removeChannel=0, retainChannel=0, removeUnvoiced=1
+// To filter out EVERYTHING (why would you do this?), set removeChannel=0, retainChannel=0, removeUnvoiced=0
+
+unsigned char filterMessage(struct midiRecognizer* recognizer, unsigned char c, unsigned char removeChannel, unsigned char retainChannel, unsigned char removeUnvoiced)
+	{
+	unsigned char channel = recognizeNextByte(recognizer, c);
+	if (channel == SYNC_ERROR) return 0;
+	if (removeUnvoiced && channel == NO_CHANNEL) return 0;
+	if (channel == removeChannel) return 0;
+	if (channel != retainChannel && channel != NO_CHANNEL) return 0;
+	else return 1;
+	}
+
+

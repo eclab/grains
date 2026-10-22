@@ -232,6 +232,12 @@ void emitActiveSensing(struct midiEmitter* emitter);
 void emitSystemReset(struct midiEmitter* emitter);
 void emitTuneRequest(struct midiEmitter* emitter);
 
+// This is used to emit arbitrary message data without calling one of the message types.
+// Note that if you use this message to emit sysex, it doesn't automatically
+// add an 0xF7 at the end.  This function should be used to emit an *entire* message,
+// not a fragment of one.
+void emitMessage(struct midiEmitter* emitter, unsigned char* message, unsigned char messageLength);
+
 
 
 #endif

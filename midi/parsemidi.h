@@ -19,11 +19,14 @@
 /// 1. A MIDI PARSER.  This object parses MIDI data into MIDI messages and calls callback messages you
 ///    have created to handle these messages.  You can construct multiple separate parsers.  Parsers can
 ///    be associated with a single channel and instructed to ignore messages in other channels.  There
-///    is considerable flexibility in setting up parsers and what they parse.
+///    is considerable flexibility in setting up parsers and what they parse.  This parser handles
+///    everything from basic MIDI messages to NRPN, RPN, and 16-bit CC data.
 ///
-/// 2. A MIDI CHANNEL RECOGNIZER.  This object reads incoming MIDI data and ascertains the channel of
-///    the message to which the latest byte is a member.  You can use this to distribute the byte data
-///    to separate per-channel parsers, or to separate multiplexed outputs.
+/// 2. A MIDI CHANNEL AND MESSAGE BORDER RECOGNIZER.  This object reads incoming MIDI data and ascertains
+///    the channel of the message to which the latest byte is a member.  You can use this to distribute 
+///    the byte data to separate per-channel parsers, or to filter multiplexed outputs.  It also maintains 
+///    a belief as to whether we are in the middle of a message, or are in-between messages, which is useful 
+///    for inserting messages into an existing stream without parsing the stream.  
 
 
 
@@ -106,6 +109,9 @@
 /// MPE system works you may or may not wish to set up all the parsers to respond to non-voice messages
 /// or only one of them.
 ///
+/// The parser has a utility function called isParserIncomplete.  You can use this to determine if the
+/// parser is in-between messages (so you could insert a message downstream, for example). 
+///
 ///
 /// WEAKNESSES OF THIS CODE
 ///
@@ -124,6 +130,15 @@
 /// message and hands it to only one parser as a result: and this would kinda work except for MPE, where some parsers
 /// respond to more than one channel (such as the master channel).  For future work perhaps.  For now you have O(n)
 /// parses per incoming byte.
+///
+/// 4. The isParserIncomplete function may not work properly for system realtime messages (that is, ones
+/// whose status is >= CLOCK_PULSE) if the parser was initialized or reset on an active MIDI stream.  This
+/// is because these messages are permitted to appear in the middle of another message, and so do not affect
+/// its completeness.  For example, suppose that your active MIDI stream was in the middle of a system 
+/// exclusive message.  You initialize the parser on the stream.  The next byte in the stream is a CLOCK_PULSE
+/// message.  Have we completed or not?  If there is a system exclusive message that's not finished, we are
+/// incomplete.  If not, we are complete.  We don't know.  So isParserIncomplete will return 0 (complete)
+/// in this situation, even though we may not be.
 
 
 
@@ -259,6 +274,7 @@ struct midiParser					// we can't make this a typedef because it breaks Arduino'
     unsigned char status;                           // The status byte, stripped of channel
     unsigned char data1;                            // The first data byte, if any
     unsigned char unvoicedMessages;                 // Does this parser respond to unvoiced messages?
+    unsigned char incomplete;						// Are we in the middle of a message?
 
 #ifdef ALLOW_PC
     unsigned char bankMSB;
@@ -448,6 +464,13 @@ unsigned char getParserCurrentMIDIChannel(struct midiParser* parser);
 // Returns the parser's tag
 unsigned char getParserTag(struct midiParser* parser);
 
+// Returns 1 if the parser is potentially the middle of a message
+// Returns 0 if the parser is in-between messages
+// Note that if the parser is initialized or reset in the middle of an active MIDI
+// stream, then any message >= CLOCK_PULSE may improperly return 0 even though the 
+// stream is still processing a longer message, and so they should have returned 1.
+unsigned char isParserIncomplete(struct midiParser* parser);
+
 #if defined(ALLOW_MPE)
 // Sets the MPE Master Channel for this parser.  If voiced messages are assigned to the MPE Master Channel,
 // they will be responded to by this parser (along with voiced messages on its regular channel).  The
@@ -481,8 +504,9 @@ void setHighResUsed(struct midiParser* parser, unsigned char parameter, unsigned
 ////// MIDI CHANNEL RECOGNIZER
 
 /// This is a simple object you can attach to an incoming MIDI data stream and determine the channel of
-/// current bytes passing through.  You could use this to distribute those bytes to external streams without
-/// the overhead of parsing the data.  Or you could use a recognizer to determine which parser to hand the data to
+/// current bytes passing through.  It is much lighter weight than the MIDI Parser.  
+/// You could use this to distribute those bytes to external streams without the overhead of 
+/// parsing the data.  Or you could use a recognizer to determine which parser to hand the data to
 /// if you need separate parsers per-channel.  
 ///
 /// To use the recognizer properly:
@@ -509,6 +533,26 @@ void setHighResUsed(struct midiParser* parser, unsigned char parameter, unsigned
 ///        }
 ///    }
 ///
+/// A convenience method is provided to make it easier to use the recognizer to filter out 
+/// MIDI data from a stream.  For example, to filter out
+/// all unvoiced data as well as all voiced data except from channel 5 (assuming channels
+/// start with a 1 in MIDI, channel 5 is a 4 here, as we start with 0), you could say:
+///
+/// struct midiRecognizer recognizer;
+///
+/// void setup() { 
+///    initializeRecognizer(&recognizer);  
+///    Serial.begin(32150); 
+///    }
+///
+/// void loop() {
+///    if (Serial.available()) {
+///        unsigned char c = Serial.read();
+///        if (filterMessage(&recognizer, c, NO_CHANNEL, 4, 0)) {
+///            // do something with c
+///            }
+///    }
+
 
 // Don't fool with these constants
 #define SYNC_ERROR 17							// Returned when bytes are provided for which we cannot determine the channel
@@ -544,6 +588,8 @@ void setHighResUsed(struct midiParser* parser, unsigned char parameter, unsigned
 struct midiRecognizer					// we can't make this a typedef because it breaks Arduino's compilation
     {
     unsigned char channel;
+    unsigned char status;
+    unsigned char dataCount;
     };
 
 
@@ -551,17 +597,17 @@ struct midiRecognizer					// we can't make this a typedef because it breaks Ardu
 void initializeRecognizer(struct midiRecognizer* recognizer);
 
 
-// Reads a byte and determines the current channel for the message that this byte is part of.
+// Reads the next byte and updates the recognizer.  Returns the current channel for the message that this byte is part of.
 // Returns one of:
 // 0 ... 15                    	MIDI Channel (representing channels 1 ... 16) for voiced messages such as NOTE ON, CC, etc.
 // NO_CHANNEL					Indicates that this byte is part of an unvoiced message such as START, STOP, CLOCK, SYSEX, etc.
 // SYNC_ERROR					Returned when we cannot determine the message.  This only happens if a recognizer was
 //								initially fed out-of-sync MIDI data, and will continue until a status byte appears to set
 //								the channel properly.
-unsigned char recognizeChannel(struct midiRecognizer* recognizer, unsigned char c);
+unsigned char recognizeNextByte(struct midiRecognizer* recognizer, unsigned char c);
 
 
-// Returns TRUE if the given byte is a status byte (as opposed to a data byte)
+// Returns 1 if the given byte is a status byte (as opposed to a data byte), else 0
 unsigned char isStatusByte(unsigned char c);
 
 
@@ -570,5 +616,28 @@ unsigned char isStatusByte(unsigned char c);
 // NOTE_OF ... SYSTEM RESET (see "MIDI Message Types" in parsemidi.h)	if the byte is a status byte
 // 0                                                                 	if the byte is a data byte
 unsigned char messageType(unsigned char statusByte);
+
+// Returns 1 if at present we have finished a message (and thus are in-between messages)
+// and so it is safe to insert a message into the stream.  Returns 0 if we are in the
+// middle of building a message.  Note that if we have initialized the recognizer or
+// reset it in the middle of an active stream, we will not be able to determine if we are
+// at a message completion yet, until we have read a full non-realtime message.  Until then
+// this function will return 0.
+unsigned char completedMessage(struct midiRecognizer* recognizer)
+
+
+// Reads a byte and determines whether the byte should be filtered out of the stream based on rules you specify.  You pass in the byte as c,
+// and what is returned is either 0, meaning the byte should be filtered out, or 1, meaning that it should be retained
+//
+// To filter out bytes belonging to a channel, but retain unvoiced messsages, set removeChannel=channel, retainChannel=NO_CHANNEL, removeUnvoiced=0
+// To filter out bytes belonging to a channel, and remove unvoiced messsages, set removeChannel=channel, retainChannel=NO_CHANNEL, removeUnvoiced=1
+// To filter out bytes NOT belonging to a channel, but retain unvoiced messsages, set removeChannel=NO_CHANNEL, retainChannel=channel, removeUnvoiced=0
+// To filter out bytes NOT belonging to a channel, and remove unvoiced messsages, set removeChannel=NO_CHANNEL, retainChannel=channel, removeUnvoiced=1
+// To filter out ALL unvoiced messages, but retain voiced messages, set removeChannel=NO_CHANNEL, retainChannel=NO_CHANNEL, removeUnvoiced=1
+// To filter out ALL voiced messages, but retain unvoiced messages, set removeChannel=0, retainChannel=0, removeUnvoiced=0
+// To filter out NOTHING, set removeChannel=0, retainChannel=0, removeUnvoiced=1
+// To filter out EVERYTHING (why would you do this?), set removeChannel=0, retainChannel=0, removeUnvoiced=0
+
+unsigned char filterMessage(struct midiRecognizer* recognizer, unsigned char c, unsigned char removeChannel, unsigned char retainChannel, unsigned char removeUnvoiced);
 
 #endif

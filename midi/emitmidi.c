@@ -59,6 +59,17 @@ void initializeEmitter(struct midiEmitter* emitter, unsigned char tag)
     resetEmitter(emitter);
     }
 
+void emitMessage(struct midiEmitter* emitter, unsigned char* message, unsigned char messageLength)
+	{
+#ifdef ALLOW_EMIT_RUNNING_STATUS
+	emitter->lastStatus = INVALID;			// just in case
+#endif
+	for(UNSIGNED_16_BIT_INT i = 0; i < messageLength; i++)
+		{
+		emitMidi(emitter, message[i]);
+		}
+	}
+	
 // this is just called internally as a wrapper around emitMidi
 void doEmit(struct midiEmitter* emitter, unsigned char byte)
     {

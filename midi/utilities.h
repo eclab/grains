@@ -54,6 +54,11 @@ UNSIGNED_16_BIT_INT midiNoteFreq16(unsigned char midiNote);
 
 /// PITCH BEND
 
+// If you have not computed a pitch bend range from a received RPN Pitch Bend Message, you might
+// reasonably assume that your synth is using the suggested default value of 2 semitones.  That
+// would be:
+#define DEFAULT_PITCH_BEND_RANGE ((UNSIGNED_16_BIT_INT) 512)
+
 // Converts an RPN bend range of semitones and cents into N * 1/256 of a semitone
 // RPN Bend Range is provided by RPN 0.  Its MSB is the range in semitones, and its LSB is the range in cents
 // Requires one integer division (by 25) at present.
@@ -80,7 +85,6 @@ void bendFull(unsigned char midiNote, SIGNED_16_BIT_INT bendPitch, unsigned char
 //
 // This function is reasonably efficient, using only 16-bit integers
 void bend12(unsigned char midiNote, SIGNED_16_BIT_INT bendAmount, unsigned char* newNote, unsigned char* divisions);
-
 
 
 
@@ -225,5 +229,9 @@ extern unsigned char deallocateChannel(struct noteDistributor* distributor, unsi
 // previously allocated.  If no channel has been allocated for any note, does not reallocate and 
 // instead returns DISTRIBUTOR_NO_NOTE.
 extern unsigned char stealChannel(struct noteDistributor* distributor, unsigned char note);
+
+
+
+
 
 #endif
