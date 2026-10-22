@@ -124,7 +124,7 @@ uint16_t randomPosition()
 	{
 	for(uint8_t i = 0; i < 8; i++)
 		{
-		uint8_t rnd = random(294) - 147;
+		int16_t rnd = random(294) - 147;
 		int16_t newPosition = position + rnd;
 		if (newPosition > 294 || newPosition < 0) 
 			{
