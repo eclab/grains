@@ -82,7 +82,7 @@ Status: Working
 
 ## 808
 
-A drum sampler for up to 9 samples and up to 5 triggers.  Comes with several 8-bit drum samples, including, yes, ones from the TR-808.  You can provide your own samples, and there are a variety of configurations.  Allows 8-bit raw and u-Law samples.  Requires Mozzi.
+A drum, chord, and loop sampler for up to 9 samples and up to 5 triggers.  Comes with several 8-bit drum samples and chord loops, including, yes, ones from the TR-808.  You can provide your own samples, and there are a variety of configurations.  Allows 8-bit raw and u-Law samples.  Requires Mozzi.
 
 Status: Working.  This is a major upgrade from the previous 808 version. 
 
