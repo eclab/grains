@@ -271,12 +271,7 @@ There are nine samples, SAMPLE\_1 through SAMPLE\_9.  You can change the total v
     IN 1        UNUSED 
 
 ### FORMAT\_10
-There are nine samples, SAMPLE_1 through SAMPLE_9.  You can change the
-total volume with a pot.  Set the volume such that when the two samples play
-simultaneously you don't have pops or clipping.
-There are only THREE triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4, and SAMPLE_5 
-share a trigger, and SAMPLE_6, SAMPLE_7, SAMPLE_8, and SAMPLE_9 share a 
-different trigger.  Two pots determine which samples play on these triggers.
+In this format there is a single sample, SAMPLE\_1, but it is played as a chord.  You can change its pitch and the chord type.  Note that the samples in the chord will be different lengths -- you'll need to make sure you envelope them. When the longest (lowest) sample note has finished playing, the OUTPUT TRIGGER will be set.
 
     POT 3       CHORD CHOICE
     POT 2       VOLUME
