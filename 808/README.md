@@ -1,24 +1,47 @@
 # 808
 
-808 is a drum sampler with up to 9 voices and up to 5 triggers.  There are many options depending on the number of voices you are using.  808 comes with an assortment of 8-bit u-Law TR-808, TR-909, and DR-55, and LinnDrum drum samples, along with samples from the Roland D-110.  808 is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
+808 is a drum sampler with up to 9 voices and up to 5 triggers.  There are many options depending on the number of voices you are using.  808 comes with an assortment of 8-bit u-Law TR-808, TR-909, and DR-55, and LinnDrum drum samples, along with samples from the
+Roland D-110 and the Kawai K4.  Samples can be set to be one-shot or looping.  808 is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
 You will need to install the Mozzi Library.  You can do this from the Library Manager in your Arduino IDE.
 
-To set up 808, you just have to do two things:
+To set up 808, you just have to do a few things:
 
-- State the sample files you're using and
+- State the sample files you're using.  If the sample file is ULaw (all the ones which
+come with 808 are U-Law) you need to state that; otherwise you need to state that it
+is linear.
 
-- State which FORMAT you're using.  The FORMAT is the layout of the 808's interface. There are 13 formats available, and they dictate both how many samples will be used which will be grouped to the same trigger (you can only play one sample from a group on a given trigger at a given time).
+- State which FORMAT you're using.  The FORMAT is the layout of the 808's interface. There are many formats available, and they dictate both how many samples will be used which will be grouped to the same trigger (you can only play one sample from a group on a given trigger at a given time).
 
-FORMATS differ in capability based on the number of samples involved so as to maximize GRAINS's limited interface.  FORMAT\_1 has only one sample but lets you specify the start and end sample points, and the pitch.  FORMAT\_2 has two samples but you can specify their pitch; similarly for FORMAT\_3 and FORMAT\_4.  FORMAT\_5 has up to 5 triggers.  FORMATS 6, 7, 7A, 8, and 9 have increasing numbers of samples, but they are crammed into selectable groups with smaller and smaller numbers of triggers.  
+- You may also wish to indicate whether the sample is looping.
 
-A note about pitch: Mozzi's sampler facility is very primitive, and changes in pitch will have a lot of aliasing and other artifacts.
+FORMATS differ in capability based on the number of samples involved so as to maximize 
+GRAINS's limited interface.  FORMAT\_1 and 1A have only one sample but lets you specify the start 
+and end sample points, and the pitch.  FORMAT\_2 has two samples but you can specify their 
+pitch; similarly for FORMAT\_3 and FORMAT\_4.  FORMAT\_5 has up to 5 triggers.  FORMATS 6, 7, 7A, 8, and 9 have increasing numbers of samples, but they are crammed into 
+selectable groups with smaller and smaller numbers of triggers.  FORMAT 10 has only
+one sample but plays it as a chord.
+
+### About Pitch
+
+FORMAT 1A and FORMAT 10 specify pitch as Volt/Octave just like you'd expect.  FORMAT 1, 2, 3, and 4 specify pitch as a value above or below the standard pitch of the
+sample: think of them as detuning.  All other FORMATs do not specify pitch, but
+instead use the standard tuning.
+
+Mozzi's sampler facility is very primitive, and changes in pitch 
+will have a lot of aliasing and other artifacts.
 
 ### Drum Samples
 
 The drum sample libraries come from various open content libraries, and I have included the original sound files as well.  Also, Roger Linn has kindly given me permission to use the LinnDrum samples.
+
+
+### Kawai K4 and Roland D110 Samples
+These are non-drum samples of various kinds. The D110 samples are mostly one-shot, though
+one sample (BreathChorLoop.h) is provided in a format suitable for looping.  All the K4
+samples are loops and are intended for looping.
 
 ### Memory Allocation
 
@@ -32,7 +55,7 @@ As you increase the number of triggers (to say, 4 or 5), Mozzi will start to str
 
 ### A note about the DIGITAL OUT Pin
 
-808 uses the Digital Out pin as its first trigger input.  This pin is different from the others.  If you leave a bare disconnected wire in this pin, it will cause GRAINS to receive noise which it will interpret as a bunch of triggers, resulting in your kick  drum (or whatever) going nuts.  So disconnect the wire entirely from the socket, or plug the wire into *something* else at the other end.
+808 uses the Digital Out pin as its first trigger input.  This pin is different from the others.  If you leave a bare disconnected wire in this pin, it will cause GRAINS to receive noise which it will interpret as a bunch of triggers, resulting in your kick drum (or whatever) going nuts.  So disconnect the wire entirely from the socket, or plug the wire into *something* else at the other end.
 
 
 ## Setting the Sample Files
@@ -44,6 +67,10 @@ You can load samples as **8-bit signed** or **8-bit u-Law**.  u-Law samples have
 Is a sample too loud compared to the others?  You can adjust the relative gain of each sample by setting certain #defines in the code.
 
 
+## Looping
+You can set sampples to loop forever rather than to be one-shot.  
+This is done by uncommenting a #define in the code as described there.
+
 
 ## Setting the Format
 
@@ -52,7 +79,9 @@ There are 13 formats, and they dictate the number of samples used, how they're g
 - **FORMAT\_0** \
 A single sample, with no features, intended to reduce noise as much as possible
 - **FORMAT\_1** \
-A single sample, plus editable start/end points and pitch control
+A single sample, plus editable start/end points, plus Volt/Octave pitch control
+- **FORMAT\1A** \
+A single sample, plus editable start/end points, and pitch control
 - **FORMAT\_2** \
 Two samples, each with pitch control, plus total volume control
 - **FORMAT\_3** \
@@ -93,26 +122,28 @@ In this format there is a single sample, SAMPLE\_1.  There are no options: the g
     IN 1                 UNUSED
 
 ### FORMAT\_1
-In this format there is a single sample, SAMPLE\_1.  You can change its pitch and start and end points with the pots.  Additionally, when Drum 1 is played, TRIGGER OUT is output.  This allows you to line up other drums (like KICK) precisely, since Mozzi has some degree of latency.
+In this format there is a single sample, SAMPLE_1.  You can change its pitch and
+start and end points with the pots.  The pitch is standard volt/octave, unlike other formats
 
     POT 3       END 1      [If START > END, they are swapped]    [Set to MAN]
     POT 2       START 1    [If START > END, they are swapped]    [Set to MAN]
-    POT 1       PITCH 1    [CENTER: Original Pitch]
-    GATE OUT    UNUSED
-    AUDIO IN    TRIGGER OUT
-    IN 3        TRIGGER 1
+    POT 1       PITCH 1    [Unlike other Formats, this pitch is standard volt/octave note pitch]
+    GATE OUT    TRIGGER 1
+    AUDIO IN    UNUSED
+    IN 3        UNUSED
     IN 2        UNUSED
     IN 1        PITCH CV 1
 
-### FORMAT\_1
-In this format there is a single sample, SAMPLE\_1.  You can change its pitch and start and end points with the pots.  Additionally, when Drum 1 is played, TRIGGER OUT is output.  This allows you to line up other drums (like KICK) precisely, since Mozzi has some degree of latency.
+### FORMAT\_1A
+In this format there is a single sample, SAMPLE_1.  You can change its pitch and
+start and end points with the pots.  The pitch is like other formats (and not like FORMAT\_1)
 
     POT 3       END 1      [If START > END, they are swapped]    [Set to MAN]
     POT 2       START 1    [If START > END, they are swapped]    [Set to MAN]
     POT 1       PITCH 1    [CENTER: Original Pitch]
-    GATE OUT    UNUSED
-    AUDIO IN    TRIGGER OUT
-    IN 3        TRIGGER 1
+    GATE OUT    TRIGGER 1
+    AUDIO IN    UNUSED
+    IN 3        UNUSED
     IN 2        UNUSED
     IN 1        PITCH CV 1
 
@@ -123,8 +154,8 @@ There are two samples, SAMPLE\_1 and SAMPLE\_2.  You can change the pitch of eac
     POT 2       PITCH 2    [CENTER: Original Pitch]    [Note GRAINS BUG ABOVE]
     POT 1       PITCH 1    [CENTER: Original Pitch]    [Note GRAINS BUG ABOVE]
     GATE OUT    TRIGGER 1
-    AUDIO IN    TRIGGER OUT
-    IN 3        TRIGGER 2
+    AUDIO IN    TRIGGER 2
+    IN 3        UNUSED
     IN 2        PITCH CV 2
     IN 1        PITCH CV 1 
 
@@ -240,7 +271,12 @@ There are nine samples, SAMPLE\_1 through SAMPLE\_9.  You can change the total v
     IN 1        UNUSED 
 
 ### FORMAT\_10
-In this format there is a single sample, SAMPLE\_1, but it is played as a chord.  You can change its pitch and the chord type.  Note that the samples in the chord will be different lengths -- you'll need to make sure you envelope them. When the longest (lowest) sample note has finished playing, the OUTPUT TRIGGER will be set.
+There are nine samples, SAMPLE_1 through SAMPLE_9.  You can change the
+total volume with a pot.  Set the volume such that when the two samples play
+simultaneously you don't have pops or clipping.
+There are only THREE triggers.  SAMPLE_2, SAMPLE_3, SAMPLE_4, and SAMPLE_5 
+share a trigger, and SAMPLE_6, SAMPLE_7, SAMPLE_8, and SAMPLE_9 share a 
+different trigger.  Two pots determine which samples play on these triggers.
 
     POT 3       CHORD CHOICE
     POT 2       VOLUME
@@ -261,7 +297,4 @@ The chords are, in order:
 - Sevenths: 7, minor 7, Major 7, diminished 7
 - Octave Triads: minor + octave, Major + octave  
 
-#### LOOPING
-
-You can set the sample in FORMAT_10 to be LOOPING for ever.  It will always play.  This is done by uncommenting a #define in the code as directed.
 

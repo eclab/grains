@@ -11,7 +11,8 @@
 /// 808 is a drum sampler with up to 9 voices and up to 5 triggers.  In some cases you
 /// choose which voices sound for a given trigger.   808 comes with an assortment of 8-bit 
 /// u-Law TR-808, TR-909, DR-55, and LinnDrum drum samples, along with samples from the
-/// Roland D-110.  808 is meant to run on the AE Modular 
+/// Roland D-110 and the Kawai K4.  Samples can be set to be one-shot or looping.
+/// 808 is meant to run on the AE Modular 
 /// GRAINS, but it could be adapted to any Arduino.
 ///
 /// SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
@@ -19,14 +20,18 @@
 /// You will need to install the Mozzi Library.  You can do this from the Library Manager
 /// in your Arduino IDE.
 ///
-/// To set up 808, you just have to do two things:
+/// To set up 808, you just have to do a few things:
 ///
-/// - State the sample files you're using and
+/// - State the sample files you're using.  If the sample file is ULaw (all the ones which
+///   come with 808 are U-Law) you need to state that; otherwise you need to state that it
+///   is linear.
 ///
 /// - State which FORMAT you're using.  The FORMAT is the layout of the 808's interface.
-///   There are 11 formats available, and they dictate both how many samples will be used
+///   There are many formats available, and they dictate both how many samples will be used
 ///   which will be grouped to the same trigger (you can only play one sample from a group
 ///   on a given trigger at a given time).
+///
+/// - You may also wish to indicate whether the sample is looping.
 ///
 /// FORMATS differ in capability based on the number of samples involved so as to maximize 
 /// GRAINS's limited interface.  FORMAT_1 and 1A have only one sample but lets you specify the start 
@@ -99,7 +104,7 @@
 // That takes up 89% of memory.  If you want more samples, they have to be SHORT.
 
 
-#define SAMPLE_1        "k4/airvoicehi.h"  // "d110/BreathChorLoop.h"             
+#define SAMPLE_1        "tr808/CL.h"    // "k4/airvoicehi.h"  // "d110/BreathChorLoop.h"             
 #define SAMPLE_2        "blank2.h"
 #define SAMPLE_3        "blank3.h"             
 #define SAMPLE_4        "blank5.h"
@@ -229,8 +234,7 @@
 /// You set the format by changing the following value.  For example, to set to FORMAT_7,
 /// you would change below to   #define FORMAT FORMAT_7
 
-//#define FORMAT FORMAT_0
-#define FORMAT FORMAT_10
+#define FORMAT FORMAT_0
 
 
 /// The CONTROL_RATE value below indicates how often per second Mozzi checks for incoming
@@ -2030,7 +2034,7 @@ int updateAudio()
         
 void setup()
     {
-    Serial.begin(9600);
+    //Serial.begin(9600);
     startMozzi();
 
     inverseLengths0 = 1.0 / lengths0;
@@ -2058,7 +2062,7 @@ sample0.setLoopingOn();
       pinMode(CV_AUDIO_IN, OUTPUT);
 #endif
    
-#if (FORMAT == FORMAT1)
+#if (FORMAT == FORMAT_1)
     initializeFrequency(CV_POT_IN1, CV_AUDIO_IN);
     // updateControl();   // can't do it now, mozziAnalogRead isn't set up yet
 #endif
