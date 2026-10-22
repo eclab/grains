@@ -10,7 +10,8 @@
 ///
 /// 808 is a drum sampler with up to 9 voices and up to 5 triggers.  In some cases you
 /// choose which voices sound for a given trigger.   808 comes with an assortment of 8-bit 
-/// u-Law TR-808, TR-909, DR-55, and LinnDrum drum samples.  808 is meant to run on the AE Modular 
+/// u-Law TR-808, TR-909, DR-55, and LinnDrum drum samples, along with samples from the
+/// Roland D-110.  808 is meant to run on the AE Modular 
 /// GRAINS, but it could be adapted to any Arduino.
 ///
 /// SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
@@ -28,25 +29,36 @@
 ///   on a given trigger at a given time).
 ///
 /// FORMATS differ in capability based on the number of samples involved so as to maximize 
-/// GRAINS's limited interface.  FORMAT_1 has only one sample but lets you specify the start 
+/// GRAINS's limited interface.  FORMAT_1 and 1A have only one sample but lets you specify the start 
 /// and end sample points, and the pitch.  FORMAT_2 has two samples but you can specify their 
 /// pitch; similarly for FORMAT_3 and FORMAT_4.  FORMAT_5 has up to 5 triggers.  
 /// FORMATS 6, 7, 7A, 8, and 9 have increasing numbers of samples, but they are crammed into 
-/// selectable groups with smaller and smaller numbers of triggers.  
+/// selectable groups with smaller and smaller numbers of triggers.  FORMAT 10 has only
+/// one sample but plays it as a chord.
 ///
-/// A note about pitch: Mozzi's sampler facility is very primitive, and changes in pitch 
+/// ABOUT PITCH
+/// FORMAT 1A and FORMAT 10 specify pitch as Volt/Octave just like you'd expect.  
+/// FORMAT 1, 2, 3, and 4 specify pitch as a value above or below the standard pitch of the
+/// sample: think of them as detuning.  All other FORMATs do not specify pitch, but
+/// instead use the standard tuning.
+/// 
+/// Mozzi's sampler facility is very primitive, and changes in pitch 
 /// will have a lot of aliasing and other artifacts.
 ///
 ///
 /// DRUM SAMPLES
-///
 /// The drum sample libraries come from various open content libraries, and I have included 
 /// the original sound files as well.  Also, Roger Linn has kindly given me permission to use 
 /// the LinnDrum samples.
 ///
+/// KAWAI K4 and ROLAND D110 SAMPLES
+/// These are non-drum samples of various kinds. The D110 samples are mostly one-shot, though
+/// one sample (BreathChorLoop.h) is provided in a format suitable for looping.  All the K4
+/// samples are loops and are intended for looping.
 ///
 /// MEMORY ALLOCATION
-/// 808 provides about 26000 bytes of memory for your samples.  The total byte length of
+/// 808 provides about 26000 bytes of memory for drum samples, but if you're using FORMAT_1
+/// or FORMAT_10, you have about 20500 bytes total.  The total byte length of
 /// your samples cannot exceed this amount.
 ///
 ///
@@ -87,7 +99,7 @@
 // That takes up 89% of memory.  If you want more samples, they have to be SHORT.
 
 
-#define SAMPLE_1        "d110/AcouPiano1.h"             
+#define SAMPLE_1        "k4/airvoicehi.h"  // "d110/BreathChorLoop.h"             
 #define SAMPLE_2        "blank2.h"
 #define SAMPLE_3        "blank3.h"             
 #define SAMPLE_4        "blank5.h"
@@ -162,6 +174,15 @@
 // memory for your samples in GRAINS.
 
 
+/// LOOPING
+///
+/// You can set sampples to loop forever rather than to be one-shot.  
+/// This is done by uncommenting the following #define:
+
+#define LOOPING
+
+
+
 /// ADJUSTING INDIVIDUAL SAMPLE VOLUME
 ///
 /// Is a sample too loud compared to the others?  
@@ -191,24 +212,25 @@
 /// play with this:
 
 #define FORMAT_0        0               // A single sample, with no options, aiming for minimal noise and accurate triggering
-#define FORMAT_1        1               // A single sample, plus editable start/end points and pitch control
-#define FORMAT_2        2               // Two samples, each with pitch control, plus total volume control
-#define FORMAT_3        3               // Three samples, the first two with pitch control, plus total volume control
-#define FORMAT_4        4               // Four samples, the first one with pitch control, plus total volume control
-#define FORMAT_5        5               // Has 5 triggers: thus not for TRIQ164 or GRAINS BEATS
-#define FORMAT_5A       6               // An alternative to FORMAT_5 for people with 4-trigger step sequencers like TRIQ164 or GRAINS BEATS 
-#define FORMAT_6        7               // Six samples and four triggers: the last three samples share a trigger
-#define FORMAT_7        8               // Seven samples and four triggers: the last four samples share a trigger
-#define FORMAT_7A       9               // An alternative to FORMAT_7, with three triggers.  The last three samples share a trigger, and the next three share another
-#define FORMAT_8        10              // Eight samples and three triggers.  The last four samples share a trigger, and the next three share another
-#define FORMAT_9        11              // Nine samples and three triggers.  The last four samples share a trigger, and the next four share another
-#define FORMAT_10       12              // One sample and one trigger, but the sample produces a chord
+#define FORMAT_1        1               // A single sample, plus editable start/end points, plus Volt/Octave pitch control
+#define FORMAT_1A       2               // A single sample, plus editable start/end points, and pitch control
+#define FORMAT_2        3               // Two samples, each with pitch control, plus total volume control
+#define FORMAT_3        4               // Three samples, the first two with pitch control, plus total volume control
+#define FORMAT_4        5               // Four samples, the first one with pitch control, plus total volume control
+#define FORMAT_5        6               // Has 5 triggers: thus not for TRIQ164 or GRAINS BEATS
+#define FORMAT_5A       7               // An alternative to FORMAT_5 for people with 4-trigger step sequencers like TRIQ164 or GRAINS BEATS 
+#define FORMAT_6        8               // Six samples and four triggers: the last three samples share a trigger
+#define FORMAT_7        9               // Seven samples and four triggers: the last four samples share a trigger
+#define FORMAT_7A       10              // An alternative to FORMAT_7, with three triggers.  The last three samples share a trigger, and the next three share another
+#define FORMAT_8        11              // Eight samples and three triggers.  The last four samples share a trigger, and the next three share another
+#define FORMAT_9        12              // Nine samples and three triggers.  The last four samples share a trigger, and the next four share another
+#define FORMAT_10       13              // One sample and one trigger, but the sample produces a chord, plus Volt/Octave pitch control
 
 /// You set the format by changing the following value.  For example, to set to FORMAT_7,
 /// you would change below to   #define FORMAT FORMAT_7
 
 //#define FORMAT FORMAT_0
-#define FORMAT FORMAT_5
+#define FORMAT FORMAT_10
 
 
 /// The CONTROL_RATE value below indicates how often per second Mozzi checks for incoming
@@ -228,7 +250,7 @@
 /// speed.  I keep them down to 128.  But you might drop down into the sloppy range (64 to 128)
 /// if it bothers you.
 
-#if ((FORMAT == FORMAT_5A) || (FORMAT == FORMAT_7))
+#if ((FORMAT == FORMAT_5A) || (FORMAT == FORMAT_7) || (FORMAT == FORMAT_10))
 #define CONTROL_RATE 128					// this used to be 200 but Mozzi 2.0.1 forbids it. 
 #else
 #define CONTROL_RATE 256					// this used to be 200 but Mozzi 2.0.1 forbids it. 
@@ -253,10 +275,22 @@
 
 /// FORMAT_1
 /// In this format there is a single sample, SAMPLE_1.  You can change its pitch and
-/// start and end points with the pots.
+/// start and end points with the pots.  The pitch is standard volt/octave, unlike other formats
 // POT 3                END 1           [If START > END, they are swapped]      [Set to MAN]
 // POT 2                START 1         [If START > END, they are swapped]      [Set to MAN]
-// POT 1                PITCH 1         [CENTER: Original Pitch]
+// POT 1                PITCH 1         [Unlike other Formats, this pitch is standard volt/octave note pitch]
+// GATE OUT             TRIGGER 1
+// AUDIO IN             UNUSED
+// IN 3                 UNUSED
+// IN 2                 UNUSED
+// IN 1                 PITCH CV 1
+
+/// FORMAT_1A
+/// In this format there is a single sample, SAMPLE_1.  You can change its pitch and
+/// start and end points with the pots.  The pitch is like other formats (and not like FORMAT_1)
+// POT 3                END 1           [If START > END, they are swapped]      [Set to MAN]
+// POT 2                START 1         [If START > END, they are swapped]      [Set to MAN]
+// POT 1                PITCH 1         [CENTER: Original Pitch]        [Note GRAINS BUG ABOVE]
 // GATE OUT             TRIGGER 1
 // AUDIO IN             UNUSED
 // IN 3                 UNUSED
@@ -337,7 +371,6 @@
 // IN 3                 TRIGGER 3
 // IN 2                 TRIGGER 4
 // IN 1                 UNUSED 
-
 
 /// FORMAT_6
 /// There are six samples, SAMPLE_1 through SAMPLE_6.  You can change the
@@ -423,9 +456,10 @@
 /// as a chord.  You can change its pitch and the chord type.  Note that the samples in the
 /// chord will be different lengths -- you'll need to make sure you envelope them.
 /// When the longest (lowest) sample has finished playing, the OUTPUT TRIGGER will be set.
+/// Onlike other formats (except FORMAT_1), the pitch is volt/octave.
 // POT 3                CHORD CHOICE
 // POT 2                VOLUME
-// POT 1                PITCH				[Unlike other Formats, this pitch is standard note pitch]
+// POT 1                PITCH				[Unlike other Formats, this pitch is standard volt/octave note pitch]
 // GATE OUT             TRIGGER
 // AUDIO IN             PITCH CV TUNE
 // IN 3                 OUTPUT TRIGGER
@@ -482,7 +516,7 @@ int16_t previousPitch2 = UNDEFINED;
 int16_t previousStart = UNDEFINED;
 int16_t previousEnd = UNDEFINED;
 int16_t previousVolume = UNDEFINED;
-int16_t previousChord = UNDEFINED;
+uint8_t previousChord = 0;
 
 #define HIGH_TRIGGER_BOUNDARY 200
 #define LOW_TRIGGER_BOUNDARY 100
@@ -534,8 +568,11 @@ float computeFrequency(uint16_t pitch, float inverseLength)
 #include <Sample.h>
 
 
-#if (FORMAT == FORMAT_10)
-PROGMEM const float frequencies[1024+512] = {
+#define FREQUENCY_MULTIPLICAND (5.66645f)
+#define FREQUENCY_MULTIPLICAND_2 (32.1086f)
+
+#if (FORMAT == FORMAT_10 || FORMAT == FORMAT_1)
+PROGMEM const float frequencies[512] = {
     32.7, 32.81097, 32.922318, 33.034042, 33.146145, 33.25863, 33.37149, 33.48474, 33.59837, 33.71239, 33.826794, 33.94159, 34.056774, 34.172344, 34.28831, 34.40467, 
     34.521423, 34.638577, 34.756123, 34.87407, 34.992416, 35.111168, 35.23032, 35.349876, 35.469837, 35.590206, 35.710987, 35.832172, 35.95377, 36.075783, 36.198208, 36.32105, 
     36.444305, 36.56798, 36.692078, 36.816593, 36.941532, 37.066895, 37.192684, 37.3189, 37.445545, 37.572617, 37.700123, 37.82806, 37.956432, 38.08524, 38.214485, 38.34417, 
@@ -552,6 +589,7 @@ PROGMEM const float frequencies[1024+512] = {
     66.15767, 66.38218, 66.60745, 66.83349, 67.06029, 67.287865, 67.51621, 67.74534, 67.975235, 68.20591, 68.43737, 68.66962, 68.90265, 69.136475, 69.37109, 69.606514, 
     69.84273, 70.07974, 70.31756, 70.55618, 70.79562, 71.03587, 71.27694, 71.518814, 71.76152, 72.00505, 72.249405, 72.49458, 72.7406, 72.98745, 73.23514, 73.483665, 
     73.73304, 73.98325, 74.23433, 74.48624, 74.73901, 74.992645, 75.24714, 75.502495, 75.75872, 76.01581, 76.27377, 76.53261, 76.79233, 77.052925, 77.314415, 77.57678, 
+    
     77.84005, 78.1042, 78.36925, 78.63521, 78.902054, 79.169815, 79.438484, 79.70806, 79.97856, 80.24997, 80.52231, 80.795555, 81.06975, 81.34486, 81.62091, 81.897896, 
     82.17582, 82.45468, 82.734505, 83.01527, 83.29699, 83.57966, 83.8633, 84.14788, 84.43345, 84.71997, 85.00748, 85.29596, 85.58542, 85.875854, 86.167274, 86.459694, 
     86.7531, 87.0475, 87.3429, 87.63931, 87.936714, 88.23513, 88.53457, 88.835014, 89.136475, 89.43897, 89.742485, 90.04703, 90.352615, 90.65923, 90.96689, 91.27559, 
@@ -568,6 +606,8 @@ PROGMEM const float frequencies[1024+512] = {
     157.48367, 158.01811, 158.55435, 159.0924, 159.6323, 160.17403, 160.71759, 161.26299, 161.81024, 162.35936, 162.91034, 163.46318, 164.0179, 164.57451, 165.133, 165.69339, 
     166.25568, 166.81989, 167.38599, 167.95403, 168.52399, 169.09589, 169.66972, 170.24551, 170.82324, 171.40294, 171.9846, 172.56825, 173.15387, 173.74149, 174.33109, 174.92268, 
     175.5163, 176.11192, 176.70956, 177.30923, 177.91096, 178.51471, 179.1205, 179.72836, 180.33829, 180.95027, 181.56433, 182.18048, 182.79874, 183.41907, 184.0415, 184.66606, 
+
+    /*
     185.29276, 185.92155, 186.55247, 187.18556, 187.82079, 188.45816, 189.09772, 189.73943, 190.38332, 191.0294, 191.67766, 192.32814, 192.9808, 193.6357, 194.29282, 194.95216, 
     195.61374, 196.27757, 196.94365, 197.61198, 198.2826, 198.95547, 199.63065, 200.3081, 200.98785, 201.66992, 202.35431, 203.04102, 203.73004, 204.42142, 205.11514, 205.8112, 
     206.50964, 207.21043, 207.91362, 208.6192, 209.32715, 210.0375, 210.75029, 211.46548, 212.1831, 212.90317, 213.62566, 214.35062, 215.07803, 215.8079, 216.54027, 217.2751, 
@@ -600,6 +640,9 @@ PROGMEM const float frequencies[1024+512] = {
     892.3725, 895.4008, 898.4394, 901.4883, 904.54755, 907.61725, 910.69727, 913.7878, 916.8888, 920.0003, 923.1224, 926.25507, 929.3983, 932.5523, 935.717, 938.8924, 
     942.0786, 945.27563, 948.48346, 951.7022, 954.9319, 958.1725, 961.42413, 964.68677, 967.96045, 971.2453, 974.54126, 977.84845, 981.1668, 984.4965, 987.8374, 991.1897, 
     994.55334, 997.92847, 1001.31494, 1004.713, 1008.12256, 1011.5437, 1014.97644, 1018.42084, 1021.8769, 1025.3447, 1028.8242, 1032.3157, 1035.8188, 1039.334, 1042.861, 1046.4, 
+    */
+
+    /*
     1049.951, 1053.5142, 1057.0894, 1060.6766, 1064.2761, 1067.8877, 1071.5117, 1075.1478, 1078.7965, 1082.4574, 1086.1309, 1089.8168, 1093.515, 1097.226, 1100.9495, 1104.6855, 
     1108.4344, 1112.1959, 1115.9702, 1119.7573, 1123.5574, 1127.3702, 1131.196, 1135.0348, 1138.8866, 1142.7516, 1146.6295, 1150.5206, 1154.425, 1158.3427, 1162.2736, 1166.2178, 
     1170.1754, 1174.1465, 1178.131, 1182.129, 1186.1406, 1190.1659, 1194.2048, 1198.2574, 1202.3237, 1206.4039, 1210.4979, 1214.6058, 1218.7277, 1222.8635, 1227.0134, 1231.1772, 
@@ -631,11 +674,12 @@ PROGMEM const float frequencies[1024+512] = {
     4789.783, 4806.038, 4822.3477, 4838.7124, 4855.133, 4871.609, 4888.141, 4904.729, 4921.3735, 4938.0747, 4954.8325, 4971.647, 4988.5186, 5005.4473, 5022.4336, 5039.4775, 
     5056.5796, 5073.7393, 5090.957, 5108.2334, 5125.569, 5142.963, 5160.4155, 5177.9277, 5195.4995, 5213.131, 5230.822, 5248.5728, 5266.3843, 5284.256, 5302.1885, 5320.1816, 
     5338.2363, 5356.3516, 5374.529, 5392.7676, 5411.0684, 5429.431, 5447.8564, 5466.3438, 5484.894, 5503.5073, 5522.184, 5540.924, 5559.7275, 5578.5947, 5597.526, 5616.5215, 
-    5635.5815, 5654.706, 5673.8955, 5693.151, 5712.4707, 5731.856, 5751.3076, 5770.825, 5790.4087, 5810.0586, 5829.7754, 5849.5596, 5869.41, 5889.328, 5909.314, 5929.368, 
+    5635.5815, 5654.706, 5673.8955, 5693.151, 5712.4707, 5731.856, 5751.3076, 5770.825, 5790.4087, 5810.0586, 5829.7754, 5849.5596, 5869.41, 5889.328, 5909.314, 5929.368, */
     };
 
-#define FREQUENCY(pitch) pgm_read_float_near(&frequencies[pitch])
+#define FREQUENCY(pitch) (pitch < 512 ? pgm_read_float_near(&frequencies[pitch]) : (pitch < 1024 ? pgm_read_float_near(&frequencies[pitch - 512]) * FREQUENCY_MULTIPLICAND : pgm_read_float_near(&frequencies[pitch - 1024]) * FREQUENCY_MULTIPLICAND_2))
 
+//#define FREQUENCY(pitch) pgm_read_float_near(&frequencies[pitch < 512 ? pitch : (pitch < 1024 ? pitch - 512 : pitch - 1024)]) * (pitch < 512 ? 1.0f : (pitch < 1024 ? FREQUENCY_MULTIPLICAND : FREQUENCY_MULTIPLICAND_2))
 
 // These are the semitone values for the chords.  
 // The first number is the number of additional notes beyond the first
@@ -748,6 +792,9 @@ inline float getFrequency(uint8_t pitch, uint8_t tune)
 #endif
 
 
+
+
+
 #include SAMPLE_1
 Sample<DATA_LENGTH, 16384> sample0(DATA);
 uint16_t lengths0 = DATA_LENGTH;
@@ -759,54 +806,69 @@ Sample<DATA_LENGTH, 16384> sample0c(DATA);
 #undef DATA
 #undef DATA_LENGTH
 
+#if (FORMAT == FORMAT_2 || FORMAT == FORMAT_3 || FORMAT == FORMAT_4 || FORMAT == FORMAT_5 || FORMAT == FORMAT_5A || FORMAT == FORMAT_6 || FORMAT == FORMAT_7 || FORMAT == FORMAT_7A || FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
 #include SAMPLE_2
 Sample<DATA_LENGTH, 16384> sample1(DATA);
 uint16_t lengths1 = DATA_LENGTH;
 #undef DATA
 #undef DATA_LENGTH
+#endif
 
+#if (FORMAT == FORMAT_3 || FORMAT == FORMAT_4 || FORMAT == FORMAT_5 || FORMAT == FORMAT_5A || FORMAT == FORMAT_6 || FORMAT == FORMAT_7 || FORMAT == FORMAT_7A || FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
 #include SAMPLE_3
 Sample<DATA_LENGTH, 16384> sample2(DATA);
 uint16_t lengths2 = DATA_LENGTH;
 #undef DATA
 #undef DATA_LENGTH
+#endif
 
+#if (FORMAT == FORMAT_4 || FORMAT == FORMAT_5 || FORMAT == FORMAT_5A || FORMAT == FORMAT_6 || FORMAT == FORMAT_7 || FORMAT == FORMAT_7A || FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
 #include SAMPLE_4
 Sample<DATA_LENGTH, 16384> sample3(DATA);
 uint16_t lengths3 = DATA_LENGTH;
 #undef DATA
 #undef DATA_LENGTH
+#endif
 
+#if (FORMAT == FORMAT_5 || FORMAT == FORMAT_5A || FORMAT == FORMAT_6 || FORMAT == FORMAT_7 || FORMAT == FORMAT_7A || FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
 #include SAMPLE_5
 Sample<DATA_LENGTH, 16384> sample4(DATA);
 uint16_t lengths4 = DATA_LENGTH;
 #undef DATA
 #undef DATA_LENGTH
+#endif
 
+#if (FORMAT == FORMAT_6 || FORMAT == FORMAT_7 || FORMAT == FORMAT_7A || FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
 #include SAMPLE_6
 Sample<DATA_LENGTH, 16384> sample5(DATA);
 uint16_t lengths5 = DATA_LENGTH;
 #undef DATA
 #undef DATA_LENGTH
+#endif
 
+#if (FORMAT == FORMAT_7 || FORMAT == FORMAT_7A || FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
 #include SAMPLE_7
 Sample<DATA_LENGTH, 16384> sample6(DATA);
 uint16_t lengths6 = DATA_LENGTH;
 #undef DATA
 #undef DATA_LENGTH
 
+#if (FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
 #include SAMPLE_8
 Sample<DATA_LENGTH, 16384> sample7(DATA);
 uint16_t lengths7 = DATA_LENGTH;
 #undef DATA
 #undef DATA_LENGTH
+#endif
 
+#if (FORMAT == FORMAT_9)
 #include SAMPLE_9
 Sample<DATA_LENGTH, 16384> sample8(DATA);
 uint16_t lengths8 = DATA_LENGTH;
 #undef DATA
 #undef DATA_LENGTH
-
+#endif
+#endif
 
 //// DIGITAL OUT registers a trigger faster than the analog reads, particularly Analog In,
 //// partly because the capacitors on them I think and partly because mozziAnalogRead
@@ -820,19 +882,9 @@ uint8_t counter = 1;
 uint8_t triggerOutCountdown = 0;
 
 
+#if (FORMAT == FORMAT_0)
 inline void updateControl0()
     {
-      /*
-      if (triggerOutCountdown > 0)
-        {
-        if (triggerOutCountdown == 1)
-          {
-            digitalWrite(CV_AUDIO_IN, 0);
-          }
-        triggerOutCountdown--;
-        }
-       */
-       
     // POT 3            UNUSED
     // POT 2            UNUSED
     // POT 1            UNUSED
@@ -841,7 +893,7 @@ inline void updateControl0()
     // IN 3             UNUSED
     // IN 2             UNUSED
     // IN 1             UNUSED
-       
+
     uint8_t val = digitalRead(CV_GATE_OUT);
     if (!triggered[0] && val) 
         { 
@@ -852,7 +904,12 @@ inline void updateControl0()
         }
     triggered[0] = val;
     }
-    
+#endif
+
+
+#define INVERSE_MIDDLE_C_FREQUENCY (1.0 / 261.63)
+
+#if (FORMAT == FORMAT_1)
 inline void updateControl1()
     {
     // POT 3            END 1
@@ -864,35 +921,73 @@ inline void updateControl1()
     // IN 2             UNUSED
     // IN 1             PITCH CV 1
         
-    if (previousPitch1 == UNDEFINED) previousPitch1 = pot[0] = mozziAnalogRead(CV_POT3);
-    else pot[0] = previousPitch1 = (previousPitch1 * 7 + mozziAnalogRead(CV_POT3)) >> 3;
+    if (previousPitch1 == UNDEFINED) previousPitch1 = pot[0] = mozziAnalogRead(CV_POT_IN1);
+    else pot[0] = previousPitch1 = (previousPitch1 * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3;
     if (previousStart == UNDEFINED) previousStart = pot[1] = mozziAnalogRead(CV_POT_IN2);
     else pot[1] = previousStart = (previousStart * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3;
-    if (previousEnd == UNDEFINED) previousEnd = pot[2] = mozziAnalogRead(CV_POT_IN1);
-    else pot[2] = previousEnd = (previousEnd * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3;
+    if (previousEnd == UNDEFINED) previousEnd = pot[2] = mozziAnalogRead(CV_POT3);
+    else pot[2] = previousEnd = (previousEnd * 7 + mozziAnalogRead(CV_POT3)) >> 3;
 
-    uint8_t val = digitalRead(CV_GATE_OUT);
-    if (!triggered[0] && val) 
-        { 
-        // don't bother with the countdown in this situation, only one drum
-        
+float frequency = getFrequency(CV_POT_IN1, CV_AUDIO_IN);
+
         // set sample lengths and pitch only when we start
-        sample0.setFreq(computeFrequency(pot[0], inverseLengths0));
+        sample0.setFreq((float)(16384 * inverseLengths0 * INVERSE_MIDDLE_C_FREQUENCY * frequency));  // frequency * inverseLengths0);  // frequency); // computeFrequency(pot[0], inverseLengths0));
         if (pot[2] < pot[1]) // start is after end, need to swap
             {
             uint8_t p = pot[2];
             pot[2] = pot[1];
             pot[1] = p;
             }
-                                        
+               
+                   uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        {         
+        // don't bother with the countdown in this situation, only one drum
+
         sample0.setStart((pot[1] * (uint32_t)lengths0) >> 10);
-        sample0.setEnd((pot[2] * (uint32_t)lengths0) >> 10);
+        if (pot[2] >= 996) sample0.setEnd(lengths0);            // guarantee that we can go to the very end
+        else sample0.setEnd((pot[2] * (uint32_t)lengths0) >> 10);
         sample0.start(); 
         }
     triggered[0] = val;
     }
- 
+ #endif
 
+#if (FORMAT == FORMAT_1A)
+inline void updateControl1()
+    {
+    // POT 3            END 1
+    // POT 2            START 1
+    // POT 1            PITCH 1
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         UNUSED
+    // IN 3             UNUSED
+    // IN 2             UNUSED
+    // IN 1             PITCH CV 1
+        
+    if (previousPitch1 == UNDEFINED) previousPitch1 = pot[0] = mozziAnalogRead(CV_POT_IN1);
+    else pot[0] = previousPitch1 = (previousPitch1 * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3;
+    if (previousStart == UNDEFINED) previousStart = pot[1] = mozziAnalogRead(CV_POT_IN2);
+    else pot[1] = previousStart = (previousStart * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3;
+    if (previousEnd == UNDEFINED) previousEnd = pot[2] = mozziAnalogRead(CV_POT3);
+    else pot[2] = previousEnd = (previousEnd * 7 + mozziAnalogRead(CV_POT3)) >> 3;
+
+    uint8_t val = digitalRead(CV_GATE_OUT);
+    if (!triggered[0] && val) 
+        {         
+        // don't bother with the countdown in this situation, only one drum
+        sample0.setFreq(computeFrequency(pot[0], inverseLengths0));
+
+        sample0.setStart((pot[1] * (uint32_t)lengths0) >> 10);
+        if (pot[2] >= 996) sample0.setEnd(lengths0);            // guarantee that we can go to the very end
+        else sample0.setEnd((pot[2] * (uint32_t)lengths0) >> 10);
+        sample0.start(); 
+        }
+    triggered[0] = val;
+    }
+ #endif
+
+#if (FORMAT == FORMAT_2)
 inline void updateControl2()
     {       
     // POT 3            VOLUME
@@ -936,9 +1031,10 @@ inline void updateControl2()
        }
     else if (triggered[1] && val1 < LOW_TRIGGER_BOUNDARY) { triggered[1] = 0; }
     }
+#endif
 
 
-
+#if (FORMAT == FORMAT_3)
 inline void updateControl3()
     {
     // POT 3            VOLUME
@@ -986,7 +1082,9 @@ inline void updateControl3()
     if (!triggered[2] && val2 > HIGH_TRIGGER_BOUNDARY) { triggered[2] = 1; sample2.start(); }
     else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
     }
+#endif
 
+#if (FORMAT == FORMAT_4)
 inline void updateControl4()
     {
     // POT 3            VOLUME
@@ -1032,7 +1130,9 @@ inline void updateControl4()
     else if (triggered[3] && val3 < LOW_TRIGGER_BOUNDARY) { triggered[3] = 0; }
         
     }
+#endif
 
+#if (FORMAT == FORMAT_5)
 inline void updateControl5()
     {
     // POT 3            VOLUME
@@ -1078,7 +1178,9 @@ inline void updateControl5()
     if (!triggered[4] && val4 > HIGH_TRIGGER_BOUNDARY) { triggered[4] = 1; sample4.start(); }
     else if (triggered[4] && val4 < LOW_TRIGGER_BOUNDARY) { triggered[4] = 0; }
     }
+#endif
 
+#if (FORMAT == FORMAT_5A)
 inline void updateControl5A()
     {
     // POT 3            VOLUME
@@ -1120,7 +1222,9 @@ inline void updateControl5A()
     if (!triggered[3] && val3 > HIGH_TRIGGER_BOUNDARY) { triggered[3] = 1; if (pot[0] < 512) sample3.start(); else sample4.start(); }
     else if (triggered[3] && val3 < LOW_TRIGGER_BOUNDARY) { triggered[3] = 0; }
     }
+#endif
 
+#if (FORMAT == FORMAT_6)
 inline void updateControl6()
     {
     // POT 3            VOLUME
@@ -1162,7 +1266,9 @@ inline void updateControl6()
     if (!triggered[3] && val3 > HIGH_TRIGGER_BOUNDARY) { triggered[3] = 1; if (pot[0] < 341) sample3.start(); else if (pot[0] < 682) sample4.start(); else sample5.start(); }
     else if (triggered[3] && val3 < LOW_TRIGGER_BOUNDARY) { triggered[3] = 0; }
     }
+#endif
 
+#if (FORMAT == FORMAT_7)
 inline void updateControl7()
     {
     // POT 3            VOLUME
@@ -1204,7 +1310,9 @@ inline void updateControl7()
     if (!triggered[3] && val3 > HIGH_TRIGGER_BOUNDARY) { triggered[3] = 1; if (pot[0] < 256) sample3.start(); else if (pot[0] < 512) sample4.start(); else if (pot[0] < 768) sample5.start(); else sample6.start(); }
     else if (triggered[3] && val3 < LOW_TRIGGER_BOUNDARY) { triggered[3] = 0; }
     }
+#endif
 
+#if (FORMAT == FORMAT_7A)
 inline void updateControl7A()
     {
     // POT 3            VOLUME
@@ -1242,7 +1350,9 @@ inline void updateControl7A()
     if (!triggered[2] && val2 > HIGH_TRIGGER_BOUNDARY) { triggered[2] = 1; if (pot[0] < 341) sample4.start(); else if (pot[0] < 682) sample5.start(); else sample6.start(); }
     else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
     }
+#endif
 
+#if (FORMAT == FORMAT_8)
 inline void updateControl8()
     {
     // POT 3            VOLUME
@@ -1280,7 +1390,9 @@ inline void updateControl8()
     if (!triggered[2] && val2 > HIGH_TRIGGER_BOUNDARY) { triggered[2] = 1; if (pot[0] < 256) sample4.start(); else if (pot[0] < 512) sample5.start(); else if (pot[0] < 768) sample6.start(); else sample7.start(); }
     else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
     }
+#endif
 
+#if (FORMAT == FORMAT_9)
 inline void updateControl9()
     {
     // POT 3            VOLUME
@@ -1340,12 +1452,12 @@ inline void updateControl9()
         }
     else if (triggered[2] && val2 < LOW_TRIGGER_BOUNDARY) { triggered[2] = 0; }
     }
-
+#endif
 
 #if (FORMAT == FORMAT_10)
 uint8_t finalGain = 0;
-uint8_t lastChord = 255;
 uint8_t completed = false;
+float lastFrequency = -1;
 inline void updateControl10()
     {       
     // POT 3            CHORD CHOICE
@@ -1357,60 +1469,64 @@ inline void updateControl10()
     // IN 2             VOLUME CV
     // IN 1             PITCH CV
 
-    float frequency = getFrequency(CV_POT_IN1, CV_AUDIO_IN);
-
     if (previousPitch1 == UNDEFINED) previousPitch1 = pot[0] = mozziAnalogRead(CV_POT_IN1);
     else pot[0] = previousPitch1 = (previousPitch1 * 7 + mozziAnalogRead(CV_POT_IN1)) >> 3;
     if (previousVolume == UNDEFINED) previousVolume = pot[1] = mozziAnalogRead(CV_POT_IN2);
     else pot[1] = previousVolume = (previousVolume * 7 + mozziAnalogRead(CV_POT_IN2)) >> 3;
-    pot[3] = (mozziAnalogRead(CV_POT3) * 6) >> 8;		// 0...23
     finalGain = pot[1] >>  4;			// 0...63
-    
-    uint8_t val = digitalRead(CV_GATE_OUT);
+    int chord =  (mozziAnalogRead(CV_POT3) * 6) >> 8;    // 0...23
+
+       
+       uint8_t val = digitalRead(CV_GATE_OUT);
     if (!triggered[0] && val) 
         { 
-        if (counter == 0) counter = COUNTDOWN;
-        }
-    triggered[0] = val;
+        // don't bother with countdown here, only one drum
+  
+        
+    sample0.start(); 
+      sample0a.start(); 
+      sample0b.start(); 
+      sample0c.start();
+      completed = false;
+      digitalWrite(CV_IN3, 0);
+      triggerOutCountdown = 0;
+      }
 
-    // Compute Chord
-    if (pot[3] != lastChord)
-    	{
-    	lastChord = pot[3];
-    	uint8_t* c = chords[pot[3]];
-		sample0.setFreq(frequency);
-		if (c[0] > 0)
-			{
-			sample0a.setFreq(frequency * semitoneFrequencyRatios[c[1]]);
-			if (c[0] > 1)
-				{
-				sample0b.setFreq(frequency * semitoneFrequencyRatios[c[2]]);
-				if (c[0] > 2)
-					{
-					sample0c.setFreq(frequency * semitoneFrequencyRatios[c[3]]);
-					}
-				}
-			}
-		}
-
-    if (counter == 1)
+       float f = getFrequency(CV_POT_IN1, CV_AUDIO_IN);
+     if(f != lastFrequency || chord != previousChord)
+      {
+        lastFrequency = f;
+        
+        float frequency = ((float)(16384 * inverseLengths0 * INVERSE_MIDDLE_C_FREQUENCY * f));
+        
+      sample0.setFreq(frequency);
+      if (chords[previousChord][0] > 0)
         {
-        sample0.start(); 
-        sample0a.start(); 
-        sample0b.start(); 
-        sample0c.start();
-        completed = false;
-        triggerOutCountdown = 0;
-       }
-    if (counter > 0) counter--;
-    
+        sample0a.setFreq(frequency * semitoneFrequencyRatios[chords[previousChord][1]]);
+            //Serial.print("one");
+        if (chords[previousChord][0] > 1)
+          {
+          sample0b.setFreq(frequency * semitoneFrequencyRatios[chords[previousChord][2]]);
+            //Serial.print("two");
+          if (chords[previousChord][0] > 2)
+            {
+            sample0c.setFreq(frequency * semitoneFrequencyRatios[chords[previousChord][3]]);
+            //Serial.print("three");
+            }
+          }
+        }
+      }
+        
+      triggered[0] = val;
+      previousChord = chord;
+  
     // at present we trigger if the LONGEST sound is done playing.  Maybe that's not a good choice?
-    if (!completed && !sample0.isPlaying())
-    	{
-    	completed = true;
-    	triggerOutCountdown = TRIGGER_OUT_COUNTDOWN;
-        digitalWrite(CV_IN3, 1);
-    	}
+    if (completed == true && !sample0.isPlaying())
+      {
+      completed = true;
+      triggerOutCountdown = TRIGGER_OUT_COUNTDOWN;
+      digitalWrite(CV_IN3, 1);
+      }
     else if (triggerOutCountdown > 0)
         {
         if (triggerOutCountdown == 1)
@@ -1569,6 +1685,7 @@ inline int16_t scaleAudioBiased(int16_t val)
 
 
 
+#if (FORMAT == FORMAT_0)
 inline int updateAudio0()
     {
     // POT 3            END 1
@@ -1582,13 +1699,17 @@ inline int updateAudio0()
 
 // believe it or not, the background hum is lower when more samples are computing.
 // so we add some dummy samples here.
-   sum += CC(sample1, GAIN_1);             // sum is to outwit the compiler
+/*   
+sum += CC(sample1, GAIN_1);             // sum is to outwit the compiler
    sum += CC(sample2, GAIN_2);
    sum += CC(sample3, GAIN_3);
+*/
    
     return scaleAudio(CC(sample0, GAIN_0) * 8);
     }
+#endif
 
+#if (FORMAT == FORMAT_1)
 inline int updateAudio1()
     {
     // POT 3            END 1
@@ -1602,13 +1723,37 @@ inline int updateAudio1()
 
 // believe it or not, the background hum is lower when more samples are computing.
 // so we add some dummy samples here.
-   sum += CC(sample1, GAIN_1);             // sum is to outwit the compiler
-   sum += CC(sample2, GAIN_2);
-   sum += CC(sample3, GAIN_3);
+//   sum += CC(sample1, GAIN_1);             // sum is to outwit the compiler
+//   sum += CC(sample2, GAIN_2);
+//   sum += CC(sample3, GAIN_3);
    
     return scaleAudio(CC(sample0, GAIN_0) * 8);
     }
-        
+#endif
+
+#if (FORMAT == FORMAT_1A)
+inline int updateAudio1()
+    {
+    // POT 3            END 1
+    // POT 2            START 1
+    // POT 1            PITCH 1
+    // GATE OUT         TRIGGER 1
+    // AUDIO IN         UNUSED
+    // IN 3             UNUSED
+    // IN 2             UNUSED
+    // IN 1             PITCH CV 1
+
+// believe it or not, the background hum is lower when more samples are computing.
+// so we add some dummy samples here.
+//   sum += CC(sample1, GAIN_1);             // sum is to outwit the compiler
+//   sum += CC(sample2, GAIN_2);
+//   sum += CC(sample3, GAIN_3);
+   
+    return scaleAudio(CC(sample0, GAIN_0) * 8);
+    }
+#endif
+
+#if (FORMAT == FORMAT_2)
 inline int updateAudio2()
     {
     // POT 3            VOLUME
@@ -1622,10 +1767,12 @@ inline int updateAudio2()
 
 // believe it or not, the background hum is lower when more samples are computing.
 // so we add some dummy samples here.
-    sum += CC(sample2, GAIN_2);             // sum is to outwit the compiler
+//    sum += CC(sample2, GAIN_2);             // sum is to outwit the compiler
     return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1)) * (uint32_t) pot[2]) >> 6); 
     }
+#endif
 
+#if (FORMAT == FORMAT_3)
 inline int updateAudio3()
     {
     // POT 3            VOLUME
@@ -1639,7 +1786,9 @@ inline int updateAudio3()
 
     return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2)) * (uint32_t) pot[2]) >> 6);
     }
+#endif
 
+#if (FORMAT == FORMAT_4)
 inline int updateAudio4()
     {
     // POT 3            VOLUME
@@ -1653,7 +1802,9 @@ inline int updateAudio4()
 
     return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + CC(sample3, GAIN_3)) * (uint32_t) pot[2]) >> 6);
     }
+#endif
 
+#if (FORMAT == FORMAT_5)
 inline int updateAudio5()
     {
     // POT 3            VOLUME
@@ -1667,7 +1818,9 @@ inline int updateAudio5()
 
     return scaleAudio((((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + CC(sample3, GAIN_3) + CC(sample4, GAIN_4))) * (uint32_t) pot[2]) >> 6);
     }
+#endif
 
+#if (FORMAT == FORMAT_5A)
 inline int updateAudio5A()
     {
     // POT 3            VOLUME
@@ -1681,7 +1834,9 @@ inline int updateAudio5A()
 
     return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + (pot[0] < 512 ? CC(sample3, GAIN_3) : CC(sample4, GAIN_4))) * (uint32_t) pot[2]) >> 6);
     }
+#endif
 
+#if (FORMAT == FORMAT_6)
 inline int updateAudio6()
     {
     // POT 3            VOLUME
@@ -1695,7 +1850,9 @@ inline int updateAudio6()
 
     return scaleAudio(((CC(sample0, GAIN_0) + CC(sample1, GAIN_1) + CC(sample2, GAIN_2) + (pot[0] < 341 ? CC(sample3, GAIN_3) : (pot[0] < 682 ? CC(sample4, GAIN_4) : CC(sample5, GAIN_5)))) * (uint32_t) pot[2]) >> 6);
     }
+#endif
 
+#if (FORMAT == FORMAT_7)
 inline int updateAudio7()
     {
     // POT 3            VOLUME
@@ -1712,7 +1869,9 @@ inline int updateAudio7()
                             (pot[0] < 256 ? CC(sample3, GAIN_3) : CC(sample4, GAIN_4)) :
                             (pot[0] < 768 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6)))) * (uint32_t) pot[2]) >> 6);
     }
+#endif
 
+#if (FORMAT == FORMAT_7A)
 inline int updateAudio7A()
     {
     // POT 3            VOLUME
@@ -1726,7 +1885,9 @@ inline int updateAudio7A()
 
     return scaleAudio(((CC(sample0, GAIN_0) + (pot[1] < 341 ? CC(sample1, GAIN_1) : (pot[1] < 682 ? CC(sample2, GAIN_2) : CC(sample3, GAIN_3))) + (pot[0] < 341 ? CC(sample4, GAIN_4) : (pot[0] < 682 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6)))) * (uint32_t) pot[2]) >> 6);
     }
+#endif
 
+#if (FORMAT == FORMAT_8)
 inline int updateAudio8()
     {
     // POT 3            VOLUME
@@ -1744,7 +1905,9 @@ inline int updateAudio8()
                             (pot[0] < 256 ? CC(sample4, GAIN_4) : CC(sample5, GAIN_5)) :
                             (pot[0] < 768 ? CC(sample6, GAIN_6) : CC(sample7, GAIN_7)))) * (uint32_t) pot[2]) >> 6);
     }
+#endif
 
+#if (FORMAT == FORMAT_9)
 inline int updateAudio9()
     {
     // POT 3            VOLUME
@@ -1764,6 +1927,7 @@ inline int updateAudio9()
                             (pot[0] < 256 ? CC(sample5, GAIN_5) : CC(sample6, GAIN_6)) : 
                             (pot[0] < 768 ? CC(sample7, GAIN_7) : CC(sample8, GAIN_8)))) * (uint32_t) pot[2]) >> 6);
     }
+#endif
 
 #if (FORMAT == FORMAT_10)
 inline int updateAudio10()
@@ -1780,7 +1944,7 @@ inline int updateAudio10()
     uint8_t numNotes = chords[previousChord][0];
     
     int16_t out = CC(sample0, GAIN_0);
-    if (numNotes > 0) 
+     if (numNotes > 0) 
     	{
     	out += CC(sample0a, GAIN_0);
 	    if (numNotes > 1) 
@@ -1792,8 +1956,10 @@ inline int updateAudio10()
 	    		}
 	    	}
 	    }
-    
-    return scaleAudio(out * finalGain);
+    // The result is normally between -4K and +4K but potentially between -16K and +16K
+    // We want to put it to between -32K and +32K,
+
+    return scaleAudio((out >> 3) * finalGain);
     }
 #endif
 
@@ -1858,41 +2024,82 @@ int updateAudio()
 #elif (FORMAT == FORMAT_9)
     return updateAudio9();
 #elif (FORMAT == FORMAT_10)
-    return updateAudio9();
+    return updateAudio10();
 #endif
     }
         
 void setup()
     {
-#if (FORMAT == FORMAT_10)
-    initializeFrequency(CV_POT_IN1, CV_AUDIO_IN);
-#endif 
-   
-    pinMode(CV_GATE_OUT, INPUT);
-    if (FORMAT == FORMAT_0)
-      pinMode(CV_AUDIO_IN, OUTPUT);
-
-    inverseLengths0 = 1.0 / lengths0;
-    inverseLengths1 = 1.0 / lengths1;
-
-    sample0.setFreq(16384 / (float) lengths0);
-#if (FORMAT == FORMAT_10)
-    sample0a.setFreq(16384 / (float) lengths0);
-    sample0b.setFreq(16384 / (float) lengths0);
-    sample0c.setFreq(16384 / (float) lengths0);
-    pinMode(CV_IN3, OUTPUT);
-#endif
-    sample1.setFreq(16384 / (float) lengths1);
-    sample2.setFreq(16384 / (float) lengths2);
-    sample3.setFreq(16384 / (float) lengths3);
-    sample4.setFreq(16384 / (float) lengths4);
-    sample5.setFreq(16384 / (float) lengths5);
-    sample6.setFreq(16384 / (float) lengths6);
-    sample7.setFreq(16384 / (float) lengths7);
-    sample8.setFreq(16384 / (float) lengths8);
+    Serial.begin(9600);
     startMozzi();
 
-    //Serial.begin(9600);
+    inverseLengths0 = 1.0 / lengths0;
+    sample0.setFreq(16384 / (float) lengths0);
+    pinMode(CV_GATE_OUT, INPUT);
+
+#ifdef LOOPING
+sample0.setLoopingOn();
+#endif
+
+
+#if (FORMAT == FORMAT_10)
+    initializeFrequency(CV_POT_IN1, CV_AUDIO_IN);
+#ifdef LOOPING
+  sample0.setLoopingOn();
+  sample0a.setLoopingOn();
+  sample0b.setLoopingOn();
+  sample0c.setLoopingOn();
+#endif
+    pinMode(CV_IN3, OUTPUT);
+    // updateControl();   // can't do it now, mozziAnalogRead isn't set up yet
+#endif
+
+#if (FORMAT == FORMAT_0)
+      pinMode(CV_AUDIO_IN, OUTPUT);
+#endif
+   
+#if (FORMAT == FORMAT1)
+    initializeFrequency(CV_POT_IN1, CV_AUDIO_IN);
+    // updateControl();   // can't do it now, mozziAnalogRead isn't set up yet
+#endif
+
+#if (FORMAT == FORMAT_2 || FORMAT == FORMAT_3 || FORMAT == FORMAT_4 || FORMAT == FORMAT_5 || FORMAT == FORMAT_5A || FORMAT == FORMAT_6 || FORMAT == FORMAT_7 || FORMAT == FORMAT_7A || FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
+    inverseLengths1 = 1.0 / lengths1;
+    sample1.setFreq(16384 / (float) lengths1);
+#endif
+
+#if (FORMAT == FORMAT_3 || FORMAT == FORMAT_4 || FORMAT == FORMAT_5 || FORMAT == FORMAT_5A || FORMAT == FORMAT_6 || FORMAT == FORMAT_7 || FORMAT == FORMAT_7A || FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
+    sample2.setFreq(16384 / (float) lengths2);
+#endif
+
+    #if (FORMAT == FORMAT_4 || FORMAT == FORMAT_5 || FORMAT == FORMAT_5A || FORMAT == FORMAT_6 || FORMAT == FORMAT_7 || FORMAT == FORMAT_7A || FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
+    sample3.setFreq(16384 / (float) lengths3);
+#endif
+
+    #if (FORMAT == FORMAT_5 || FORMAT == FORMAT_5A || FORMAT == FORMAT_6 || FORMAT == FORMAT_7 || FORMAT == FORMAT_7A || FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
+    sample4.setFreq(16384 / (float) lengths4);
+ #endif
+
+#if (FORMAT == FORMAT_6 || FORMAT == FORMAT_7 || FORMAT == FORMAT_7A || FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
+    sample5.setFreq(16384 / (float) lengths5);
+#endif
+
+#if (FORMAT == FORMAT_7 || FORMAT == FORMAT_7A || FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
+    sample6.setFreq(16384 / (float) lengths6);
+#endif
+
+#if (FORMAT == FORMAT_8 || FORMAT == FORMAT_9)
+    sample7.setFreq(16384 / (float) lengths7);
+#endif
+
+#if (FORMAT == FORMAT_9)
+    sample8.setFreq(16384 / (float) lengths8);
+#endif
+
+#ifdef LOOPING
+   sample0.start();
+#endif
+
     }
 
 void loop()
