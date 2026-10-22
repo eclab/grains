@@ -80,7 +80,7 @@ There are 13 formats, and they dictate the number of samples used, how they're g
 A single sample, with no features, intended to reduce noise as much as possible
 - **FORMAT\_1** \
 A single sample, plus editable start/end points, plus Volt/Octave pitch control
-- **FORMAT\1A** \
+- **FORMAT\_1A** \
 A single sample, plus editable start/end points, and pitch control
 - **FORMAT\_2** \
 Two samples, each with pitch control, plus total volume control
