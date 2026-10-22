@@ -1,6 +1,6 @@
 # 808
 
-808 is a drum sampler with up to 9 voices and up to 5 triggers.  There are many options depending on the number of voices you are using.  808 comes with an assortment of 8-bit u-Law TR-808, TR-909, and DR-55, and LinnDrum drum samples.  808 is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
+808 is a drum sampler with up to 9 voices and up to 5 triggers.  There are many options depending on the number of voices you are using.  808 comes with an assortment of 8-bit u-Law TR-808, TR-909, and DR-55, and LinnDrum drum samples, along with samples from the Roland D-110.  808 is meant to run on the AE Modular GRAINS, but it could be adapted to any Arduino.
 
 SET GRAINS TO MOZZI MODE.  Sorry, no Grains mode.
 
@@ -261,5 +261,7 @@ The chords are, in order:
 - Sevenths: 7, minor 7, Major 7, diminished 7
 - Octave Triads: minor + octave, Major + octave  
 
+#### LOOPING
 
+You can set the sample in FORMAT_10 to be LOOPING for ever.  It will always play.  This is done by uncommenting a #define in the code as directed.
 
